@@ -480,6 +480,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../time/index.html">Time</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../quality_pack.html">Quality Pack Targets</a></li>
 </ul>
 </details></li>
@@ -554,7 +555,7 @@
                   
   <section id="time-daemon-user-manual">
 <span id="id1"></span><h1>Time Daemon User Manual<a class="headerlink" href="#time-daemon-user-manual" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-8dbc54ce">
+<div class="need_container docutils container" id="SNCB-ce745c0c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__user_manual_time_daemon">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -576,6 +577,7 @@
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../process_methods_tools/score_process_description/process_areas/quality_management/quality_workproducts.html#wp__training_path" title="doc__user_manual_time_daemon">wp__training_path</a></span></span></div>
+<div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../index.html#comp__time_daemon" title="doc__user_manual_time_daemon">comp__time_daemon</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -613,9 +615,149 @@
 </ul>
 </div>
 </section>
+<section id="composing-timebase-handlers">
+<h2>Composing Timebase Handlers<a class="headerlink" href="#composing-timebase-handlers" title="Link to this heading">#</a></h2>
+<p>The standard way to implement a custom timebase handler is to derive from <code class="docutils literal notranslate"><span class="pre">score::td::GenericTimebaseHandler&lt;T&gt;</span></code>.
+<code class="docutils literal notranslate"><span class="pre">T</span></code> is the message type exchanged by the handler’s machines. Pass a handler name to the base constructor and
+override <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">CreateComponents()</span> <span class="pre">noexcept</span></code> to create and connect the machines. The generic base manages the
+message broker, initialization, startup, and shutdown; custom handlers do not need to reimplement that lifecycle.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">CreateComponents()</span></code>, call <code class="docutils literal notranslate"><span class="pre">Add()</span></code> for each machine and pass its initialization timeout.
+Each timeout counts from the start of initialization. If a machine’s <code class="docutils literal notranslate"><span class="pre">Init()</span></code> has not succeeded by then,
+the handler fails and does not start its machines.
+Connect the machines with <code class="docutils literal notranslate"><span class="pre">Publish()</span></code> and <code class="docutils literal notranslate"><span class="pre">Subscribe()</span></code>.
+Proactive machines start in <code class="docutils literal notranslate"><span class="pre">Add()</span></code> order and stop in reverse order.
+Add machines that must run first before their data sources.
+Do not add or connect machines after <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code> is the reference implementation of this pattern. Its constructor names the handler,
+and <code class="docutils literal notranslate"><span class="pre">CreateComponents()</span></code> selects the machines, initialization timeouts, topics, and wiring for Vehicle Time.</p>
+<p>The handlers are composed at link time, not selected at runtime. <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> runs every handler returned by
+<code class="docutils literal notranslate"><span class="pre">score::td::CreateTimebaseHandlers()</span></code>, which the linked factory defines. The default
+<code class="docutils literal notranslate"><span class="pre">//score/time_daemon:time_daemon</span></code> program uses the S-CORE factory, which creates one <code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code>.
+To use custom handlers, link your own factory into a program using <code class="docutils literal notranslate"><span class="pre">time_daemon_main</span></code>.</p>
+<p>Handler-related code is grouped under <code class="docutils literal notranslate"><span class="pre">score/time_daemon/src/application/timebase_handlers</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>timebase_handlers/
+    timebase_handler.h
+    timebase_handler_factory.h
+    generic/
+        generic_timebase_handler.h
+    score/
+        score_timebase_handler_factory.cpp
+        vehicle_time/
+            score_vehicle_timebase_handler.h
+            score_vehicle_timebase_handler.cpp
+            factory.h
+            factory.cpp
+</pre></div>
+</div>
+<p>The contracts and <code class="docutils literal notranslate"><span class="pre">generic/</span></code> implementation do not depend on S-CORE’s selected handler composition.
+The <code class="docutils literal notranslate"><span class="pre">score/</span></code> subtree contains the supplied project-specific composition; its Vehicle Time handler selects the machines,
+timings, topics, and wiring. Other projects can provide their own compositions without changing the generic code.</p>
+<p>The public targets for application and custom handler integration are available under <code class="docutils literal notranslate"><span class="pre">&#64;score_time//score/time_daemon</span></code>:</p>
+<p>Application and entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">time_daemon</span></code>: default executable with the S-CORE factory and Vehicle Time handler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_daemon_core</span></code>: reusable daemon library, without the process entry point or a handler factory implementation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_daemon_main</span></code>: process entry point, without a handler factory or logging backend.</p></li>
+</ul>
+<p>Programs linking <code class="docutils literal notranslate"><span class="pre">time_daemon_core</span></code> must provide a factory definition even when injecting handlers directly,
+because both constructors are defined in the same source file. Unit tests can supply a test-only factory.</p>
+<p>Generic handler infrastructure:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">timebase_handler_factory</span></code>: declaration of <code class="docutils literal notranslate"><span class="pre">CreateTimebaseHandlers()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_timebase_handler</span></code>: standard implementation base, <code class="docutils literal notranslate"><span class="pre">GenericTimebaseHandler&lt;T&gt;</span></code>.</p></li>
+</ul>
+<p>Define <code class="docutils literal notranslate"><span class="pre">CreateTimebaseHandlers()</span></code> in one source file. Return the handlers in a
+<code class="docutils literal notranslate"><span class="pre">std::vector&lt;std::unique_ptr&lt;TimebaseHandler&gt;&gt;</span></code>. Add them with <code class="docutils literal notranslate"><span class="pre">push_back</span></code> or <code class="docutils literal notranslate"><span class="pre">emplace_back</span></code>.
+Do not use an initializer list: it would copy the pointers, but <code class="docutils literal notranslate"><span class="pre">unique_ptr</span></code> cannot be copied.
+Include <code class="docutils literal notranslate"><span class="pre">score/time_daemon/src/application/timebase_handlers/timebase_handler_factory.h</span></code> in your factory source.
+<code class="docutils literal notranslate"><span class="pre">TimebaseHandler</span></code> remains the polymorphic type shared by the daemon and factory; its declaration is included
+by the factory header. Custom handlers inherit that contract through <code class="docutils literal notranslate"><span class="pre">GenericTimebaseHandler&lt;T&gt;</span></code>.</p>
+<p>Each program using <code class="docutils literal notranslate"><span class="pre">time_daemon_main</span></code> must supply exactly one factory definition. If it is packaged in a
+library, set <code class="docutils literal notranslate"><span class="pre">alwayslink</span> <span class="pre">=</span> <span class="pre">True</span></code> so duplicate providers cause a link error rather than being hidden in archives.
+Do not use weak symbols or link order to replace the factory. The <a class="reference internal" href="../detailed_design/index.html#time-daemon-factory-composition"><span class="std std-ref">Factory Selection and Ownership</span></a>
+section explains provider linkage and ownership.</p>
+<p>This example uses a custom generic handler. Add dependencies on the public targets
+for any machine factories, message types, and topic headers used by <code class="docutils literal notranslate"><span class="pre">vendor_handler</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cc_library</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"vendor_handler"</span><span class="p">,</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"vendor_handler.cpp"</span><span class="p">],</span>
+    <span class="n">hdrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"vendor_handler.h"</span><span class="p">],</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">"@score_time//score/time_daemon:generic_timebase_handler"</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">cc_library</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"vendor_timebases"</span><span class="p">,</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"timebase_handler_factory.cpp"</span><span class="p">],</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">":vendor_handler"</span><span class="p">,</span>
+        <span class="s2">"@score_time//score/time_daemon:timebase_handler_factory"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">alwayslink</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">cc_binary</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"vendor_time_daemon"</span><span class="p">,</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">":vendor_timebases"</span><span class="p">,</span>
+        <span class="s2">"@score_baselibs//score/mw/log:console_only_backend"</span><span class="p">,</span>
+        <span class="s2">"@score_time//score/time_daemon:time_daemon_main"</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Without a factory, the linker reports an undefined reference to <code class="docutils literal notranslate"><span class="pre">score::td::CreateTimebaseHandlers()</span></code>.
+With more than one directly linked or force-included factory, it reports multiple definitions of that function.</p>
+</section>
+<section id="handler-lifecycle">
+<h2>Handler Lifecycle<a class="headerlink" href="#handler-lifecycle" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> owns the handlers. Call <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> once; it rejects empty lists and null handlers before
+initializing any handler. Otherwise, it performs setup in list order. For generic handlers, setup creates and
+connects machines but does not yet initialize or start them.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Run()</span></code> calls <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> on each handler in list order, waiting up to 100 ms between passes. Generic handlers
+initialize their machines asynchronously and start proactive machines only after all initialization succeeds.
+A failed initialization calls <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> and enters terminal <code class="docutils literal notranslate"><span class="pre">kStopped</span></code> without starting machines. A stop request
+does not skip the rest of the current pass. Generic <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> does not check cancellation itself, so a
+successful initialization result can still start machines during that pass. Custom <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> implementations
+must not block, or they will delay the other handlers.</p>
+<p>On cancellation, <code class="docutils literal notranslate"><span class="pre">Run()</span></code> stops handlers in reverse order, even if cancellation preceded the first pass.
+When managing a generic handler directly, serialize its lifecycle calls and cancel the parent stop source
+before stopping or destroying it with pending initialization. Every <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> calls all registered proactive
+machines in reverse registration order, even before startup or after an earlier stop, then enters <code class="docutils literal notranslate"><span class="pre">kStopped</span></code>.
+Machines must tolerate these repeated calls, including the additional call during handler destruction. Polling
+a stopped handler does nothing; reinitialization and restart are not supported.</p>
+<p>See <a class="reference internal" href="../detailed_design/index.html#time-daemon-handler-lifecycle"><span class="std std-ref">Generic Handler Lifecycle</span></a> for the state diagram, cancellation behavior, and shutdown lifetime details.</p>
+</section>
+<section id="reusable-machine-building-blocks">
+<h2>Reusable Machine Building Blocks<a class="headerlink" href="#reusable-machine-building-blocks" title="Link to this heading">#</a></h2>
+<p>These optional public targets under <code class="docutils literal notranslate"><span class="pre">&#64;score_time//score/time_daemon</span></code> provide the reusable machine building
+blocks used by <code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code>. Depend on only the ones used by your custom handler:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">msg_broker</span></code>: <code class="docutils literal notranslate"><span class="pre">Topic</span></code>, to connect machines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptp_time_info</span></code>: <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code>, the message type of <code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptp_control_flow_divider</span></code>: <code class="docutils literal notranslate"><span class="pre">CreatePtpControlFlowDivider()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptp_machine</span></code>: <code class="docutils literal notranslate"><span class="pre">PTPMachine&lt;PTPEngine&gt;</span></code>, the PTP machine for a custom engine.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gptp_shm_machine</span></code>: <code class="docutils literal notranslate"><span class="pre">CreateGPTPShmMachine()</span></code>, the PTP machine that reads <code class="docutils literal notranslate"><span class="pre">TimeSlave</span></code> data.</p></li>
+</ul>
+<p>Vehicle Time building blocks (existing SVT API names):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">svt_verification_machine</span></code>: <code class="docutils literal notranslate"><span class="pre">CreateSvtVerificationMachine()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">svt_publisher</span></code>: <code class="docutils literal notranslate"><span class="pre">CreateSvtPublisher()</span></code>, which writes to <code class="docutils literal notranslate"><span class="pre">/svt_shmem_path</span></code>.</p></li>
+</ul>
+<p>To read PTP data from another source, write an engine and create its <code class="docutils literal notranslate"><span class="pre">PTPMachine</span></code> directly.
+Pass the machine’s name, update interval, and engine arguments to the constructor.
+Then add the machine with its initialization timeout:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">ptp_machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">PTPMachine</span><span class="o">&lt;</span><span class="n">VendorPtpEngine</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="s">"ptp_worker"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">{</span><span class="mi">50</span><span class="p">},</span><span class="w"> </span><span class="n">vendor_client</span><span class="p">);</span>
+<span class="n">Add</span><span class="p">(</span><span class="n">ptp_machine</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">{</span><span class="mi">20</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>The engine must provide <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">Initialize()</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">Deinitialize()</span></code>, and <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">ReadPTPSnapshot(PtpTimeInfo&amp;)</span></code>.</p>
+</section>
 <section id="runtime-requirements">
 <h2>Runtime Requirements<a class="headerlink" href="#runtime-requirements" title="Link to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> requires:</p>
+<p>The supplied S-CORE composition requires:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">TimeSlave</span></code> must be running and publishing data to shared memory</p></li>
 <li><p>Access to POSIX shared memory segment (<code class="docutils literal notranslate"><span class="pre">/gptp_ptp_info</span></code>)</p></li>
@@ -673,6 +815,9 @@
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#composing-timebase-handlers">Composing Timebase Handlers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#handler-lifecycle">Handler Lifecycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-machine-building-blocks">Reusable Machine Building Blocks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-requirements">Runtime Requirements</a></li>
 </ul>
   </nav></div>
