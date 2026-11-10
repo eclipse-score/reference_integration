@@ -113,6 +113,14 @@ TEST(Compare, IgnoresTheModuleOrder)
     EXPECT_EQ(Compare(expected, actual), "");
 }
 
+TEST(Compare, ReportsADuplicateModuleOnThePlatform)
+{
+    const auto expected = Info("t", {{"score_a", "1.0.0"}});
+    const auto actual = Info("t", {{"score_a", "1.0.0"}, {"score_a", "9.0.0"}});
+
+    EXPECT_EQ(Compare(expected, actual), "score_a: listed more than once on the platform\n");
+}
+
 TEST(ToString, ListsTimestampAndOneLinePerModule)
 {
     const auto info = Info("2026-11-01T00:00:00Z", {{"score_a", "1.0.0"}, {"score_b", "0123abcd"}});

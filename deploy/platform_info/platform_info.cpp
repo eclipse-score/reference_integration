@@ -102,6 +102,18 @@ const ModuleVersion* FindModule(const PlatformInfo& info, const std::string_view
     return nullptr;
 }
 
+bool IsListedBefore(const PlatformInfo& info, const std::size_t index) noexcept
+{
+    for (std::size_t i = 0U; i < index; ++i)
+    {
+        if (View(info.modules[i].name) == View(info.modules[index].name))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 }  // namespace
 
 PlatformInfo MakePlatformInfo() noexcept
@@ -177,9 +189,14 @@ std::string Compare(const PlatformInfo& expected, const PlatformInfo& actual)
     }
     for (std::size_t i = 0U; i < actual.module_count; ++i)
     {
-        if (FindModule(expected, View(actual.modules[i].name)) == nullptr)
+        const auto name = View(actual.modules[i].name);
+        if (IsListedBefore(actual, i))
         {
-            differences.append(View(actual.modules[i].name)).append(": not part of the expected S-CORE version\n");
+            differences.append(name).append(": listed more than once on the platform\n");
+        }
+        else if (FindModule(expected, name) == nullptr)
+        {
+            differences.append(name).append(": not part of the expected S-CORE version\n");
         }
     }
     return differences;
