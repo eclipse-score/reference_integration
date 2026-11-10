@@ -38,18 +38,22 @@ Follow `.github/instructions/known-good-json.instructions.md` and
 
 ## 3. Report table (done by the script)
 
-Commits since the release are measured between the release tag and the head of
-the module's `branch` (default `main`) with the GitHub compare API (`ahead_by`).
+Commit counts come from the GitHub compare API (`ahead_by`/`behind_by`).
 Release date is the GitHub release's `published_at`, otherwise the tag's commit
-date. A module pinned by `hash` is shown in *Before* as the release whose tag
-points exactly at that commit (highest tag if several); an untagged commit is
-shown as the short hash with its commit date. *Now* also shows the commits the
-new release gains (`+N`) or drops (`-N`, a downgrade) compared to *Before*
-(`+N/-M` if they diverged).
+date. A commit (pinned `hash` or branch head) is shown as the release whose tag
+points exactly at it (highest tag if several, with the release date); an
+untagged commit is shown as the short hash with its commit date.
 
 The report has a single table with every module. The columns are fixed:
-`Module | Group | Before | Now | Head | OK/NOK`. `Head` is the number of
-commits since the release, bold from 10 on, linked to the diff.
+
+| Column | Content |
+|---|---|
+| `Before` | Release or commit pinned in `known_good.json` so far, (date) |
+| `Now` | Latest registry release, (date), then the commits it gains (`+N`) or drops (`-N`, bold; `+N/-M` if diverged) compared to `Before` |
+| `Head` | Head commit of the module's `branch` (default `main`), (date), then the commits since the `Now` release, bold from 10 on |
+| `OK/NOK` | Empty |
+
+Every commit count links to the GitHub commit list (compare view).
 **OK/NOK stays empty**; it is set by hand in the PR later. The table is
 changed only by the script: never edit rows or values by hand. Whenever the
 table has to change, fix the script if needed, rerun it and replace the whole

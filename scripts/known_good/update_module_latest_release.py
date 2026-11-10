@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import functools
 import json
 import os
 import re
@@ -76,7 +77,11 @@ class Release:
     error: str | None = None
     current_date: dt.date | None = None
     current_tag: str | None = None
+    current_ref: str | None = None
     delta: tuple[int, int] | None = None
+    head_sha: str | None = None
+    head_tag: str | None = None
+    head_date: dt.date | None = None
 
 
 def http_json(url: str, *, github: bool = False) -> dict | list | None:
@@ -149,12 +154,19 @@ def release_date(slug: str, tag: str) -> dt.date:
     return commit_date(slug, tag)
 
 
-def tag_at(slug: str, sha: str) -> str | None:
-    """Highest tag pointing exactly at the commit; None if the commit is untagged."""
+@functools.cache
+def repo_tags(slug: str) -> list[tuple[str, str]]:
+    """(name, commit sha) of every tag of the repository."""
     tags, page = [], 1
     while batch := http_json(f"{API}/repos/{slug}/tags?per_page=100&page={page}", github=True):
-        tags += [t["name"] for t in batch if t["commit"]["sha"].startswith(sha)]
+        tags += [(t["name"], t["commit"]["sha"]) for t in batch]
         page += 1
+    return tags
+
+
+def tag_at(slug: str, sha: str) -> str | None:
+    """Highest tag pointing exactly at the commit; None if the commit is untagged."""
+    tags = [name for name, tag_sha in repo_tags(slug) if tag_sha.startswith(sha)]
     return max(tags, key=lambda t: version_key(t.removeprefix("v")), default=None)
 
 
@@ -181,8 +193,11 @@ def compare_counts(slug: str, base: str, head: str) -> tuple[int, int]:
     return compare["ahead_by"], compare["behind_by"]
 
 
-def commits_since(slug: str, tag: str, branch: str) -> int:
-    return compare_counts(slug, tag, branch)[0]
+def head_commit(slug: str, branch: str) -> tuple[str, dt.date]:
+    commit = http_json(f"{API}/repos/{slug}/commits/{branch}", github=True)
+    if not commit:
+        raise RuntimeError(f"branch {branch} not found in {slug}")
+    return commit["sha"], parse_date(commit["commit"]["committer"]["date"])
 
 
 def collect(known_good_path: Path) -> list[Release]:
@@ -200,12 +215,17 @@ def collect(known_good_path: Path) -> list[Release]:
                     continue
                 entry.version, entry.tag = found
                 entry.date = release_date(entry.slug, entry.tag)
-                entry.commits = commits_since(entry.slug, entry.tag, entry.branch)
+                entry.head_sha, entry.head_date = head_commit(entry.slug, entry.branch)
+                entry.head_tag = tag_at(entry.slug, entry.head_sha)
+                if entry.head_tag:
+                    entry.head_date = release_date(entry.slug, entry.head_tag)
+                entry.commits = compare_counts(entry.slug, entry.tag, entry.head_sha)[0]
                 entry.current_tag, entry.current_date = pinned_release(module)
                 if module.hash and entry.current_tag:
                     entry.current = entry.current_tag.removeprefix("v")
-                if before_ref := entry.current_tag or module.hash:
-                    entry.delta = compare_counts(entry.slug, before_ref, entry.tag)
+                entry.current_ref = entry.current_tag or module.hash
+                if entry.current_ref:
+                    entry.delta = compare_counts(entry.slug, entry.current_ref, entry.tag)
             except Exception as e:  # noqa: BLE001
                 entry.error = str(e)
             print(
@@ -234,34 +254,32 @@ def apply_versions(path: Path, releases: list[Release]) -> None:
 
 
 def render(releases: list[Release], today: dt.date) -> str:
-    def before_cell(r: Release) -> str:
-        if not r.current_tag:
-            return f"`{r.current}` ({r.current_date or '?'})"
-        return f"[{r.current}](https://github.com/{r.slug}/releases/tag/{r.current_tag}) ({r.current_date or '?'})"
+    def ref_cell(r: Release, label: str, tag: str | None, date: dt.date | None) -> str:
+        if not tag:
+            return f"`{label}` ({date or '?'})"
+        return f"[{label}](https://github.com/{r.slug}/releases/tag/{tag}) ({date or '?'})"
 
     def now_cell(r: Release) -> str:
         if not r.version:
             return "-"
-        details = str(r.date or "?")
-        if r.delta:
-            ahead, behind = r.delta
-            if ahead and behind:
-                details += f", +{ahead}/-{behind} commits"
-            elif behind:
-                details += f", -{behind} commits"
-            else:
-                details += f", +{ahead} commits"
-        if not r.tag:
-            return f"{r.version} ({details})"
-        return f"[{r.version}](https://github.com/{r.slug}/releases/tag/{r.tag}) ({details})"
+        cell = ref_cell(r, r.version, r.tag, r.date)
+        if not r.delta:
+            return cell
+        ahead, behind = r.delta
+        text = f"+{ahead}/-{behind}" if ahead and behind else f"-{behind}" if behind else f"+{ahead}"
+        if behind:
+            text = f"**{text}**"
+        return f"{cell} [{text}](https://github.com/{r.slug}/compare/{r.current_ref}...{r.tag})"
 
     def head_cell(r: Release) -> str:
         if r.error:
             return f"Error: {r.error}"
-        if r.commits is None:
+        if r.commits is None or not r.head_sha:
             return "-"
+        label = r.head_tag.removeprefix("v") if r.head_tag else r.head_sha[:8]
         count = f"**{r.commits}**" if r.commits >= BOLD_COMMITS else str(r.commits)
-        return f"[{count}](https://github.com/{r.slug}/compare/{r.tag}...{r.branch})"
+        link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.head_sha}"
+        return f"{ref_cell(r, label, r.head_tag, r.head_date)} [{count}]({link})"
 
     lines = [
         f"<!-- generated by scripts/known_good/update_module_latest_release.py on {today} -->",
@@ -269,18 +287,22 @@ def render(releases: list[Release], today: dt.date) -> str:
         "",
         (
             "Before: release or commit pinned in `known_good.json` so far (release or commit date);"
-            " a pinned commit is shown as the release whose tag points at it, if there is one."
-            " Now: latest registry release this PR switches to (release date, commits gained (+) or"
-            " dropped (-) compared to Before)."
-            f" Head: commits on the module's branch after that release, bold from {BOLD_COMMITS} on,"
-            " linked to the diff. Set OK/NOK by hand."
+            " a commit is shown as the release whose tag points at it, if there is one."
+            " Now: latest registry release this PR switches to (release date), followed by the commits"
+            " it gains (+) or drops (-, bold) compared to Before."
+            " Head: head commit of the module's branch (commit or release date), followed by the commits"
+            f" since the Now release, bold from {BOLD_COMMITS} on. The numbers link to the commit list."
+            " Set OK/NOK by hand."
         ),
         "",
         "| Module | Group | Before | Now | Head | OK/NOK |",
         "|---|---|---|---|---|---|",
     ]
     for r in releases:
-        lines.append(f"| {r.module} | {r.group} | {before_cell(r)} | {now_cell(r)} | {head_cell(r)} | |")
+        lines.append(
+            f"| {r.module} | {r.group} | {ref_cell(r, r.current, r.current_tag, r.current_date)}"
+            f" | {now_cell(r)} | {head_cell(r)} | |"
+        )
     return "\n".join(lines) + "\n"
 
 
