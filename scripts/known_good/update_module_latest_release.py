@@ -286,14 +286,21 @@ def render(releases: list[Release], today: dt.date) -> str:
         "### Module versions",
         "",
         (
-            "Before: release or commit pinned in `known_good.json` so far (release or commit date);"
+            "- **Before:** release or commit pinned in `known_good.json` so far (release or commit date);"
             " a commit is shown as the release whose tag points at it, if there is one."
-            " Now: latest registry release this PR switches to (release date), followed by the commits"
-            " it gains (+) or drops (-, bold) compared to Before."
-            " Head: head commit of the module's branch (commit or release date), followed by the commits"
-            f" since the Now release, bold from {BOLD_COMMITS} on. The numbers link to the commit list."
-            " Set OK/NOK by hand."
         ),
+        (
+            "- **Now:** latest registry release this PR switches to (release date), followed by the commits"
+            " it gains (+) or drops (-, bold) compared to Before."
+        ),
+        (
+            "- **Head:** head commit of the module's branch, shown as release if a tag points at it"
+            " (commit or release date), followed by the commits since the Now release,"
+            f" bold from {BOLD_COMMITS} on."
+        ),
+        "- **OK/NOK:** set by hand.",
+        "",
+        "All commit numbers link to the commit list.",
         "",
         "| Module | Group | Before | Now | Head | OK/NOK |",
         "|---|---|---|---|---|---|",
