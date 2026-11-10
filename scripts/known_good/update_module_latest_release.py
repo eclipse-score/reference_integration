@@ -76,6 +76,7 @@ class Release:
     error: str | None = None
     current_date: dt.date | None = None
     current_tag: str | None = None
+    delta: tuple[int, int] | None = None
 
 
 def http_json(url: str, *, github: bool = False) -> dict | list | None:
@@ -172,11 +173,16 @@ def pinned_release(module) -> tuple[str | None, dt.date | None]:
     return None, None
 
 
-def commits_since(slug: str, tag: str, branch: str) -> int:
-    compare = http_json(f"{API}/repos/{slug}/compare/{tag}...{branch}", github=True)
+def compare_counts(slug: str, base: str, head: str) -> tuple[int, int]:
+    """(ahead_by, behind_by) of head compared to base."""
+    compare = http_json(f"{API}/repos/{slug}/compare/{base}...{head}", github=True)
     if not compare:
-        raise RuntimeError(f"cannot compare {tag}...{branch} in {slug}")
-    return compare["ahead_by"]
+        raise RuntimeError(f"cannot compare {base}...{head} in {slug}")
+    return compare["ahead_by"], compare["behind_by"]
+
+
+def commits_since(slug: str, tag: str, branch: str) -> int:
+    return compare_counts(slug, tag, branch)[0]
 
 
 def collect(known_good_path: Path) -> list[Release]:
@@ -198,6 +204,8 @@ def collect(known_good_path: Path) -> list[Release]:
                 entry.current_tag, entry.current_date = pinned_release(module)
                 if module.hash and entry.current_tag:
                     entry.current = entry.current_tag.removeprefix("v")
+                if before_ref := entry.current_tag or module.hash:
+                    entry.delta = compare_counts(entry.slug, before_ref, entry.tag)
             except Exception as e:  # noqa: BLE001
                 entry.error = str(e)
             print(
@@ -234,9 +242,18 @@ def render(releases: list[Release], today: dt.date) -> str:
     def now_cell(r: Release) -> str:
         if not r.version:
             return "-"
+        details = str(r.date or "?")
+        if r.delta:
+            ahead, behind = r.delta
+            if ahead and behind:
+                details += f", +{ahead}/-{behind} commits"
+            elif behind:
+                details += f", -{behind} commits"
+            else:
+                details += f", +{ahead} commits"
         if not r.tag:
-            return f"{r.version} ({r.date or '?'})"
-        return f"[{r.version}](https://github.com/{r.slug}/releases/tag/{r.tag}) ({r.date or '?'})"
+            return f"{r.version} ({details})"
+        return f"[{r.version}](https://github.com/{r.slug}/releases/tag/{r.tag}) ({details})"
 
     def head_cell(r: Release) -> str:
         if r.error:
@@ -253,7 +270,8 @@ def render(releases: list[Release], today: dt.date) -> str:
         (
             "Before: release or commit pinned in `known_good.json` so far (release or commit date);"
             " a pinned commit is shown as the release whose tag points at it, if there is one."
-            " Now: latest registry release this PR switches to (release date)."
+            " Now: latest registry release this PR switches to (release date, commits gained (+) or"
+            " dropped (-) compared to Before)."
             f" Head: commits on the module's branch after that release, bold from {BOLD_COMMITS} on,"
             " linked to the diff. Set OK/NOK by hand."
         ),

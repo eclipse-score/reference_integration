@@ -43,7 +43,9 @@ the module's `branch` (default `main`) with the GitHub compare API (`ahead_by`).
 Release date is the GitHub release's `published_at`, otherwise the tag's commit
 date. A module pinned by `hash` is shown in *Before* as the release whose tag
 points exactly at that commit (highest tag if several); an untagged commit is
-shown as the short hash with its commit date.
+shown as the short hash with its commit date. *Now* also shows the commits the
+new release gains (`+N`) or drops (`-N`, a downgrade) compared to *Before*
+(`+N/-M` if they diverged).
 
 The report has a single table with every module. The columns are fixed:
 `Module | Group | Before | Now | Head | OK/NOK`. `Head` is the number of

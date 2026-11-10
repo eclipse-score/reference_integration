@@ -61,6 +61,18 @@ def test_render_versions_table_shows_dates_before_and_now():
     assert "| `abc` (2026-10-01) | [1.0.0](https://github.com/o/a/releases/tag/v1.0.0) (2026-11-09) |" in report
 
 
+def test_render_now_shows_commits_compared_to_before():
+    rows = []
+    for delta in [(12, 0), (0, 3), (2, 1), (0, 0)]:
+        entry = Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0", "v1.0.0", TODAY, 0)
+        entry.delta = delta
+        rows.append(render([entry], TODAY))
+    assert "(2026-11-09, +12 commits)" in rows[0]
+    assert "(2026-11-09, -3 commits)" in rows[1]
+    assert "(2026-11-09, +2/-1 commits)" in rows[2]
+    assert "(2026-11-09, +0 commits)" in rows[3]
+
+
 def test_render_before_shows_release_of_tagged_commit():
     entry = Release("score_a", "target_sw", "o/a", "main", "0.9.0", "1.0.0", "v1.0.0", TODAY, 0)
     entry.current_tag, entry.current_date = "v0.9.0", dt.date(2026, 10, 1)
