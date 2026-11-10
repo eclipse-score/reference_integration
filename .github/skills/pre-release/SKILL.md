@@ -41,7 +41,9 @@ Follow `.github/instructions/known-good-json.instructions.md` and
 Commits since the release are measured between the release tag and the head of
 the module's `branch` (default `main`) with the GitHub compare API (`ahead_by`).
 Release date is the GitHub release's `published_at`, otherwise the tag's commit
-date; for a pinned hash the commit date.
+date. A module pinned by `hash` is shown in *Before* as the release whose tag
+points exactly at that commit (highest tag if several); an untagged commit is
+shown as the short hash with its commit date.
 
 The report has a single table with every module. The columns are fixed:
 `Module | Group | Before | Now | Head | OK/NOK`. `Head` is the number of

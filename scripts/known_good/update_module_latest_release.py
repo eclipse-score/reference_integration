@@ -75,9 +75,10 @@ class Release:
     commits: int | None = None
     error: str | None = None
     current_date: dt.date | None = None
+    current_tag: str | None = None
 
 
-def http_json(url: str, *, github: bool = False) -> dict | None:
+def http_json(url: str, *, github: bool = False) -> dict | list | None:
     """GET a JSON document; None on 404."""
     request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json"} if github else {})
     if github and (token := os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_PAT")):
@@ -147,17 +148,28 @@ def release_date(slug: str, tag: str) -> dt.date:
     return commit_date(slug, tag)
 
 
-def pinned_date(module) -> dt.date | None:
-    """Release date of the pinned version, or commit date of the pinned hash."""
+def tag_at(slug: str, sha: str) -> str | None:
+    """Highest tag pointing exactly at the commit; None if the commit is untagged."""
+    tags, page = [], 1
+    while batch := http_json(f"{API}/repos/{slug}/tags?per_page=100&page={page}", github=True):
+        tags += [t["name"] for t in batch if t["commit"]["sha"].startswith(sha)]
+        page += 1
+    return max(tags, key=lambda t: version_key(t.removeprefix("v")), default=None)
+
+
+def pinned_release(module) -> tuple[str | None, dt.date | None]:
+    """(tag, date) of the pinned version or hash; tag is None for an untagged hash."""
     if module.version:
         tag = next(
             (t for registry in REGISTRIES if (t := source_tag(registry, module.name, module.version))),
             f"v{module.version}",
         )
-        return release_date(module.owner_repo, tag)
+        return tag, release_date(module.owner_repo, tag)
     if module.hash:
-        return commit_date(module.owner_repo, module.hash)
-    return None
+        if tag := tag_at(module.owner_repo, module.hash):
+            return tag, release_date(module.owner_repo, tag)
+        return None, commit_date(module.owner_repo, module.hash)
+    return None, None
 
 
 def commits_since(slug: str, tag: str, branch: str) -> int:
@@ -183,7 +195,9 @@ def collect(known_good_path: Path) -> list[Release]:
                 entry.version, entry.tag = found
                 entry.date = release_date(entry.slug, entry.tag)
                 entry.commits = commits_since(entry.slug, entry.tag, entry.branch)
-                entry.current_date = pinned_date(module)
+                entry.current_tag, entry.current_date = pinned_release(module)
+                if module.hash and entry.current_tag:
+                    entry.current = entry.current_tag.removeprefix("v")
             except Exception as e:  # noqa: BLE001
                 entry.error = str(e)
             print(
@@ -212,6 +226,11 @@ def apply_versions(path: Path, releases: list[Release]) -> None:
 
 
 def render(releases: list[Release], today: dt.date) -> str:
+    def before_cell(r: Release) -> str:
+        if not r.current_tag:
+            return f"`{r.current}` ({r.current_date or '?'})"
+        return f"[{r.current}](https://github.com/{r.slug}/releases/tag/{r.current_tag}) ({r.current_date or '?'})"
+
     def now_cell(r: Release) -> str:
         if not r.version:
             return "-"
@@ -232,7 +251,8 @@ def render(releases: list[Release], today: dt.date) -> str:
         "### Module versions",
         "",
         (
-            "Before: commit or version pinned in `known_good.json` so far (commit or release date)."
+            "Before: release or commit pinned in `known_good.json` so far (release or commit date);"
+            " a pinned commit is shown as the release whose tag points at it, if there is one."
             " Now: latest registry release this PR switches to (release date)."
             f" Head: commits on the module's branch after that release, bold from {BOLD_COMMITS} on,"
             " linked to the diff. Set OK/NOK by hand."
@@ -242,8 +262,7 @@ def render(releases: list[Release], today: dt.date) -> str:
         "|---|---|---|---|---|---|",
     ]
     for r in releases:
-        before = f"`{r.current}` ({r.current_date or '?'})"
-        lines.append(f"| {r.module} | {r.group} | {before} | {now_cell(r)} | {head_cell(r)} | |")
+        lines.append(f"| {r.module} | {r.group} | {before_cell(r)} | {now_cell(r)} | {head_cell(r)} | |")
     return "\n".join(lines) + "\n"
 
 
