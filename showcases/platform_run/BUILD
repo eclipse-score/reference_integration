@@ -29,6 +29,8 @@ score_pkg_bundle(
     ],
     custom_layout = {
         ":platform_run_lm_config": "etc/",
+        # The launch manager offers its control service over mw::com; copy of @score_lifecycle//score/launch_manager:example_com_config.
+        "//showcases/platform_run:launch_manager_mw_com_config.json": "etc/mw_com_config.json",
         "//showcases/platform_run:logging.json": "etc/logging.json",
         "//showcases/platform_run:logging_com_api_example.json": "etc/logging_com_api_example.json",
         "//showcases/platform_run:logging_platform_info_consumer.json": "etc/logging_platform_info_consumer.json",
