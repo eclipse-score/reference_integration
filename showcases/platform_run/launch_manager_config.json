@@ -1,10 +1,10 @@
 {
-    "schema_version": 1,
+    "schema_version": 2,
     "defaults": {
         "deployment_config": {
             "bin_dir": "/showcases/bin",
-            "ready_timeout": 30,
-            "shutdown_timeout": 2,
+            "ready_timeout_ms": 30000,
+            "shutdown_timeout_ms": 2000,
             "environmental_variables": {
                 "PATH": "/usr/local/bin:/usr/bin:/bin"
             },
@@ -27,7 +27,7 @@
             }
         },
         "run_target": {
-            "transition_timeout": 120
+            "transition_timeout_ms": 120000
         }
     },
     "components": {
@@ -46,7 +46,7 @@
             },
             "deployment_config": {
                 "bin_dir": "/usr/bin/datarouter",
-                "ready_timeout": 5
+                "ready_timeout_ms": 5000
             }
         },
         "platform_info_service": {
@@ -63,7 +63,7 @@
             },
             "deployment_config": {
                 "bin_dir": "/usr/bin/platform_info",
-                "ready_timeout": 5,
+                "ready_timeout_ms": 5000,
                 "environmental_variables": {
                     "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_platform_info_service.json"
                 }
@@ -213,6 +213,6 @@
     "fallback_run_target": {
         "description": "Keeps the logging daemon to report the failure, then stops",
         "depends_on": ["datarouter", "platform_run_failed"],
-        "transition_timeout": 10
+        "transition_timeout_ms": 10000
     }
 }
