@@ -18,10 +18,13 @@ every test application, and only reaches the ``PlatformRun`` run target once
 each test application has exited successfully. The applications log via mw::log
 to DLT through the datarouter. This test records that DLT traffic on the host
 while the showcase runs and analyzes the recording and the console output
-afterwards.
+afterwards. The recording is kept as ``platform_run.dlt`` in the test's
+undeclared outputs.
 """
 
+import os
 import re
+from pathlib import Path
 
 from attribute_plugin import add_test_properties
 from score.itf.plugins.dlt.dlt_receive import Protocol
@@ -97,6 +100,7 @@ def test_platform_run(target, dlt_config):
         multicast_ips=dlt_config.multicast_ips,
         print_to_stdout=False,
         binary_path=dlt_config.dlt_receive_path,
+        file_name=str(Path(os.environ["TEST_UNDECLARED_OUTPUTS_DIR"]) / "platform_run.dlt"),
     ) as window:
         output = run_showcases(target, SHOWCASE)
 
