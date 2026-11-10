@@ -1,0 +1,126 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Builds the Linux release archives (platform and showcases), installs them into
+# unmodified distribution containers and runs the showcases there.
+name: Linux - Release Archives on Stock Distributions
+on:
+  workflow_dispatch:
+  pull_request:
+  release:
+    types: [created]
+  push:
+    branches:
+      - main
+# Do not flood CI with unneeded previous runs in PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+permissions:
+  contents: read
+jobs:
+  build:
+    name: build (${{ matrix.arch }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-${{ matrix.arch }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Install aarch64 libc headers
+        if: matrix.arch == 'aarch64'
+        # iceoryx2's bindgen build scripts (via kyron) read the target's system headers from the host;
+        # clang only finds them once it detects a cross GCC installation.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+      - name: Build and package platform and showcases
+        env:
+          ARCH: ${{ matrix.arch }}
+        run: |
+          bazel build --lockfile_mode=error --config=linux-${ARCH} //deploy:platform_tar //showcases:showcases_pkg_tar
+          gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-linux-${ARCH}.tar.gz
+          gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-linux-${ARCH}.tar.gz
+      - name: Store platform and showcases packages
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: score-release-linux-${{ matrix.arch }}
+          path: |
+            score-platform-linux-${{ matrix.arch }}.tar.gz
+            score-showcases-linux-${{ matrix.arch }}.tar.gz
+  run:
+    name: run (${{ matrix.arch }}, ${{ matrix.distro }})
+    needs: build
+    runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+        # debian:12 ships libstdc++ from GCC 12 (GLIBCXX_3.4.30), the oldest the Rust showcases accept.
+        distro: ['ubuntu:24.04', 'debian:12']
+    steps:
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@v4
+        with:
+          name: score-release-linux-${{ matrix.arch }}
+          path: ./release-assets
+      - name: Install packages and run showcases
+        env:
+          ARCH: ${{ matrix.arch }}
+          DISTRO: ${{ matrix.distro }}
+        run: |
+          rc=0
+          docker run --rm -e ARCH -v "$PWD/release-assets:/assets:ro" "$DISTRO" sh -c '
+            tar -xzf /assets/score-platform-linux-$ARCH.tar.gz -C / &&
+            tar -xzf /assets/score-showcases-linux-$ARCH.tar.gz -C / &&
+            # Workaround as on AutoSD: config_daemon runs forever. Drop once it exits on its own.
+            grep -rl --include="*.score.json" config_daemon /showcases | xargs rm -f &&
+            timeout 600 /showcases/bin/cli --examples all' > cli.log 2>&1 || rc=$?
+          cat cli.log
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::Showcases failed on $DISTRO ($ARCH) with exit code $rc"
+            exit "$rc"
+          fi
+          # The CLI does not yet fail on a showcase's exit code; require at least that it completed.
+          grep -q "All done!" cli.log || { echo "::error::Showcase CLI did not complete on $DISTRO ($ARCH)"; exit 1; }
+  release:
+    name: Publish platform and showcases to release
+    needs: run
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: score-release-linux-*
+          merge-multiple: true
+          path: ./release-assets
+      - name: Upload platform and showcases to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" ./release-assets/*.tar.gz --clobber
