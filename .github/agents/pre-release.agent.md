@@ -18,8 +18,12 @@ Read it first and follow it exactly.
 
 - DO NOT pick versions, dates or commit counts by hand; they come from
   `scripts/known_good/update_module_latest_release.py`.
-- DO NOT edit the module table or fill in the OK/NOK column; it is set by hand
-  in the PR later.
+- DO NOT edit the report table (*Module versions*) by hand, neither in the
+  report file nor in the PR body. The table is produced only by
+  `scripts/known_good/update_module_latest_release.py --report`; whenever it
+  has to change (outdated values, new releases, a wrong value), fix the script
+  if needed and rerun it, then replace the whole table in the PR body with the
+  new output. Leave the OK/NOK column empty; it is set by hand in the PR later.
 - DO NOT build, run tests or other local checks, and DO NOT fix anything;
   only replace the versions (skill, 5).
 - DO NOT edit generated files by hand (`bazel_common/*.MODULE.bazel`,

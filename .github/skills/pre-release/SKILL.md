@@ -46,8 +46,10 @@ date; for a pinned hash the commit date.
 The report has a single table with every module. The columns are fixed:
 `Module | Group | Before | Now | Head | OK/NOK`. `Head` is the number of
 commits since the release, bold from 10 on, linked to the diff.
-**OK/NOK stays empty**; it is set by hand in the PR later. Do not edit the
-table rows by hand; change the script and rerun it.
+**OK/NOK stays empty**; it is set by hand in the PR later. The table is
+changed only by the script: never edit rows or values by hand. Whenever the
+table has to change, fix the script if needed, rerun it and replace the whole
+table in the PR body with the new output.
 
 ## 4. Commands
 
