@@ -1,0 +1,72 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# TEMPORARY - remove before merging #462. Publishes the platform run DLT trace from
+# this branch, as test_and_docs only gets its upload step once it is on main.
+name: Preview platform run DLT trace
+on:
+  push:
+    branches:
+      - feat/platform-run
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  platform_run_dlt:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          # Restore (never save) the disk cache of test_and_docs.yml.
+          disk-cache: Code Quality & Documentation
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: false
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute platform run test
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 --test_output=errors \
+            //platform_integration_tests/platform_run
+      - name: Collect platform run DLT trace
+        if: always()
+        run: |
+          outputs=bazel-testlogs/platform_integration_tests/platform_run/test.outputs/outputs.zip
+          if [ -f "$outputs" ]; then
+            unzip -o -q "$outputs" '*.dlt' -d platform-run-dlt || echo "::warning::No DLT trace in $outputs"
+          fi
+      - name: Upload platform run DLT trace
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: platform-run-dlt-${{ github.sha }}
+          path: platform-run-dlt/
+          retention-days: 7
+          if-no-files-found: warn
