@@ -105,20 +105,12 @@ jobs:
         # figures of the platform verification report.
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //platform_integration_tests:pit
-      - name: Collect platform run DLT trace
-        # Bazel zips undeclared test outputs; unpack so the artifact holds the .dlt directly.
-        if: always()
-        run: |
-          outputs=bazel-testlogs/platform_integration_tests/platform_run/platform_run/test.outputs/outputs.zip
-          if [ -f "$outputs" ]; then
-            unzip -o -q "$outputs" '*.dlt' -d platform-run-dlt || echo "::warning::No DLT trace in $outputs"
-          fi
       - name: Upload platform run DLT trace
         if: always()
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
         with:
           name: platform-run-dlt-${{ github.event.pull_request.head.sha || github.sha }}
-          path: platform-run-dlt/
+          path: bazel-testlogs/platform_integration_tests/platform_run/platform_run/test.outputs/platform_run.dlt
           retention-days: 7
           if-no-files-found: warn
       - name: Execute Module Integration Tests
