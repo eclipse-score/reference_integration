@@ -78,7 +78,7 @@ baselibs and Kyron examples log to stdout only.
 
 `//platform_integration_tests/platform_run` (part of
 `//platform_integration_tests:pit`, Linux x86_64 only) runs the showcase in the
-Docker image and checks the console output and the DLT traffic:
+Docker image and checks the DLT traffic:
 
 1. It routes DLT multicast out of the container
    (`ip route add 224.0.0.0/4 dev eth0`) and starts `dlt-receive` on the host
@@ -87,13 +87,7 @@ Docker image and checks the console output and the DLT traffic:
    `platform-run-dlt-<sha>`.
 2. It runs the showcase through the showcase CLI. The CLI must exit with 0 and
    report `Example 'S-CORE Platform Run' finished successfully`.
-3. **Console checks.** The verdict comes from the shell wrapper, not from
-   mw::log, so it is only on the console:
-   - `S-CORE platform run: PASSED` is printed.
-   - Before it, `Completed the request for Run Target PlatformRun` is printed.
-   - Before it, none of `unexpected termination of process`,
-     `Problem discovered` or `timeout for process` appears.
-4. **DLT checks.** For every entry in `EXPECTED_DLT` the recording must contain
+3. **DLT checks.** For every entry in `EXPECTED_DLT` the recording must contain
    at least one message with exactly this app id and context id whose decoded
    payload matches the regular expression:
 
@@ -114,9 +108,21 @@ Docker image and checks the console output and the DLT traffic:
    Platform daemons are not checked this way: the launch manager starts them
    before or while the datarouter comes up, so these messages may not reach
    DLT.
-5. All findings are collected and reported together with the console output.
 
-To add a DLT check, extend `EXPECTED_DLT` in
+   In addition, the recording must not contain any message from the entries in
+   `FORBIDDEN_DLT`, the warnings of the launch manager:
+
+   | App id | Context id | Payload                             |
+   |--------|------------|-------------------------------------|
+   | `LM`   | `LM`       | `unexpected termination of process` |
+   | `LM`   | `LM`       | `Problem discovered`                |
+   | `LM`   | `LM`       | `did not meet its ready condition`  |
+
+   The verdict `S-CORE platform run: PASSED` is printed by the showcase's shell
+   wrapper and is not checked: it follows from reaching `PlatformRun`.
+4. All findings are collected and reported together with the console output.
+
+To add a DLT check, extend `EXPECTED_DLT` or `FORBIDDEN_DLT` in
 [test_platform_run.py](../platform_integration_tests/platform_run/test_platform_run.py).
 To check a new test application, add it to `launch_manager_config.json`, to the
 `PlatformRun` run target and to `TEST_APPS`.

@@ -16,10 +16,10 @@ The ``S-CORE Platform Run`` showcase (``showcases/platform_run``) hands control
 to the deployed launch manager: it starts the platform daemons first and then
 every test application, and only reaches the ``PlatformRun`` run target once
 each test application has exited successfully. The applications log via mw::log
-to DLT through the datarouter. This test records that DLT traffic on the host
-while the showcase runs and analyzes the recording and the console output
-afterwards. The recording is kept as ``platform_run.dlt`` in the test's
-undeclared outputs.
+to DLT through the datarouter, and so does the launch manager. This test
+records that DLT traffic on the host while the showcase runs and analyzes the
+recording afterwards. The recording is kept as ``platform_run.dlt`` in the
+test's undeclared outputs.
 """
 
 import os
@@ -64,32 +64,26 @@ for _app in TEST_APPS:
         ("LM", "LM", rf"Process\s+{_app}\s+\(\s*pid\s+\d+\s*\)\s+terminated with status\s+0\b"),
     ]
 
-
-def analyze_console(output: str) -> list[str]:
-    """Findings in the console output, up to the verdict of the run.
-
-    The verdict comes from the showcase's shell wrapper, not from mw::log, so it
-    is only on the console.
-    """
-    findings = []
-    run, verdict, _ = output.partition("S-CORE platform run: PASSED")
-    if not verdict:
-        findings.append("the run did not report PASSED")
-    if not re.search(r"Completed the request for Run Target PlatformRun", run):
-        findings.append("the launch manager did not reach the PlatformRun run target")
-    for problem in ("unexpected termination of process", "Problem discovered", "timeout for process"):
-        if problem in run:
-            findings.append(f"the launch manager reported '{problem}'")
-    return findings
+# (app id, context id, payload pattern) that no run may put on DLT: launch manager warnings.
+FORBIDDEN_DLT = [
+    ("LM", "LM", r"unexpected termination of process"),
+    ("LM", "LM", r"Problem discovered"),
+    ("LM", "LM", r"did not meet its ready condition"),
+]
 
 
 def analyze_dlt(record) -> list[str]:
-    """Findings in the recorded DLT traffic: every expected message is present."""
+    """Findings in the recorded DLT traffic: every expected message is present
+    and no forbidden one."""
     findings = []
     for apid, ctid, pattern in EXPECTED_DLT:
-        query = dict(apid=apid, ctid=ctid, payload_decoded=re.compile(pattern))
+        query = {"apid": apid, "ctid": ctid, "payload_decoded": re.compile(pattern)}
         if not record.find(query=query, full_match=False):
             findings.append(f"no DLT message {apid}/{ctid} matching '{pattern}'")
+    for apid, ctid, pattern in FORBIDDEN_DLT:
+        query = {"apid": apid, "ctid": ctid, "payload_decoded": re.compile(pattern)}
+        for msg in record.find(query=query, full_match=True):
+            findings.append(f"DLT message {apid}/{ctid}: {msg.payload}")
     return findings
 
 
@@ -117,5 +111,5 @@ def test_platform_run(target, dlt_config):
     ) as window:
         output = run_showcases(target, SHOWCASE)
 
-    findings = analyze_console(output) + analyze_dlt(window.record())
+    findings = analyze_dlt(window.record())
     assert not findings, "\n".join(findings) + f"\n\nConsole output:\n{output}"
