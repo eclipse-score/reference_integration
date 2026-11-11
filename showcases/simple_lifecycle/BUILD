@@ -23,6 +23,10 @@ launch_manager_config(
 # The launch manager itself is part of the deployed platform
 # (//deploy/lifecycle), not of this showcase. What ships here are the
 # applications it supervises and the configuration that declares them.
+exports_files([
+    "lifecycle_signal.sh",
+])
+
 score_pkg_bundle(
     name = "simple_lifecycle",
     bins = [

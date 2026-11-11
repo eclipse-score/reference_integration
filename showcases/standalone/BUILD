@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -134,14 +135,17 @@ launch_manager_config(
     flatbuffer_out_dir = "etc",
 )
 
-# launch_manager, control_daemon, cpp/rust_supervised_app and lifecycle_signal.sh
-# are shipped by //showcases/simple_lifecycle into the shared /showcases/bin.
+# The launch manager, the lifecycle control client and the supervised apps are
+# built from @score_lifecycle. The signal helper and logging configuration are
+# taken directly from //showcases/simple_lifecycle.
 score_pkg_bundle(
     name = "lifecycle_run_target_recovery",
     bins = [
+        "@score_lifecycle//score/launch_manager",
         "@score_lifecycle//examples/c_supervised_app",
         "@score_lifecycle//examples/cpp_lifecycle_app",
         "@score_lifecycle//examples/control_application:lmcontrol",
+        "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = ["//showcases/standalone:lifecycle_run_target_recovery.score.json"],
     custom_layout = {
