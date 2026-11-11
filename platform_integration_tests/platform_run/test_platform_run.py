@@ -36,6 +36,19 @@ SHOWCASE = "S-CORE Platform Run"
 # Routes DLT multicast out of the container to the host-side dlt-receive.
 _MULTICAST_ROUTE_CMD = "ip route add 224.0.0.0/4 dev eth0 2>/dev/null || true"
 
+# Launch manager components (launch_manager_config.json) that must run to completion.
+TEST_APPS = [
+    "logging_app",
+    "dlt_generator",
+    "log_builtin",
+    "log_custom",
+    "log_cpp_init",
+    "kyron_safety_task",
+    "kyron_main_macro",
+    "com_api_example",
+    "platform_info_consumer",
+]
+
 # (app id, context id, payload pattern) that every run must put on DLT.
 EXPECTED_DLT = [
     ("DR", "DFLT", r"successfully completed initialization"),
@@ -44,6 +57,12 @@ EXPECTED_DLT = [
     ("PINC", "PINF", r"platform_info_consumer: S-CORE version check passed"),
     ("LM", "LM", r"Completed the request for Run Target\s+PlatformRun"),
 ]
+# The launch manager logs these at debug level, which showcases/platform_run/logging.json enables for DLT.
+for _app in TEST_APPS:
+    EXPECTED_DLT += [
+        ("LM", "LM", rf"Starting process\s*\(\s*{_app}\s*\)"),
+        ("LM", "LM", rf"Process\s+{_app}\s+\(\s*pid\s+\d+\s*\)\s+terminated with status\s+0\b"),
+    ]
 
 
 def analyze_console(output: str) -> list[str]:
