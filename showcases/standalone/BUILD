@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -101,5 +102,28 @@ score_pkg_bundle(
         "@score_baselibs//examples/log_cpp_init:log_cpp_init",
     ],
     config_data = ["//showcases/standalone:baselibs.score.json"],
+    package_dir = "standalone",
+)
+
+# Consumer of the platform info service deployed by //deploy/platform_info. It
+# brings no provider of its own, so it fails if the platform does not deploy one.
+cc_binary(
+    name = "platform_info_consumer",
+    srcs = ["platform_info_consumer.cpp"],
+    deps = [
+        "//deploy/platform_info:platform_info_interface",
+        "@score_baselibs//score/string_manipulation/arguments",
+        "@score_communication//score/mw/com",
+        "@score_logging//score/mw/log",
+    ],
+)
+
+score_pkg_bundle(
+    name = "platform_info",
+    bins = ["//showcases/standalone:platform_info_consumer"],
+    config_data = ["//showcases/standalone:platform_info.score.json"],
+    custom_layout = {
+        "//showcases/standalone/configs:platform_info_consumer.json": "etc/logging.json",
+    },
     package_dir = "standalone",
 )
