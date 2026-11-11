@@ -151,6 +151,9 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_run_target_recovery_configs": "etc/",
         "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        # The launch manager serves lm_control over mw::com and reads this
+        # from ./etc relative to its working directory; without it it aborts.
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
     package_dir = "standalone",
 )
