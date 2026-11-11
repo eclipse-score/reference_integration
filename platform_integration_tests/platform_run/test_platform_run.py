@@ -19,7 +19,9 @@ each test application has exited successfully. The applications log via mw::log
 to DLT through the datarouter, and so does the launch manager. This test
 records that DLT traffic on the host while the showcase runs and analyzes the
 recording afterwards. The recording is kept as ``platform_run.dlt`` in the
-test's undeclared outputs.
+test's undeclared outputs. Only the verdict of the run is taken from the
+console: the showcase's shell wrapper prints it, and a datarouter failure would
+not reach DLT.
 """
 
 import os
@@ -72,6 +74,16 @@ FORBIDDEN_DLT = [
 ]
 
 
+def analyze_verdict(output: str) -> list[str]:
+    """Findings in the console verdict: PASSED and no FAILED."""
+    # Anchored: the CLI also echoes the wrapper command, which contains the FAILED text.
+    findings = []
+    if not re.search(r"^S-CORE platform run: PASSED\s*$", output, re.MULTILINE):
+        findings.append("the run did not print 'S-CORE platform run: PASSED'")
+    findings += re.findall(r"^S-CORE platform run: FAILED.*$", output, re.MULTILINE)
+    return findings
+
+
 def analyze_dlt(record) -> list[str]:
     """Findings in the recorded DLT traffic: every expected message is present
     and no forbidden one."""
@@ -111,5 +123,5 @@ def test_platform_run(target, dlt_config):
     ) as window:
         output = run_showcases(target, SHOWCASE)
 
-    findings = analyze_dlt(window.record())
+    findings = analyze_verdict(output) + analyze_dlt(window.record())
     assert not findings, "\n".join(findings) + f"\n\nConsole output:\n{output}"
