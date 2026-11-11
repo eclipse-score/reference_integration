@@ -16,7 +16,6 @@ on:
     types: [submitted, edited, dismissed]
 jobs:
   check-approvals:
-    name: Verify Required Approvals
     if: startsWith(github.event.pull_request.base.ref, 'releases/')
     runs-on: ubuntu-24.04
     permissions:
