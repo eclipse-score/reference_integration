@@ -59,10 +59,7 @@ configuration via `MW_LOG_CONFIG_FILE`; the launch manager itself reads
 [platform_run/logging.json](platform_run/logging.json).
 
 The launch manager logs at debug level to DLT but only at info level to the
-console. Its debug messages report every process start and termination. DLT
-output of the launch manager needs
-[patches/lifecycle/004-launch-manager-dlt-logging.patch](../patches/lifecycle/004-launch-manager-dlt-logging.patch):
-without it, lifecycle links only the console backend of mw::log.
+console. Its debug messages report every process start and termination.
 
 | DLT app id | Process                  | Context ids                          |
 |------------|--------------------------|--------------------------------------|
