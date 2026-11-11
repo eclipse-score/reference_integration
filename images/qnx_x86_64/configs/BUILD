@@ -12,19 +12,7 @@
 # *******************************************************************************
 
 exports_files([
-    "startup.sh",
-    "network_setup.sh",
-    "network_setup_dhcp.sh",
-    "dhcpcd.conf",
     "pci_server.cfg",
     "pci_hw.cfg",
-    "qcrypto.conf",
-    "passwd",
-    "group",
-    "sshd_config",
-    "ssh_host_rsa_key",
-    "ssh_host_rsa_key.pub",
-    "hostname",
-    "profile",
-    "network_capture.sh",
+    "startup-hw.sh",
 ])

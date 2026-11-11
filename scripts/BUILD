@@ -11,12 +11,32 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_python//python:defs.bzl", "py_library")
+load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 py_library(
     name = "quality_runners",
     srcs = ["quality_runners.py"],
+    imports = ["."],
     visibility = ["//visibility:public"],
     deps = [
         "//scripts/known_good",
     ],
+)
+
+py_library(
+    name = "module_tests",
+    srcs = [
+        "module_tests.py",
+        "quality_runners.py",
+    ],
+    imports = ["."],
+    visibility = ["//visibility:public"],
+    deps = ["//scripts/known_good"],
+)
+
+score_py_pytest(
+    name = "module_tests_tests",
+    srcs = ["tests/test_module_tests.py"],
+    pytest_config = "//:pyproject.toml",
+    deps = [":module_tests"],
 )

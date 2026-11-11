@@ -12,6 +12,8 @@
 # *******************************************************************************
 name: AutoSD - Build & Integration Test
 on:
+  release:
+    types: [created]
   pull_request:
     types: [opened, reopened, synchronize]
   merge_group:
@@ -41,7 +43,7 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -111,7 +113,65 @@ jobs:
           sshcmd 'bootc switch --apply  --transport oci-archive /tmp/score_showcases_autosd_latest.oci' || true
           sleep 5
           sshcmd 'bootc status'
-          sshcmd '/showcases/bin/cli --examples all'
+          # Workaround: config_daemon runs forever, so run all showcases except it
+          # (CLI reads *.score.json from SCORE_CLI_INIT_DIR). Drop once the daemon exits on its own.
+          sshcmd 'cp -a /showcases /tmp/showcases && grep -rl --include="*.score.json" config_daemon /tmp/showcases | xargs rm -f'
+          sshcmd 'SCORE_CLI_INIT_DIR=/tmp/showcases timeout 900 /tmp/showcases/bin/cli --examples all'
+          sshcmd 'rm -f /tmp/score_showcases_autosd_latest.oci'
         working-directory: ./images/autosd
         env:
           SSH_PASSWORD: password
+      - name: Archive Modified Image
+        run: |
+          xz disk.qcow2
+          mv disk.qcow2.xz eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+        working-directory: ./images/autosd
+      - name: Store Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+          path: images/autosd/eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+      - name: Package platform and showcases
+        if: github.event_name == 'release'
+        run: |
+          bazel build --lockfile_mode=error --config autosd-${{ matrix.platform }} //deploy:platform_tar //showcases:showcases_pkg_tar
+          gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-autosd-${{ matrix.platform }}.tar.gz
+          gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-autosd-${{ matrix.platform }}.tar.gz
+      - name: Store platform and showcases packages
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: score-release-autosd-${{ matrix.platform }}
+          path: |
+            score-platform-autosd-${{ matrix.platform }}.tar.gz
+            score-showcases-autosd-${{ matrix.platform }}.tar.gz
+  release:
+    name: Publish image to release
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      RELEASE_NAME: ${{ github.event.release.tag_name }}
+    steps:
+      - name: Download archived image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: eclipse-autosd-bootc-qemu-x86_64.qcow2.xz
+          path: ./release-assets
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@v4
+        with:
+          name: score-release-autosd-x86_64
+          path: ./release-assets
+      - name: Upload image to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload "$RELEASE_NAME" \
+            ./release-assets/eclipse-autosd-bootc-qemu-x86_64.qcow2.xz \
+            ./release-assets/score-platform-autosd-x86_64.tar.gz \
+            ./release-assets/score-showcases-autosd-x86_64.tar.gz \
+            --clobber

@@ -17,69 +17,74 @@
 bazel_dep(name = "score_crates")
 git_override(
     module_name = "score_crates",
-    commit = "4656dda8f04a3d88c8089f63111195840cfbd9e3",
+    commit = "ee5f1a4f02dcfaa01d7a5e23ec68fd51590a66f8",
     remote = "https://github.com/eclipse-score/score-crates.git",
 )
 
 bazel_dep(name = "score_itf")
-git_override(
+single_version_override(
     module_name = "score_itf",
-    commit = "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06",
-    remote = "https://github.com/eclipse-score/itf.git",
+    version = "0.6.0",
+)
+
+bazel_dep(name = "score_devcontainer")
+single_version_override(
+    module_name = "score_devcontainer",
+    version = "1.11.4",
+)
+
+bazel_dep(name = "score_tools")
+git_override(
+    module_name = "score_tools",
+    commit = "3b99e9da6fe98e7df2c2b3616ad4d1aad318b72c",
+    remote = "https://github.com/eclipse-score/tools.git",
 )
 
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
-    commit = "4736b5655f3a73dd353da1bdbeced5febd669664",
-    patch_strip = 1,
-    patches = [
-        "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch",
-    ],
+    commit = "a3eed5852f8addbbbf276aaae262ba1313141ef5",
     remote = "https://github.com/eclipse-score/tooling.git",
 )
 
 bazel_dep(name = "score_platform")
 git_override(
     module_name = "score_platform",
-    commit = "6d65a262c2329328cb9cbdd276bb143b417c54a4",
-    patch_strip = 1,
-    patches = [
-        "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch",
-    ],
+    commit = "32759e0a51e02ed87311e12d0f8125e5f8cb4de0",
     remote = "https://github.com/eclipse-score/score.git",
 )
 
 bazel_dep(name = "score_bazel_platforms")
 git_override(
     module_name = "score_bazel_platforms",
-    commit = "607672cdf2f05f21af7113dab0849726dd59bf86",
+    commit = "081dcf7bdbc94d05bbe354291e13a775dbf8f3e6",
     remote = "https://github.com/eclipse-score/bazel_platforms.git",
 )
 
 bazel_dep(name = "score_test_scenarios")
 git_override(
     module_name = "score_test_scenarios",
-    commit = "fec712d490ff5d46fae91332bafac4777b300026",
+    commit = "d0aab76ac6e64fc78f867a196531fbafd8924948",
     remote = "https://github.com/eclipse-score/testing_tools.git",
 )
 
 bazel_dep(name = "score_docs_as_code")
-single_version_override(
+git_override(
     module_name = "score_docs_as_code",
-    version = "8.3.0",
+    commit = "eed72238afe35a3e9191a7594847eb28944bcd01",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")
 git_override(
     module_name = "score_process_description",
-    commit = "98d1d5f42dad412a09a888ea25e59c62fa6371ce",
+    commit = "1861e884b10c921e1427787c3ab1d99ed0bed7c0",
     remote = "https://github.com/eclipse-score/process_description.git",
 )
 
 bazel_dep(name = "score_bazel_cpp_toolchains")
 git_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "bd12c5344053f842fae4623dada5716dfb43e61d",
+    commit = "3dd3caa94354e44310172607d5e9223cf914ea76",
     remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
 )

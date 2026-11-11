@@ -18,12 +18,12 @@ on:
     types: [checks_requested]
 jobs:
   copyright-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       # Runs the `copyright` hook from .pre-commit-config.yaml (cr_checker from

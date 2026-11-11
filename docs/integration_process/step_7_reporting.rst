@@ -121,13 +121,49 @@ measured. Build a single module's report with:
 
    bazel run //rust_coverage:rust_coverage_score_my_module
 
+Component coverage in the documentation
+---------------------------------------
+
+``scripts/module_tests.py`` uses ``--config=llvm_cov`` and exports reports through
+``@score_coverage//:generate_coverage_html`` for the integrated Baselibs,
+Persistency, Logging, Kyron, Lifecycle and Time versions. Communication and Config
+Management run their unit tests without coverage until a version using
+``coverage_tool`` is integrated; the
+activation points are commented in ``COVERAGE_MODULES`` in the script.
+
+The export uses ``COVERAGE_THRESHOLD=0`` to collect evidence without adding a
+percentage gate. It contains plain LCOV at ``coverage/coverage_report.dat`` and
+the detailed HTML report. Source paths are translated to the reference
+integration's repository identities before upload; for example,
+``score/foo.cpp`` in Baselibs becomes
+``external/score_baselibs+/score/foo.cpp``.
+
+The ``report`` command combines these files into
+``coverage-report/coverage_report.dat``, which docs-as-code reads when the
+published documentation is built. Component coverage uses only the
+``primary_need_id`` and ``code_targets`` already exported by the pinned modules.
+Missing ownership or measurements remain unavailable; the integration does not
+add component metadata through patches.
+
+To include coverage in a local documentation build:
+
+.. code-block:: bash
+
+   python3 scripts/module_tests.py run score_persistency
+   python3 scripts/module_tests.py report _module_tests/reports
+   bazel run //:docs_shim
+
 Verification & status reports
 -----------------------------
 
 The consolidated reports live under
-`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_ and the roadmap /
-status trackers under
-`docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_ (e.g.
-``overall_status.rst``). Add your module to the relevant tables/rows so it shows
-up in the platform verification report and the feature/process status overview.
+`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_, the roadmap under
+`docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_
+and the release-wide progress overview next to the release notes under
+`docs/s_core_v_1/releases <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/releases>`_.
+Your module appears in the platform and module
+verification reports as soon as its documentation is part of the build; add it
+to ``scripts/progress_overview/collect_metrics.py`` to give it a colour slot in
+the per-release progress charts of
+``docs/s_core_v_1/releases/progress_overview.rst``.
 The full catalogue of reports is under :ref:`reports`.

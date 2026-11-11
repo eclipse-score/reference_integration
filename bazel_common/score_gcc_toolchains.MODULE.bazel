@@ -13,16 +13,9 @@
 
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 gcc.toolchain(
-    name = "score_gcc_x86_64_toolchain",
-    target_cpu = "x86_64",
-    target_os = "linux",
-    use_default_package = True,
-    version = "12.2.0",
-)
-gcc.toolchain(
     name = "score_ebclfsa_toolchain",
     runtime_ecosystem = "ebclfsa",
-    sdk_version = "2.0.0-beta2",
+    sdk_version = "2.0.0-beta3",
     target_cpu = "aarch64",
     target_os = "linux",
     use_default_package = True,
@@ -36,9 +29,18 @@ gcc.toolchain(
     target_os = "linux",
     use_default_package = True,
 )
+
+## Vanilla Linux aarch64 (glibc) toolchain, e.g. for Raspberry Pi OS
+gcc.toolchain(
+    name = "score_gcc_aarch64_toolchain",
+    target_cpu = "aarch64",
+    target_os = "linux",
+    use_default_package = True,
+    version = "12.2.0",
+)
 use_repo(
     gcc,
     "score_autosd10_x86_64_toolchain",
     "score_ebclfsa_toolchain",
-    "score_gcc_x86_64_toolchain",
+    "score_gcc_aarch64_toolchain",
 )

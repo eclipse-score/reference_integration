@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 sh_binary(
@@ -30,30 +29,12 @@ sh_binary(
     },
 )
 
-pkg_tar(
-    name = "datarouter_bin_tar",
-    srcs = ["@score_logging//score/datarouter"],
-    mode = "0755",
-    package_dir = "/usr/bin/datarouter",
-)
-
-pkg_tar(
-    name = "datarouter_etc_tar",
-    srcs = [
-        "//feature_integration_tests/configs/datarouter:etc/log-channels.json",
-        "//feature_integration_tests/configs/datarouter:etc/logging.json",
-    ],
-    mode = "0644",
-    package_dir = "/usr/bin/datarouter/etc",
-)
-
 oci_image(
     name = "image",
     base = "@ubuntu_22_04_linux_amd64",
     tars = [
+        "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
-        ":datarouter_bin_tar",
-        ":datarouter_etc_tar",
     ],
 )
 
@@ -63,5 +44,6 @@ oci_load(
     repo_tags = ["score_showcases:latest"],
     visibility = [
         "//feature_integration_tests/itf:__pkg__",
+        "//platform_integration_tests:__subpackages__",
     ],
 )

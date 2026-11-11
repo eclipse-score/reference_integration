@@ -48,6 +48,20 @@ bazel run //showcases/cli:cli -- --help
 
 See [showcases/cli/README.md](showcases/cli/README.md) for CLI configuration and examples.
 
+## Run showcases on Raspberry Pi (Linux aarch64)
+
+Every release carries `score-platform-linux-aarch64.tar.gz` and
+`score-showcases-linux-aarch64.tar.gz`. Install them on a Raspberry Pi running
+Raspberry Pi OS Lite (64-bit) and run `sudo /showcases/bin/cli --examples all`;
+see [deploy/README.md](deploy/README.md#linux-aarch64-eg-raspberry-pi-4). To
+build them yourself on an x86_64 Ubuntu host (iceoryx2's bindgen step reads
+the aarch64 glibc headers from the host):
+
+```bash
+sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+bazel build --config=linux-aarch64 //deploy:platform_tar //showcases:showcases_pkg_tar
+```
+
 ## Build and deploy showcases on Raspberry Pi (QNX aarch64)
 
 The `images/qnx_aarch64` image packages all S-CORE showcases into a bootable QNX 8.0 IFS (Image File System) for AArch64 targets. It can be run in QEMU for local development and testing, or deployed to a Raspberry Pi 4/5 for real hardware validation.
@@ -178,21 +192,21 @@ General steps to create a bootable QNX SD card for Raspberry Pi:
    sync && umount /media/$USER/boot
    ```
 
-5. **Insert the SD card** into the RPi and power it on. QNX boots and starts all services defined in [`images/qnx_aarch64/configs/startup.sh`](images/qnx_aarch64/configs/startup.sh).
+5. **Insert the SD card** into the RPi and power it on. QNX boots and starts all services defined in [`images/qnx_common/configs/startup.sh`](images/qnx_common/configs/startup.sh).
 
 ### Deploy and run showcases on Raspberry Pi
 
 Once QNX is running on the RPi:
 
-1. **Find the RPi IP address** — the system acquires an address via DHCP on the `vtnet0` interface at startup (configured in [`configs/network_setup_dhcp.sh`](images/qnx_aarch64/configs/network_setup_dhcp.sh)). Check your router's DHCP table or connect a serial console to read the address from the boot log.
+1. **Find the RPi IP address** — the system acquires an address via DHCP on the `vtnet0` interface at startup (configured in [`configs/network_setup_dhcp.sh`](images/qnx_common/configs/network_setup_dhcp.sh)). Check your router's DHCP table or connect a serial console to read the address from the boot log.
 
-2. **SSH into the RPi** (root, no password — see [`configs/sshd_config`](images/qnx_aarch64/configs/sshd_config)):
+2. **SSH into the RPi** (root, no password — see [`configs/sshd_config`](images/qnx_common/configs/sshd_config)):
 
    ```bash
    ssh root@<RPi_IP>
    ```
 
-3. **Showcases are pre-loaded** in `/showcases/bin/`. The interactive CLI is started automatically on boot (see [`configs/startup.sh`](images/qnx_aarch64/configs/startup.sh)). Re-launch it at any time:
+3. **Showcases are pre-loaded** in `/showcases/bin/`. The interactive CLI is started automatically on boot (see [`configs/startup.sh`](images/qnx_common/configs/startup.sh)). Re-launch it at any time:
 
    ```bash
    /showcases/bin/cli
@@ -300,6 +314,7 @@ Integration and deployment platforms for S-CORE:
 - **[Elektrobit corbos Linux for Safety Applications (aarch64)](images/ebclfsa_aarch64/README.md)** — Safety-critical automotive Linux
 - **Red Hat AutoSD (x86_64)** — Automotive system development
 - **Linux x86_64** — Standard Linux development and testing (Docker-based)
+- **Linux aarch64** — Vanilla Linux with glibc 2.31 and libstdc++ from GCC 12 or newer, e.g. Raspberry Pi OS Lite (64-bit, Bookworm) on a Raspberry Pi 4; see [Run showcases on Raspberry Pi (Linux aarch64)](#run-showcases-on-raspberry-pi-linux-aarch64)
 
 ## Multi-Module Development Workspace
 
