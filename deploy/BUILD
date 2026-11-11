@@ -30,6 +30,8 @@ pkg_filegroup(
         "//deploy/lifecycle:launch_manager_bin",
         "//deploy/logging:datarouter_bin",
         "//deploy/logging:datarouter_configs",
+        "//deploy/platform_info:platform_info_service_bin",
+        "//deploy/platform_info:platform_info_service_configs",
     ],
     visibility = ["//visibility:public"],
 )

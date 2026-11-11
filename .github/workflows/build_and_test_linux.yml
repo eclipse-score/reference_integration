@@ -51,6 +51,9 @@ jobs:
           bazel build --lockfile_mode=error --config=linux-x86_64 --keep_going \
             //images/linux_x86_64:image \
             //:sbom
+      - name: Unit tests
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 //deploy/platform_info:platform_info_test
       - name: Integration tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
