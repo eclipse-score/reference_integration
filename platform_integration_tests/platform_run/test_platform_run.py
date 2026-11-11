@@ -41,19 +41,16 @@ EXPECTED_DLT = [
     ("DR", "DFLT", r"successfully completed initialization"),
     ("EXA", "DFLT", r"Logging Application DoLogging"),
     ("LGGG", "LOGG", r"DLT generator finished"),
-]
-
-# Verdicts of test applications that only print to the console.
-EXPECTED_CONSOLE = [
-    "platform_info_consumer: S-CORE version check passed",
+    ("PINC", "PINF", r"platform_info_consumer: S-CORE version check passed"),
+    ("LM", "LM", r"Completed the request for Run Target\s+PlatformRun"),
 ]
 
 
 def analyze_console(output: str) -> list[str]:
     """Findings in the console output, up to the verdict of the run.
 
-    The launch manager starts before the datarouter, so its own messages are
-    only on the console, not on DLT.
+    The verdict comes from the showcase's shell wrapper, not from mw::log, so it
+    is only on the console.
     """
     findings = []
     run, verdict, _ = output.partition("S-CORE platform run: PASSED")
@@ -64,9 +61,6 @@ def analyze_console(output: str) -> list[str]:
     for problem in ("unexpected termination of process", "Problem discovered", "timeout for process"):
         if problem in run:
             findings.append(f"the launch manager reported '{problem}'")
-    for expected in EXPECTED_CONSOLE:
-        if expected not in run:
-            findings.append(f"missing on the console: '{expected}'")
     return findings
 
 
