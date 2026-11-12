@@ -105,6 +105,14 @@ jobs:
         # figures of the platform verification report.
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //platform_integration_tests:pit
+      - name: Upload platform run DLT trace
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: platform-run-dlt-${{ github.event.pull_request.head.sha || github.sha }}
+          path: bazel-testlogs/platform_integration_tests/platform_run/platform_run/test.outputs/platform_run.dlt
+          retention-days: 7
+          if-no-files-found: warn
       - name: Execute Module Integration Tests
         # Driven from quality_runners.py (checked out from the PR head) rather
         # than hardcoded here: this job runs via pull_request_target, which reads
