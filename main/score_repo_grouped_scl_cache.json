@@ -3316,15 +3316,24 @@
         }
       },
       {
-        "need": "stkh_req__time__vehicle_time_api",
+        "need": "stkh_req__execution_model__processes",
         "links": {
           "CodeLinks": [],
           "TestLinks": [
             {
-              "name": "test_vehicle_time_showcase",
-              "file": "platform_integration_tests/time/test_vehicle_time_showcase.py",
+              "name": "test_platform_run",
+              "file": "platform_integration_tests/platform_run/test_platform_run.py",
+              "line": 102,
+              "need": "stkh_req__execution_model__processes",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "test_async_runtime_showcase",
+              "file": "platform_integration_tests/kyron/test_async_runtime_showcase.py",
               "line": 24,
-              "need": "stkh_req__time__vehicle_time_api",
+              "need": "stkh_req__execution_model__processes",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
@@ -3338,10 +3347,36 @@
           "CodeLinks": [],
           "TestLinks": [
             {
+              "name": "test_platform_run",
+              "file": "platform_integration_tests/platform_run/test_platform_run.py",
+              "line": 102,
+              "need": "stkh_req__dev_experience__logging_support",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
               "name": "test_logging_showcase",
               "file": "platform_integration_tests/logging/test_logging_showcase.py",
               "line": 24,
               "need": "stkh_req__dev_experience__logging_support",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "stkh_req__time__vehicle_time_api",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "test_vehicle_time_showcase",
+              "file": "platform_integration_tests/time/test_vehicle_time_showcase.py",
+              "line": 24,
+              "need": "stkh_req__time__vehicle_time_api",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
@@ -3385,23 +3420,6 @@
               "file": "platform_integration_tests/baselibs/test_baselibs_showcase.py",
               "line": 37,
               "need": "feat_req__baselibs__multi_language_apis",
-              "verify_type": "partially",
-              "result": "passed",
-              "result_text": ""
-            }
-          ]
-        }
-      },
-      {
-        "need": "stkh_req__execution_model__processes",
-        "links": {
-          "CodeLinks": [],
-          "TestLinks": [
-            {
-              "name": "test_async_runtime_showcase",
-              "file": "platform_integration_tests/kyron/test_async_runtime_showcase.py",
-              "line": 24,
-              "need": "stkh_req__execution_model__processes",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
