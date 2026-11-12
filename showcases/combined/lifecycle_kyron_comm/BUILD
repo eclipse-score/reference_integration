@@ -10,27 +10,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
-
-pkg_files(
-    name = "lifecycle_kyron_comm_data_pkg_files",
-    srcs = [
-        ":lifecycle_kyron_comm_configs",
-        "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm.score.json",
-        "//showcases/combined/lifecycle_kyron_comm/configs:logging.json",
-        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json",
-    ],
-    attributes = pkg_attributes(mode = "0755"),
-    renames = {
-        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "data/lifecycle_kyron_comm/etc/mw_com_config.json",
-        "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm.score.json": "configs/lifecycle_kyron_comm.score.json",
-        ":lifecycle_kyron_comm_configs": "data/lifecycle_kyron_comm/etc/",
-        "//showcases/combined/lifecycle_kyron_comm/configs:logging.json": "data/lifecycle_kyron_comm/etc/logging.json",
-    },
-    visibility = ["//showcases:__pkg__"],
-)
 
 launch_manager_config(
     name = "lifecycle_kyron_comm_configs",
@@ -40,13 +21,7 @@ launch_manager_config(
 
 score_pkg_bundle(
     name = "lifecycle_kyron_comm",
-    bins = [
-        "@score_lifecycle//score/launch_manager:launch_manager",
-        "@score_lifecycle//examples/control_application:control_daemon",
-        "@score_kyron//examples:safety_task",
-        "@score_communication//score/mw/com/example/com-api-example:com-api-example",
-        "//showcases/simple_lifecycle:lifecycle_signal.sh",
-    ],
+    bins = [],
     config_data = [
         "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm.score.json",
     ],

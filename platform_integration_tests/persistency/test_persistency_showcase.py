@@ -38,6 +38,7 @@ def test_persistency_kvs_showcase(target):
     data = root.get("v", {})
     assert set(data) == _EXPECTED_KEYS, f"Unexpected keys in KVS data file: {set(data)}"
     assert data.get("number", {}).get("t") == "f64", f"'number' has wrong type tag: {data.get('number')}"
+    assert data.get("number", {}).get("v") == 123.0, f"'number' has wrong value: {data.get('number')}"
 
     exit_code, out = target.execute("/showcases/bin/kvs_tool -d /tmp -o getkey -k number")
     out = out.decode(errors="replace")
