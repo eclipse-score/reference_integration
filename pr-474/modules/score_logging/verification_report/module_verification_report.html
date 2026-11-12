@@ -580,7 +580,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-bedd1788">
+<div class="need_container docutils container" id="SNCB-5b9962f1">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_mod_ver_report table" id="mod_vrep__logging__report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -648,10 +648,10 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
 
-/* All bars of a safety class are one figure; every figure has the same
-   width, so the bars of all classes line up on one shared axis. */
+/* All bars of a safety class are one figure, sized for one half of the
+   ASIL B | QM pair; the cap keeps single charts at the same scale. */
 img.score-report-bars {
-    display: block; width: 100%; max-width: 46em; height: auto;
+    display: block; width: 100%; max-width: 32em; height: auto;
     margin: 0 0 0.6em 0;
 }
 
@@ -670,40 +670,23 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
     color: #6c757d; font-style: italic;
 }
 
-.chart-legend { display: flex; flex-wrap: wrap; gap: 1.2em 2.5em; }
-.chart-legend-group {
-    display: flex; flex-direction: column; gap: 0.3em;
-    flex: 1 1 20em; font-size: 0.9em;
+/* One-line colour legend above every chart pair; hover explains a colour. */
+.chart-legend {
+    display: flex; flex-wrap: wrap; gap: 0.3em 1.6em;
+    margin: 0.2em 0 0.4em 0; font-size: 0.85em;
 }
+.chart-legend-group {
+    display: inline-flex; flex-wrap: wrap; align-items: center;
+    gap: 0.2em 0.8em;
+}
+.chart-legend-group > span[title] { cursor: help; }
 .chart-legend-head { font-weight: 600; }
 .chart-legend-dot {
     display: inline-block; width: 0.8em; height: 0.8em;
-    margin-right: 0.5em; border-radius: 50%;
+    margin-right: 0.35em; border-radius: 50%; vertical-align: -0.05em;
     border: 1px solid rgba(0, 0, 0, 0.25);
 }
-</style><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in" open="open">
-<summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text">Legend — status values and chart colours</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<div class="chart-legend">
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Status — ASIL B</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected</span>
-    <span><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
-  </div>
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Status — QM</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (<code>valid_inspected</code> counts here too)</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
-  </div>
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Test coverage — both classes</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span>fully covered — at least one test fully verifies the need</span>
-    <span><span class="chart-legend-dot" style="background: #f0a500;"></span>partially covered — only partially verifying tests</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered — no verifying test at all</span>
-  </div>
-</div></div>
-</details><section id="components">
+</style><section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Link to this heading">#</a></h2>
 <section id="component-overview">
 <h3>Component Overview<a class="headerlink" href="#component-overview" title="Link to this heading">#</a></h3>
@@ -742,15 +725,31 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 <span id="comp-datarouter"></span><h3>Datarouter<a class="headerlink" href="#datarouter" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="component-requirements-statistics">
 <h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
-<div class="empty-pie">no ASIL B requirements</div><p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
+<div class="empty-pie">no ASIL B requirements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <img alt="Datarouter Requirements (QM) — Status: valid 9, invalid 0; Test Coverage: fully covered 4, partially covered 2, not covered 3" class="score-report-bars" src="../../../_images/score_report_bars_1f23c15690.svg" />
+</div>
+</div>
+</div>
 </section>
 <section id="component-architecture-statistics">
 <h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
-<div class="empty-pie">no ASIL B architecture elements</div><p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
+<div class="empty-pie">no ASIL B architecture elements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
+<div class="empty-pie">no QM architecture elements</div></div>
+</div>
+</div>
+</section>
 <section id="requirements-traceability">
 <h4>Requirements Traceability<a class="headerlink" href="#requirements-traceability" title="Link to this heading">#</a></h4>
 <p>The following table lists all requirements of this component together with their
@@ -981,17 +980,33 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-mw-log-backend"></span><h3>mw::log Backend<a class="headerlink" href="#mw-log-backend" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id1">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <img alt="mw::log Backend Requirements (ASIL B) — Status: valid_inspected 0, valid 9, invalid 0; Test Coverage: fully covered 0, partially covered 9, not covered 0" class="score-report-bars" src="../../../_images/score_report_bars_44799c12f3.svg" />
+</div>
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <img alt="mw::log Backend Requirements (QM) — Status: valid 6, invalid 0; Test Coverage: fully covered 4, partially covered 1, not covered 1" class="score-report-bars" src="../../../_images/score_report_bars_853f05c201.svg" />
+</div>
+</div>
+</div>
 </section>
 <section id="id2">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <img alt="mw::log Backend Architecture Elements (ASIL B) — Status: valid_inspected 0, valid 1, invalid 0; Test Coverage: fully covered 0, partially covered 0, not covered 1" class="score-report-bars" src="../../../_images/score_report_bars_33226eaa16.svg" />
+</div>
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
+<div class="empty-pie">no QM architecture elements</div></div>
+</div>
+</div>
+</section>
 <section id="id3">
 <h4>Requirements Traceability<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <p>The following table lists all requirements of this component together with their
