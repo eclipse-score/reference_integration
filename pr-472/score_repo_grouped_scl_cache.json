@@ -3316,15 +3316,24 @@
         }
       },
       {
-        "need": "stkh_req__time__vehicle_time_api",
+        "need": "stkh_req__execution_model__processes",
         "links": {
           "CodeLinks": [],
           "TestLinks": [
             {
-              "name": "test_vehicle_time_showcase",
-              "file": "platform_integration_tests/time/test_vehicle_time_showcase.py",
+              "name": "test_platform_run",
+              "file": "platform_integration_tests/platform_run/test_platform_run.py",
+              "line": 102,
+              "need": "stkh_req__execution_model__processes",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "test_async_runtime_showcase",
+              "file": "platform_integration_tests/kyron/test_async_runtime_showcase.py",
               "line": 24,
-              "need": "stkh_req__time__vehicle_time_api",
+              "need": "stkh_req__execution_model__processes",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
@@ -3338,10 +3347,36 @@
           "CodeLinks": [],
           "TestLinks": [
             {
+              "name": "test_platform_run",
+              "file": "platform_integration_tests/platform_run/test_platform_run.py",
+              "line": 102,
+              "need": "stkh_req__dev_experience__logging_support",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
               "name": "test_logging_showcase",
               "file": "platform_integration_tests/logging/test_logging_showcase.py",
               "line": 24,
               "need": "stkh_req__dev_experience__logging_support",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "stkh_req__time__vehicle_time_api",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "test_vehicle_time_showcase",
+              "file": "platform_integration_tests/time/test_vehicle_time_showcase.py",
+              "line": 24,
+              "need": "stkh_req__time__vehicle_time_api",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
@@ -3385,23 +3420,6 @@
               "file": "platform_integration_tests/baselibs/test_baselibs_showcase.py",
               "line": 37,
               "need": "feat_req__baselibs__multi_language_apis",
-              "verify_type": "partially",
-              "result": "passed",
-              "result_text": ""
-            }
-          ]
-        }
-      },
-      {
-        "need": "stkh_req__execution_model__processes",
-        "links": {
-          "CodeLinks": [],
-          "TestLinks": [
-            {
-              "name": "test_async_runtime_showcase",
-              "file": "platform_integration_tests/kyron/test_async_runtime_showcase.py",
-              "line": 24,
-              "need": "stkh_req__execution_model__processes",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
@@ -5229,6 +5247,111 @@
               "file": "feature_integration_tests/test_cases/tests/persistency/test_multiple_kvs_per_app.py",
               "line": 96,
               "need": "feat_req__persistency__multiple_kvs",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "feat_req__time__abs_base_api",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSystemClockNow__test_returns_success[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 58,
+              "need": "feat_req__time__abs_base_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSystemClockNow__test_reading_logged[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 61,
+              "need": "feat_req__time__abs_base_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "feat_req__time__monotonic_clock_api",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSteadyClockNow__test_returns_success[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 85,
+              "need": "feat_req__time__monotonic_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSteadyClockNow__test_readings_monotonic[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 88,
+              "need": "feat_req__time__monotonic_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSteadyClockProgression__test_returns_success[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 150,
+              "need": "feat_req__time__monotonic_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSteadyClockProgression__test_readings_monotonic[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 153,
+              "need": "feat_req__time__monotonic_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSteadyClockProgression__test_clock_progressed_during_sleep[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 159,
+              "need": "feat_req__time__monotonic_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "feat_req__time__high_res_clock_api",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestHighResSteadyClockNow__test_returns_success[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 113,
+              "need": "feat_req__time__high_res_clock_api",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestHighResSteadyClockNow__test_readings_monotonic[cpp]",
+              "file": "feature_integration_tests/test_cases/tests/time/test_clock_now.py",
+              "line": 116,
+              "need": "feat_req__time__high_res_clock_api",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
