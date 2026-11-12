@@ -17,7 +17,7 @@ import json
 from attribute_plugin import add_test_properties
 from showcase_runner import run_showcases
 
-_KVS_FILE = "/tmp/kvs_0_0.json"
+_KVS_FILE = "/data/kvs_0_0.json"
 _EXPECTED_KEYS = {"number", "bool", "string", "null", "array", "object"}
 
 
@@ -40,7 +40,7 @@ def test_persistency_kvs_showcase(target):
     assert data.get("number", {}).get("t") == "f64", f"'number' has wrong type tag: {data.get('number')}"
     assert data.get("number", {}).get("v") == 123.0, f"'number' has wrong value: {data.get('number')}"
 
-    exit_code, out = target.execute("/showcases/bin/kvs_tool -d /tmp -o getkey -k number")
+    exit_code, out = target.execute("/showcases/bin/kvs_tool -d /data -o getkey -k number")
     out = out.decode(errors="replace")
     assert exit_code == 0, f"kvs_tool getkey failed:\n{out}"
     assert "Key 'number' exists!" in out, f"getkey did not confirm key presence:\n{out}"
