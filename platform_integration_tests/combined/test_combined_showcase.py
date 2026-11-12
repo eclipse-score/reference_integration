@@ -34,7 +34,7 @@ def test_lifecycle_comm_showcase(target):
     score_lifecycle and score_communication working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Communication Example")
-    assert "to State MainPG/Startup" in output
+    assert "Run Target Startup" in output
     assert "activating recovery state" not in output
     assert "samples received" in output
 
@@ -52,7 +52,7 @@ def test_lifecycle_kyron_showcase(target):
     and score_kyron working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Kyron Async Showcase")
-    assert "to State MainPG/Startup" in output
+    assert "Run Target Startup" in output
     assert "activating recovery state" not in output
     assert "Program finished running." in output
 
@@ -71,7 +71,7 @@ def test_lifecycle_time_showcase(target):
     score_lifecycle and score_time working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Time Reporting Showcase")
-    assert "to State MainPG/Startup" in output
+    assert "Run Target Startup" in output
     assert "activating recovery state" not in output
     assert "vehicle=" in output
 
@@ -107,7 +107,7 @@ def test_lifecycle_time_comm_showcase(target):
     working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Time and Communication Showcase")
-    assert "to State MainPG/Startup" in output
+    assert "Run Target Startup" in output
     assert "activating recovery state" not in output
     assert "vehicle=" in output
     assert "samples received" in output
@@ -127,7 +127,7 @@ def test_lifecycle_kyron_comm_showcase(target):
     working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Kyron and Communication Showcase")
-    assert "to State MainPG/Startup" in output
+    assert "Run Target Startup" in output
     assert "activating recovery state" not in output
     assert "Program finished running." in output
     assert "samples received" in output

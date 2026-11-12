@@ -28,6 +28,7 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_time_configs": "etc/",
         "//showcases/combined/lifecycle_time/configs:logging.json": "etc/logging.json",
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
     package_dir = "lifecycle_time",
 )
