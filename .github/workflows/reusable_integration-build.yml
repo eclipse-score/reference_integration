@@ -102,7 +102,7 @@ jobs:
           ref: ${{ inputs.target_branch || 'main' }}
           token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.15.0
+        uses: bazel-contrib/setup-bazel@0.19.1
         with:
           # Avoid downloading Bazel every time.
           bazelisk-cache: true
