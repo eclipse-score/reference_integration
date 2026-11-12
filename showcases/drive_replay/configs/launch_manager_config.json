@@ -1,0 +1,146 @@
+{
+    "schema_version": 2,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/showcases/bin/",
+            "working_dir": "/showcases/data/drive_replay",
+            "activation_retry_attempts": 1,
+            "activation_retry_delay_ms": 500,
+            "sandbox": {
+                "uid": 0,
+                "gid": 0,
+                "supplementary_group_ids": [],
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 1
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Reporting",
+                "is_self_terminating": false,
+                "alive_supervision": {
+                    "reporting_cycle_ms": 100,
+                    "min_indications": 1,
+                    "max_indications": 3,
+                    "failed_cycles_tolerance": 1
+                }
+            },
+            "depends_on": [],
+            "process_arguments": [],
+            "ready_condition": {
+                "process_state": "Running"
+            }
+        },
+        "run_target": {
+            "transition_timeout_ms": 5000,
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "alive_supervision": {
+            "evaluation_cycle_ms": 500
+        }
+    },
+    "components": {
+        "datarouter": {
+            "description": "DLT daemon of score_logging, streams all logs to 239.255.42.99:3490",
+            "component_properties": {
+                "binary_name": "datarouter",
+                "application_profile": {
+                    "application_type": "Native"
+                },
+                "process_arguments": [
+                    "--no_adaptive_runtime"
+                ]
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/datarouter/",
+                "working_dir": "/usr/bin/datarouter"
+            }
+        },
+        "state_manager": {
+            "description": "Watches Run Target changes and recovers from the degraded Run Target",
+            "component_properties": {
+                "binary_name": "drive_state_manager",
+                "application_profile": {
+                    "application_type": "State_Manager",
+                    "alive_supervision": {
+                        "min_indications": 0
+                    }
+                },
+                "depends_on": [
+                    "datarouter"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/drive_replay/etc/logging_sm.json"
+                }
+            }
+        },
+        "replay_app": {
+            "description": "Replays the scripted drive and publishes it via mw::com",
+            "component_properties": {
+                "binary_name": "replay_app",
+                "depends_on": [
+                    "datarouter"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/drive_replay/etc/logging_replay.json"
+                }
+            }
+        },
+        "warn_app": {
+            "description": "Forward collision warning, supervised by the health monitor",
+            "component_properties": {
+                "binary_name": "warn_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "depends_on": [
+                    "replay_app"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "IDENTIFIER": "warn_app",
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/drive_replay/etc/logging_fcw.json",
+                    "DRIVE_KVS_DIR": "/tmp/drive_replay/kvs/"
+                }
+            }
+        }
+    },
+    "run_targets": {
+        "Drive": {
+            "description": "Full functionality: drive replay with forward collision warning",
+            "depends_on": [
+                "datarouter",
+                "state_manager",
+                "replay_app",
+                "warn_app"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        }
+    },
+    "initial_run_target": "Drive",
+    "fallback_run_target": {
+        "description": "Degraded: the drive continues, the forward collision warning is off",
+        "depends_on": [
+            "datarouter",
+            "state_manager",
+            "replay_app"
+        ],
+        "transition_timeout_ms": 1500
+    },
+    "alive_supervision": {
+        "evaluation_cycle_ms": 500
+    }
+}
