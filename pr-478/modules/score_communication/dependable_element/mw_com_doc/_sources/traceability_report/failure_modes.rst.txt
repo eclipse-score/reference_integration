@@ -1,0 +1,1933 @@
+Failure Modes
+=============
+
+**Coverage:** 50.0% (35 of 70 items OK)
+
+.. _lobster-item-3e098d1c10d54a345dde4df7f87998f619f4869b:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.InMemoryConfigurationWrong
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The in-memory (cpp representation) does not match the on file-system JSON configuration.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.FileCorrupted <lobster-item-11db1ea2455005d387491f2713ce6bf5b148e5bd>`
+   * :ref:`mw\_com\_fta.JsonParserBroken <lobster-item-ee20fbf9a1fdfdb2e6a7d2bfa92e8bfba61713a7>`
+   * :ref:`mw\_com\_fta.ManipulateReadData <lobster-item-30127d57e5a8f81ef58611f8039cd4b86a3707be>`
+   * :ref:`mw\_com\_fta.OmitReadingOfRelevantElements <lobster-item-44315c02640f5ad070181833c0d8c6e9d6f5cf74>`
+   * :ref:`mw\_com\_fta.UserProvidedWrongConfiguration <lobster-item-74c34c03e89715f9077e7deafb5b82165c43482a>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Runtime.Initialize
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:31:26 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L31>`__
+
+.. _lobster-item-0cbf7ebde0eaefc89e68e81aaf218b821a8df804:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.CodeDoesNotMatchConfiguration
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Definitions of service-interfaces may not match the given mw::com configuration.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.DifferentRevisionsForProxyAndSkeletonBuilt <lobster-item-20ffbbfe4bfad701824c0ad2ec44dc0a809c7f7a>`
+   * :ref:`mw\_com\_fta.MissingSyncCodeAndConfiguration <lobster-item-c6af8de970327a794582042689944210c18e7307>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.runtime.InitializeRuntime
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:53:26 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L53>`__
+
+.. _lobster-item-32215b16de4fa207542356179adc809cb6d273c2:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.CreationOfSkeletonNotPossible
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      It is not possible to create a skeleton instance
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.InstanceSpecifierResolutionLogicBroken <lobster-item-987a15851a706606f4f813f4842390ea03eb7839>`
+   * :ref:`mw\_com\_fta.StaticCreateFunctionReturnsAnError <lobster-item-5bad319c7d650a204f480376f965c3c6e14dc136>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.Create
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:79:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L79>`__
+
+.. _lobster-item-6bbbad2a1b2f33c83865436d71c93ee5a53bd5b6:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceOfferedWithoutInitialFieldValue
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A service is offered, although at least one of its field has no initial value set by the provider.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.OfferCallDidNotCheckIfUserProvidedFieldValues <lobster-item-be39829bcc71ffa6e0393cdd1432c9584887c387>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:93:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L93>`__
+
+.. _lobster-item-7441f470201ffecda64bfba3ba199731cc3658da:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceNotOffered
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A skeleton service is offering a service, but the service is silently not offered. Note: offered in this case means, that it is also connectable
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.DifferentlyConfiguredBetweenSkletonAndProxySide <lobster-item-4523b6135f14e7d2c986152d92aa8108c7cf0f01>`
+   * :ref:`mw\_com\_fta.InstanceSpecifierResolutionBrokenNotOffered <lobster-item-b6a37d85225f5ac1d61e4d84f5126ea8a62ff0c1>`
+   * :ref:`mw\_com\_fta.NotCreatedAtAll <lobster-item-5e14700adeb05201ca9f65155400ac23f0d87d9e>`
+   * :ref:`mw\_com\_fta.OsRelatedFunctionalityFailed <lobster-item-9f895662bebcaaec15f17b2076b27911465151e5>`
+   * :ref:`mw\_com\_fta.SharedMemorySegmentDoesNotTryToCreateSegment <lobster-item-588b7738be115abdd3f4326b78744d6b3a62bb29>`
+   * :ref:`mw\_com\_fta.SharedMemorySegmentsAreCreatedUnderWrongName <lobster-item-ef5245ec8f2cd1f632321facac3d131fe8fcc357>`
+   * :ref:`mw\_com\_fta.WrongDirectoryStructure <lobster-item-b38018c020a5f35780750e6b8ce90a2bd52ea896>`
+   * :ref:`mw\_com\_fta.WrongMarkerFileName <lobster-item-c7a36563fb4fe0e53644f236185c612dc1f47941>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:104:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L104>`__
+
+.. _lobster-item-1f88052fd9ecd34d55eea20bd2338d29fc7d0382:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceOfferedOnWrongBinding
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A skeleton is offering a service on the wrong binding. Meaning, the service is not offered on the intended binding, but on an unintended one.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.BindingSelectionFaulty <lobster-item-578645e97885a52fbfd946a7778c039104b2c0da>`
+   * :ref:`mw\_com\_fta.InstanceSpecifierResolutionBrokenWrongBinding <lobster-item-a09c5143ecd6918c9d8e150c03770307aabcaed4>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:115:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L115>`__
+
+.. _lobster-item-5db6fdccb86ec4b398a2d86475f8d532cfb4a0a6:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceOfferedUnderWrongIds
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A skeleton is offering a service with wrong identifiers. This can include a service id, a instance id or also the service version.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.FilenameCreationFromConfigFailed <lobster-item-a6ad6928a78a03c18c5f8b475ae9d51cc25936f8>`
+   * :ref:`mw\_com\_fta.InstanceSpecifierResolutionFaulty <lobster-item-c99dc26ccdd0f9d6c5cc57cc2bf36d1432f14237>`
+   * :ref:`mw\_com\_fta.OsCreatesFileWithWrongName <lobster-item-0127018e77762c369ec1decc5b46609ff25422c8>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:126:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L126>`__
+
+.. _lobster-item-dd5cf4545ef442954c6a41225a47fc45ee08bf48:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.OffersAlreadyOfferedService
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A skeleton offers a service that was already offered. Either by another process or by itself.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ServiceWasAlreadyOfferedByOurProcess <lobster-item-b008cf65603f2a61125427b03539ab62fb555721>`
+   * :ref:`mw\_com\_fta.ServiceWasAlreadyOfferedByPreviousDiedProcess <lobster-item-1957341a445aa8c497a9388a87bea161bf201317>`
+   * :ref:`mw\_com\_fta.ServiceWasOfferedByAnotherProcess <lobster-item-c2817931c225f5a8fc2f02a375c516545fc2374e>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:137:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L137>`__
+
+.. _lobster-item-f0719d938bba5a58e7a068ed8d2db478880b5418:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceOnlyPartiallyOffered
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A skeleton offers a service, which is not visible to all consumers, but only to parts of them.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.NotAllEventsArePopulated <lobster-item-585f3b13282d22530013c29c1936a945ab3d2868>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.OfferService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:148:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L148>`__
+
+.. _lobster-item-e744efca13258865166978a9e873dcff113a8ef4:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.TooFewMemoryAllocated
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The event allocation allocates too few memory (including no memory at all).
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.AllocateClaimsTooFewMemory <lobster-item-ef8a2c958744ce78eca551cd51e0632ef4073606>`
+   * :ref:`mw\_com\_fta.ConsumerUsesAnOlderSlotThanHeAlreadyHasBlockedInThePreviousAccess <lobster-item-21b49065fad3125ebc6f5f506bbceb7919661e63>`
+   * :ref:`mw\_com\_fta.HoldsMoreSampleptrThanAnnounced <lobster-item-4d22206e6c44155e991c5924fa5b10fa524efdf4>`
+   * :ref:`mw\_com\_fta.HoldsMoreSampleptrThanConfigured <lobster-item-ea02ab70cdfcf68cd902bcc00dc0a72a39e82a17>`
+   * :ref:`mw\_com\_fta.IssueInLockFreeSychronization <lobster-item-7b94adaeef53c7f17f36b7c26057375ce92b0bdb>`
+   * :ref:`mw\_com\_fta.LiteralyWrongNumberOfSlotsReserved <lobster-item-83276d522240cd04721afaeeb133862db1f0c3f2>`
+   * :ref:`mw\_com\_fta.MappingFromActualEventidToEventTypeIncorrect <lobster-item-9b039020518fe1cab14575fc0dfc2635881e0197>`
+   * :ref:`mw\_com\_fta.MoreThanOneSampleallocateeptrInParallel <lobster-item-f3f4650b1b8c096dda17c24a2d940fa3936931ea>`
+   * :ref:`mw\_com\_fta.NecessarySizeCalculationRetrievesWrongValue <lobster-item-8634b6dea2595016ee49ea9a3711b248afd789a6>`
+   * :ref:`mw\_com\_fta.RetryLogicNotBulletProof <lobster-item-a873d1235cddca2104cb7f384e86b439fd098711>`
+   * :ref:`mw\_com\_fta.SharedMemoryTruncationFails <lobster-item-e24db22a3e9b1b813f2adc8594add1726b48fb49>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Allocate
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:210:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L210>`__
+
+.. _lobster-item-4d6f3af070f5fd367efb1e8e3eb65c1803700393:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.WronglyAlignedMemoryAllocated
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The memory for an event/field is allocated in a wrongly aligned manner.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseWronglyAlignedMemoryAllocated <lobster-item-66d9c64edf00f799292bade199ad38c90fa2ac18>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.SkeletonEvent.Allocate
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:221:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L221>`__
+
+.. _lobster-item-fdb820a5ba189f951909df921d5f446e93a43bbb:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingEventChangesUserData
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A call to send manipulates the data that was provided by the caller.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.DirectAccessToDataViaAllocateePtr <lobster-item-6f061ba448d8fcf7c4a8b6211f3c5477619bf30c>`
+   * :ref:`mw\_com\_fta.DirectAccessToDataViaCopy <lobster-item-c8ff2312c77796f6db235732fc8d8f8268415e9a>`
+   * :ref:`mw\_com\_fta.GenericTraceapiChangesData <lobster-item-4c22d0834a80c7014a0054b05f6d4567808c9192>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:257:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L257>`__
+
+.. _lobster-item-81f9673c42824726089dd0c75145d10aafc1296e:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingAnEventOrFieldSendsDataOnlyPartially
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Data that is send by the user, only reaches partially the consumer. This can happen in two ways, only a partial number of consumers see the data or all consumers see only partial data.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.AllocateClaimsTooFewMemory <lobster-item-ef8a2c958744ce78eca551cd51e0632ef4073606>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:268:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L268>`__
+
+.. _lobster-item-31c4f321e8d71fc593bf23c242c1f1ae9cd556fb:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingEventOnlyPartiallyNotifiesConsumer
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      When data is sent, consumers that have a callback registered, are only partially notified.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.AlgorithmicBug <lobster-item-fb209f97da887507f1f0e32f3068027cca70dbab>`
+   * :ref:`mw\_com\_fta.ReceiveErrorOnRegistration <lobster-item-9a72e8ed70f56a5f28f829cf96964d21d040df73>`
+   * :ref:`mw\_com\_fta.ServerProcessCrash <lobster-item-117bb513824388000eb18231fca46d40ec3144bc>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:279:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L279>`__
+
+.. _lobster-item-c4d5b547ef7f86a4528855b4ec47c95c20dc1310:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingEventSendsToWrongConsumer
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      An event or field is sent to the wrong consumer.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+      * missing reference to Root Causes
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:290:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L290>`__
+
+.. _lobster-item-6bdb711d0963358e719ef49dcc21de997df5e880:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingAnEventOrFieldSendsSameSampleNtimes
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Instead of sending a sample (one data point) only once, it is send multiple times.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+      * missing reference to Root Causes
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:301:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L301>`__
+
+.. _lobster-item-5185e749a327bdc9e0cc231ebb8319390452ad54:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.SendingEventDoesNotFreeResources
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Resources in the middleware that have been allocated with a previous allocation, are not freed after returning from send/update.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CopyOnSendDoesNotDestroySampleallocateeptr <lobster-item-6d9cef4b462948b64adee87738daacb0de1fc6c9>`
+   * :ref:`mw\_com\_fta.DestructionOfSampleallocateeptrDoesNotTriggerStateChange <lobster-item-58138f2cd8d668e08c64484f5b1729dbcee3f3d3>`
+   * :ref:`mw\_com\_fta.WritingStateChangeIsNotWorking <lobster-item-a912efa941227f76c1a1c512292d2d517faca8d7>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.Send
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:312:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L312>`__
+
+.. _lobster-item-05c6a74816ace148fe7847db30dbcf7aacd31d63:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.WrongResourcesFreed
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A destruction of one skeleton instances, frees the resources of another skeleton instance.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.WrongMemoryResourceProxy <lobster-item-084f178e476af81d13ab3323870aa2f7591ab7f0>`
+   * :ref:`mw\_com\_fta.WrongNameOfSharedMemorySegment <lobster-item-26a322c101163fc9e60ea85f689790b2f8d5ead6>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.Destroy
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:326:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L326>`__
+
+.. _lobster-item-553e75b189ea00e3ee24ac0b0548ab5bab739055:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.NoResourcesFreed
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The resources allocated on construction and during operation are not freed on destruction.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.NoUnmapOnDestruction <lobster-item-a1c339d8341b60294e13a59a702a9742cb57ef1c>`
+   * :ref:`mw\_com\_fta.SharedMemorySegmentIsNotUnlinked <lobster-item-812bc736e5255ad01025758399149d76dffb4876>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.Destroy
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:337:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L337>`__
+
+.. _lobster-item-309c34a4207acf3ee868bd75ab3bc347fa9a8b3d:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.EarlyCleanUp
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Resources are freed while still being used.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.NoUnmapOnDestruction <lobster-item-a1c339d8341b60294e13a59a702a9742cb57ef1c>`
+   * :ref:`mw\_com\_fta.SharedMemorySegmentIsNotUnlinked <lobster-item-812bc736e5255ad01025758399149d76dffb4876>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Skeleton.Destroy
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:348:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L348>`__
+
+.. _lobster-item-2b8545bce5b57402442c715da05cf176ac484ec9:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.StartFindServiceCallbackCalledUnexpectedly
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The user-provided callback is invoked, even though it should not be invoked.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CalledEventhoughStopfindserviceHasBeenCalled <lobster-item-5c3594e6bbd55befad95d78415ff40a768322f86>`
+   * :ref:`mw\_com\_fta.CalledReduandently <lobster-item-55ac7cee7a5a6fe9194caeb69dd3cdde0055289f>`
+   * :ref:`mw\_com\_fta.InotifyReturnsWrongInformation <lobster-item-dd125cc7462453975cba646926c700bd260b6568>`
+   * :ref:`mw\_com\_fta.WatchesAreSetWrongly <lobster-item-2ad868634b71af984555446c29d8c45b7f8c95f8>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Proxy.StartFindService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:418:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L418>`__
+
+.. _lobster-item-a5d0bc81946103361a153d735849ecae6f297ef9:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceNotFound
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A proxy does not find a service instance, even though it was offered by a skeleton.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.WrongServiceDiscoveryMarkerFileSearchedFor <lobster-item-169ae851e8f9a9eb593a7209863f79f35b53f4e7>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Proxy.FindService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:432:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L432>`__
+
+.. _lobster-item-66ff5798dc16975c75b73c64b0855ec8aed6eccd:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.WrongServiceFound
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A proxy instance finds a wrong service. This could be either a wrong service instance or a completely wrong service.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.InstancespecifierResolvedToWrongInstanceidentifier <lobster-item-cff3fc7f129c1f6e8c48cc1d36b74ccba836b142>`
+   * :ref:`mw\_com\_fta.WrongPathResolvedFromInstanceidentifier <lobster-item-0dbc46e432f6e29e3b2d7a6255a183e185972be9>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Proxy.FindService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:443:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L443>`__
+
+.. _lobster-item-3d58f317539e93211740146e699977aa8585dcd4:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ServiceIsFoundButDoesNotExist
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      Finding a service, returns a service, even though no service instance was offered.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ServiceWasOfferedButNotUnlinkedOnStopOffer <lobster-item-e21e49ae0525a7e38af3a62717e19d539e45384c>`
+   * :ref:`mw\_com\_fta.SharedMemoryObjectDoesNotExist <lobster-item-8511ddc722adc0fc3c7244375a2de47bf9400215>`
+   * :ref:`mw\_com\_fta.WrongAcl <lobster-item-7ceaef9a3f964e8ea5bdeb50bf0954d1d180d7f6>`
+   * :ref:`mw\_com\_fta.WrongName <lobster-item-aaf3bda161ec1ad70cbae6a1fb92236cce5c5f91>`
+   * :ref:`mw\_com\_fta.WrongProvider <lobster-item-3ede5b2a022ef2c24be3d2cdea189c169ca66265>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Proxy.FindService
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:457:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L457>`__
+
+.. _lobster-item-c92eb5cd8ef5c3727433959d80e680078d88bf82:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ReceiveHandlerNotInvoked
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A proxy has set a receive handler and a skeleton is updating an event, but the receive handler is never invoked.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseReceiveHandlerNotInvoked <lobster-item-64b6cc15092dd7a4c4b49c7e1d560abecc50a0ac>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:531:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L531>`__
+
+.. _lobster-item-29da88eb46cc8dbf7adf903860c69b2db9b0a7cd:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedWithWrongEvent
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A receive handler registered for an event, gets called because of an update of an different event.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseReceiveHandlerInvokedWithWrongEvent <lobster-item-ce81d00c7546495fca9710c35e4293031109224d>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:543:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L543>`__
+
+.. _lobster-item-137cf08f474dfb454b6f46303d2016709f692e1b:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedMultipleTimes
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A receive handler is invoked multiple times, even though only one event update happend.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseReceiveHandlerInvokedMultipleTimes <lobster-item-ae573242e235a0832b393feed07749ca9c3b013d>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:554:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L554>`__
+
+.. _lobster-item-ca188da918196f213a95cd5091a7b7a6615e165b:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedWithoutEventNotification
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A receive handler is invoked, even though no event update happend.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseReceiveHandlerInvokedWithoutEventNotification <lobster-item-83e4d08033044813e25380b117c207807d4a2617>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:566:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L566>`__
+
+.. _lobster-item-ea396ae3498f8f4b6d5768a297f19d709ff2890e:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.GetNewSamplesSucceedsDespiteAnError
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A user calls GetNewSamples() on a proxy instance and receives a sample count, even though he should have received an error.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseGetNewSamplesSucceedsDespiteAnError <lobster-item-c6c20fd052d9043e7727c3dd40e674c83fba5e2a>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.Event.GetNewSamples
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:623:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L623>`__
+
+.. _lobster-item-6dba5007f9fa0aee6a48a9dc937de4afb9fb328e:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.MapContainingNonexistentEvents
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The map that is visible to the user, contains events that are not actually existing (e.g. in the configuration).
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Root Causes
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:689:38 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L689>`__
+
+.. _lobster-item-08e830aa185c798938a8aeacb50f59d0736b8394:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.IncompleteMapOfEvents
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The user gets presented not all events the generic proxy supports.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Root Causes
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:699:38 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L699>`__
+
+.. _lobster-item-5fa23afdb656b44063b2a7a01529d04bfd50a897:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.TheSizeReturnedIsBiggerThenTheActualValue
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The user receives a size, that is bigger then the actual value.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ConsumerLookedUpSizeInWrongLocation <lobster-item-5a13664b13f0e96ca842f30841fec668cbbf4182>`
+   * :ref:`mw\_com\_fta.SizeWasManipulatedInSharedMemory <lobster-item-bcef23d7ba6b1171c90ca064ee99624a25a2d68e>`
+   * :ref:`mw\_com\_fta.SizeWasWronglySetInSharedMemory <lobster-item-2a3c4c3bcc05cf162c6d8c43ec7ccbecd76ca564>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.GenericProxyEvent.GetDataTypeSizeInfo
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:713:38 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L713>`__
+
+.. _lobster-item-938de5e055f4cf04e2077a1a35fd29b42df6e9c3:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.TheSizeReturnedIsSmallerThenTheActualSize
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The user receives a size, that is smaller then the actual value.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ConsumerLookedUpSizeInWrongLocation <lobster-item-5a13664b13f0e96ca842f30841fec668cbbf4182>`
+   * :ref:`mw\_com\_fta.SizeWasManipulatedInSharedMemory <lobster-item-bcef23d7ba6b1171c90ca064ee99624a25a2d68e>`
+   * :ref:`mw\_com\_fta.SizeWasWronglySetInSharedMemory <lobster-item-2a3c4c3bcc05cf162c6d8c43ec7ccbecd76ca564>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.GenericProxyEvent.GetDataTypeSizeInfo
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:724:38 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L724>`__
+
+.. _lobster-item-b3298ed23dc738162b6afd29ea435312428634b8:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.WrongIndicationIfFormatIsSerialized
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A user, using HasSerializedFormat(), receives the wrong value.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.IndicationWhetherFormatIsSerializedWronglyImplemented <lobster-item-4e71bdf6a56cd94e8f2eef6ce315adc13f047d35>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req mw.com.GenericProxyEvent.HasSerializedFormat
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:736:38 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L736>`__
+
+.. _lobster-item-cb81cf4aa044e860d61736a6a9a1f1264bf0d58c:
+
+.. dropdown:: [MISSING] TRLC Failuremode Communication.DoesNotReserveResources
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      A SamplePtr or SampleAllocateePtr do not increase their respective ref-counts and thus avoid data changes.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ChangingStateFails <lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2>`
+   * :ref:`mw\_com\_fta.IncreasingDecreasingRefCountFails <lobster-item-6b97c412d9bea7902c91be683007f180b1b29592>`
+   * :ref:`mw\_com\_fta.SlotReferenceBrokenEGNonValid <lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * unknown tracing target req score.mw.com.SampleAllocateePtr<SampleType>
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:827:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L827>`__
+
+.. _lobster-item-6f041fa86e6585486660a0060508342a33f4f5e0:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.AnyFunctionBlocksLongerThanExpected
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Any API of mw::com (LoLa) blocks longer than expected (or indefinite)
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseAnyFunctionBlocksLongerThanExpected <lobster-item-853874bde50a7f998c617dd2d0738dc3dcd0c75b>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:20:26 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L20>`__
+
+.. _lobster-item-0547ced7080ab2e9ad470d0b46e74587814d5a42:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.FunctionCalledFromMultipleThreads
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Any API is called within multiple threads concurrently without any further synchronization.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.EventInstanceAPICalledInAReentrantManner <lobster-item-15f755034ad39bcb381565a4fed64b7ef19cda15>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:42:26 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L42>`__
+
+.. _lobster-item-48d74d95e4523a7fb45da828383c0ee23b69d5f3:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.MisusedApis
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      APIs are invoked in either an invalid context or non public APIs are invoked.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ApiUsedInWrongContext <lobster-item-fa2c756880e23b01de985a1d3e7db0553b61b7c5>`
+   * :ref:`mw\_com\_fta.InternalApiUsed <lobster-item-d789f732e2e199fe83bfb32d40c7cf0bf44a75bc>`
+   * :ref:`mw\_com\_fta.TerminatingUserCallback <lobster-item-9aa0ed50288b2c8e5d068864f0cce724da122874>`
+   * :ref:`mw\_com\_fta.dummyrrootcause <lobster-item-cad5f92cec79e94354a49d989e980dd8798472c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:64:26 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L64>`__
+
+.. _lobster-item-ea8e328d1439ab760ca9819eb8e2e98cf8e9fbae:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.StopOfferNotStoppedInSD
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A service instance was offered via service discovery, but it wasn't withdrawn from service discovery in the stop offer.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.SDClientMarkerFileNotFound <lobster-item-b8a908fe6bd097a301be5a0c337deda913fcdcdf>`
+   * :ref:`mw\_com\_fta.SDClientMarkerFileWrongPath <lobster-item-25b4f5eb03c4bafb4fd73e2770d2c542e55a1266>`
+   * :ref:`mw\_com\_fta.SDFileDeletionFailure <lobster-item-21a2076b27fab30bf528639baf87010b04a94e3b>`
+   * :ref:`mw\_com\_fta.SDNotifyFailed <lobster-item-4e6c4c662c8ca8d09c25f6d035b6d5eb52bc98d4>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:160:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L160>`__
+
+.. _lobster-item-41ff9bce797666dc021b75d89329ab0ee7f2f599:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.StopOfferWrongInstanceStoppedInSD
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Same as in StopOfferNotStoppedInSD. Additionally another service instance, which is still being offered, is withdrawn from service discovery.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.SDClientWrongMarkerFile <lobster-item-c95da48468c4008e4799d68a70cf26fcc391071e>`
+   * :ref:`mw\_com\_fta.SDNotifyWrongFD <lobster-item-f412c5b120db3a9e270c2c8d0e84ae11c1d12634>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:169:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L169>`__
+
+.. _lobster-item-c32955021950ec3ba6384715fcaf12aec96a6cb3:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.StopOfferUnlinkWrongSHMObjects
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Skeleton instance did unlink shared memory objects which do not belong to the service instance being stop offered.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.SHMObjectWrongPath <lobster-item-5a282748d4bc2ee30127d1bd54ea52ead1988da6>`
+   * :ref:`mw\_com\_fta.ServiceInstanceUsageLockMechanismFailed <lobster-item-a8e1bfd54595f2812fc20b8849d6d2e0c96cff47>`
+   * :ref:`mw\_com\_fta.ServiceInstanceUsageNotChecked <lobster-item-9507968ccc91c056258eb49ce2c5b6907164b6e0>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:178:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L178>`__
+
+.. _lobster-item-5014a6c2c2e182bd3571e2c85311e240d3777fd0:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.StopOfferInconsistent
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Skeleton instance is in an inconsistent state after stop offering: Either the stop offer was not forwarded to the binding or failed at the binding. Or it wasn't forwarded to the dependent service elements or their bindings or failed at them.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.DependentPrepareOfferFailed <lobster-item-bb70a5bfbd628e90bb653af51bfdaa86a492a9ce>`
+   * :ref:`mw\_com\_fta.DependentPrepareOfferNotCalled <lobster-item-f98160796e47e6a4441725883ed029aca3d3e43c>`
+   * :ref:`mw\_com\_fta.OfferStateInconsistent <lobster-item-3e75a7df2037d94c6638bf305d6897099fb5a8c8>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:187:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L187>`__
+
+.. _lobster-item-2e44abef080ef0359ee65e3cd96f96730508b8f6:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.MemoryAllocatedInWrongSection
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      The memory for an event is allocated in the wrong memory section (e.g. in Heap, another Shared Memory segment or the stack).
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.BrokenAllocator <lobster-item-22b5056bbe0357103058d68eb303a1afeb70c44c>`
+   * :ref:`mw\_com\_fta.DataTypeItselfIsAllocatedOnStack <lobster-item-dfdeca64f8dfd227d36e944bf3ee38c5f6af6582>`
+   * :ref:`mw\_com\_fta.ForwardedTheWrongSharedMemorySegmentFromTheBeginning <lobster-item-682756b8bc7b15ee018fbe06d4abbc4bd226746c>`
+   * :ref:`mw\_com\_fta.MiddlewareProvidedTypeIsWrong <lobster-item-36f5d539550d8824e980cf9c5b709a5cf04cf479>`
+   * :ref:`mw\_com\_fta.OffsetPtrCorruption <lobster-item-055be2d8e46baf4afad297f18fafb37b7839da57>`
+   * :ref:`mw\_com\_fta.ProxyIdOverwritten <lobster-item-c7405bd23e741ca34591a6783d84505836080161>`
+   * :ref:`mw\_com\_fta.SharedMemoryResourceOpensWrongSharedMemorySegment <lobster-item-0001d1387942f51d053d476381ab29bbb33a8be6>`
+   * :ref:`mw\_com\_fta.SharedMemoryResourceReturnsWrongProxy <lobster-item-b3c134dd7dee1eb8aac96e30d91722803cfda77d>`
+   * :ref:`mw\_com\_fta.SharedMemoryRessourceNotForwarded <lobster-item-1aa3b1027d7ef3226d071ece9e3754fa6b0f17f1>`
+   * :ref:`mw\_com\_fta.SharedmemoryfactoryReturnsWrongMemoryRessource <lobster-item-7b7ac6ea63e2cdbe2cd0d05e76edac7dbb14e817>`
+   * :ref:`mw\_com\_fta.UserFehler <lobster-item-38b45756c9699974925826c2459ed03d9559d97a>`
+   * :ref:`mw\_com\_fta.UserProvidedTypeIsWrong <lobster-item-1a161c23efbb36d5e783a8004a376b3b990fd9ba>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:200:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L200>`__
+
+.. _lobster-item-17f99d9a312f3323af3701ce586335aa0a346d19:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.TooMuchMemoryAllocated
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      There is too much memory allocated for one event/field
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.TooMuchMemoryAllocated <lobster-item-94ad1631c62e20114b727cd136d88203aa58d4aa>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:232:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L232>`__
+
+.. _lobster-item-a3e9b973da5ade42d409c2f3fd83c172c256a8c9:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.AllocatesAlreadyAllocatedMemory
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      The memory for an event/field is allocated from already allocated memory (not free memory).
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseAllocatesAlreadyAllocatedMemory <lobster-item-4c00bbc5fe016e191f31c6991b76ceb3540334cf>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:243:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L243>`__
+
+.. _lobster-item-d8b17c6cb0431e7601b9c98b13ed1ee2594d3a3a:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongMethodInArgsUsed
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Unintended input arguments are used in a service method call. Therefore, the method call gets executed with wrong input data.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CalleeUsedInArgsBeforeBeingProvided <lobster-item-beaeca8bec93c1609c02adde8c70b38b434aba45>`
+   * :ref:`mw\_com\_fta.CalleeUsedInArgsFromWrongLocation <lobster-item-421776a5d9016ae85541baa30461b99e54fcb988>`
+   * :ref:`mw\_com\_fta.CalleeUsedInArgsInWrongLayout <lobster-item-2e2ea16cfe3e832533e89c96d4841aebd829f5b7>`
+   * :ref:`mw\_com\_fta.CalleeUsedInArgsWhileConcurrentlyUpdated <lobster-item-5590d9d601a13835a89c7bc34df1a9cd54fe6737>`
+   * :ref:`mw\_com\_fta.InArgsCorruptedBy3rdParty <lobster-item-d74bf98b0c10d54233573d2e5654cd7ba5c45f62>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:368:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L368>`__
+
+.. _lobster-item-ed896db3872e04764cd70f52587bc80e717a7fae:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongMethodCalled
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Either the wrong user provided method handler is called or no user handler is called at all. Therefore, the method call results are invalid/garbage.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.MethodIdCorrupted <lobster-item-44dee929a8d94eb505babbf8f357cbbf7ac09174>`
+   * :ref:`mw\_com\_fta.UserMethodCallHandlerAssignmentWrong <lobster-item-c051c102641b1ffcd0bcfadb99aa440084b0d155>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:384:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L384>`__
+
+.. _lobster-item-2a85aecf6902edc33e975767c3d25b215e8a2c69:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongResultsProvided
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      The result of a method call is either not provided in the expected location, leaving uninitialized data in the expected location or it is provided in an inconsistent state. Therefore, the method call results are invalid/garbage.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CalleeConcurrentlyUpdatesResultAfterSignaling <lobster-item-61c03cd459c71041b5131bf5e96dd64370913ee7>`
+   * :ref:`mw\_com\_fta.CalleeProvidedResultInWrongLayout <lobster-item-5a4a1ee11ee459653890980ff116bbd042b96083>`
+   * :ref:`mw\_com\_fta.CalleeProvidedResultInWrongLocation <lobster-item-77eae049dfc05d4e541355ee929932e6c181c836>`
+   * :ref:`mw\_com\_fta.CalleeSignalledCallFinishedBeforeResultComplete <lobster-item-909df54a20837b38ce0c38ecc2f813f78d5ba660>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:402:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L402>`__
+
+.. _lobster-item-30eb7893854c1612d8f983c94fcda7043bc1372e:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.StartedFindServiceIsNotStopped
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A user called "StartFindService" with a given handler, and since "StopFindService" does not work, services can still be found.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CalledEventhoughStopfindserviceHasBeenCalled <lobster-item-5c3594e6bbd55befad95d78415ff40a768322f86>`
+   * :ref:`mw\_com\_fta.CalledReduandently <lobster-item-55ac7cee7a5a6fe9194caeb69dd3cdde0055289f>`
+   * :ref:`mw\_com\_fta.InotifyReturnsWrongInformation <lobster-item-dd125cc7462453975cba646926c700bd260b6568>`
+   * :ref:`mw\_com\_fta.WatchesAreSetWrongly <lobster-item-2ad868634b71af984555446c29d8c45b7f8c95f8>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:472:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L472>`__
+
+.. _lobster-item-dd30cca2c77202a2a3801df9f089bac454c5c2c7:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongStartfindserviceIsStopped
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      The handle provided to StopFindService, is identified as another one and thus stops the wrong service discovery query.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseWrongStartFindServiceIsStopped <lobster-item-90f0391e9312560d723f48ed8c05e5036d049a92>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:483:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L483>`__
+
+.. _lobster-item-b4fbe99e4807a9fff06daabe15dc0551e8878174:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.SubscribeToWrongEvent
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A service proxy subscribes to a wrong event. This either means that this event does not exist at all, is offered by another service instance, another event in the current instance or a completely different service.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.EventFieldIdReferencesWrongStorage <lobster-item-977c64f1d6df712250f0a4cdbe55d022dfc9f415>`
+   * :ref:`mw\_com\_fta.EventFieldNameMappingClash <lobster-item-81d8565ad352bd2ceffa4ad8d474dc408a92269f>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:497:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L497>`__
+
+.. _lobster-item-2e5c4679933108ccefb3cc4d431ba729f6d5eb84:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.SubscribeWithWrongMaxSampleCount
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A proxy instance subscribes to an event to with a wrong sample count, meaning a different one that was provided by the user.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.MessagePassingCorruptsTheMaxSampleValue <lobster-item-eebeee7c74f5181be98cdb39816c8a9ec2aaeab2>`
+   * :ref:`mw\_com\_fta.WrongValueIsPassedToMessagePassingLibrary <lobster-item-a1659151dee789c196f4d3b58623e89b6e9b042d>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:507:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L507>`__
+
+.. _lobster-item-6b66247bd616bf0986d34f1581444aea89772438:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.DoesNotSubscribe
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A proxy does not subscribe to a skeleton. Thus, a skeleton does not know that a proxy is interested in data.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseDoesNotSubscribe <lobster-item-0486dba15021622ae1cb665ec9c553d0f7eb0ec7>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:517:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L517>`__
+
+.. _lobster-item-1dcb6863744b5cf9ae9d3481c83b3f43d98e732f:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.CallbackNotInvokedDespiteSamplesAvailable
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      GetNewSamples() gets called on an event with a callback F, but the callback gets called not at all, although at least one new sample is available.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CallbackIsNotStoredCorrectly <lobster-item-999d8225624399b406c36412c471131e5d2ab312>`
+   * :ref:`mw\_com\_fta.WrongAclConfigurationForShmSegments <lobster-item-76fd6ca793eb2fe862a2166982c11b26d34441db>`
+   * :ref:`mw\_com\_fta.WrongValueInsertedSlotStatus <lobster-item-4968bae1f75281bf0664dc46b868ec2e2971697c>`
+   * :ref:`mw\_com\_fta.WrongValueInsertedTimestamp <lobster-item-c2c02344cddb2934bb33975009dadd9f22e5c2c3>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:581:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L581>`__
+
+.. _lobster-item-234f3116305a93f5bd9d4b15a68daaeaf30d3661:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.CallbackInvokedWithWrongData
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A proxy receives a sample pointer via callback F(), but the data does not contain the expected one.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ActivelyManipulateByProgrammParts <lobster-item-fe7bfd30944dfb95b7b181e2e380cef275e1382c>`
+   * :ref:`mw\_com\_fta.CallbackDangling <lobster-item-c9bd1294e213227dbb42d9b07b52b5e324884fce>`
+   * :ref:`mw\_com\_fta.EventfqidWronglyConstructed <lobster-item-7baffdb3b2056aa7e009e91d1faefad73fe5745e>`
+   * :ref:`mw\_com\_fta.OrderingWrong <lobster-item-630bdafafb028bfd431504fdeec8623815935b89>`
+   * :ref:`mw\_com\_fta.PtrDangling <lobster-item-a51f6491834cac418f6950899270e65c26f0f846>`
+   * :ref:`mw\_com\_fta.SlotAllocationSynchronisationWrongState <lobster-item-983942276667462ae28e4ada831312dde13b0da3>`
+   * :ref:`mw\_com\_fta.SlotAllocationSynchronisationWrongTimestamp <lobster-item-3a52675daaeb66a5747871521231e88e9013518e>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:591:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L591>`__
+
+.. _lobster-item-01ac0c1135144a4cc8eb983ad729fa0c91e6521f:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.UsesTooManySampleptr
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      User is already max. sample count SamplePtr, but we are still handing out SamplePtrs in callback F().
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ReferenceCountingFacilityForSampleptrIsBroken <lobster-item-f6fe36fe8b93ea94c45400d1d22fe2d251a4c3a0>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:601:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L601>`__
+
+.. _lobster-item-fe349804c9094ba4d4fd9a82431b9df0cc522c8b:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.ReturnsWrongSampleCount
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Value returned by GetNewSample() does not match with the number of calls to callback F().
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CounterOfInvokedCallbacksIsWrong <lobster-item-745569a77dd270df24c51db4c383ca4d58bfc887>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:612:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L612>`__
+
+.. _lobster-item-1ba8a77e1f4241b907630ec05c2e42feb0c7fd91:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.ReturnsWrongFreeSampleCount
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A user has already M SamplePtr in use from a max. announced number N, but GetFreeSampleCount() returns a different value than N-M.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseReturnsWrongFreeSampleCount <lobster-item-973441bc61d696419fad088dc1ab0cc5d614893b>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:638:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L638>`__
+
+.. _lobster-item-904c71df36d9809380f3e9fdc24a6996528b7155:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.DoesNotUnsubscribe
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A proxy is subscribed to an event, tries to unsubscribe, but silently fails to unsubscribe.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ExplicitUnsubscribeByUserFailed <lobster-item-c09d4ab5518cb140bdba1ee993eafbac3dae0578>`
+   * :ref:`mw\_com\_fta.ProxyCrashesWithoutUnsubscription <lobster-item-4bf2127a4f3d6004a99da1cefdb3d9ad00b4bc1f>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:652:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L652>`__
+
+.. _lobster-item-580713db74f3a5832552c7363befd16da78be354:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.UnsubscribesFromWrongEvent
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A user unsubscribes from an event, but the unsubscribe is silently carried out on another event.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.EventFieldIdReferencesWrongStorage <lobster-item-977c64f1d6df712250f0a4cdbe55d022dfc9f415>`
+   * :ref:`mw\_com\_fta.EventFieldNameMappingClash <lobster-item-81d8565ad352bd2ceffa4ad8d474dc408a92269f>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:662:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L662>`__
+
+.. _lobster-item-9cd5aa45b21aed6cf13f031923d62b7351f2c245:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.DoesNotImplicitRemoveReceiveHandler
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A proxy has registered a receive handler and unsubscribes, this should lead to the case that a receive handler is no longer called. In this failure mode, the receive handler would still be called.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.RootCauseDoesNotImplicitRemoveReceiveHandler <lobster-item-a33d992136d37b104a3fb6cf395d3da7226b947f>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:673:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L673>`__
+
+.. _lobster-item-3a2e66b4b9cb8ce1c6440b56c7a5187a48036a2d:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.MethodCallBlocksLongerThanExpected
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A call to a service-method on the client/consumer side blocks longer than expected (or indefinite). This is a specific instance of FailureMode [AnyFunctionBlocksLongerThanExpected], but since with service-methods we have concrete root causes in the form of message-passing behaviour and behaviour of user-provided handler, we have this specific failure mode.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.BlocksOnCaller <lobster-item-e251c14ea7aa696152f1a5ba65c7e70ac1e5e643>`
+   * :ref:`mw\_com\_fta.CallBlocksOnCallee <lobster-item-aff56d22187e3d485074c26e69cbb41c586ed42a>`
+   * :ref:`mw\_com\_fta.CallBlocksOnUserHandler <lobster-item-cab40b399c21e29dc81600797c8b1b8a647e64fa>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:752:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L752>`__
+
+.. _lobster-item-b3ff2f925fe67a8d606d6a6392a78bc30b6dfe81:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongMethodInArgsProvided
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Unintended input arguments are provided to a service method call. Therefore, the method call gets executed with wrong input data.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CallSignalledBeforeInArgsCompletelyProvided <lobster-item-a5bde766949d2309fbd11bca162f6581a495cbc1>`
+   * :ref:`mw\_com\_fta.CallerProvidedInArgsInWrongLocation <lobster-item-3d98f2e4492940d76c9d180021e708b2f80bc837>`
+   * :ref:`mw\_com\_fta.InArgsUpdateAfterCall <lobster-item-87448a3b4942ccc14a4da0a0e015499f6ddf729c>`
+   * :ref:`mw\_com\_fta.InArgsWrongLayout <lobster-item-b45e3ff94a2374ed7c2917b6ad83291bdb2fbd23>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:769:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L769>`__
+
+.. _lobster-item-2df19c946ac37dd18658c0b66a07384a43d35a3c:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.WrongReturnValueUsed
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      Unintended results are provided from a service method call. Therefore, the caller of the method works on wrong data.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.CallerUsedResultBeforeFullyProvided <lobster-item-7e89f9de21f0436e31f81f40230c8a4acbd3f1b4>`
+   * :ref:`mw\_com\_fta.CallerUsedResultFromWrongLocation <lobster-item-9a54059abdf7f3c5f3df5b1266f9af2975cd97bf>`
+   * :ref:`mw\_com\_fta.CallerUsedResultInWrongLayout <lobster-item-fcbdc308c80a563da0a2379144223e6f940da951>`
+   * :ref:`mw\_com\_fta.CallerUsedResultWhileConcurrentlyUpdated <lobster-item-9f598aeca7198ab1cbec0e3314b824708a1a8ee6>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:786:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L786>`__
+
+.. _lobster-item-a7e927c15e6d55f370fb254efcebddd61dfc1d6f:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.DoesNotFreeResourcesOnDestruction
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A SampleAllocateePtr or SamplePtr is destroyed, which should lead to a freeing of resources, but caused by a fault they are not freed.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ChangingStateFails <lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2>`
+   * :ref:`mw\_com\_fta.IncreasingDecreasingRefCountFails <lobster-item-6b97c412d9bea7902c91be683007f180b1b29592>`
+   * :ref:`mw\_com\_fta.SlotReferenceBrokenEGNonValid <lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:806:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L806>`__
+
+.. _lobster-item-102d7397c31cde2b2fbb6e6fab533fbb83526213:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.FreesWrongResources
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      A SampleAllocateePtr or SamplePtr free the wrong resources associated with them.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.ChangingStateFails <lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2>`
+   * :ref:`mw\_com\_fta.IncreasingDecreasingRefCountFails <lobster-item-6b97c412d9bea7902c91be683007f180b1b29592>`
+   * :ref:`mw\_com\_fta.SlotReferenceBrokenEGNonValid <lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:816:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L816>`__
+
+.. _lobster-item-9682bf97a1e08888c6264f9b916c5ba9e9e933b2:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.DoesNotUpdateFreeSampleCountCorrectly
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      When a SamplePtr gets created or destroyed for a given event instance, the Free Sample Count of this instance doesn't get updated accordingly
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.SlotReferenceCountNotDecremented <lobster-item-4ae05956921b2fb9b6242be5be79c54fba0fb570>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:838:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L838>`__
+
+.. _lobster-item-095592958842a04c6a742f5bfd4e1ef9aa40ccf3:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.ReturnsWrongData
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      On dereferenciation of a SamplePtr or SampleAllocateePtr wrong data is returned.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.LifeCycleIssuesSamplePtr <lobster-item-e972b9bb6cb435723bf989d8e51a7e73fe07041c>`
+   * :ref:`mw\_com\_fta.WrongSlotReferenced <lobster-item-32eb0575ad16d27f3255922b9d9cd6c0d1cebaf7>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:848:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L848>`__
+
+.. _lobster-item-cd2f11fe58d1b7ef6805c40cf207cc0454c7914e:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.MethodSignatureElementPtrWrongTarget
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      On de-referencing of a MethodSignatureElementPtr wrong data is returned.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.LifeCycleIssuesElementPtr <lobster-item-537eba2dfbbbb05705b5e8899c9420b545e71402>`
+   * :ref:`mw\_com\_fta.ReferencesInvalidMemory <lobster-item-485f6a303ddd3186c065f3c7e89adea751485793>`
+   * :ref:`mw\_com\_fta.ReferencesValidMemoryInsideSHM <lobster-item-cfef30a2e7f29960fdb0156f44bb2e54cf355512>`
+   * :ref:`mw\_com\_fta.ReferencesValidMemoryOutsideSHM <lobster-item-a6f562f26b766f0665d24d3ebdecd28832ebbcff>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:868:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L868>`__
+
+.. _lobster-item-d34575ccd6bfc1a5a2fe6fe89dd12537312177b1:
+
+.. dropdown:: [OK] TRLC Failuremode Communication.MethodSignatureElementPtrFailsToFree
+   :class-title: sd-bg-success sd-text-white
+
+   .. pull-quote::
+
+      On destruction of a MethodSignatureElementPtr wrong memory is freed or not freed at all.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`mw\_com\_fta.DoesNotFreeMethodSignatureElement <lobster-item-f427691875b7086c9eecbe57455b211022133d1f>`
+   * :ref:`mw\_com\_fta.OverwriteOfElementInUse <lobster-item-67b89f6c1a0b3b5dc146acee76ea374667399846>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/mw/com/dependability/safety\_analysis/failure\_modes.trlc:883:34 <../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L883>`__
+
