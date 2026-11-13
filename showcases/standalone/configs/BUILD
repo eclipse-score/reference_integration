@@ -15,4 +15,5 @@ exports_files([
     "logging_app.json",
     "dlt_generator.json",
     "platform_info_consumer.json",
+    "lifecycle_run_target_recovery_lm_config.json",
 ])

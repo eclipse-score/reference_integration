@@ -23,6 +23,10 @@ launch_manager_config(
 # The launch manager itself is part of the deployed platform
 # (//deploy/lifecycle), not of this showcase. What ships here are the
 # applications it supervises and the configuration that declares them.
+exports_files([
+    "lifecycle_signal.sh",
+])
+
 score_pkg_bundle(
     name = "simple_lifecycle",
     bins = [
@@ -37,5 +41,7 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_configs": "etc/",
         "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        # Required by the launch manager's mw::com based lm_control service.
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
 )

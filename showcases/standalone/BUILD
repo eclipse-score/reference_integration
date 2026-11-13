@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -124,6 +125,36 @@ score_pkg_bundle(
     config_data = ["//showcases/standalone:platform_info.score.json"],
     custom_layout = {
         "//showcases/standalone/configs:platform_info_consumer.json": "etc/logging.json",
+    },
+    package_dir = "standalone",
+)
+
+launch_manager_config(
+    name = "lifecycle_run_target_recovery_configs",
+    config = "//showcases/standalone/configs:lifecycle_run_target_recovery_lm_config.json",
+    flatbuffer_out_dir = "etc",
+)
+
+# The launch manager, the lifecycle control client and the supervised apps are
+# built from @score_lifecycle. The signal helper is not packaged here: it is
+# shipped once by //showcases/simple_lifecycle at /showcases/bin/lifecycle_signal.sh,
+# and packaging it twice makes mkifs fail on duplicate entries. The logging
+# configuration is taken directly from //showcases/simple_lifecycle.
+score_pkg_bundle(
+    name = "lifecycle_run_target_recovery",
+    bins = [
+        "@score_lifecycle//score/launch_manager",
+        "@score_lifecycle//examples/c_supervised_app",
+        "@score_lifecycle//examples/cpp_lifecycle_app",
+        "@score_lifecycle//examples/control_application:lmcontrol",
+    ],
+    config_data = ["//showcases/standalone:lifecycle_run_target_recovery.score.json"],
+    custom_layout = {
+        ":lifecycle_run_target_recovery_configs": "etc/",
+        "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        # The launch manager serves lm_control over mw::com and reads this
+        # from ./etc relative to its working directory; without it it aborts.
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
     package_dir = "standalone",
 )
