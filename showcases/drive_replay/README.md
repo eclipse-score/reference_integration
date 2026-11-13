@@ -5,6 +5,11 @@ processes are started and supervised by the S-CORE launch manager; if the FCW ha
 crashes, the system falls back to a degraded mode and recovers. Every step is visible
 in the DLT log.
 
+[![Drive Replay Demo video: how the S-CORE modules work together](doc/drive_replay_demo_preview.jpg)](doc/drive_replay_demo.mp4)
+
+*Click the image to watch the video (53 s): how the S-CORE modules work together,
+recorded from a real run.*
+
 ## Architecture
 
 ```mermaid
