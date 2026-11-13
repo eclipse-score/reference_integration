@@ -46,6 +46,9 @@ pkg_mkdirs(
 # Same content as :platform_bundle, as a tar for oci_image consumers.
 pkg_tar(
     name = "platform_tar",
-    srcs = [":platform_bundle", ":data_dir"],
+    srcs = [
+        ":data_dir",
+        ":platform_bundle",
+    ],
     visibility = ["//visibility:public"],
 )
