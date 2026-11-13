@@ -1,0 +1,79 @@
+{
+  "kind": "chipmunk_named_presets",
+  "version": 2,
+  "presets": [
+    {
+      "name": "S-CORE Drive Replay",
+      "pinned": true,
+      "filters": [
+        {
+          "filter": { "value": "lead vehicle brakes hard|ego driver reacts late|traffic clears|lap \\d+ started", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [0, 0, 0, 255], "bg": [178, 190, 195, 255] }
+        },
+        {
+          "filter": { "value": "FORWARD COLLISION WARNING", "is_regex": false, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [0, 0, 0, 255], "bg": [253, 203, 110, 255] }
+        },
+        {
+          "filter": { "value": "CRITICAL, brake now", "is_regex": false, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [255, 255, 255, 255], "bg": [214, 48, 49, 255] }
+        },
+        {
+          "filter": { "value": "situation resolved", "is_regex": false, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [0, 0, 0, 255], "bg": [85, 239, 196, 255] }
+        },
+        {
+          "filter": { "value": "FAULT INJECTED", "is_regex": false, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [255, 255, 255, 255], "bg": [232, 67, 147, 255] }
+        },
+        {
+          "filter": { "value": "switched to FAILED|unexpected termination of process", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [255, 255, 255, 255], "bg": [130, 20, 20, 255] }
+        },
+        {
+          "filter": { "value": "Completed the request for Run Target", "is_regex": false, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [255, 255, 255, 255], "bg": [9, 132, 227, 255] }
+        },
+        {
+          "filter": { "value": "recovered a failure|requesting Run Target", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [255, 255, 255, 255], "bg": [108, 92, 231, 255] }
+        },
+        {
+          "filter": { "value": "started \\(start #\\d+\\), restored", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "colors": { "fg": [0, 0, 0, 255], "bg": [129, 236, 236, 255] }
+        }
+      ],
+      "search_values": [
+        {
+          "filter": { "value": "processed: gap ([\\d.]+) m", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "color": [9, 132, 227, 255]
+        },
+        {
+          "filter": { "value": "m/s, TTC ([\\d.]+) s", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "color": [214, 48, 49, 255]
+        },
+        {
+          "filter": { "value": "ego (\\d+) km/h", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "color": [0, 184, 148, 255]
+        },
+        {
+          "filter": { "value": "lead (\\d+) km/h", "is_regex": true, "ignore_case": false, "is_word": false },
+          "enabled": true,
+          "color": [253, 150, 68, 255]
+        }
+      ]
+    }
+  ]
+}

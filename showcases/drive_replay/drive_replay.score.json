@@ -1,0 +1,30 @@
+{
+    "name": "Drive Replay Demo",
+    "description": "Scripted run (~65 s): replays a highway drive into a forward collision warning that is supervised by the launch manager. Injects a hang after 20 s and a crash after 45 s; the state manager recovers both. Logs go to DLT (239.255.42.99:3490), live data to Lichtblick via showcases/drive_replay/viz/foxglove_bridge.py",
+    "apps": [
+        {
+            "path": "/usr/bin/launch_manager",
+            "dir": "/showcases/data/drive_replay",
+            "args": [],
+            "env": {}
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["warn_app", "SIGUSR1"],
+            "env": {},
+            "delay": 20
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["warn_app", "SIGKILL"],
+            "env": {},
+            "delay": 25
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 20
+        }
+    ]
+}
