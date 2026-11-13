@@ -79,6 +79,8 @@ DR_003_URL = "https://github.com/eclipse-score/score/blob/main/docs/design_decis
 EMPTY_CELL = "---"
 # Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
+# Share of the content width, so that the whole diagram fits on screen.
+DIAGRAM_WIDTH = "75%"
 NEEDS_TARGET = "//:needs_json_file"
 # Old module names in earlier known_good.json versions -> current name used in the docs tree.
 KEY_ALIASES = {"score_lifecycle_health": "score_lifecycle", "score_process": "score_process_description"}
@@ -558,6 +560,7 @@ included in the software platform release version {release} as compared to the
 previous platform release ({origin}).
 
 .. figure:: /{DIAGRAM_DIR.removeprefix("docs/")}/{diagram_name(release)}
+   :width: {DIAGRAM_WIDTH}
    :alt: S-CORE v{short} reference integration architecture
 
    Modules, components and images of the reference integration {release}.

@@ -21,7 +21,6 @@ this skill holds the rules. Template basis: `wp__platform_sw_release_note`
 | `scripts/release_note/collect_changes.py` | Evidence for the narrative |
 | `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst` | The note |
 | `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` | The diagram (generated) |
-| `docs/_assets/custom.css` | Display size of the diagram (5.1) |
 | `docs/s_core_v_1/releases/releases.rst` | Release-note `toctree` (explicit list, release order) |
 
 ### 1.2 Who writes what
@@ -141,11 +140,10 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
   another ref the components would still come from the checkout.
 - Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
   `architecture_diagram.py`.
-- Display size: `docs/_assets/custom.css` limits every `architecture_v*.svg`
-  to 70 % of the window height, so the whole diagram fits on screen; a click
-  opens it in full size. It applies to all notes without regeneration. Change
-  the size only there; the generator sets no `:width:`/`:height:`. Keep the file
-  name pattern `architecture_v<major>_<minor>.svg`, the CSS selector relies on it.
+- Display size: the figure gets `:width:` `DIAGRAM_WIDTH` (75 % of the content
+  width), so the whole diagram fits on screen; a click opens it in full size.
+  Change the size only in `DIAGRAM_WIDTH`, keep it a percentage (scales with
+  the page) and never set `:height:` (distorts the diagram on narrow screens).
 
 ### 5.2 Content
 
@@ -360,8 +358,8 @@ Put the candidate lists of all passes together, then decide per item:
 Checks:
 
 - [ ] `grep -n "AI-FILL" <note>` is empty.
-- [ ] Overview has the `.. figure::`; the SVG was written by this run and is
-      committed with the note.
+- [ ] Overview has the `.. figure::` with `:width:` `DIAGRAM_WIDTH`; the SVG
+      was written by this run and is committed with the note.
 - [ ] Every software module has a maturity badge; the generator printed
       `maturity (DR-003): ...`; the Overview links DR-003.
 - [ ] The note is the last entry of the release-note `toctree` in
