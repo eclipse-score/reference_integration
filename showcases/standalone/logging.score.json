@@ -3,12 +3,10 @@
     "description": "A Logging app that demonstrates logging with mw::log with kConsole|kRemote|kFile config.",
     "apps": [
       {
-        "path": "/bin/sh",
-        "args": [
-          "-c",
-          "(cd /usr/bin/datarouter && exec ./datarouter --no_adaptive_runtime) </dev/null >/dev/null 2>&1 &"
-        ],
-        "env": {}
+        "path": "/usr/bin/datarouter/datarouter",
+        "args": ["--no_adaptive_runtime"],
+        "env": {},
+        "dir": "/usr/bin/datarouter"
       },
       {
         "path": "/showcases/bin/logging_app",
@@ -16,12 +14,17 @@
         "env": {},
         "dir": "/showcases/data/logging/logging_app/etc"
       },
-
       {
         "path": "/showcases/bin/dlt_generator",
         "args": [],
         "env": {},
         "dir": "/showcases/data/logging/dlt_generator/etc"
+      },
+      {
+        "path": "/showcases/bin/lifecycle_signal.sh",
+        "args": ["datarouter", "SIGTERM"],
+        "env": {},
+        "delay": 3
       }
     ]
   }
