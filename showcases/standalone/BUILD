@@ -136,8 +136,10 @@ launch_manager_config(
 )
 
 # The launch manager, the lifecycle control client and the supervised apps are
-# built from @score_lifecycle. The signal helper and logging configuration are
-# taken directly from //showcases/simple_lifecycle.
+# built from @score_lifecycle. The signal helper is not packaged here: it is
+# shipped once by //showcases/simple_lifecycle at /showcases/bin/lifecycle_signal.sh,
+# and packaging it twice makes mkifs fail on duplicate entries. The logging
+# configuration is taken directly from //showcases/simple_lifecycle.
 score_pkg_bundle(
     name = "lifecycle_run_target_recovery",
     bins = [
@@ -145,7 +147,6 @@ score_pkg_bundle(
         "@score_lifecycle//examples/c_supervised_app",
         "@score_lifecycle//examples/cpp_lifecycle_app",
         "@score_lifecycle//examples/control_application:lmcontrol",
-        "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = ["//showcases/standalone:lifecycle_run_target_recovery.score.json"],
     custom_layout = {
