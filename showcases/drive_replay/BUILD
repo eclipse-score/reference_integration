@@ -45,6 +45,7 @@ cc_binary(
     deps = [
         ":drive_data",
         ":viz_link",
+        "@score_baselibs//score/log_rust/stdout_logger_cpp_init",
         "@score_baselibs//score/string_manipulation/arguments",
         "@score_communication//score/mw/com",
         "@score_lifecycle//score/health_monitor:health_monitoring_cc",

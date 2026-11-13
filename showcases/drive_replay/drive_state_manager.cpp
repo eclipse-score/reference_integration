@@ -150,7 +150,8 @@ int main(int argc, const char* argv[])
             recover_at.reset();
             logger.LogWarn() << "requesting Run Target '" + std::string{kNominalRunTarget} +
                                     "' to restore the collision warning";
-            const auto requested = client->activate_run_target(RunTargetName{"Drive"});
+            // force: without it the launch manager rejects the request ("queued activation is not yet implemented").
+            const auto requested = client->activate_run_target(RunTargetName{"Drive"}, true);
             if (!requested.has_value())
             {
                 logger.LogError() << "Run Target request rejected, retrying";
