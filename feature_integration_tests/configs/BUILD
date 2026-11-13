@@ -17,5 +17,6 @@ exports_files(
         "dlt_config_qnx_x86_64.json",
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
+        "lifecycle_persistency_config.json",
     ],
 )

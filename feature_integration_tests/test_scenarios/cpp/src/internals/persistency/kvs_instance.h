@@ -32,6 +32,9 @@ public:
     // Set value
     bool set_value(const std::string& key, double value);
 
+    // Whether `key` has a stored (written) value; nullopt if the lookup fails.
+    std::optional<bool> key_exists(const std::string& key);
+
     // Get value methods
     std::optional<double> get_value(const std::string& key);
     std::optional<double> get_value_f64(const std::string& key);

@@ -1,0 +1,181 @@
+{
+    "schema_version": 1,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "__FIT_RUNTIME_ROOT__/bin",
+            "ready_timeout": 2.0,
+            "shutdown_timeout": 2.0,
+            "ready_recovery_action": {
+                "restart": {
+                    "number_of_attempts": 0
+                }
+            },
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            },
+            "sandbox": {
+                "uid": "__FIT_SANDBOX_UID__",
+                "gid": "__FIT_RUNNER_GID__",
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 0
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Native",
+                "is_self_terminating": true
+            },
+            "ready_condition": {
+                "process_state": "Terminated"
+            }
+        }
+    },
+    "components": {
+        "control_daemon": {
+            "component_properties": {
+                "binary_name": "control_daemon",
+                "application_profile": {
+                    "application_type": "State_Manager",
+                    "is_self_terminating": false,
+                    "alive_supervision": {
+                        "reporting_cycle": 0.1,
+                        "min_indications": 0,
+                        "max_indications": 3,
+                        "failed_cycles_tolerance": 1
+                    }
+                },
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "control_daemon"
+                },
+                "sandbox": {
+                    "uid": "__FIT_RUNNER_UID__",
+                    "gid": "__FIT_RUNNER_GID__"
+                }
+            }
+        },
+        "__FIT_SUPERVISED_APP__": {
+            "component_properties": {
+                "binary_name": "__FIT_SUPERVISED_APP__",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised",
+                    "is_self_terminating": false,
+                    "alive_supervision": {
+                        "reporting_cycle": 0.1,
+                        "min_indications": 1,
+                        "max_indications": 3,
+                        "failed_cycles_tolerance": 1
+                    }
+                },
+                "ready_condition": {
+                    "process_state": "Running"
+                },
+                "process_arguments": [
+                    "-d50"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "__FIT_SUPERVISED_APP__",
+                    "IDENTIFIER": "__FIT_SUPERVISED_APP__"
+                }
+            }
+        },
+        "kvs_primary": {
+            "component_properties": {
+                "binary_name": "kvs_scenario",
+                "process_arguments": [
+                    "--name",
+                    "persistency.restart_counter",
+                    "--input",
+                    "{\"kvs_parameters_1\": {\"kvs_parameters\": {\"instance_id\": 1, \"dir\": \"__FIT_KVS_DIR__\", \"defaults\": \"optional\"}}, \"test\": {\"counter_key\": \"launch_count\", \"set_keys\": [\"key1\", \"key2\", \"key3\"], \"set_values\": [111.0, 222.0, 333.0]}}"
+                ]
+            }
+        },
+        "kvs_recovery_reset": {
+            "component_properties": {
+                "binary_name": "kvs_scenario",
+                "process_arguments": [
+                    "--name",
+                    "persistency.restart_counter",
+                    "--input",
+                    "{\"kvs_parameters_1\": {\"kvs_parameters\": {\"instance_id\": 1, \"dir\": \"__FIT_KVS_DIR__\", \"defaults\": \"optional\"}}, \"test\": {\"counter_key\": \"recovery_count\", \"reset_keys\": [\"key2\"], \"read_keys\": [\"launch_count\", \"key1\", \"key2\", \"key3\"]}}"
+                ]
+            }
+        },
+        "kvs_secondary": {
+            "component_properties": {
+                "binary_name": "kvs_scenario",
+                "process_arguments": [
+                    "--name",
+                    "persistency.restart_counter",
+                    "--input",
+                    "{\"kvs_parameters_1\": {\"kvs_parameters\": {\"instance_id\": 2, \"dir\": \"__FIT_KVS_DIR__\", \"defaults\": \"optional\"}}, \"test\": {\"counter_key\": \"launch_count\", \"set_keys\": [\"key1\", \"key2\", \"key3\"], \"set_values\": [444.0, 555.0, 666.0]}}"
+                ]
+            }
+        }
+    },
+    "run_targets": {
+        "Startup": {
+            "depends_on": [
+                "control_daemon"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "Running": {
+            "depends_on": [
+                "control_daemon",
+                "__FIT_SUPERVISED_APP__",
+                "kvs_primary"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "Secondary": {
+            "depends_on": [
+                "control_daemon",
+                "kvs_secondary"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "BothInstances": {
+            "depends_on": [
+                "control_daemon",
+                "kvs_primary",
+                "kvs_secondary"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        }
+    },
+    "initial_run_target": "Startup",
+    "alive_supervision": {
+        "evaluation_cycle": 0.05
+    },
+    "fallback_run_target": {
+        "depends_on": [
+            "control_daemon",
+            "kvs_recovery_reset"
+        ]
+    }
+}
