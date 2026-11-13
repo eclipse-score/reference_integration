@@ -31,7 +31,8 @@ from score.itf.plugins.dlt.dlt_receive import Protocol
 from score.itf.plugins.dlt.dlt_window import DltWindow
 from showcase_runner import run_showcases
 
-SHOWCASE = "Drive Replay Demo (scripted, ~65 s)"
+# No comma: the showcase CLI splits --examples at commas.
+SHOWCASE = "Drive Replay Demo"
 
 _MULTICAST_ROUTE_CMD = "ip route add 224.0.0.0/4 dev eth0 2>/dev/null || true"
 
