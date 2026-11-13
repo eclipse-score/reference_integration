@@ -125,7 +125,7 @@ jobs:
           python ./scripts/quality_runners.py --integration-tests \
             ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Install uv (required for SBOM license scanning)
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: false
       - name: Build build tools SBOM
