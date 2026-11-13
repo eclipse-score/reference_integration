@@ -62,10 +62,14 @@ DLT_TO_FOXGLOVE_LEVEL = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, 6: 1}
 
 
 def _schema(properties: dict[str, str]) -> str:
+    def _property(kind: str) -> dict[str, Any]:
+        # Lichtblick's JSON schema parser needs "items" for every array.
+        return {"type": kind, "items": {"type": "object"}} if kind == "array" else {"type": kind}
+
     return json.dumps(
         {
             "type": "object",
-            "properties": {name: {"type": kind} for name, kind in properties.items()},
+            "properties": {name: _property(kind) for name, kind in properties.items()},
         }
     )
 
@@ -214,6 +218,11 @@ def _parse_dlt_message(message: bytes) -> DltMessage | None:
     return DltMessage(ecu, app_id, context_id, (message_info >> 4) & 0x0F, text)
 
 
+def _is_noise(message: DltMessage) -> bool:
+    # periodic mw::log statistics and the datarouter's own info/debug output
+    return message.context_id == "STAT" or (message.app_id == "DR" and message.level > 3)
+
+
 def parse_dlt(datagram: bytes) -> Iterator[DltMessage]:
     """Yields the log messages of a UDP datagram, which may carry several DLT messages."""
     offset = 0
@@ -334,6 +343,8 @@ class DemoBridge:
     async def on_dlt(self, datagram: bytes) -> None:
         now_ns = time.time_ns()
         for message in parse_dlt(datagram):
+            if _is_noise(message):
+                continue
             await self._publish(
                 "/log",
                 {

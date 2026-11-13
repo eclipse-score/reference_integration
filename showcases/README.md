@@ -13,7 +13,7 @@ collision warning. All processes run under the launch manager:
 
 | Process | DLT app id | Role |
 |---|---|---|
-| `launch_manager` | `LM` (console only) | starts the Run Target `Drive`, supervises `warn_app` |
+| `launch_manager` | `LM` | starts the Run Target `Drive`, supervises `warn_app` |
 | `datarouter` | `DR` | streams all logs as DLT to `239.255.42.99:3490` |
 | `drive_state_manager` | `DSM` | reports Run Target changes, requests `Drive` again after a recovery |
 | `replay_app` | `RPLY` | publishes the drive frames via `mw::com` (`score/showcases/drive_replay/DriveData`) |
@@ -51,10 +51,19 @@ In Lichtblick open the connection `Foxglove WebSocket` -> `ws://127.0.0.1:8765` 
 * Plot panel: `/adas/fcw.ttc`, `/drive/frame.gap`, `/drive/frame.ego_kmh`, `/drive/frame.lead_kmh`
 * State Transitions panel: `/system/state.run_target`, `/adas/fcw.level`
 * Indicator panel: `/system/health.fcw_alive`
-* Log panel: topic `/log` (DLT messages of DSM, RPLY, FCW and the datarouter)
+* Log panel: topic `/log` (DLT messages of LM, DSM, RPLY, FCW and the datarouter)
 
 The launch manager needs POSIX ACL support on `/dev/shm` (alive supervision). Docker Desktop
 (linuxkit kernel) does not provide it; Raspberry Pi OS and Ubuntu do.
+
+## Platform integration test
+
+`//platform_integration_tests/drive_replay` (Linux x86_64) runs the scripted showcase and
+records its DLT traffic; CI uploads it as artifact `drive-replay-dlt-<sha>` (open it in the
+DLT Viewer). The test checks the chain in the trace: drive and warnings (`RPLY`, `FCW`),
+exactly one supervision failure of `warn_app` and only after the injected hang, two
+recoveries (`LM` `fallback_run_target`, `DSM` requesting `Drive`, `LM` `Drive` again) and
+the restarted `warn_app` restoring its counters (`start #3, restored warn_count>0`).
 
 # S-CORE Platform Run
 

@@ -25,6 +25,7 @@
 #include <score/mw/health/common.h>
 #include <score/mw/health/health_monitor.h>
 #include <score/mw/lifecycle/report_running.h>
+#include <score/mw/log/rust/stdout_logger_init.h>
 
 #include <algorithm>
 #include <array>
@@ -46,6 +47,8 @@ using namespace score::showcases::drive_replay;
 using namespace std::chrono_literals;
 
 constexpr auto kCycle{50ms};
+constexpr auto kMonitorCycle{10ms};
+constexpr auto kMinHeartbeatGap{20ms};
 constexpr double kWarningTtcS{3.0};
 constexpr double kCriticalTtcS{2.0};
 constexpr double kMinClosingSpeedMps{0.1};
@@ -172,14 +175,30 @@ int main(int argc, const char* argv[])
     logger.LogInfo() << "started (start #" + std::to_string(start_count) +
                             "), restored warn_count=" + std::to_string(warn_count) + " from persistency";
 
+    auto proxy = ConnectToDriveData(logger);
+    if (!proxy.has_value())
+    {
+        return (g_stop_requested != 0) ? 0 : 4;
+    }
+    if (!proxy->frame_.Subscribe(4U).has_value())
+    {
+        logger.LogError() << "cannot subscribe to drive frames";
+        return 5;
+    }
+    logger.LogInfo() << "connected to " + std::string{kDriveDataInstance} + " via mw::com, subscribed to frames";
+
+    score::mw::log::rust::StdoutLoggerBuilder{}
+        .Context("HMON")
+        .LogLevel(score::mw::log::rust::LogLevel::Warn)
+        .SetAsDefaultLogger();
     const score::mw::health::MonitorTag monitor_tag{"fcw_cycle"};
-    // The heartbeat minimum must exceed half the internal processing cycle.
+    // Heartbeat range minimum must exceed half the internal cycle; the supervisor cycle must be a multiple of it.
     auto health_monitor_result =
         score::mw::health::HealthMonitorBuilder()
             .AddHeartbeatMonitor(monitor_tag,
                                  score::mw::health::heartbeat::HeartbeatMonitorBuilder(
-                                     score::mw::health::TimeRange(30ms, 300ms)))
-            .WithInternalProcessingCycle(kCycle)
+                                     score::mw::health::TimeRange(10ms, 300ms)))
+            .WithInternalProcessingCycle(kMonitorCycle)
             .WithSupervisorApiCycle(kCycle)
             .Build();
     if (!health_monitor_result.has_value())
@@ -199,25 +218,23 @@ int main(int argc, const char* argv[])
     score::mw::lifecycle::report_running();
     logger.LogInfo() << "supervised by health monitor: heartbeat every 50 ms, tolerance 300 ms";
 
-    auto proxy = ConnectToDriveData(logger);
-    if (!proxy.has_value())
-    {
-        return (g_stop_requested != 0) ? 0 : 4;
-    }
-    if (!proxy->frame_.Subscribe(4U).has_value())
-    {
-        logger.LogError() << "cannot subscribe to drive frames";
-        return 5;
-    }
-    logger.LogInfo() << "connected to " + std::string{kDriveDataInstance} + " via mw::com, subscribed to frames";
-
     WarningLevel level{WarningLevel::kNone};
     double episode_min_ttc_s{kNoCollisionTtcS};
     std::optional<std::uint64_t> last_sequence{};
     auto next_cycle = std::chrono::steady_clock::now();
+    auto last_heartbeat = next_cycle;
     while ((g_stop_requested == 0) && (g_hang_requested == 0))
     {
+        next_cycle += kCycle;
+        const auto now = std::chrono::steady_clock::now();
+        if (next_cycle < now)
+        {
+            // Running late: skip the missed cycles, a burst of heartbeats would be reported as TooEarly.
+            next_cycle = now;
+        }
+        std::this_thread::sleep_until(std::max(next_cycle, last_heartbeat + kMinHeartbeatGap));
         heartbeat.Heartbeat();
+        last_heartbeat = std::chrono::steady_clock::now();
 
         std::optional<DriveFrame> frame{};
         static_cast<void>(proxy->frame_.GetNewSamples(
@@ -285,9 +302,6 @@ int main(int argc, const char* argv[])
                      ",\"warn_count\":" + std::to_string(warn_count) +
                      ",\"start_count\":" + std::to_string(start_count) + "}");
         }
-
-        next_cycle += kCycle;
-        std::this_thread::sleep_until(next_cycle);
     }
 
     if (g_hang_requested != 0)
