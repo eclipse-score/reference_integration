@@ -12,11 +12,13 @@ described in [showcases/README.md](../README.md#drive-replay-demo).
 flowchart LR
     subgraph target["Target: Raspberry Pi / Linux x86_64"]
         LM["<b>launch_manager</b><br/>score_lifecycle<br/>DLT: LM"]
-        SM["<b>drive_state_manager</b><br/>State Manager<br/>DLT: DSM"]
-        RP["<b>replay_app</b><br/>scripted drive<br/>DLT: RPLY"]
-        FCW["<b>warn_app</b><br/>forward collision warning<br/>DLT: FCW"]
-        KVS[("<b>KVS</b><br/>score_persistency<br/>/tmp/drive_replay/kvs")]
-        DR["<b>datarouter</b><br/>score_logging<br/>DLT: DR"]
+        subgraph apps["Run Target Drive"]
+            RP["<b>replay_app</b><br/>scripted drive<br/>DLT: RPLY"]
+            FCW["<b>warn_app</b><br/>forward collision warning<br/>DLT: FCW"]
+            SM["<b>drive_state_manager</b><br/>State Manager<br/>DLT: DSM"]
+        end
+        KVS[("<b>KVS</b><br/>score_persistency")]
+        DR["<b>datarouter</b><br/>score_logging<br/>DLT daemon"]
     end
     subgraph host["Laptop"]
         CH["Chipmunk / DLT Viewer"]
@@ -25,19 +27,19 @@ flowchart LR
     end
 
     RP -->|"① mw::com event frame<br/>DriveFrame, 20 Hz"| FCW
-    FCW -->|"② health monitor heartbeat<br/>alive notification every 50 ms"| LM
-    LM -->|"③ start / stop processes<br/>per Run Target"| RP & FCW & SM & DR
-    RP & FCW & SM -.->|"④ report_running"| LM
-    SM <-->|"⑤ mw::com LmControlService<br/>ActivationResult / ActivateRunTarget"| LM
-    FCW <-->|"⑥ start_count, warn_count"| KVS
-    RP & FCW & SM & LM -->|"⑦ mw::log"| DR
-    DR -->|"⑧ DLT, UDP multicast<br/>239.255.42.99:3490"| CH & BR
-    RP & FCW & SM -.->|"⑨ JSON, UDP<br/>239.255.42.99:9001"| BR
-    BR -->|"Foxglove WebSocket :8765"| LB
+    FCW -->|"② heartbeat<br/>alive every 50 ms"| LM
+    LM -->|"③ start / stop<br/>per Run Target"| apps
+    apps -.->|"④ report_running"| LM
+    SM <-->|"⑤ mw::com LmControlService"| LM
+    FCW <-->|"⑥ counters"| KVS
+    apps -->|"⑦ mw::log"| DR
+    DR -->|"⑧ DLT, UDP :3490"| host
+    apps -.->|"⑨ JSON, UDP :9001"| BR
+    BR -->|"WebSocket :8765"| LB
 ```
 
-Solid arrows are S-CORE interfaces, dotted arrows are lifecycle reports and the optional
-visualization feed.
+The launch manager also starts the `datarouter` and logs through it (⑦). Solid arrows are
+S-CORE interfaces, dotted arrows are lifecycle reports and the optional visualization feed.
 
 ### Information flows
 
