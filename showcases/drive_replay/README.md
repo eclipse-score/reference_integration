@@ -3,8 +3,7 @@
 A scripted 40 s highway lap is replayed into a forward collision warning (FCW). All
 processes are started and supervised by the S-CORE launch manager; if the FCW hangs or
 crashes, the system falls back to a degraded mode and recovers. Every step is visible
-in the DLT log. How to run it, the CI test and the Chipmunk / Lichtblick setup are
-described in [showcases/README.md](../README.md#drive-replay-demo).
+in the DLT log.
 
 ## Architecture
 
@@ -66,3 +65,70 @@ S-CORE interfaces, dotted arrows are lifecycle reports and the optional visualiz
 | `datarouter` | – | started as `Native` component | is the DLT daemon | – |
 
 score_baselibs is used underneath by all of them (argument parsing, result types, `mw::log` frontend).
+
+## Fault handling
+
+If `warn_app` hangs (no more heartbeats) or crashes, the launch manager switches to the
+degraded `fallback_run_target`: the drive continues, the collision warning is off. The
+state manager requests `Drive` again after 3 s; the restarted `warn_app` restores its
+counters from the KVS.
+
+## Run on the target
+
+```sh
+# scripted (~65 s, hang after 20 s, crash after 45 s, then stop):
+/showcases/bin/cli --examples 'Drive Replay Demo'
+# live, until Ctrl-C:
+cd /showcases/data/drive_replay && /usr/bin/launch_manager
+# inject a fault from a second shell:
+/showcases/bin/lifecycle_signal.sh warn_app SIGUSR1   # hang (no more heartbeats)
+/showcases/bin/lifecycle_signal.sh warn_app SIGKILL   # crash
+```
+
+The launch manager needs POSIX ACL support on `/dev/shm` (alive supervision). Docker Desktop
+(linuxkit kernel) does not provide it; Raspberry Pi OS and Ubuntu do.
+
+## Platform integration test
+
+`//platform_integration_tests/drive_replay` (Linux x86_64) runs the scripted showcase and
+records its DLT traffic; CI uploads it as artifact `drive-replay-dlt-<sha>`. The test checks
+the chain in the trace: drive and warnings (`RPLY`, `FCW`), exactly one supervision failure
+of `warn_app` and only after the injected hang, two recoveries (`LM` `fallback_run_target`,
+`DSM` requesting `Drive`, `LM` `Drive` again) and the restarted `warn_app` restoring its
+counters (`start #3, restored warn_count>0`).
+
+## View the trace in Chipmunk
+
+[viz/chipmunk_presets.json](viz/chipmunk_presets.json) is a named preset for
+[Chipmunk](https://github.com/esrlabs/chipmunk) 4.x: open `drive_replay.dlt` (CI artifact, or
+recorded from `239.255.42.99:3490`), then in the bottom panel *Presets* use *Import named
+presets* and apply "S-CORE Drive Replay". It adds
+
+* colored filters that reduce the trace to the story: scenario (grey), warning (yellow),
+  critical (red), resolved (green), fault injected (pink), supervision failure / crash (dark red),
+  Run Target changes of `LM` (blue), recovery requests of `DSM` (violet), restart with restored
+  counters (cyan);
+* charts from the measurement lines that `RPLY` and `FCW` log every 0.5 s: gap, time to
+  collision (capped at 10 s), ego and lead speed.
+
+## Live visualization in Lichtblick (optional)
+
+The apps send their live data as JSON via UDP to `239.255.42.99:9001`; to use unicast
+instead, add `DRIVE_VIZ_ADDR=<ip>:<port>` to the `environmental_variables` of the apps in
+[configs/launch_manager_config.json](configs/launch_manager_config.json).
+
+On a laptop in the same network, from the repository root:
+
+```sh
+pip install -r showcases/drive_replay/viz/requirements.txt
+python3 showcases/drive_replay/viz/foxglove_bridge.py --interface <laptop ip>
+```
+
+In Lichtblick open the connection `Foxglove WebSocket` -> `ws://127.0.0.1:8765` and import
+the layout [viz/lichtblick_layout.json](viz/lichtblick_layout.json), or add the panels:
+
+* 3D panel: topic `/scene`, display frame `ego`
+* Plot panel: `/adas/fcw.ttc`, `/drive/frame.gap`, `/drive/frame.ego_kmh`, `/drive/frame.lead_kmh`
+* State Transitions panel: `/system/state.run_target`, `/adas/fcw.level`
+* Indicator panel: `/system/health.fcw_alive`
+* Log panel: topic `/log` (DLT messages of LM, DSM, RPLY, FCW and the datarouter)

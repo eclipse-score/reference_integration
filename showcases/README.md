@@ -8,76 +8,10 @@ For remote (DLT) logging, please refer to the following documentation:
 
 # Drive Replay Demo
 
-A scripted 40 s highway lap is replayed on the target (e.g. a Raspberry Pi) into a forward
-collision warning. All processes run under the launch manager:
-
-| Process | DLT app id | Role |
-|---|---|---|
-| `launch_manager` | `LM` | starts the Run Target `Drive`, supervises `warn_app` |
-| `datarouter` | `DR` | streams all logs as DLT to `239.255.42.99:3490` |
-| `drive_state_manager` | `DSM` | reports Run Target changes, requests `Drive` again after a recovery |
-| `replay_app` | `RPLY` | publishes the drive frames via `mw::com` (`score/showcases/drive_replay/DriveData`) |
-| `warn_app` | `FCW` | computes the time to collision, heartbeat to the health monitor, counters in the persistency KVS |
-
-If `warn_app` hangs or crashes, the launch manager switches to the degraded
-`fallback_run_target` (drive continues, warning off). The state manager requests `Drive`
-again after 3 s; the restarted `warn_app` restores its counters from the KVS.
-
-On the target:
-
-```sh
-# scripted (~65 s, hang after 20 s, crash after 45 s): select it in the showcase CLI
-# live, until Ctrl-C:
-cd /showcases/data/drive_replay && /usr/bin/launch_manager
-# inject a fault from a second shell:
-/showcases/bin/lifecycle_signal.sh warn_app SIGUSR1   # hang (no more heartbeats)
-/showcases/bin/lifecycle_signal.sh warn_app SIGKILL   # crash
-```
-
-The apps send their live data as JSON via UDP to `239.255.42.99:9001`; to use unicast instead, add
-`DRIVE_VIZ_ADDR=<ip>:<port>` to the `environmental_variables` of the apps in
-[drive_replay/configs/launch_manager_config.json](drive_replay/configs/launch_manager_config.json).
-
-On the laptop in the same network:
-
-```sh
-pip install -r showcases/drive_replay/viz/requirements.txt
-python3 showcases/drive_replay/viz/foxglove_bridge.py --interface <laptop ip>
-```
-
-In Lichtblick open the connection `Foxglove WebSocket` -> `ws://127.0.0.1:8765` and add:
-
-* 3D panel: topic `/scene`, display frame `ego`
-* Plot panel: `/adas/fcw.ttc`, `/drive/frame.gap`, `/drive/frame.ego_kmh`, `/drive/frame.lead_kmh`
-* State Transitions panel: `/system/state.run_target`, `/adas/fcw.level`
-* Indicator panel: `/system/health.fcw_alive`
-* Log panel: topic `/log` (DLT messages of LM, DSM, RPLY, FCW and the datarouter)
-
-The launch manager needs POSIX ACL support on `/dev/shm` (alive supervision). Docker Desktop
-(linuxkit kernel) does not provide it; Raspberry Pi OS and Ubuntu do.
-
-## Platform integration test
-
-`//platform_integration_tests/drive_replay` (Linux x86_64) runs the scripted showcase and
-records its DLT traffic; CI uploads it as artifact `drive-replay-dlt-<sha>` (open it in the
-DLT Viewer). The test checks the chain in the trace: drive and warnings (`RPLY`, `FCW`),
-exactly one supervision failure of `warn_app` and only after the injected hang, two
-recoveries (`LM` `fallback_run_target`, `DSM` requesting `Drive`, `LM` `Drive` again) and
-the restarted `warn_app` restoring its counters (`start #3, restored warn_count>0`).
-
-## View the trace in Chipmunk
-
-[viz/chipmunk_presets.json](drive_replay/viz/chipmunk_presets.json) is a named preset for
-[Chipmunk](https://github.com/esrlabs/chipmunk) 4.x: open `drive_replay.dlt` (CI artifact, or recorded
-from `239.255.42.99:3490`), then in the bottom panel *Presets* use *Import named presets* and apply
-"S-CORE Drive Replay". It adds
-
-* colored filters that reduce the trace to the story: scenario (grey), warning (yellow),
-  critical (red), resolved (green), fault injected (pink), supervision failure / crash (dark red),
-  Run Target changes of `LM` (blue), recovery requests of `DSM` (violet), restart with restored
-  counters (cyan);
-* charts from the measurement lines that `RPLY` and `FCW` log every 0.5 s: gap, time to
-  collision (capped at 10 s), ego and lead speed.
+A scripted highway drive into a forward collision warning, supervised by the launch
+manager: a hanging or crashing warning function is detected, the system falls back to a
+degraded mode and recovers, visible step by step in the DLT log. See
+[drive_replay/README.md](drive_replay/README.md).
 
 # S-CORE Platform Run
 
