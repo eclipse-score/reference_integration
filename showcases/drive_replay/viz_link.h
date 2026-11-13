@@ -22,7 +22,7 @@ namespace score::showcases::drive_replay
 {
 
 /// Fire-and-forget UDP sender for JSON records consumed by viz/foxglove_bridge.py.
-/// The destination is taken from DRIVE_VIZ_ADDR ("<ipv4>:<port>"), default 239.255.42.99:9001.
+/// Off unless a destination "<ipv4>:<port>" is set in DRIVE_VIZ_ADDR or in the file etc/drive_viz_addr.
 class VizLink
 {
   public:

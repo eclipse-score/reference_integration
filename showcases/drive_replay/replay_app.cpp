@@ -185,7 +185,7 @@ int main(int argc, const char* argv[])
     }
 
     const score::showcases::drive_replay::VizLink viz{};
-    logger.LogInfo() << "offering " + std::string{kDriveDataInstance} + " via mw::com, 20 frames/s, viz -> " +
+    logger.LogInfo() << "offering " + std::string{kDriveDataInstance} + " via mw::com, 20 frames/s, viz feed " +
                             viz.Destination();
     score::mw::lifecycle::report_running();
 

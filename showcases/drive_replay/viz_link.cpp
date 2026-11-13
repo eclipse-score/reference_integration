@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <fstream>
 #include <string>
 
 namespace score::showcases::drive_replay
@@ -26,24 +27,44 @@ namespace score::showcases::drive_replay
 namespace
 {
 
-constexpr const char* kDefaultDestination{"239.255.42.99:9001"};
+// Read relative to the working directory, so the feed can be switched on without rebuilding the launch manager config.
+constexpr const char* kAddressFile{"etc/drive_viz_addr"};
+
+std::string ConfiguredDestination()
+{
+    const char* configured = std::getenv("DRIVE_VIZ_ADDR");
+    if (configured != nullptr && configured[0] != '\0')
+    {
+        return configured;
+    }
+    std::ifstream file{kAddressFile};
+    std::string address{};
+    file >> address;
+    return address;
+}
 
 }  // namespace
 
 VizLink::VizLink() noexcept
 {
-    const char* configured = std::getenv("DRIVE_VIZ_ADDR");
-    destination_text_ = (configured != nullptr && configured[0] != '\0') ? configured : kDefaultDestination;
+    destination_text_ = ConfiguredDestination();
+    if (destination_text_.empty())
+    {
+        destination_text_ = "off";
+        return;
+    }
 
     const auto colon = destination_text_.rfind(':');
     if (colon == std::string::npos)
     {
+        destination_text_ = "off (invalid address '" + destination_text_ + "')";
         return;
     }
     const std::string host = destination_text_.substr(0U, colon);
     const long port = std::strtol(destination_text_.c_str() + colon + 1U, nullptr, 10);
     if ((port <= 0L) || (port > 65535L))
     {
+        destination_text_ = "off (invalid address '" + destination_text_ + "')";
         return;
     }
 
@@ -51,6 +72,7 @@ VizLink::VizLink() noexcept
     destination_.sin_port = htons(static_cast<std::uint16_t>(port));
     if (inet_pton(AF_INET, host.c_str(), &destination_.sin_addr) != 1)
     {
+        destination_text_ = "off (invalid address '" + destination_text_ + "')";
         return;
     }
     socket_ = ::socket(AF_INET, SOCK_DGRAM, 0);
