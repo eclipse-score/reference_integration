@@ -28,6 +28,7 @@ import argparse
 import asyncio
 import ipaddress
 import json
+import re
 import socket
 import struct
 import time
@@ -218,9 +219,20 @@ def _parse_dlt_message(message: bytes) -> DltMessage | None:
     return DltMessage(ecu, app_id, context_id, (message_info >> 4) & 0x0F, text)
 
 
-def _is_noise(message: DltMessage) -> bool:
-    # periodic mw::log statistics and the datarouter's own info/debug output
-    return message.context_id == "STAT" or (message.app_id == "DR" and message.level > 3)
+DLT_LEVEL_INFO = 4
+# Measurement lines logged every 0.5 s for DLT charts; Lichtblick plots these values from /drive/frame and /adas/fcw.
+_MEASUREMENT_LINE = re.compile(r"published via mw::com:|processed: gap")
+
+
+def is_noise(message: DltMessage) -> bool:
+    """Messages kept out of the log topic: debug/verbose output, mw::log statistics, the
+    datarouter's own info output and the periodic measurement lines."""
+    return (
+        message.level > DLT_LEVEL_INFO
+        or message.context_id == "STAT"
+        or (message.app_id == "DR" and message.level >= DLT_LEVEL_INFO)
+        or bool(_MEASUREMENT_LINE.search(message.text))
+    )
 
 
 def parse_dlt(datagram: bytes) -> Iterator[DltMessage]:
@@ -334,8 +346,7 @@ class DemoBridge:
             self._replay_rx = time.monotonic()
             await self._on_drive(record, now_ns)
         elif kind == "warn":
-            self._fcw_rx = time.monotonic()
-            self._fcw = record
+            self.update_fcw(record)
             await self._publish("/adas/fcw", record, now_ns)
         elif kind == "system":
             await self._publish("/system/state", record, now_ns)
@@ -343,7 +354,7 @@ class DemoBridge:
     async def on_dlt(self, datagram: bytes) -> None:
         now_ns = time.time_ns()
         for message in parse_dlt(datagram):
-            if _is_noise(message):
+            if is_noise(message):
                 continue
             await self._publish(
                 "/log",
@@ -397,9 +408,14 @@ class DemoBridge:
             },
             now_ns,
         )
-        await self._publish("/scene", {"deletions": [], "entities": self._scene(record, now_ns)}, now_ns)
+        await self._publish("/scene", {"deletions": [], "entities": self.scene(record, now_ns)}, now_ns)
 
-    def _scene(self, record: dict[str, Any], now_ns: int) -> list[dict[str, Any]]:
+    def update_fcw(self, record: dict[str, Any]) -> None:
+        """Remembers the latest warning record; the scene colors the lead vehicle with it."""
+        self._fcw_rx = time.monotonic()
+        self._fcw = record
+
+    def scene(self, record: dict[str, Any], now_ns: int) -> list[dict[str, Any]]:
         ego_x, lead_x = record["ego_x"], record["lead_x"]
         fcw_alive = time.monotonic() - self._fcw_rx < STALE_AFTER_S
         level = self._fcw.get("level_id", 0) if fcw_alive else -1

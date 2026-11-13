@@ -52,7 +52,7 @@ S-CORE interfaces, dotted arrows are lifecycle reports and the optional visualiz
 | ⑥ | `warn_app` ↔ KVS | score_persistency, `score::kvs::Kvs` | JSON files with hash | `start_count`, `warn_count`; restored after every restart |
 | ⑦ | all processes → `datarouter` | score_logging, `mw::log` (`kConsole\|kRemote`, app ids in `configs/logging*.json`) | shared memory + Unix socket | log messages with app id / context id |
 | ⑧ | `datarouter` → laptop | score_logging, datarouter ([deploy/logging/etc](../../deploy/logging/etc)) | DLT over UDP multicast | all logs as DLT, viewed in Chipmunk ([viz/chipmunk_presets.json](viz/chipmunk_presets.json)) or forwarded to Lichtblick |
-| ⑨ | apps → bridge (optional) | none, plain UDP ([viz_link.h](viz_link.h)) | JSON over UDP | `drive` (positions, speeds, gap), `warn` (TTC, level, counters), `system` (Run Target, degraded) |
+| ⑨ | apps → bridge (optional, off by default) | none, plain UDP ([viz_link.h](viz_link.h)) | JSON over UDP | `drive` (positions, speeds, gap), `warn` (TTC, level, counters), `system` (Run Target, degraded) |
 
 ### S-CORE modules per process
 
@@ -113,11 +113,16 @@ presets* and apply "S-CORE Drive Replay". It adds
 
 ## Live visualization in Lichtblick (optional)
 
-The apps send their live data as JSON via UDP to `239.255.42.99:9001`; to use unicast
-instead, add `DRIVE_VIZ_ADDR=<ip>:<port>` to the `environmental_variables` of the apps in
-[configs/launch_manager_config.json](configs/launch_manager_config.json).
+The live data feed (⑨) is off by default. Switch it on before starting the launch manager
+by writing a destination into `etc/drive_viz_addr` (read by every app at start; the
+environment variable `DRIVE_VIZ_ADDR` takes precedence):
 
-On a laptop in the same network, from the repository root:
+```sh
+echo 239.255.42.99:9001 > /showcases/data/drive_replay/etc/drive_viz_addr   # multicast
+echo <laptop ip>:9001   > /showcases/data/drive_replay/etc/drive_viz_addr   # or unicast
+```
+
+On a laptop in the same network, from the repository root (Python >= 3.10):
 
 ```sh
 pip install -r showcases/drive_replay/viz/requirements.txt
@@ -131,4 +136,8 @@ the layout [viz/lichtblick_layout.json](viz/lichtblick_layout.json), or add the 
 * Plot panel: `/adas/fcw.ttc`, `/drive/frame.gap`, `/drive/frame.ego_kmh`, `/drive/frame.lead_kmh`
 * State Transitions panel: `/system/state.run_target`, `/adas/fcw.level`
 * Indicator panel: `/system/health.fcw_alive`
-* Log panel: topic `/log` (DLT messages of LM, DSM, RPLY, FCW and the datarouter)
+* Log panel: topic `/log`: warnings, errors and info events of LM, DSM, RPLY, FCW; the bridge
+  drops debug output and the 0.5 s measurement lines, which the plots show instead
+
+`//showcases/drive_replay/viz:foxglove_bridge_test` covers the DLT parser, the log filter and
+the 3D scene.

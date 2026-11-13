@@ -55,7 +55,7 @@ jobs:
           python-version: '3.12'
       - name: Execute drive replay platform integration test
         run: |
-          bazel test --lockfile_mode=error --config=linux-x86_64 --test_output=errors //platform_integration_tests/drive_replay
+          bazel test --lockfile_mode=error --config=linux-x86_64 --test_output=errors //platform_integration_tests/drive_replay //showcases/drive_replay/viz:foxglove_bridge_test
       - name: Upload DLT trace and test log
         if: always()
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
