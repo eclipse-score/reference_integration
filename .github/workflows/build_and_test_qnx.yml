@@ -41,7 +41,7 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           allow-unsafe-pr-checkout: true
       - name: Setup Bazel with shared caching
-        uses: bazel-contrib/setup-bazel@0.19.1
+        uses: bazel-contrib/setup-bazel@0.19.2
         with:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
