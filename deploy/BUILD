@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_mkdirs")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 exports_files(["README.md"])
@@ -36,9 +36,16 @@ pkg_filegroup(
     visibility = ["//visibility:public"],
 )
 
+# Writable persistent-storage directory; on QNX this is provided by a RAM disk
+# symlink in the IFS image (common_init.build); on Linux it must be created.
+pkg_mkdirs(
+    name = "data_dir",
+    dirs = ["data"],
+)
+
 # Same content as :platform_bundle, as a tar for oci_image consumers.
 pkg_tar(
     name = "platform_tar",
-    srcs = [":platform_bundle"],
+    srcs = [":platform_bundle", ":data_dir"],
     visibility = ["//visibility:public"],
 )

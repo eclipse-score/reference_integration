@@ -11,19 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_mkdirs")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
-
-pkg_mkdirs(
-    name = "data_dir",
-    dirs = ["data"],
-)
-
-pkg_tar(
-    name = "data_dir_tar",
-    srcs = [":data_dir"],
-)
 
 sh_binary(
     name = "run",
@@ -47,7 +36,6 @@ oci_image(
     tars = [
         "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
-        ":data_dir_tar",
     ],
 )
 
