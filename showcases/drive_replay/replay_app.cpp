@@ -41,7 +41,7 @@ constexpr auto kFramePeriod{50ms};
 constexpr double kFramePeriodS{0.05};
 constexpr double kLapDurationS{40.0};
 constexpr double kInitialGapM{40.0};
-constexpr std::uint64_t kSummaryEveryFrames{100U};
+constexpr std::uint64_t kSummaryEveryFrames{10U};
 
 struct Keyframe
 {

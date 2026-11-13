@@ -121,3 +121,17 @@ DLT Viewer). The test checks the chain in the trace: drive and warnings (`RPLY`,
 exactly one supervision failure of `warn_app` and only after the injected hang, two
 recoveries (`LM` `fallback_run_target`, `DSM` requesting `Drive`, `LM` `Drive` again) and
 the restarted `warn_app` restoring its counters (`start #3, restored warn_count>0`).
+
+## View the trace in Chipmunk
+
+[viz/chipmunk_presets.json](drive_replay/viz/chipmunk_presets.json) is a named preset for
+[Chipmunk](https://github.com/esrlabs/chipmunk) 4.x: open `drive_replay.dlt` (CI artifact, or recorded
+from `239.255.42.99:3490`), then in the bottom panel *Presets* use *Import named presets* and apply
+"S-CORE Drive Replay". It adds
+
+* colored filters that reduce the trace to the story: scenario (grey), warning (yellow),
+  critical (red), resolved (green), fault injected (pink), supervision failure / crash (dark red),
+  Run Target changes of `LM` (blue), recovery requests of `DSM` (violet), restart with restored
+  counters (cyan);
+* charts from the measurement lines that `RPLY` and `FCW` log every 0.5 s: gap, time to
+  collision (capped at 10 s), ego and lead speed.
