@@ -93,3 +93,36 @@ git_override(
 bazel_dep(name = "score_sbom", version = "0.1.1")
 
 include("//bazel_common:score_sbom.MODULE.bazel")
+
+# ── score_diagnostics: dependencies that inc_diagnostics only declares as dev_dependency ──
+# Overrides are only honoured in the root module, so they are repeated here.
+bazel_dep(name = "classic-diagnostic-adapter", version = "0.1.0")
+git_override(
+    module_name = "classic-diagnostic-adapter",
+    commit = "213767d340fb4e7167a82b30cc38c7013c36c042",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:classic-diagnostic-adapter-linkme.patch",
+        "//patches/diagnostics:classic-diagnostic-adapter-resource-ids.patch",
+    ],
+    remote = "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
+)
+
+bazel_dep(name = "mbedtls-rs", version = "0.1.0")
+git_override(
+    module_name = "mbedtls-rs",
+    commit = "1dac0d8c6a80feb3864e86aac80b35cf34b10f87",
+    remote = "https://github.com/eclipse-opensovd/mbedtls-rs.git",
+)
+
+bazel_dep(name = "opensovd_core", version = "0.0.0")
+git_override(
+    module_name = "opensovd_core",
+    commit = "30ac7995e3c850de567fc0308813b04d09dc667e",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:opensovd-core-expose-tokio.patch",
+        "//patches/diagnostics:opensovd-core-expose-client.patch",
+    ],
+    remote = "https://github.com/eclipse-opensovd/opensovd-core.git",
+)
