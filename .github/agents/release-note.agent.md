@@ -28,6 +28,8 @@ Read it first and follow it exactly.
   scratch with every skeleton run. If a generated part needs other content
   (a new image download, a known issue, a line someone added by hand), change
   the generator (`IMAGES`, `IMAGE_DOWNLOADS`, fixed text) and regenerate.
+- DO NOT size the diagram in the note (`:width:`/`:height:`); its display
+  size comes from `docs/_assets/custom.css` (skill, 5.1).
 - DO NOT set a module's DR-003 maturity by hand; `assess_maturity()` derives it
   on every run (skill, 5.5). Propose rule changes to the user instead.
 - Pass `--final` only when the user explicitly asks for the final note;

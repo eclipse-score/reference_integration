@@ -558,7 +558,6 @@ included in the software platform release version {release} as compared to the
 previous platform release ({origin}).
 
 .. figure:: /{DIAGRAM_DIR.removeprefix("docs/")}/{diagram_name(release)}
-   :width: 100%
    :alt: S-CORE v{short} reference integration architecture
 
    Modules, components and images of the reference integration {release}.

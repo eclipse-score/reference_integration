@@ -21,6 +21,7 @@ this skill holds the rules. Template basis: `wp__platform_sw_release_note`
 | `scripts/release_note/collect_changes.py` | Evidence for the narrative |
 | `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst` | The note |
 | `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` | The diagram (generated) |
+| `docs/_assets/custom.css` | Display size of the diagram (5.1) |
 | `docs/s_core_v_1/releases/releases.rst` | Release-note `toctree` (explicit list, release order) |
 
 ### 1.2 Who writes what
@@ -140,6 +141,11 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
   another ref the components would still come from the checkout.
 - Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
   `architecture_diagram.py`.
+- Display size: `docs/_assets/custom.css` limits every `architecture_v*.svg`
+  to 70 % of the window height, so the whole diagram fits on screen; a click
+  opens it in full size. It applies to all notes without regeneration. Change
+  the size only there; the generator sets no `:width:`/`:height:`. Keep the file
+  name pattern `architecture_v<major>_<minor>.svg`, the CSS selector relies on it.
 
 ### 5.2 Content
 
