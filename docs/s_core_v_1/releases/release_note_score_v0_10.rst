@@ -43,7 +43,7 @@ included in the software platform release version v0.10.0 as compared to the
 previous platform release (v0.9.0).
 
 .. figure:: /s_core_v_1/releases/_assets/architecture_v0_10.svg
-   :width: 75%
+   :width: 50%
    :alt: S-CORE v0.10 reference integration architecture
 
    Modules, components and images of the reference integration v0.10.0.

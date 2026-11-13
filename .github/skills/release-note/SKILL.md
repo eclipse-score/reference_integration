@@ -140,7 +140,7 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
   another ref the components would still come from the checkout.
 - Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
   `architecture_diagram.py`.
-- Display size: the figure gets `:width:` `DIAGRAM_WIDTH` (75 % of the content
+- Display size: the figure gets `:width:` `DIAGRAM_WIDTH` (50 % of the content
   width), so the whole diagram fits on screen; a click opens it in full size.
   Change the size only in `DIAGRAM_WIDTH`, keep it a percentage (scales with
   the page) and never set `:height:` (distorts the diagram on narrow screens).

@@ -80,7 +80,7 @@ EMPTY_CELL = "---"
 # Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
 # Share of the content width, so that the whole diagram fits on screen.
-DIAGRAM_WIDTH = "75%"
+DIAGRAM_WIDTH = "50%"
 NEEDS_TARGET = "//:needs_json_file"
 # Old module names in earlier known_good.json versions -> current name used in the docs tree.
 KEY_ALIASES = {"score_lifecycle_health": "score_lifecycle", "score_process": "score_process_description"}
