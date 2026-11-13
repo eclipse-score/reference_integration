@@ -1,0 +1,380 @@
+diff --git a/docs/index.rst b/docs/index.rst
+index df4c0e3..edb472f 100644
+--- a/docs/index.rst
++++ b/docs/index.rst
+@@ -44,6 +44,7 @@ For a detailed concept and architectural design, please refer to the :doc:`time_
+ 
+    features/index
+    module/index
++   verification_report/module_verification_report
+    quality_pack
+ 
+ 
+diff --git a/docs/module/index.rst b/docs/module/index.rst
+index 6b7d7dc..5ade0bb 100644
+--- a/docs/module/index.rst
++++ b/docs/module/index.rst
+@@ -17,11 +17,13 @@ Module
+ 
+ The S-CORE ``time`` module provides a unified API for accessing system, steady, high-resolution steady, and PTP-synchronized vehicle time. The module contains four components: a client library for application-facing access, Time Slave for PTP clock synchronization, ``ts_client`` for shared-memory IPC between Time Slave and Time Daemon, and Time Daemon for synchronization quality validation before serving Vehicle Time.
+ 
+-.. code-block:: rst
+-
+-   .. mod:: Time
+-      :id: mod__time
+-      :includes: comp__component_name_template
++.. mod:: Time
++   :id: mod__time
++   :version: 1
++   :security: NO
++   :safety: ASIL_B
++   :status: valid
++   :includes: comp__time, comp__time_daemon, comp__time_slave, comp__ts_client
+ 
+ Module View
+ -----------
+diff --git a/docs/module/manuals/user_manual.rst b/docs/module/manuals/user_manual.rst
+index 06e52cd..ed7be11 100644
+--- a/docs/module/manuals/user_manual.rst
++++ b/docs/module/manuals/user_manual.rst
+@@ -24,6 +24,7 @@ User Manual
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__training_path[version==1]
++   :belongs_to: mod__time
+ 
+ Overview
+ ========
+diff --git a/docs/verification_report/module_verification_report.rst b/docs/verification_report/module_verification_report.rst
+new file mode 100644
+index 0000000..92a2bf0
+--- /dev/null
++++ b/docs/verification_report/module_verification_report.rst
+@@ -0,0 +1,28 @@
++..
++   # *******************************************************************************
++   # Copyright (c) 2026 Contributors to the Eclipse Foundation
++   #
++   # See the NOTICE file(s) distributed with this work for additional
++   # information regarding copyright ownership.
++   #
++   # This program and the accompanying materials are made available under the
++   # terms of the Apache License Version 2.0 which is available at
++   # https://www.apache.org/licenses/LICENSE-2.0
++   #
++   # SPDX-License-Identifier: Apache-2.0
++   # *******************************************************************************
++
++Verification Report
++===================
++
++.. mod_ver_report:: Time Module Verification Report
++   :id: mod_vrep__time__report
++   :post_template: module_verification_report
++   :status: valid
++   :safety: ASIL_B
++   :security: NO
++   :verification_method: test_and_inspection
++   :belongs_to: mod__time
++   :realizes: wp__verification_module_ver_report
++   :applies_to_module_version: v1.0
++   :version: 1
+diff --git a/score/time/docs/detailed_design/chklst_impl_inspection.rst b/score/time/docs/detailed_design/chklst_impl_inspection.rst
+index b7395ac..cbff84b 100644
+--- a/score/time/docs/detailed_design/chklst_impl_inspection.rst
++++ b/score/time/docs/detailed_design/chklst_impl_inspection.rst
+@@ -19,6 +19,7 @@
+   :safety: ASIL_B
+   :security: NO
+   :realizes: wp__sw_implementation_inspection
++  :belongs_to: comp__time
+   :tags: time
+ 
+ .. note::
+diff --git a/score/time/docs/detailed_design/index.rst b/score/time/docs/detailed_design/index.rst
+index 4a43ddf..532259b 100644
+--- a/score/time/docs/detailed_design/index.rst
++++ b/score/time/docs/detailed_design/index.rst
+@@ -24,6 +24,7 @@ Detailed Design
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__sw_implementation
++   :belongs_to: comp__time
+    :tags: time, detailed_design
+ 
+ Description
+diff --git a/score/time/docs/index.rst b/score/time/docs/index.rst
+index cc4456f..1222ae6 100644
+--- a/score/time/docs/index.rst
++++ b/score/time/docs/index.rst
+@@ -24,6 +24,7 @@ Time
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__cmpt_request
++   :belongs_to: comp__time
+    :tags: time
+ 
+ .. comp:: Time
+diff --git a/score/time/docs/requirements/chklst_req_inspection.rst b/score/time/docs/requirements/chklst_req_inspection.rst
+index de66b30..161f7f4 100644
+--- a/score/time/docs/requirements/chklst_req_inspection.rst
++++ b/score/time/docs/requirements/chklst_req_inspection.rst
+@@ -20,6 +20,7 @@
+   :safety: ASIL_B
+   :security: NO
+   :realizes: wp__requirements_inspect
++  :belongs_to: comp__time
+   :tags: time
+ 
+ .. note::
+diff --git a/score/time/docs/requirements/index.rst b/score/time/docs/requirements/index.rst
+index ef8e701..665a2d3 100644
+--- a/score/time/docs/requirements/index.rst
++++ b/score/time/docs/requirements/index.rst
+@@ -22,6 +22,7 @@ Time Component Requirements
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__requirements_comp[version==1]
++   :belongs_to: comp__time
+    :tags: requirements, time
+ 
+ Functional Requirements
+diff --git a/score/time_daemon/docs/detailed_design/chklst_impl_inspection.rst b/score/time_daemon/docs/detailed_design/chklst_impl_inspection.rst
+index f19648c..9f901a7 100644
+--- a/score/time_daemon/docs/detailed_design/chklst_impl_inspection.rst
++++ b/score/time_daemon/docs/detailed_design/chklst_impl_inspection.rst
+@@ -19,6 +19,7 @@
+   :safety: ASIL_B
+   :security: YES
+   :realizes: wp__sw_implementation_inspection
++  :belongs_to: comp__time_daemon
+   :tags: time_daemon
+ 
+ .. note::
+diff --git a/score/time_daemon/docs/detailed_design/index.rst b/score/time_daemon/docs/detailed_design/index.rst
+index 1c7292b..ea131ed 100644
+--- a/score/time_daemon/docs/detailed_design/index.rst
++++ b/score/time_daemon/docs/detailed_design/index.rst
+@@ -24,6 +24,7 @@ Time Daemon Detailed Design
+    :safety: ASIL_B
+    :security: YES
+    :realizes: wp__sw_implementation
++   :belongs_to: comp__time_daemon
+    :tags: time_daemon
+ 
+ Description
+diff --git a/score/time_daemon/docs/index.rst b/score/time_daemon/docs/index.rst
+index 3cf6471..243edcf 100644
+--- a/score/time_daemon/docs/index.rst
++++ b/score/time_daemon/docs/index.rst
+@@ -24,6 +24,7 @@ Time Daemon
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__cmpt_request
++   :belongs_to: comp__time_daemon
+    :tags: time_daemon
+ 
+ .. comp:: Time Daemon
+diff --git a/score/time_daemon/docs/manuals/user_manual.rst b/score/time_daemon/docs/manuals/user_manual.rst
+index 81d3809..e8007e5 100644
+--- a/score/time_daemon/docs/manuals/user_manual.rst
++++ b/score/time_daemon/docs/manuals/user_manual.rst
+@@ -24,6 +24,7 @@ Time Daemon User Manual
+    :safety: QM
+    :security: NO
+    :realizes: wp__training_path[version==1]
++   :belongs_to: comp__time_daemon
+ 
+ Overview
+ ========
+diff --git a/score/time_daemon/docs/requirements/chklst_req_inspection.rst b/score/time_daemon/docs/requirements/chklst_req_inspection.rst
+index 194e598..bd8983e 100644
+--- a/score/time_daemon/docs/requirements/chklst_req_inspection.rst
++++ b/score/time_daemon/docs/requirements/chklst_req_inspection.rst
+@@ -20,6 +20,7 @@
+   :safety: ASIL_B
+   :security: NO
+   :realizes: wp__requirements_inspect
++  :belongs_to: comp__time_daemon
+   :tags: time_daemon
+ 
+ .. note::
+diff --git a/score/time_daemon/docs/requirements/index.rst b/score/time_daemon/docs/requirements/index.rst
+index 8d5aa5e..a472a7b 100644
+--- a/score/time_daemon/docs/requirements/index.rst
++++ b/score/time_daemon/docs/requirements/index.rst
+@@ -22,6 +22,7 @@ Time Daemon Component Requirements
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__requirements_comp[version==1]
++   :belongs_to: comp__time_daemon
+    :tags: requirements, time_daemon
+ 
+ Functional Requirements
+diff --git a/score/time_slave/docs/detailed_design/chklst_impl_inspection.rst b/score/time_slave/docs/detailed_design/chklst_impl_inspection.rst
+index b107011..718d0e4 100644
+--- a/score/time_slave/docs/detailed_design/chklst_impl_inspection.rst
++++ b/score/time_slave/docs/detailed_design/chklst_impl_inspection.rst
+@@ -19,6 +19,7 @@
+   :safety: ASIL_B
+   :security: YES
+   :realizes: wp__sw_implementation_inspection
++  :belongs_to: comp__time_slave
+   :tags: time_slave
+ 
+ .. note::
+diff --git a/score/time_slave/docs/detailed_design/index.rst b/score/time_slave/docs/detailed_design/index.rst
+index e2f7962..43f38c3 100644
+--- a/score/time_slave/docs/detailed_design/index.rst
++++ b/score/time_slave/docs/detailed_design/index.rst
+@@ -24,6 +24,7 @@ Time Slave Detailed Design
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__sw_implementation
++   :belongs_to: comp__time_slave
+    :tags: time_slave
+ 
+ Description
+diff --git a/score/time_slave/docs/index.rst b/score/time_slave/docs/index.rst
+index 6acf15a..172f13a 100644
+--- a/score/time_slave/docs/index.rst
++++ b/score/time_slave/docs/index.rst
+@@ -24,6 +24,7 @@ Time Slave
+    :safety: QM
+    :security: NO
+    :realizes: wp__cmpt_request
++   :belongs_to: comp__time_slave
+    :tags: time_slave
+ 
+ .. comp:: Time Slave
+diff --git a/score/time_slave/docs/manuals/user_manual.rst b/score/time_slave/docs/manuals/user_manual.rst
+index 76b0d78..ac7c3e1 100644
+--- a/score/time_slave/docs/manuals/user_manual.rst
++++ b/score/time_slave/docs/manuals/user_manual.rst
+@@ -24,6 +24,7 @@ Time Slave User Manual
+    :safety: QM
+    :security: NO
+    :realizes: wp__training_path[version==1]
++   :belongs_to: comp__time_slave
+ 
+ Overview
+ ========
+diff --git a/score/time_slave/docs/requirements/chklst_req_inspection.rst b/score/time_slave/docs/requirements/chklst_req_inspection.rst
+index 1e4ae13..7852726 100644
+--- a/score/time_slave/docs/requirements/chklst_req_inspection.rst
++++ b/score/time_slave/docs/requirements/chklst_req_inspection.rst
+@@ -20,6 +20,7 @@
+   :safety: QM
+   :security: NO
+   :realizes: wp__requirements_inspect
++  :belongs_to: comp__time_slave
+   :tags: time_slave
+ 
+ Requirement Inspection Checklist
+diff --git a/score/time_slave/docs/requirements/index.rst b/score/time_slave/docs/requirements/index.rst
+index a6af0a2..521ba6a 100644
+--- a/score/time_slave/docs/requirements/index.rst
++++ b/score/time_slave/docs/requirements/index.rst
+@@ -22,6 +22,7 @@ Time Slave Component Requirements
+    :safety: QM
+    :security: NO
+    :realizes: wp__requirements_comp[version==1]
++   :belongs_to: comp__time_slave
+    :tags: requirements, time_slave
+ 
+ Functional Requirements
+diff --git a/score/ts_client/docs/detailed_design/chklst_impl_inspection.rst b/score/ts_client/docs/detailed_design/chklst_impl_inspection.rst
+index 22b8ddb..6e2f618 100644
+--- a/score/ts_client/docs/detailed_design/chklst_impl_inspection.rst
++++ b/score/ts_client/docs/detailed_design/chklst_impl_inspection.rst
+@@ -13,12 +13,13 @@
+    # *******************************************************************************
+ 
+ .. document:: Time Sync Client Implementation Inspection Checklist
+-  :id: doc__ts_client_impl_inspection
++  :id: doc__time_sync_client_impl_inspection
+   :status: draft
+   :version: 1
+   :safety: ASIL_B
+   :security: NO
+   :realizes: wp__sw_implementation_inspection
++  :belongs_to: comp__ts_client
+   :tags: ts_client
+ 
+ .. note::
+diff --git a/score/ts_client/docs/detailed_design/index.rst b/score/ts_client/docs/detailed_design/index.rst
+index 9889e42..547e71b 100644
+--- a/score/ts_client/docs/detailed_design/index.rst
++++ b/score/ts_client/docs/detailed_design/index.rst
+@@ -18,12 +18,13 @@ Time Sync Client Detailed Design
+ =================================
+ 
+ .. document:: Time Sync Client Detailed Design
+-   :id: doc__ts_client_detailed_design
++   :id: doc__time_sync_client_detailed_design
+    :status: draft
+    :version: 1
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__sw_implementation
++   :belongs_to: comp__ts_client
+    :tags: ts_client
+ 
+ Description
+diff --git a/score/ts_client/docs/index.rst b/score/ts_client/docs/index.rst
+index 1dc4816..c8f5953 100644
+--- a/score/ts_client/docs/index.rst
++++ b/score/ts_client/docs/index.rst
+@@ -18,12 +18,13 @@ Time Sync Client
+ ################
+ 
+ .. document:: Time Sync Client
+-   :id: doc__ts_client
++   :id: doc__time_sync_client
+    :status: draft
+    :version: 1
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__cmpt_request
++   :belongs_to: comp__ts_client
+    :tags: ts_client
+ 
+ .. comp:: Time Sync Client
+diff --git a/score/ts_client/docs/requirements/chklst_req_inspection.rst b/score/ts_client/docs/requirements/chklst_req_inspection.rst
+index c956e5c..4b99888 100644
+--- a/score/ts_client/docs/requirements/chklst_req_inspection.rst
++++ b/score/ts_client/docs/requirements/chklst_req_inspection.rst
+@@ -14,12 +14,13 @@
+ 
+ 
+ .. document:: Time Sync Client Requirements Inspection Checklist
+-  :id: doc__ts_client_req_inspection
++  :id: doc__time_sync_client_req_inspection
+   :status: draft
+   :version: 2
+   :safety: ASIL_B
+   :security: NO
+   :realizes: wp__requirements_inspect
++  :belongs_to: comp__ts_client
+   :tags: ts_client
+ 
+ .. note::
+diff --git a/score/ts_client/docs/requirements/index.rst b/score/ts_client/docs/requirements/index.rst
+index 7e645f5..bc73409 100644
+--- a/score/ts_client/docs/requirements/index.rst
++++ b/score/ts_client/docs/requirements/index.rst
+@@ -16,12 +16,13 @@ Component Time Sync Client Requirements
+ ########################################
+ 
+ .. document:: Time Sync Client Requirements
+-   :id: doc__ts_client_requirements
++   :id: doc__time_sync_client_requirements
+    :status: draft
+    :version: 1
+    :safety: ASIL_B
+    :security: NO
+    :realizes: wp__requirements_comp[version==1]
++   :belongs_to: comp__ts_client
+    :tags: requirements, ts_client
+ 
+ 

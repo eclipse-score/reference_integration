@@ -11,80 +11,84 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-28T09:19:12Z
+# Generated from known_good.json at 2026-11-13T14:08:13Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
-git_override(
+single_version_override(
     module_name = "score_crates",
-    commit = "e5682307b81118831f78040e9e2f3b748a8c047a",
-    remote = "https://github.com/eclipse-score/score-crates.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/crates:001-docs-external-needs.patch",
+    ],
+    version = "0.0.13",
 )
 
 bazel_dep(name = "score_itf")
 single_version_override(
     module_name = "score_itf",
-    version = "0.6.0",
+    version = "0.7.0",
 )
 
 bazel_dep(name = "score_devcontainer")
 single_version_override(
     module_name = "score_devcontainer",
-    version = "1.11.4",
+    version = "1.12.0",
 )
 
 bazel_dep(name = "score_tools")
-git_override(
+single_version_override(
     module_name = "score_tools",
-    commit = "3b99e9da6fe98e7df2c2b3616ad4d1aad318b72c",
-    remote = "https://github.com/eclipse-score/tools.git",
+    version = "0.0.4",
 )
 
 bazel_dep(name = "score_tooling")
-git_override(
+single_version_override(
     module_name = "score_tooling",
-    commit = "a3eed5852f8addbbbf276aaae262ba1313141ef5",
-    remote = "https://github.com/eclipse-score/tooling.git",
+    version = "3.0.2",
 )
 
 bazel_dep(name = "score_platform")
-git_override(
+single_version_override(
     module_name = "score_platform",
-    commit = "32759e0a51e02ed87311e12d0f8125e5f8cb4de0",
-    remote = "https://github.com/eclipse-score/score.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/platform:001-unique-feature-time-requirements-id.patch",
+        "//patches/platform:002-relative-doc-links-in-architecture-overview.patch",
+    ],
+    version = "0.7.5",
 )
 
 bazel_dep(name = "score_bazel_platforms")
-git_override(
+single_version_override(
     module_name = "score_bazel_platforms",
-    commit = "f1b1e388cb3abec915b3bec803d6e4dcbf270d1a",
-    remote = "https://github.com/eclipse-score/bazel_platforms.git",
+    version = "1.3.0",
 )
 
 bazel_dep(name = "score_test_scenarios")
-git_override(
+single_version_override(
     module_name = "score_test_scenarios",
-    commit = "d0aab76ac6e64fc78f867a196531fbafd8924948",
-    remote = "https://github.com/eclipse-score/testing_tools.git",
+    version = "0.5.0",
 )
 
 bazel_dep(name = "score_docs_as_code")
-git_override(
+single_version_override(
     module_name = "score_docs_as_code",
-    commit = "eed72238afe35a3e9191a7594847eb28944bcd01",
-    remote = "https://github.com/eclipse-score/docs-as-code.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/docs_as_code:001-keep-new-metamodel-checks-info-only.patch",
+    ],
+    version = "9.0.0",
 )
 
 bazel_dep(name = "score_process_description")
-git_override(
+single_version_override(
     module_name = "score_process_description",
-    commit = "1861e884b10c921e1427787c3ab1d99ed0bed7c0",
-    remote = "https://github.com/eclipse-score/process_description.git",
+    version = "2.2.4",
 )
 
 bazel_dep(name = "score_bazel_cpp_toolchains")
-git_override(
+single_version_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "d751801bdbae0db5cfa750671379f8cc25f2acb1",
-    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
+    version = "1.1.0-rc2",
 )

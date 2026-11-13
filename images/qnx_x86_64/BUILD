@@ -22,12 +22,12 @@ sh_binary(
     name = "run",
     srcs = ["//runners/qemu_x86_64/scripts:run_qemu.sh"],
     args = [
-        "$(location @score_qcc_x86_64_toolchain_pkg//:host_dir)",
+        "$(location @qnx_sdp_8_0_5_pkg//:host_dir)",
         "$(location :image)",
     ],
     data = [
         ":image",
-        "@score_qcc_x86_64_toolchain_pkg//:host_all",
-        "@score_qcc_x86_64_toolchain_pkg//:host_dir",
+        "@qnx_sdp_8_0_5_pkg//:host_all",
+        "@qnx_sdp_8_0_5_pkg//:host_dir",
     ],
 )
