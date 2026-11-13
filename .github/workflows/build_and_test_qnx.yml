@@ -31,6 +31,9 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+    env:
+      # Read access to eclipse-score/qnx_sdp_pkg for the QNX SDP release asset
+      GH_TOKEN: ${{ secrets.SCORE_BOT_QNX_PKG_PAT }}
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
