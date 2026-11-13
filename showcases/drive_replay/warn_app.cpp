@@ -53,7 +53,8 @@ constexpr double kWarningTtcS{3.0};
 constexpr double kCriticalTtcS{2.0};
 constexpr double kMinClosingSpeedMps{0.1};
 constexpr double kNoCollisionTtcS{99.0};
-constexpr std::uint64_t kSummaryEveryFrames{100U};
+constexpr std::uint64_t kSummaryEveryFrames{10U};
+constexpr double kLoggedTtcCapS{10.0};
 constexpr const char* kDefaultKvsDir{"/tmp/drive_replay/kvs/"};
 
 volatile std::sig_atomic_t g_stop_requested{0};
@@ -291,7 +292,8 @@ int main(int argc, const char* argv[])
             if ((sequence % kSummaryEveryFrames) == 0U)
             {
                 logger.LogInfo() << "frame #" + std::to_string(sequence) + " processed: gap " + Fixed(gap_m, 1) +
-                                        " m, closing " + Fixed(closing_mps, 1) + " m/s, " + LevelName(level);
+                                        " m, closing " + Fixed(closing_mps, 1) + " m/s, TTC " +
+                                        Fixed(std::min(ttc_s, kLoggedTtcCapS), 1) + " s, " + LevelName(level);
             }
             logger.LogDebug() << "frame #" + std::to_string(sequence) + " TTC " + Fixed(ttc_s, 2);
 
