@@ -185,6 +185,14 @@ jobs:
           files: bazel-bin/build_tools_sbom.spdx.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload code coverage dashboards (workflow artifact)
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        if: always()
+        with:
+          name: coverage-dashboards-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/coverage
+          retention-days: 7
+          if-no-files-found: warn
       - name: Build documentation
         run: |
           bazel run \
@@ -195,6 +203,14 @@ jobs:
 
           CURRENT=$(realpath .)
           bazel run //scripts/tooling -- misc html_report --output ${CURRENT}/_build/status_dashboard.html
+
+          # Include generated coverage dashboards into documentation build
+          if [ -d artifacts/coverage ]; then
+            echo "Copying coverage dashboards to documentation build..."
+            mkdir -p ${CURRENT}/_build/coverage
+            cp -r artifacts/coverage/* ${CURRENT}/_build/coverage/
+          fi
+
           # Dependable element docs built by module_tests.yml; they cannot be coupled via Bazel, so
           # they are published next to the main docs (linked from docs/modules/index.rst).
           for report in _module_reports/*; do
