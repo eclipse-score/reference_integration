@@ -285,8 +285,16 @@
                         "cpp",
                         "rust"
                     ],
-                    "exclude_test_targets": []
-                }
+                    "exclude_test_targets": [],
+                    "test_args": [
+                        "--config=_score_diag_common_build_settings",
+                        "--",
+                        "//examples/...",
+                        "//tests/...",
+                        "//score/..."
+                    ]
+                },
+                "docs": false
             }
         },
         "tooling": {
