@@ -39,6 +39,11 @@ pkg_filegroup(
 # Same content as :platform_bundle, as a tar for oci_image consumers.
 pkg_tar(
     name = "platform_tar",
-    srcs = [":platform_bundle"],
+    srcs = [
+        ":platform_bundle",
+        # Not part of platform_bundle: that one is also consumed by the QNX images,
+        # and the OpenSOVD gateway and CDA are not supported on QNX.
+        "//deploy/diagnostics:diagnostics_bin",
+    ],
     visibility = ["//visibility:public"],
 )
