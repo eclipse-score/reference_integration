@@ -1,0 +1,28 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# Rationale: The Classic Diagnostic Adapter (CDA) uses the 'linkme' crate for service
+# registration, which relies on ELF section retention to discover and register services
+# at runtime. The default Rust linker configuration may garbage-collect these sections
+# in release builds, breaking service discovery. This patch ensures linker sections are
+# retained for proper CDA functionality and is required for release clearance compliance.
+#
+diff --git a/cda-main/BUILD.bazel b/cda-main/BUILD.bazel
+--- a/cda-main/BUILD.bazel
++++ b/cda-main/BUILD.bazel
+@@ -83,0 +84,5 @@
++    # The CDA uses linkme sections for service registration; retain them in the release binary.
++    rustc_flags = [
++        "-C",
++        "link-arg=-Wl,--no-gc-sections",
++    ],

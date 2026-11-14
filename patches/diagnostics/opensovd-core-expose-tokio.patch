@@ -1,0 +1,76 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# Rationale: The opensovd-core library does not publicly expose its dependencies
+# (tokio, tracing, async-trait, etc.) which are required by downstream consumers
+# building integration tests and clients. This patch exposes these dependencies
+# as aliases in the top-level BUILD file to enable proper dependency resolution
+# and avoid duplicate dependency declarations in consumer repositories.
+# Required for build system integration and modularity.
+#
+diff --git a/BUILD.bazel b/BUILD.bazel
+index ab0e6f7..5b8f04e 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -3,6 +3,51 @@
+ 
+ package(default_visibility = ["//visibility:public"])
+ 
++alias(
++    name = "tokio",
++    actual = "@crate_index//:tokio",
++)
++
++alias(
++    name = "tracing",
++    actual = "@crate_index//:tracing",
++)
++
++alias(
++    name = "tracing-subscriber",
++    actual = "@crate_index//:tracing-subscriber",
++)
++
++alias(
++    name = "async-trait",
++    actual = "@crate_index//:async-trait",
++)
++
++alias(
++    name = "opensovd-core",
++    actual = "//opensovd-core:opensovd_core",
++)
++
++alias(
++    name = "opensovd-models",
++    actual = "//opensovd-models:opensovd_models",
++)
++
++alias(
++    name = "opensovd-providers",
++    actual = "//opensovd-providers:opensovd_providers",
++)
++
++alias(
++    name = "opensovd-server",
++    actual = "//opensovd-server:opensovd_server",
++)
++
++alias(
++    name = "opensovd-client",
++    actual = "//opensovd-client:opensovd_client",
++)
++
+ exports_files([
+     "Cargo.lock",
+     "Cargo.toml",
