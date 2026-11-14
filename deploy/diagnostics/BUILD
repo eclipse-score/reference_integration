@@ -20,8 +20,8 @@ package(default_visibility = ["//deploy:__pkg__"])
 pkg_filegroup(
     name = "diagnostics_bin",
     srcs = [
-        "@score_diagnostics//score/opensovd-core:gateway_files",
         "@score_diagnostics//score/opensovd-cda:cda_files",
+        "@score_diagnostics//score/opensovd-core:gateway_files",
     ],
     prefix = "usr/bin/diagnostics",
 )
