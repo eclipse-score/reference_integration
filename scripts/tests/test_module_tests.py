@@ -25,6 +25,7 @@ from module_tests import (
     normalize_lcov,
     override_rc,
     report,
+    vanished_overrides,
 )
 
 
@@ -38,6 +39,18 @@ def test_graph_modules_walks_nested_and_indirect_deps():
         "indirectDependencies": [{"name": "zlib", "version": "1.3.1"}],
     }
     assert graph_modules(graph) == {"rules_cc", "platforms", "zlib"}
+
+
+def test_vanished_overrides_reads_the_module_names_from_bazels_error():
+    stderr = (
+        "ERROR: Error computing the main repository mapping: "
+        "the root module specifies overrides on nonexistent module(s): boost, boost.assert, rules_foreign_cc\n"
+    )
+    assert vanished_overrides(stderr) == {"boost", "boost.assert", "rules_foreign_cc"}
+
+
+def test_vanished_overrides_is_empty_for_other_output():
+    assert vanished_overrides("INFO: Invocation ID: 1\n") == set()
 
 
 def test_override_rc_is_sorted_one_line_per_module():

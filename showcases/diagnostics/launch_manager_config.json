@@ -1,0 +1,102 @@
+{
+    "schema_version": 2,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/usr/bin/diagnostics",
+            "ready_timeout_ms": 30000,
+            "shutdown_timeout_ms": 2000,
+            "environmental_variables": {
+                "PATH": "/usr/local/bin:/usr/bin:/bin"
+            },
+            "sandbox": {
+                "uid": 0,
+                "gid": 0,
+                "supplementary_group_ids": [],
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 0
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Native",
+                "is_self_terminating": false
+            },
+            "depends_on": [],
+            "ready_condition": {
+                "process_state": "Running"
+            }
+        },
+        "run_target": {
+            "transition_timeout_ms": 60000
+        }
+    },
+    "components": {
+        "cda_directories": {
+            "description": "Creates the directories that the CDA writes to",
+            "component_properties": {
+                "binary_name": "sh",
+                "process_arguments": [
+                    "-c",
+                    "mkdir -p /tmp/opensovd-cda/flash /tmp/opensovd-cda/storage"
+                ],
+                "application_profile": {
+                    "application_type": "Native",
+                    "is_self_terminating": true
+                },
+                "ready_condition": {
+                    "process_state": "Terminated"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        },
+        "opensovd_cda": {
+            "description": "Classic diagnostic adapter: loads the ECU databases and talks DoIP to the ECUs. Listens on the loopback address only, its clients use the gateway.",
+            "component_properties": {
+                "binary_name": "opensovd-cda",
+                "depends_on": [
+                    "cda_directories"
+                ]
+            },
+            "deployment_config": {
+                "ready_timeout_ms": 60000,
+                "environmental_variables": {
+                    "PATH": "/usr/local/bin:/usr/bin:/bin",
+                    "CDA_CONFIG_FILE": "/showcases/data/diagnostics/opensovd-cda.toml"
+                }
+            }
+        },
+        "opensovd_gateway": {
+            "description": "OpenSOVD gateway: the SOVD server of the platform. It forwards what it does not hold to the CDA.",
+            "component_properties": {
+                "binary_name": "opensovd-gateway",
+                "depends_on": [
+                    "opensovd_cda"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PATH": "/usr/local/bin:/usr/bin:/bin",
+                    "SCORE_GATEWAY_ADDRESS": "0.0.0.0:7690",
+                    "SCORE_UPSTREAM_URL": "http://127.0.0.1:20002/vehicle/v15"
+                }
+            }
+        }
+    },
+    "run_targets": {
+        "Diagnostics": {
+            "description": "The CDA and the gateway in front of it",
+            "depends_on": [
+                "opensovd_cda",
+                "opensovd_gateway"
+            ]
+        }
+    },
+    "initial_run_target": "Diagnostics",
+    "fallback_run_target": {
+        "description": "Nothing to keep if the CDA or the gateway do not start",
+        "depends_on": [],
+        "transition_timeout_ms": 10000
+    }
+}

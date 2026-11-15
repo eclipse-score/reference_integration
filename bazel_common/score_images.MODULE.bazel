@@ -54,6 +54,12 @@ http_file(
     url = "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta3/fastdev-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
 )
 
+http_file(
+    name = "eb_corbos_toolkit_fastdev_rpi4b_archive",
+    sha256 = "0d9b324562ec6c49f336f46ca643e1d3196f6c938aad8c063d78aa2a0850b485",
+    url = "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta3/fastdev-trixie-ebclfsa-rpi4b.tar.gz",
+)
+
 bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
 
 imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
