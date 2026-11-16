@@ -1,8 +1,8 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index cc0a758..59d340d 100644
+index 5c3345a..fb586d7 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -14,7 +14,7 @@ module(name = "score_time")
+@@ -16,7 +16,7 @@ module(name = "score_time",
  
  ## Configure the C++ toolchain
  
@@ -10,8 +10,8 @@ index cc0a758..59d340d 100644
 +bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.1.0-rc2", dev_dependency = True)
  
  gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
- gcc.toolchain(
-@@ -49,11 +49,11 @@ gcc.toolchain(
+ 
+@@ -73,11 +73,11 @@ gcc.toolchain(
  )
  use_repo(
      gcc,
@@ -24,7 +24,7 @@ index cc0a758..59d340d 100644
  )
  
  ## Custom Module Loading
-@@ -248,7 +248,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
+@@ -270,7 +270,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
  imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
