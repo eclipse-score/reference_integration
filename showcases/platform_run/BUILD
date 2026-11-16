@@ -32,6 +32,7 @@ score_pkg_bundle(
         # The launch manager offers its control service over mw::com and needs this config to start.
         "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
         "//showcases/platform_run:logging.json": "etc/logging.json",
+        "//showcases/platform_run:logging_config_daemon.json": "etc/logging_config_daemon.json",
         "//showcases/platform_run:logging_platform_info_consumer.json": "etc/logging_platform_info_consumer.json",
         "//showcases/platform_run:logging_platform_info_service.json": "etc/logging_platform_info_service.json",
     },

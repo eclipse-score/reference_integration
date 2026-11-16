@@ -29,6 +29,14 @@ from showcase_runner import run_showcases
 def test_config_management_showcase(target):
     """The config management showcase starts the config daemon deployed by the
     platform, which loads its demo parameters from a JSON file and offers them
-    to applications, demonstrating file based configuration on the platform."""
+    to applications, demonstrating file based configuration on the platform.
+    The daemon is the one deployed by the platform: the showcase brings none
+    of its own, so this fails if the platform does not deploy a working one."""
 
-    run_showcases(target, "Config Management Daemon Example")
+    output = run_showcases(target, "Config Management Daemon Example")
+    assert "ConfigDaemon:: Run InternalConfigProviderService offered" in output, (
+        f"Config daemon did not offer its config provider service:\n{output}"
+    )
+    assert "DemoJson:: Run - Demo parameters loaded" in output, (
+        f"Config daemon did not load the demo parameters:\n{output}"
+    )
