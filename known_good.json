@@ -178,9 +178,13 @@
                     "exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test",
                         "//score/datarouter/doc/design:datarouter_architectural_design",
-                        "//score/mw/log/design/backend:mw_log_backend_architectural_design"
+                        "//score/mw/log/design/backend:mw_log_backend_architectural_design",
+                        "//score/mw/log/requirements/feature_requirements:feature_requirements_test",
+                        "//score/mw/log/requirements/component_requirements:component_requirements_test"
                     ],
                     "test_notes": {
+                        "//score/mw/log/requirements/feature_requirements:feature_requirements_test": "TODO fix in score_logging: score_tooling 3.0.2 rejects QM feature requirements derived from higher-ASIL ASRs (feature_requirements.trlc:295/307/319); fixed upstream by 8f2d042b, remove once the pin includes it",
+                        "//score/mw/log/requirements/component_requirements:component_requirements_test": "TODO fix in score_logging: same ASIL derivation errors as feature_requirements_test (the component requirements depend on feature_requirements.trlc)",
                         "//score/mw/log/design/backend:mw_log_backend_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects datarouter_class_diagram.puml ('expected a Component diagram, found a Class diagram')",
                         "//score/datarouter/doc/design:datarouter_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects the datarouter diagrams ('datarouter' children split across context-sw-units.puml and detail-ipc.puml)"
                     },
@@ -233,7 +237,8 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "hash": "528e486e1eb17f299a2a26e15a59e92b4f592c24",
+                "version": "0.3.4",
+                "pin_version": true,
                 "bazel_patches": [
                     "//patches/config_management:001-expose-mw-com-config.patch"
                 ],
