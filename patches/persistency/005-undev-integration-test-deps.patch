@@ -1,5 +1,5 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 08b3533..6e72a2c 100644
+index 4c9db33..2362288 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -38,9 +38,9 @@ bazel_dep(name = "score_coverage", version = "0.4.2", dev_dependency = True)
@@ -15,21 +15,12 @@ index 08b3533..6e72a2c 100644
  bazel_dep(name = "score_sbom", version = "0.1.1")
  bazel_dep(name = "score_rust_policies", version = "0.0.5", dev_dependency = True)
  bazel_dep(name = "score_tools", version = "0.0.4")
-@@ -213,12 +213,14 @@ llvm.toolchain(
+@@ -213,7 +213,7 @@ llvm.toolchain(
  use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
  
  # ITF - base image of the docker backend.
 -oci = use_extension("@rules_oci//oci:extensions.bzl", "oci", dev_dependency = True)
 +oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
-+
-+# ref_int: pulled as a normal dependency now, so it needs a name of its own in this extension.
  oci.pull(
--    name = "ubuntu",
-+    name = "persistency_ubuntu",
+     name = "ubuntu",
      digest = "sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55",
-     image = "docker.io/library/ubuntu",
-     platforms = ["linux/amd64"],
-     tag = "24.04",
- )
--use_repo(oci, "ubuntu", "ubuntu_linux_amd64")
-+use_repo(oci, ubuntu = "persistency_ubuntu", ubuntu_linux_amd64 = "persistency_ubuntu_linux_amd64")
