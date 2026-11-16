@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Failure Modes &#8212; Mw Com Doc 1.0.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/default_custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'traceability_report/failure_modes';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Safety Measures" href="safety_measures.html" />
+    <link rel="prev" title="Feature Requirements" href="feature_requirements.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search documentation..."
+         aria-label="Search documentation..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../assumed_system.html">
+    Assumed System
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../software_arch.html">
+    Software Architectural Level
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../traceability.html">
+    Traceability
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score/communication" title="S-CORE GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">S-CORE GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../assumed_system.html">
+    Assumed System
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../software_arch.html">
+    Software Architectural Level
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../traceability.html">
+    Traceability
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score/communication" title="S-CORE GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">S-CORE GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">L.O.B.S.T.E.R. Traceability Report</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_requirements.html">Feature Requirements</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Failure Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_measures.html">Safety Measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="root_causes.html">Root Causes</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../traceability.html" class="nav-link">Traceability</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">L.O.B.S.T.E.R. Traceability Report</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Failure Modes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="failure-modes">
+<h1>Failure Modes<a class="headerlink" href="#failure-modes" title="Link to this heading">#</a></h1>
+<p><strong>Coverage:</strong> 50.0% (35 of 70 items OK)</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-3e098d1c10d54a345dde4df7f87998f619f4869b" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.InMemoryConfigurationWrong</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The in-memory (cpp representation) does not match the on file-system JSON configuration.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-11db1ea2455005d387491f2713ce6bf5b148e5bd"><span class="std std-ref">mw_com_fta.FileCorrupted</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ee20fbf9a1fdfdb2e6a7d2bfa92e8bfba61713a7"><span class="std std-ref">mw_com_fta.JsonParserBroken</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-30127d57e5a8f81ef58611f8039cd4b86a3707be"><span class="std std-ref">mw_com_fta.ManipulateReadData</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-44315c02640f5ad070181833c0d8c6e9d6f5cf74"><span class="std std-ref">mw_com_fta.OmitReadingOfRelevantElements</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-74c34c03e89715f9077e7deafb5b82165c43482a"><span class="std std-ref">mw_com_fta.UserProvidedWrongConfiguration</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Runtime.Initialize</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L31">score/mw/com/dependability/safety_analysis/failure_modes.trlc:31:26</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-0cbf7ebde0eaefc89e68e81aaf218b821a8df804" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.CodeDoesNotMatchConfiguration</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Definitions of service-interfaces may not match the given mw::com configuration.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-20ffbbfe4bfad701824c0ad2ec44dc0a809c7f7a"><span class="std std-ref">mw_com_fta.DifferentRevisionsForProxyAndSkeletonBuilt</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c6af8de970327a794582042689944210c18e7307"><span class="std std-ref">mw_com_fta.MissingSyncCodeAndConfiguration</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.runtime.InitializeRuntime</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L53">score/mw/com/dependability/safety_analysis/failure_modes.trlc:53:26</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-32215b16de4fa207542356179adc809cb6d273c2" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.CreationOfSkeletonNotPossible</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">It is not possible to create a skeleton instance</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-987a15851a706606f4f813f4842390ea03eb7839"><span class="std std-ref">mw_com_fta.InstanceSpecifierResolutionLogicBroken</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5bad319c7d650a204f480376f965c3c6e14dc136"><span class="std std-ref">mw_com_fta.StaticCreateFunctionReturnsAnError</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.Create</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L79">score/mw/com/dependability/safety_analysis/failure_modes.trlc:79:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-6bbbad2a1b2f33c83865436d71c93ee5a53bd5b6" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceOfferedWithoutInitialFieldValue</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A service is offered, although at least one of its field has no initial value set by the provider.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-be39829bcc71ffa6e0393cdd1432c9584887c387"><span class="std std-ref">mw_com_fta.OfferCallDidNotCheckIfUserProvidedFieldValues</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L93">score/mw/com/dependability/safety_analysis/failure_modes.trlc:93:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-7441f470201ffecda64bfba3ba199731cc3658da" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceNotOffered</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A skeleton service is offering a service, but the service is silently not offered. Note: offered in this case means, that it is also connectable</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4523b6135f14e7d2c986152d92aa8108c7cf0f01"><span class="std std-ref">mw_com_fta.DifferentlyConfiguredBetweenSkletonAndProxySide</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b6a37d85225f5ac1d61e4d84f5126ea8a62ff0c1"><span class="std std-ref">mw_com_fta.InstanceSpecifierResolutionBrokenNotOffered</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5e14700adeb05201ca9f65155400ac23f0d87d9e"><span class="std std-ref">mw_com_fta.NotCreatedAtAll</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9f895662bebcaaec15f17b2076b27911465151e5"><span class="std std-ref">mw_com_fta.OsRelatedFunctionalityFailed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-588b7738be115abdd3f4326b78744d6b3a62bb29"><span class="std std-ref">mw_com_fta.SharedMemorySegmentDoesNotTryToCreateSegment</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ef5245ec8f2cd1f632321facac3d131fe8fcc357"><span class="std std-ref">mw_com_fta.SharedMemorySegmentsAreCreatedUnderWrongName</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b38018c020a5f35780750e6b8ce90a2bd52ea896"><span class="std std-ref">mw_com_fta.WrongDirectoryStructure</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c7a36563fb4fe0e53644f236185c612dc1f47941"><span class="std std-ref">mw_com_fta.WrongMarkerFileName</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L104">score/mw/com/dependability/safety_analysis/failure_modes.trlc:104:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-1f88052fd9ecd34d55eea20bd2338d29fc7d0382" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceOfferedOnWrongBinding</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A skeleton is offering a service on the wrong binding. Meaning, the service is not offered on the intended binding, but on an unintended one.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-578645e97885a52fbfd946a7778c039104b2c0da"><span class="std std-ref">mw_com_fta.BindingSelectionFaulty</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a09c5143ecd6918c9d8e150c03770307aabcaed4"><span class="std std-ref">mw_com_fta.InstanceSpecifierResolutionBrokenWrongBinding</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L115">score/mw/com/dependability/safety_analysis/failure_modes.trlc:115:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-5db6fdccb86ec4b398a2d86475f8d532cfb4a0a6" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceOfferedUnderWrongIds</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A skeleton is offering a service with wrong identifiers. This can include a service id, a instance id or also the service version.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a6ad6928a78a03c18c5f8b475ae9d51cc25936f8"><span class="std std-ref">mw_com_fta.FilenameCreationFromConfigFailed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c99dc26ccdd0f9d6c5cc57cc2bf36d1432f14237"><span class="std std-ref">mw_com_fta.InstanceSpecifierResolutionFaulty</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-0127018e77762c369ec1decc5b46609ff25422c8"><span class="std std-ref">mw_com_fta.OsCreatesFileWithWrongName</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L126">score/mw/com/dependability/safety_analysis/failure_modes.trlc:126:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-dd5cf4545ef442954c6a41225a47fc45ee08bf48" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.OffersAlreadyOfferedService</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A skeleton offers a service that was already offered. Either by another process or by itself.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b008cf65603f2a61125427b03539ab62fb555721"><span class="std std-ref">mw_com_fta.ServiceWasAlreadyOfferedByOurProcess</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-1957341a445aa8c497a9388a87bea161bf201317"><span class="std std-ref">mw_com_fta.ServiceWasAlreadyOfferedByPreviousDiedProcess</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c2817931c225f5a8fc2f02a375c516545fc2374e"><span class="std std-ref">mw_com_fta.ServiceWasOfferedByAnotherProcess</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L137">score/mw/com/dependability/safety_analysis/failure_modes.trlc:137:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-f0719d938bba5a58e7a068ed8d2db478880b5418" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceOnlyPartiallyOffered</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A skeleton offers a service, which is not visible to all consumers, but only to parts of them.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-585f3b13282d22530013c29c1936a945ab3d2868"><span class="std std-ref">mw_com_fta.NotAllEventsArePopulated</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.OfferService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L148">score/mw/com/dependability/safety_analysis/failure_modes.trlc:148:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-e744efca13258865166978a9e873dcff113a8ef4" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.TooFewMemoryAllocated</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The event allocation allocates too few memory (including no memory at all).</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ef8a2c958744ce78eca551cd51e0632ef4073606"><span class="std std-ref">mw_com_fta.AllocateClaimsTooFewMemory</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-21b49065fad3125ebc6f5f506bbceb7919661e63"><span class="std std-ref">mw_com_fta.ConsumerUsesAnOlderSlotThanHeAlreadyHasBlockedInThePreviousAccess</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4d22206e6c44155e991c5924fa5b10fa524efdf4"><span class="std std-ref">mw_com_fta.HoldsMoreSampleptrThanAnnounced</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ea02ab70cdfcf68cd902bcc00dc0a72a39e82a17"><span class="std std-ref">mw_com_fta.HoldsMoreSampleptrThanConfigured</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-7b94adaeef53c7f17f36b7c26057375ce92b0bdb"><span class="std std-ref">mw_com_fta.IssueInLockFreeSychronization</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-83276d522240cd04721afaeeb133862db1f0c3f2"><span class="std std-ref">mw_com_fta.LiteralyWrongNumberOfSlotsReserved</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9b039020518fe1cab14575fc0dfc2635881e0197"><span class="std std-ref">mw_com_fta.MappingFromActualEventidToEventTypeIncorrect</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-f3f4650b1b8c096dda17c24a2d940fa3936931ea"><span class="std std-ref">mw_com_fta.MoreThanOneSampleallocateeptrInParallel</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-8634b6dea2595016ee49ea9a3711b248afd789a6"><span class="std std-ref">mw_com_fta.NecessarySizeCalculationRetrievesWrongValue</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a873d1235cddca2104cb7f384e86b439fd098711"><span class="std std-ref">mw_com_fta.RetryLogicNotBulletProof</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-e24db22a3e9b1b813f2adc8594add1726b48fb49"><span class="std std-ref">mw_com_fta.SharedMemoryTruncationFails</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Allocate</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L210">score/mw/com/dependability/safety_analysis/failure_modes.trlc:210:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-4d6f3af070f5fd367efb1e8e3eb65c1803700393" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.WronglyAlignedMemoryAllocated</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The memory for an event/field is allocated in a wrongly aligned manner.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-66d9c64edf00f799292bade199ad38c90fa2ac18"><span class="std std-ref">mw_com_fta.RootCauseWronglyAlignedMemoryAllocated</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.SkeletonEvent.Allocate</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L221">score/mw/com/dependability/safety_analysis/failure_modes.trlc:221:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-fdb820a5ba189f951909df921d5f446e93a43bbb" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingEventChangesUserData</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A call to send manipulates the data that was provided by the caller.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-6f061ba448d8fcf7c4a8b6211f3c5477619bf30c"><span class="std std-ref">mw_com_fta.DirectAccessToDataViaAllocateePtr</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c8ff2312c77796f6db235732fc8d8f8268415e9a"><span class="std std-ref">mw_com_fta.DirectAccessToDataViaCopy</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4c22d0834a80c7014a0054b05f6d4567808c9192"><span class="std std-ref">mw_com_fta.GenericTraceapiChangesData</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L257">score/mw/com/dependability/safety_analysis/failure_modes.trlc:257:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-81f9673c42824726089dd0c75145d10aafc1296e" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingAnEventOrFieldSendsDataOnlyPartially</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Data that is send by the user, only reaches partially the consumer. This can happen in two ways, only a partial number of consumers see the data or all consumers see only partial data.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ef8a2c958744ce78eca551cd51e0632ef4073606"><span class="std std-ref">mw_com_fta.AllocateClaimsTooFewMemory</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L268">score/mw/com/dependability/safety_analysis/failure_modes.trlc:268:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-31c4f321e8d71fc593bf23c242c1f1ae9cd556fb" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingEventOnlyPartiallyNotifiesConsumer</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">When data is sent, consumers that have a callback registered, are only partially notified.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-fb209f97da887507f1f0e32f3068027cca70dbab"><span class="std std-ref">mw_com_fta.AlgorithmicBug</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9a72e8ed70f56a5f28f829cf96964d21d040df73"><span class="std std-ref">mw_com_fta.ReceiveErrorOnRegistration</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-117bb513824388000eb18231fca46d40ec3144bc"><span class="std std-ref">mw_com_fta.ServerProcessCrash</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L279">score/mw/com/dependability/safety_analysis/failure_modes.trlc:279:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-c4d5b547ef7f86a4528855b4ec47c95c20dc1310" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingEventSendsToWrongConsumer</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">An event or field is sent to the wrong consumer.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+<li><p class="sd-card-text">missing reference to Root Causes</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L290">score/mw/com/dependability/safety_analysis/failure_modes.trlc:290:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-6bdb711d0963358e719ef49dcc21de997df5e880" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingAnEventOrFieldSendsSameSampleNtimes</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Instead of sending a sample (one data point) only once, it is send multiple times.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+<li><p class="sd-card-text">missing reference to Root Causes</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L301">score/mw/com/dependability/safety_analysis/failure_modes.trlc:301:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-5185e749a327bdc9e0cc231ebb8319390452ad54" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.SendingEventDoesNotFreeResources</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Resources in the middleware that have been allocated with a previous allocation, are not freed after returning from send/update.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-6d9cef4b462948b64adee87738daacb0de1fc6c9"><span class="std std-ref">mw_com_fta.CopyOnSendDoesNotDestroySampleallocateeptr</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-58138f2cd8d668e08c64484f5b1729dbcee3f3d3"><span class="std std-ref">mw_com_fta.DestructionOfSampleallocateeptrDoesNotTriggerStateChange</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a912efa941227f76c1a1c512292d2d517faca8d7"><span class="std std-ref">mw_com_fta.WritingStateChangeIsNotWorking</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.Send</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L312">score/mw/com/dependability/safety_analysis/failure_modes.trlc:312:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-05c6a74816ace148fe7847db30dbcf7aacd31d63" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.WrongResourcesFreed</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A destruction of one skeleton instances, frees the resources of another skeleton instance.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-084f178e476af81d13ab3323870aa2f7591ab7f0"><span class="std std-ref">mw_com_fta.WrongMemoryResourceProxy</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-26a322c101163fc9e60ea85f689790b2f8d5ead6"><span class="std std-ref">mw_com_fta.WrongNameOfSharedMemorySegment</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.Destroy</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L326">score/mw/com/dependability/safety_analysis/failure_modes.trlc:326:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-553e75b189ea00e3ee24ac0b0548ab5bab739055" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.NoResourcesFreed</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The resources allocated on construction and during operation are not freed on destruction.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a1c339d8341b60294e13a59a702a9742cb57ef1c"><span class="std std-ref">mw_com_fta.NoUnmapOnDestruction</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-812bc736e5255ad01025758399149d76dffb4876"><span class="std std-ref">mw_com_fta.SharedMemorySegmentIsNotUnlinked</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.Destroy</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L337">score/mw/com/dependability/safety_analysis/failure_modes.trlc:337:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-309c34a4207acf3ee868bd75ab3bc347fa9a8b3d" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.EarlyCleanUp</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Resources are freed while still being used.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a1c339d8341b60294e13a59a702a9742cb57ef1c"><span class="std std-ref">mw_com_fta.NoUnmapOnDestruction</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-812bc736e5255ad01025758399149d76dffb4876"><span class="std std-ref">mw_com_fta.SharedMemorySegmentIsNotUnlinked</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Skeleton.Destroy</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L348">score/mw/com/dependability/safety_analysis/failure_modes.trlc:348:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-2b8545bce5b57402442c715da05cf176ac484ec9" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.StartFindServiceCallbackCalledUnexpectedly</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The user-provided callback is invoked, even though it should not be invoked.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5c3594e6bbd55befad95d78415ff40a768322f86"><span class="std std-ref">mw_com_fta.CalledEventhoughStopfindserviceHasBeenCalled</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-55ac7cee7a5a6fe9194caeb69dd3cdde0055289f"><span class="std std-ref">mw_com_fta.CalledReduandently</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-dd125cc7462453975cba646926c700bd260b6568"><span class="std std-ref">mw_com_fta.InotifyReturnsWrongInformation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-2ad868634b71af984555446c29d8c45b7f8c95f8"><span class="std std-ref">mw_com_fta.WatchesAreSetWrongly</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Proxy.StartFindService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L418">score/mw/com/dependability/safety_analysis/failure_modes.trlc:418:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-a5d0bc81946103361a153d735849ecae6f297ef9" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceNotFound</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy does not find a service instance, even though it was offered by a skeleton.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-169ae851e8f9a9eb593a7209863f79f35b53f4e7"><span class="std std-ref">mw_com_fta.WrongServiceDiscoveryMarkerFileSearchedFor</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Proxy.FindService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L432">score/mw/com/dependability/safety_analysis/failure_modes.trlc:432:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-66ff5798dc16975c75b73c64b0855ec8aed6eccd" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.WrongServiceFound</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy instance finds a wrong service. This could be either a wrong service instance or a completely wrong service.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-cff3fc7f129c1f6e8c48cc1d36b74ccba836b142"><span class="std std-ref">mw_com_fta.InstancespecifierResolvedToWrongInstanceidentifier</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-0dbc46e432f6e29e3b2d7a6255a183e185972be9"><span class="std std-ref">mw_com_fta.WrongPathResolvedFromInstanceidentifier</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Proxy.FindService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L443">score/mw/com/dependability/safety_analysis/failure_modes.trlc:443:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-3d58f317539e93211740146e699977aa8585dcd4" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ServiceIsFoundButDoesNotExist</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Finding a service, returns a service, even though no service instance was offered.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-e21e49ae0525a7e38af3a62717e19d539e45384c"><span class="std std-ref">mw_com_fta.ServiceWasOfferedButNotUnlinkedOnStopOffer</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-8511ddc722adc0fc3c7244375a2de47bf9400215"><span class="std std-ref">mw_com_fta.SharedMemoryObjectDoesNotExist</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-7ceaef9a3f964e8ea5bdeb50bf0954d1d180d7f6"><span class="std std-ref">mw_com_fta.WrongAcl</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-aaf3bda161ec1ad70cbae6a1fb92236cce5c5f91"><span class="std std-ref">mw_com_fta.WrongName</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-3ede5b2a022ef2c24be3d2cdea189c169ca66265"><span class="std std-ref">mw_com_fta.WrongProvider</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Proxy.FindService</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L457">score/mw/com/dependability/safety_analysis/failure_modes.trlc:457:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-c92eb5cd8ef5c3727433959d80e680078d88bf82" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ReceiveHandlerNotInvoked</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy has set a receive handler and a skeleton is updating an event, but the receive handler is never invoked.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-64b6cc15092dd7a4c4b49c7e1d560abecc50a0ac"><span class="std std-ref">mw_com_fta.RootCauseReceiveHandlerNotInvoked</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L531">score/mw/com/dependability/safety_analysis/failure_modes.trlc:531:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-29da88eb46cc8dbf7adf903860c69b2db9b0a7cd" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedWithWrongEvent</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A receive handler registered for an event, gets called because of an update of an different event.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ce81d00c7546495fca9710c35e4293031109224d"><span class="std std-ref">mw_com_fta.RootCauseReceiveHandlerInvokedWithWrongEvent</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L543">score/mw/com/dependability/safety_analysis/failure_modes.trlc:543:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-137cf08f474dfb454b6f46303d2016709f692e1b" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedMultipleTimes</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A receive handler is invoked multiple times, even though only one event update happend.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-ae573242e235a0832b393feed07749ca9c3b013d"><span class="std std-ref">mw_com_fta.RootCauseReceiveHandlerInvokedMultipleTimes</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L554">score/mw/com/dependability/safety_analysis/failure_modes.trlc:554:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-ca188da918196f213a95cd5091a7b7a6615e165b" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.ReceiveHandlerInvokedWithoutEventNotification</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A receive handler is invoked, even though no event update happend.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-83e4d08033044813e25380b117c207807d4a2617"><span class="std std-ref">mw_com_fta.RootCauseReceiveHandlerInvokedWithoutEventNotification</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.GenericProxyEvent.SetReceiveHandler</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L566">score/mw/com/dependability/safety_analysis/failure_modes.trlc:566:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-ea396ae3498f8f4b6d5768a297f19d709ff2890e" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.GetNewSamplesSucceedsDespiteAnError</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A user calls GetNewSamples() on a proxy instance and receives a sample count, even though he should have received an error.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c6c20fd052d9043e7727c3dd40e674c83fba5e2a"><span class="std std-ref">mw_com_fta.RootCauseGetNewSamplesSucceedsDespiteAnError</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.Event.GetNewSamples</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L623">score/mw/com/dependability/safety_analysis/failure_modes.trlc:623:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-6dba5007f9fa0aee6a48a9dc937de4afb9fb328e" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.MapContainingNonexistentEvents</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The map that is visible to the user, contains events that are not actually existing (e.g. in the configuration).</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">missing reference to Root Causes</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L689">score/mw/com/dependability/safety_analysis/failure_modes.trlc:689:38</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-08e830aa185c798938a8aeacb50f59d0736b8394" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.IncompleteMapOfEvents</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The user gets presented not all events the generic proxy supports.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">missing reference to Root Causes</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L699">score/mw/com/dependability/safety_analysis/failure_modes.trlc:699:38</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-5fa23afdb656b44063b2a7a01529d04bfd50a897" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.TheSizeReturnedIsBiggerThenTheActualValue</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The user receives a size, that is bigger then the actual value.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5a13664b13f0e96ca842f30841fec668cbbf4182"><span class="std std-ref">mw_com_fta.ConsumerLookedUpSizeInWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-bcef23d7ba6b1171c90ca064ee99624a25a2d68e"><span class="std std-ref">mw_com_fta.SizeWasManipulatedInSharedMemory</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-2a3c4c3bcc05cf162c6d8c43ec7ccbecd76ca564"><span class="std std-ref">mw_com_fta.SizeWasWronglySetInSharedMemory</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.GenericProxyEvent.GetDataTypeSizeInfo</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L713">score/mw/com/dependability/safety_analysis/failure_modes.trlc:713:38</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-938de5e055f4cf04e2077a1a35fd29b42df6e9c3" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.TheSizeReturnedIsSmallerThenTheActualSize</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The user receives a size, that is smaller then the actual value.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5a13664b13f0e96ca842f30841fec668cbbf4182"><span class="std std-ref">mw_com_fta.ConsumerLookedUpSizeInWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-bcef23d7ba6b1171c90ca064ee99624a25a2d68e"><span class="std std-ref">mw_com_fta.SizeWasManipulatedInSharedMemory</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-2a3c4c3bcc05cf162c6d8c43ec7ccbecd76ca564"><span class="std std-ref">mw_com_fta.SizeWasWronglySetInSharedMemory</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.GenericProxyEvent.GetDataTypeSizeInfo</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L724">score/mw/com/dependability/safety_analysis/failure_modes.trlc:724:38</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-b3298ed23dc738162b6afd29ea435312428634b8" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.WrongIndicationIfFormatIsSerialized</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A user, using HasSerializedFormat(), receives the wrong value.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4e71bdf6a56cd94e8f2eef6ce315adc13f047d35"><span class="std std-ref">mw_com_fta.IndicationWhetherFormatIsSerializedWronglyImplemented</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req mw.com.GenericProxyEvent.HasSerializedFormat</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L736">score/mw/com/dependability/safety_analysis/failure_modes.trlc:736:38</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-cb81cf4aa044e860d61736a6a9a1f1264bf0d58c" open="open">
+<summary class="sd-summary-title sd-card-header sd-bg-danger sd-text-white">
+<span class="sd-summary-text">[MISSING] TRLC Failuremode Communication.DoesNotReserveResources</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A SamplePtr or SampleAllocateePtr do not increase their respective ref-counts and thus avoid data changes.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2"><span class="std std-ref">mw_com_fta.ChangingStateFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-6b97c412d9bea7902c91be683007f180b1b29592"><span class="std std-ref">mw_com_fta.IncreasingDecreasingRefCountFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510"><span class="std std-ref">mw_com_fta.SlotReferenceBrokenEGNonValid</span></a></p></li>
+</ul>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm lobster-issue-card docutils">
+<div class="sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">unknown tracing target req score.mw.com.SampleAllocateePtr&lt;SampleType&gt;</p></li>
+</ul>
+</div>
+</div>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L827">score/mw/com/dependability/safety_analysis/failure_modes.trlc:827:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-6f041fa86e6585486660a0060508342a33f4f5e0">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.AnyFunctionBlocksLongerThanExpected</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Any API of mw::com (LoLa) blocks longer than expected (or indefinite)</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-853874bde50a7f998c617dd2d0738dc3dcd0c75b"><span class="std std-ref">mw_com_fta.RootCauseAnyFunctionBlocksLongerThanExpected</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L20">score/mw/com/dependability/safety_analysis/failure_modes.trlc:20:26</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-0547ced7080ab2e9ad470d0b46e74587814d5a42">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.FunctionCalledFromMultipleThreads</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Any API is called within multiple threads concurrently without any further synchronization.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-15f755034ad39bcb381565a4fed64b7ef19cda15"><span class="std std-ref">mw_com_fta.EventInstanceAPICalledInAReentrantManner</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L42">score/mw/com/dependability/safety_analysis/failure_modes.trlc:42:26</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-48d74d95e4523a7fb45da828383c0ee23b69d5f3">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.MisusedApis</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">APIs are invoked in either an invalid context or non public APIs are invoked.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-fa2c756880e23b01de985a1d3e7db0553b61b7c5"><span class="std std-ref">mw_com_fta.ApiUsedInWrongContext</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-d789f732e2e199fe83bfb32d40c7cf0bf44a75bc"><span class="std std-ref">mw_com_fta.InternalApiUsed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9aa0ed50288b2c8e5d068864f0cce724da122874"><span class="std std-ref">mw_com_fta.TerminatingUserCallback</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-cad5f92cec79e94354a49d989e980dd8798472c1"><span class="std std-ref">mw_com_fta.dummyrrootcause</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L64">score/mw/com/dependability/safety_analysis/failure_modes.trlc:64:26</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-ea8e328d1439ab760ca9819eb8e2e98cf8e9fbae">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.StopOfferNotStoppedInSD</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A service instance was offered via service discovery, but it wasn’t withdrawn from service discovery in the stop offer.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b8a908fe6bd097a301be5a0c337deda913fcdcdf"><span class="std std-ref">mw_com_fta.SDClientMarkerFileNotFound</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-25b4f5eb03c4bafb4fd73e2770d2c542e55a1266"><span class="std std-ref">mw_com_fta.SDClientMarkerFileWrongPath</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-21a2076b27fab30bf528639baf87010b04a94e3b"><span class="std std-ref">mw_com_fta.SDFileDeletionFailure</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4e6c4c662c8ca8d09c25f6d035b6d5eb52bc98d4"><span class="std std-ref">mw_com_fta.SDNotifyFailed</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L160">score/mw/com/dependability/safety_analysis/failure_modes.trlc:160:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-41ff9bce797666dc021b75d89329ab0ee7f2f599">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.StopOfferWrongInstanceStoppedInSD</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Same as in StopOfferNotStoppedInSD. Additionally another service instance, which is still being offered, is withdrawn from service discovery.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c95da48468c4008e4799d68a70cf26fcc391071e"><span class="std std-ref">mw_com_fta.SDClientWrongMarkerFile</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-f412c5b120db3a9e270c2c8d0e84ae11c1d12634"><span class="std std-ref">mw_com_fta.SDNotifyWrongFD</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L169">score/mw/com/dependability/safety_analysis/failure_modes.trlc:169:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-c32955021950ec3ba6384715fcaf12aec96a6cb3">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.StopOfferUnlinkWrongSHMObjects</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Skeleton instance did unlink shared memory objects which do not belong to the service instance being stop offered.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5a282748d4bc2ee30127d1bd54ea52ead1988da6"><span class="std std-ref">mw_com_fta.SHMObjectWrongPath</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a8e1bfd54595f2812fc20b8849d6d2e0c96cff47"><span class="std std-ref">mw_com_fta.ServiceInstanceUsageLockMechanismFailed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9507968ccc91c056258eb49ce2c5b6907164b6e0"><span class="std std-ref">mw_com_fta.ServiceInstanceUsageNotChecked</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L178">score/mw/com/dependability/safety_analysis/failure_modes.trlc:178:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-5014a6c2c2e182bd3571e2c85311e240d3777fd0">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.StopOfferInconsistent</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Skeleton instance is in an inconsistent state after stop offering: Either the stop offer was not forwarded to the binding or failed at the binding. Or it wasn’t forwarded to the dependent service elements or their bindings or failed at them.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-bb70a5bfbd628e90bb653af51bfdaa86a492a9ce"><span class="std std-ref">mw_com_fta.DependentPrepareOfferFailed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-f98160796e47e6a4441725883ed029aca3d3e43c"><span class="std std-ref">mw_com_fta.DependentPrepareOfferNotCalled</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-3e75a7df2037d94c6638bf305d6897099fb5a8c8"><span class="std std-ref">mw_com_fta.OfferStateInconsistent</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L187">score/mw/com/dependability/safety_analysis/failure_modes.trlc:187:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-2e44abef080ef0359ee65e3cd96f96730508b8f6">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.MemoryAllocatedInWrongSection</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The memory for an event is allocated in the wrong memory section (e.g. in Heap, another Shared Memory segment or the stack).</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-22b5056bbe0357103058d68eb303a1afeb70c44c"><span class="std std-ref">mw_com_fta.BrokenAllocator</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-dfdeca64f8dfd227d36e944bf3ee38c5f6af6582"><span class="std std-ref">mw_com_fta.DataTypeItselfIsAllocatedOnStack</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-682756b8bc7b15ee018fbe06d4abbc4bd226746c"><span class="std std-ref">mw_com_fta.ForwardedTheWrongSharedMemorySegmentFromTheBeginning</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-36f5d539550d8824e980cf9c5b709a5cf04cf479"><span class="std std-ref">mw_com_fta.MiddlewareProvidedTypeIsWrong</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-055be2d8e46baf4afad297f18fafb37b7839da57"><span class="std std-ref">mw_com_fta.OffsetPtrCorruption</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c7405bd23e741ca34591a6783d84505836080161"><span class="std std-ref">mw_com_fta.ProxyIdOverwritten</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-0001d1387942f51d053d476381ab29bbb33a8be6"><span class="std std-ref">mw_com_fta.SharedMemoryResourceOpensWrongSharedMemorySegment</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b3c134dd7dee1eb8aac96e30d91722803cfda77d"><span class="std std-ref">mw_com_fta.SharedMemoryResourceReturnsWrongProxy</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-1aa3b1027d7ef3226d071ece9e3754fa6b0f17f1"><span class="std std-ref">mw_com_fta.SharedMemoryRessourceNotForwarded</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-7b7ac6ea63e2cdbe2cd0d05e76edac7dbb14e817"><span class="std std-ref">mw_com_fta.SharedmemoryfactoryReturnsWrongMemoryRessource</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-38b45756c9699974925826c2459ed03d9559d97a"><span class="std std-ref">mw_com_fta.UserFehler</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-1a161c23efbb36d5e783a8004a376b3b990fd9ba"><span class="std std-ref">mw_com_fta.UserProvidedTypeIsWrong</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L200">score/mw/com/dependability/safety_analysis/failure_modes.trlc:200:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-17f99d9a312f3323af3701ce586335aa0a346d19">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.TooMuchMemoryAllocated</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">There is too much memory allocated for one event/field</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-94ad1631c62e20114b727cd136d88203aa58d4aa"><span class="std std-ref">mw_com_fta.TooMuchMemoryAllocated</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L232">score/mw/com/dependability/safety_analysis/failure_modes.trlc:232:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-a3e9b973da5ade42d409c2f3fd83c172c256a8c9">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.AllocatesAlreadyAllocatedMemory</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The memory for an event/field is allocated from already allocated memory (not free memory).</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4c00bbc5fe016e191f31c6991b76ceb3540334cf"><span class="std std-ref">mw_com_fta.RootCauseAllocatesAlreadyAllocatedMemory</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L243">score/mw/com/dependability/safety_analysis/failure_modes.trlc:243:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-d8b17c6cb0431e7601b9c98b13ed1ee2594d3a3a">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongMethodInArgsUsed</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Unintended input arguments are used in a service method call. Therefore, the method call gets executed with wrong input data.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-beaeca8bec93c1609c02adde8c70b38b434aba45"><span class="std std-ref">mw_com_fta.CalleeUsedInArgsBeforeBeingProvided</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-421776a5d9016ae85541baa30461b99e54fcb988"><span class="std std-ref">mw_com_fta.CalleeUsedInArgsFromWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-2e2ea16cfe3e832533e89c96d4841aebd829f5b7"><span class="std std-ref">mw_com_fta.CalleeUsedInArgsInWrongLayout</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5590d9d601a13835a89c7bc34df1a9cd54fe6737"><span class="std std-ref">mw_com_fta.CalleeUsedInArgsWhileConcurrentlyUpdated</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-d74bf98b0c10d54233573d2e5654cd7ba5c45f62"><span class="std std-ref">mw_com_fta.InArgsCorruptedBy3rdParty</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L368">score/mw/com/dependability/safety_analysis/failure_modes.trlc:368:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-ed896db3872e04764cd70f52587bc80e717a7fae">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongMethodCalled</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Either the wrong user provided method handler is called or no user handler is called at all. Therefore, the method call results are invalid/garbage.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-44dee929a8d94eb505babbf8f357cbbf7ac09174"><span class="std std-ref">mw_com_fta.MethodIdCorrupted</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c051c102641b1ffcd0bcfadb99aa440084b0d155"><span class="std std-ref">mw_com_fta.UserMethodCallHandlerAssignmentWrong</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L384">score/mw/com/dependability/safety_analysis/failure_modes.trlc:384:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-2a85aecf6902edc33e975767c3d25b215e8a2c69">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongResultsProvided</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The result of a method call is either not provided in the expected location, leaving uninitialized data in the expected location or it is provided in an inconsistent state. Therefore, the method call results are invalid/garbage.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-61c03cd459c71041b5131bf5e96dd64370913ee7"><span class="std std-ref">mw_com_fta.CalleeConcurrentlyUpdatesResultAfterSignaling</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5a4a1ee11ee459653890980ff116bbd042b96083"><span class="std std-ref">mw_com_fta.CalleeProvidedResultInWrongLayout</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-77eae049dfc05d4e541355ee929932e6c181c836"><span class="std std-ref">mw_com_fta.CalleeProvidedResultInWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-909df54a20837b38ce0c38ecc2f813f78d5ba660"><span class="std std-ref">mw_com_fta.CalleeSignalledCallFinishedBeforeResultComplete</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L402">score/mw/com/dependability/safety_analysis/failure_modes.trlc:402:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-30eb7893854c1612d8f983c94fcda7043bc1372e">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.StartedFindServiceIsNotStopped</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A user called “StartFindService” with a given handler, and since “StopFindService” does not work, services can still be found.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-5c3594e6bbd55befad95d78415ff40a768322f86"><span class="std std-ref">mw_com_fta.CalledEventhoughStopfindserviceHasBeenCalled</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-55ac7cee7a5a6fe9194caeb69dd3cdde0055289f"><span class="std std-ref">mw_com_fta.CalledReduandently</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-dd125cc7462453975cba646926c700bd260b6568"><span class="std std-ref">mw_com_fta.InotifyReturnsWrongInformation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-2ad868634b71af984555446c29d8c45b7f8c95f8"><span class="std std-ref">mw_com_fta.WatchesAreSetWrongly</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L472">score/mw/com/dependability/safety_analysis/failure_modes.trlc:472:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-dd30cca2c77202a2a3801df9f089bac454c5c2c7">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongStartfindserviceIsStopped</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">The handle provided to StopFindService, is identified as another one and thus stops the wrong service discovery query.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-90f0391e9312560d723f48ed8c05e5036d049a92"><span class="std std-ref">mw_com_fta.RootCauseWrongStartFindServiceIsStopped</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L483">score/mw/com/dependability/safety_analysis/failure_modes.trlc:483:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-b4fbe99e4807a9fff06daabe15dc0551e8878174">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.SubscribeToWrongEvent</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A service proxy subscribes to a wrong event. This either means that this event does not exist at all, is offered by another service instance, another event in the current instance or a completely different service.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-977c64f1d6df712250f0a4cdbe55d022dfc9f415"><span class="std std-ref">mw_com_fta.EventFieldIdReferencesWrongStorage</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-81d8565ad352bd2ceffa4ad8d474dc408a92269f"><span class="std std-ref">mw_com_fta.EventFieldNameMappingClash</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L497">score/mw/com/dependability/safety_analysis/failure_modes.trlc:497:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-2e5c4679933108ccefb3cc4d431ba729f6d5eb84">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.SubscribeWithWrongMaxSampleCount</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy instance subscribes to an event to with a wrong sample count, meaning a different one that was provided by the user.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-eebeee7c74f5181be98cdb39816c8a9ec2aaeab2"><span class="std std-ref">mw_com_fta.MessagePassingCorruptsTheMaxSampleValue</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a1659151dee789c196f4d3b58623e89b6e9b042d"><span class="std std-ref">mw_com_fta.WrongValueIsPassedToMessagePassingLibrary</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L507">score/mw/com/dependability/safety_analysis/failure_modes.trlc:507:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-6b66247bd616bf0986d34f1581444aea89772438">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.DoesNotSubscribe</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy does not subscribe to a skeleton. Thus, a skeleton does not know that a proxy is interested in data.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-0486dba15021622ae1cb665ec9c553d0f7eb0ec7"><span class="std std-ref">mw_com_fta.RootCauseDoesNotSubscribe</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L517">score/mw/com/dependability/safety_analysis/failure_modes.trlc:517:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-1dcb6863744b5cf9ae9d3481c83b3f43d98e732f">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.CallbackNotInvokedDespiteSamplesAvailable</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">GetNewSamples() gets called on an event with a callback F, but the callback gets called not at all, although at least one new sample is available.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-999d8225624399b406c36412c471131e5d2ab312"><span class="std std-ref">mw_com_fta.CallbackIsNotStoredCorrectly</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-76fd6ca793eb2fe862a2166982c11b26d34441db"><span class="std std-ref">mw_com_fta.WrongAclConfigurationForShmSegments</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4968bae1f75281bf0664dc46b868ec2e2971697c"><span class="std std-ref">mw_com_fta.WrongValueInsertedSlotStatus</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c2c02344cddb2934bb33975009dadd9f22e5c2c3"><span class="std std-ref">mw_com_fta.WrongValueInsertedTimestamp</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L581">score/mw/com/dependability/safety_analysis/failure_modes.trlc:581:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-234f3116305a93f5bd9d4b15a68daaeaf30d3661">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.CallbackInvokedWithWrongData</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy receives a sample pointer via callback F(), but the data does not contain the expected one.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-fe7bfd30944dfb95b7b181e2e380cef275e1382c"><span class="std std-ref">mw_com_fta.ActivelyManipulateByProgrammParts</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c9bd1294e213227dbb42d9b07b52b5e324884fce"><span class="std std-ref">mw_com_fta.CallbackDangling</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-7baffdb3b2056aa7e009e91d1faefad73fe5745e"><span class="std std-ref">mw_com_fta.EventfqidWronglyConstructed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-630bdafafb028bfd431504fdeec8623815935b89"><span class="std std-ref">mw_com_fta.OrderingWrong</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a51f6491834cac418f6950899270e65c26f0f846"><span class="std std-ref">mw_com_fta.PtrDangling</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-983942276667462ae28e4ada831312dde13b0da3"><span class="std std-ref">mw_com_fta.SlotAllocationSynchronisationWrongState</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-3a52675daaeb66a5747871521231e88e9013518e"><span class="std std-ref">mw_com_fta.SlotAllocationSynchronisationWrongTimestamp</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L591">score/mw/com/dependability/safety_analysis/failure_modes.trlc:591:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-01ac0c1135144a4cc8eb983ad729fa0c91e6521f">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.UsesTooManySampleptr</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">User is already max. sample count SamplePtr, but we are still handing out SamplePtrs in callback F().</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-f6fe36fe8b93ea94c45400d1d22fe2d251a4c3a0"><span class="std std-ref">mw_com_fta.ReferenceCountingFacilityForSampleptrIsBroken</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L601">score/mw/com/dependability/safety_analysis/failure_modes.trlc:601:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-fe349804c9094ba4d4fd9a82431b9df0cc522c8b">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.ReturnsWrongSampleCount</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Value returned by GetNewSample() does not match with the number of calls to callback F().</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-745569a77dd270df24c51db4c383ca4d58bfc887"><span class="std std-ref">mw_com_fta.CounterOfInvokedCallbacksIsWrong</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L612">score/mw/com/dependability/safety_analysis/failure_modes.trlc:612:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-1ba8a77e1f4241b907630ec05c2e42feb0c7fd91">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.ReturnsWrongFreeSampleCount</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A user has already M SamplePtr in use from a max. announced number N, but GetFreeSampleCount() returns a different value than N-M.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-973441bc61d696419fad088dc1ab0cc5d614893b"><span class="std std-ref">mw_com_fta.RootCauseReturnsWrongFreeSampleCount</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L638">score/mw/com/dependability/safety_analysis/failure_modes.trlc:638:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-904c71df36d9809380f3e9fdc24a6996528b7155">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.DoesNotUnsubscribe</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy is subscribed to an event, tries to unsubscribe, but silently fails to unsubscribe.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-c09d4ab5518cb140bdba1ee993eafbac3dae0578"><span class="std std-ref">mw_com_fta.ExplicitUnsubscribeByUserFailed</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4bf2127a4f3d6004a99da1cefdb3d9ad00b4bc1f"><span class="std std-ref">mw_com_fta.ProxyCrashesWithoutUnsubscription</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L652">score/mw/com/dependability/safety_analysis/failure_modes.trlc:652:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-580713db74f3a5832552c7363befd16da78be354">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.UnsubscribesFromWrongEvent</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A user unsubscribes from an event, but the unsubscribe is silently carried out on another event.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-977c64f1d6df712250f0a4cdbe55d022dfc9f415"><span class="std std-ref">mw_com_fta.EventFieldIdReferencesWrongStorage</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-81d8565ad352bd2ceffa4ad8d474dc408a92269f"><span class="std std-ref">mw_com_fta.EventFieldNameMappingClash</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L662">score/mw/com/dependability/safety_analysis/failure_modes.trlc:662:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-9cd5aa45b21aed6cf13f031923d62b7351f2c245">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.DoesNotImplicitRemoveReceiveHandler</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A proxy has registered a receive handler and unsubscribes, this should lead to the case that a receive handler is no longer called. In this failure mode, the receive handler would still be called.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a33d992136d37b104a3fb6cf395d3da7226b947f"><span class="std std-ref">mw_com_fta.RootCauseDoesNotImplicitRemoveReceiveHandler</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L673">score/mw/com/dependability/safety_analysis/failure_modes.trlc:673:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-3a2e66b4b9cb8ce1c6440b56c7a5187a48036a2d">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.MethodCallBlocksLongerThanExpected</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A call to a service-method on the client/consumer side blocks longer than expected (or indefinite). This is a specific instance of FailureMode [AnyFunctionBlocksLongerThanExpected], but since with service-methods we have concrete root causes in the form of message-passing behaviour and behaviour of user-provided handler, we have this specific failure mode.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-e251c14ea7aa696152f1a5ba65c7e70ac1e5e643"><span class="std std-ref">mw_com_fta.BlocksOnCaller</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-aff56d22187e3d485074c26e69cbb41c586ed42a"><span class="std std-ref">mw_com_fta.CallBlocksOnCallee</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-cab40b399c21e29dc81600797c8b1b8a647e64fa"><span class="std std-ref">mw_com_fta.CallBlocksOnUserHandler</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L752">score/mw/com/dependability/safety_analysis/failure_modes.trlc:752:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-b3ff2f925fe67a8d606d6a6392a78bc30b6dfe81">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongMethodInArgsProvided</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Unintended input arguments are provided to a service method call. Therefore, the method call gets executed with wrong input data.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a5bde766949d2309fbd11bca162f6581a495cbc1"><span class="std std-ref">mw_com_fta.CallSignalledBeforeInArgsCompletelyProvided</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-3d98f2e4492940d76c9d180021e708b2f80bc837"><span class="std std-ref">mw_com_fta.CallerProvidedInArgsInWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-87448a3b4942ccc14a4da0a0e015499f6ddf729c"><span class="std std-ref">mw_com_fta.InArgsUpdateAfterCall</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-b45e3ff94a2374ed7c2917b6ad83291bdb2fbd23"><span class="std std-ref">mw_com_fta.InArgsWrongLayout</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L769">score/mw/com/dependability/safety_analysis/failure_modes.trlc:769:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-2df19c946ac37dd18658c0b66a07384a43d35a3c">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.WrongReturnValueUsed</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">Unintended results are provided from a service method call. Therefore, the caller of the method works on wrong data.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-7e89f9de21f0436e31f81f40230c8a4acbd3f1b4"><span class="std std-ref">mw_com_fta.CallerUsedResultBeforeFullyProvided</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9a54059abdf7f3c5f3df5b1266f9af2975cd97bf"><span class="std std-ref">mw_com_fta.CallerUsedResultFromWrongLocation</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-fcbdc308c80a563da0a2379144223e6f940da951"><span class="std std-ref">mw_com_fta.CallerUsedResultInWrongLayout</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-9f598aeca7198ab1cbec0e3314b824708a1a8ee6"><span class="std std-ref">mw_com_fta.CallerUsedResultWhileConcurrentlyUpdated</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L786">score/mw/com/dependability/safety_analysis/failure_modes.trlc:786:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-a7e927c15e6d55f370fb254efcebddd61dfc1d6f">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.DoesNotFreeResourcesOnDestruction</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A SampleAllocateePtr or SamplePtr is destroyed, which should lead to a freeing of resources, but caused by a fault they are not freed.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2"><span class="std std-ref">mw_com_fta.ChangingStateFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-6b97c412d9bea7902c91be683007f180b1b29592"><span class="std std-ref">mw_com_fta.IncreasingDecreasingRefCountFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510"><span class="std std-ref">mw_com_fta.SlotReferenceBrokenEGNonValid</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L806">score/mw/com/dependability/safety_analysis/failure_modes.trlc:806:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-102d7397c31cde2b2fbb6e6fab533fbb83526213">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.FreesWrongResources</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">A SampleAllocateePtr or SamplePtr free the wrong resources associated with them.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-19c21ee7024d53b5c1f11d0d58623d48c94ea2c2"><span class="std std-ref">mw_com_fta.ChangingStateFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-6b97c412d9bea7902c91be683007f180b1b29592"><span class="std std-ref">mw_com_fta.IncreasingDecreasingRefCountFails</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-247687aaf9ea17846e9e26fb67387fa1d90a2510"><span class="std std-ref">mw_com_fta.SlotReferenceBrokenEGNonValid</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L816">score/mw/com/dependability/safety_analysis/failure_modes.trlc:816:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-9682bf97a1e08888c6264f9b916c5ba9e9e933b2">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.DoesNotUpdateFreeSampleCountCorrectly</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">When a SamplePtr gets created or destroyed for a given event instance, the Free Sample Count of this instance doesn’t get updated accordingly</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-4ae05956921b2fb9b6242be5be79c54fba0fb570"><span class="std std-ref">mw_com_fta.SlotReferenceCountNotDecremented</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L838">score/mw/com/dependability/safety_analysis/failure_modes.trlc:838:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-095592958842a04c6a742f5bfd4e1ef9aa40ccf3">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.ReturnsWrongData</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">On dereferenciation of a SamplePtr or SampleAllocateePtr wrong data is returned.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-e972b9bb6cb435723bf989d8e51a7e73fe07041c"><span class="std std-ref">mw_com_fta.LifeCycleIssuesSamplePtr</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-32eb0575ad16d27f3255922b9d9cd6c0d1cebaf7"><span class="std std-ref">mw_com_fta.WrongSlotReferenced</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L848">score/mw/com/dependability/safety_analysis/failure_modes.trlc:848:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-cd2f11fe58d1b7ef6805c40cf207cc0454c7914e">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.MethodSignatureElementPtrWrongTarget</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">On de-referencing of a MethodSignatureElementPtr wrong data is returned.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-537eba2dfbbbb05705b5e8899c9420b545e71402"><span class="std std-ref">mw_com_fta.LifeCycleIssuesElementPtr</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-485f6a303ddd3186c065f3c7e89adea751485793"><span class="std std-ref">mw_com_fta.ReferencesInvalidMemory</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-cfef30a2e7f29960fdb0156f44bb2e54cf355512"><span class="std std-ref">mw_com_fta.ReferencesValidMemoryInsideSHM</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-a6f562f26b766f0665d24d3ebdecd28832ebbcff"><span class="std std-ref">mw_com_fta.ReferencesValidMemoryOutsideSHM</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L868">score/mw/com/dependability/safety_analysis/failure_modes.trlc:868:34</a></p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="lobster-item-d34575ccd6bfc1a5a2fe6fe89dd12537312177b1">
+<summary class="sd-summary-title sd-card-header sd-bg-success sd-text-white">
+<span class="sd-summary-text">[OK] TRLC Failuremode Communication.MethodSignatureElementPtrFailsToFree</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<blockquote class="pull-quote">
+<div><p class="sd-card-text">On destruction of a MethodSignatureElementPtr wrong memory is freed or not freed at all.</p>
+</div></blockquote>
+<hr><p class="sd-card-text"><strong>Traces to:</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-f427691875b7086c9eecbe57455b211022133d1f"><span class="std std-ref">mw_com_fta.DoesNotFreeMethodSignatureElement</span></a></p></li>
+<li><p class="sd-card-text"><a class="reference internal" href="root_causes.html#lobster-item-67b89f6c1a0b3b5dc146acee76ea374667399846"><span class="std std-ref">mw_com_fta.OverwriteOfElementInUse</span></a></p></li>
+</ul>
+<hr><p class="sd-card-text"><strong>Source:</strong> <a class="reference external" href="../../../../../../score/mw/com/dependability/safety_analysis/failure_modes.trlc#L883">score/mw/com/dependability/safety_analysis/failure_modes.trlc:883:34</a></p>
+</div>
+</details></section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="feature_requirements.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Feature Requirements</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="safety_measures.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Safety Measures</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/traceability_report/failure_modes.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+  </p>
+</div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
