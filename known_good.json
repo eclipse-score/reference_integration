@@ -240,11 +240,9 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "version": "0.3.3",
+                "version": "0.3.4",
                 "bazel_patches": [
                     "//patches/config_management:001-expose-mw-com-config.patch",
-                    "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
-                    "//patches/config_management:003-drop-dependable-element-aou-attr.patch",
                     "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
                 ],
                 "metadata": {
@@ -253,8 +251,7 @@
                         "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
                     ],
                     "exclude_test_targets": [
-                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
-                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
+                        "//score/config_management/config_daemon/code/services/details:unit_test_internal_config_provider_service_impl",
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/config_daemon/code:main_function_test",

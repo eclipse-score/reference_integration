@@ -1,8 +1,8 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 599b86e..b22da33 100644
+index 24c34f6..5b4ad64 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -67,7 +67,7 @@ use_repo(llvm, "llvm_toolchain", "llvm_toolchain_coverage", "llvm_toolchain_cove
+@@ -69,7 +69,7 @@ use_repo(llvm, "llvm_toolchain", "llvm_toolchain_coverage", "llvm_toolchain_cove
  
  # Score C++ toolchain — used for --config=host_gcc in CI (tests, static-analysis)
  bazel_dep(name = "score_bazel_platforms", version = "1.1.0", dev_dependency = True)
@@ -11,7 +11,7 @@ index 599b86e..b22da33 100644
  
  # score_devcontainer 1.11.1 was yanked upstream (retagged release, checksum mismatch);
  # force resolution to the fixed 1.11.2 release.
-@@ -101,11 +101,10 @@ gcc.toolchain(
+@@ -103,11 +103,10 @@ gcc.toolchain(
  )
  use_repo(
      gcc,
@@ -24,7 +24,7 @@ index 599b86e..b22da33 100644
  )
  
  # UTs on QNX — run_under wrapper that boots QEMU
-@@ -115,7 +114,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
+@@ -117,7 +116,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
  imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
@@ -33,7 +33,7 @@ index 599b86e..b22da33 100644
      sdp_version = "8.0.0",
      target_cpu = "x86_64",
      target_os = "qnx",
-@@ -123,7 +122,7 @@ imagefs.toolchain(
+@@ -125,7 +124,7 @@ imagefs.toolchain(
  )
  imagefs.toolchain(
      name = "score_qnx_aarch64_ifs_toolchain",
