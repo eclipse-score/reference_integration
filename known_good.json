@@ -43,7 +43,7 @@
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
                 "docs": false,
-                "hash": "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
+                "hash": "cb816c359803ded5c71792371fefdc901a8a39af",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch"
                 ],
@@ -233,11 +233,9 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "hash": "2e213d5fd030f3f2cd6b7504841b5c7aa6f4a660",
+                "hash": "528e486e1eb17f299a2a26e15a59e92b4f592c24",
                 "bazel_patches": [
-                    "//patches/config_management:001-expose-mw-com-config.patch",
-                    "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
-                    "//patches/config_management:003-drop-dependable-element-aou-attr.patch"
+                    "//patches/config_management:001-expose-mw-com-config.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -245,18 +243,10 @@
                         "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
                     ],
                     "exclude_test_targets": [
-                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
-                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
-                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
-                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
-                        "//score/config_management/config_daemon/code:main_function_test",
-                        "//score/config_management/config_daemon/code/data_model/details:unit_test",
-                        "//score/config_management/config_provider/code/parameter_set:unit_test",
                         "//score/config_management/dependability/..."
                     ],
                     "test_notes": {
-                        "//score/config_management/config_daemon/code/data_model/details:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657",
-                        "//score/config_management/config_provider/code/parameter_set:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657"
+                        "//score/config_management/dependability/...": "TODO fix: requirements/safety_analysis calls safety_analysis() without arch_design, which the score_tooling version of ref_int requires."
                     },
                     "langs": [
                         "cpp"
@@ -272,6 +262,10 @@
                         "//score/config_management/config_provider/code/config_provider/error:unit_test",
                         "//score/config_management/config_provider/code/parameter_set:unit_test",
                         "//score/config_management/config_provider/code/persistency:unit_tests_host",
+                        "//score/config_management/config_daemon/code:main_function_test",
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_factory_impl",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//tests/cpp:cpp_test_main"
                     ]
                 }
