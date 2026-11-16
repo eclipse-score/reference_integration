@@ -102,7 +102,6 @@ sbom(
     # exclude their generated Bazel aliases to avoid duplicate components.
     exclude_patterns = ["rules_python++pip+"],
     generation_context = "build",
-    java_files = ["@score_docs_as_code//src:plantuml.jar"],
     output_formats = ["spdx"],
     python_lockfiles = [
         "//feature_integration_tests/test_cases:requirements.txt.lock",
