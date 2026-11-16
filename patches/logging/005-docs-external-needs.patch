@@ -1,12 +1,12 @@
 diff --git a/BUILD b/BUILD
-index ff4a253..742c1ce 100644
+index 4724cf0..7500cb8 100644
 --- a/BUILD
 +++ b/BUILD
-@@ -60,7 +60,7 @@ py_test(
- # Creates all documentation targets:
- # - `:docs` for building documentation at build-time
+@@ -92,6 +92,8 @@ py_test(
  docs(
--    data = [
+     data = glob(["scripts/dependency_reports/dependency_report_*.json"]) + [
+         "scripts/generate_dependency_report.py",
++    ],
 +    external_needs = [
          "@score_platform//:needs_json",
          "@score_process_description//:needs_json",
