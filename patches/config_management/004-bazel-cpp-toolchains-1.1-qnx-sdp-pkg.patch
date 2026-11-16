@@ -1,5 +1,5 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 24c34f6..5b4ad64 100644
+index 24c34f6..cf8ebea 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -69,7 +69,7 @@ use_repo(llvm, "llvm_toolchain", "llvm_toolchain_coverage", "llvm_toolchain_cove
@@ -11,11 +11,29 @@ index 24c34f6..5b4ad64 100644
  
  # score_devcontainer 1.11.1 was yanked upstream (retagged release, checksum mismatch);
  # force resolution to the fixed 1.11.2 release.
+@@ -87,7 +87,7 @@ gcc.toolchain(
+ # QNX cross-compiler toolchains (QCC)
+ gcc.toolchain(
+     name = "score_qcc_x86_64_toolchain",
+-    sdp_version = "8.0.4",
++    sdp_version = "8.0.5",
+     target_cpu = "x86_64",
+     target_os = "qnx",
+     use_default_package = True,
+@@ -95,7 +95,7 @@ gcc.toolchain(
+ )
+ gcc.toolchain(
+     name = "score_qcc_aarch64_toolchain",
+-    sdp_version = "8.0.4",
++    sdp_version = "8.0.5",
+     target_cpu = "aarch64",
+     target_os = "qnx",
+     use_default_package = True,
 @@ -103,11 +103,10 @@ gcc.toolchain(
  )
  use_repo(
      gcc,
-+    "qnx_sdp_8_0_4_pkg",
++    "qnx_sdp_8_0_5_pkg",
      "score_gcc_x86_64_toolchain",
      "score_qcc_aarch64_toolchain",
 -    "score_qcc_aarch64_toolchain_pkg",
@@ -29,7 +47,7 @@ index 24c34f6..5b4ad64 100644
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
 -    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
-+    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_5_pkg",
      sdp_version = "8.0.0",
      target_cpu = "x86_64",
      target_os = "qnx",
@@ -38,7 +56,7 @@ index 24c34f6..5b4ad64 100644
  imagefs.toolchain(
      name = "score_qnx_aarch64_ifs_toolchain",
 -    sdp_to_import = "@score_qcc_aarch64_toolchain_pkg",
-+    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_5_pkg",
      sdp_version = "8.0.0",
      target_cpu = "aarch64",
      target_os = "qnx",

@@ -1,5 +1,5 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index ac04e82..b452230 100644
+index ac04e82..06265cc 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -49,7 +49,7 @@ bazel_dep(name = "score_platform", version = "0.7.4")
@@ -16,7 +16,7 @@ index ac04e82..b452230 100644
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
 -    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
-+    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_5_pkg",
      sdp_version = "8.0.0",
      target_cpu = "x86_64",
      target_os = "qnx",
@@ -25,15 +25,33 @@ index ac04e82..b452230 100644
  imagefs.toolchain(
      name = "score_qnx_aarch64_ifs_toolchain",
 -    sdp_to_import = "@score_qcc_aarch64_toolchain_pkg",
-+    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_5_pkg",
      sdp_version = "8.0.0",
      target_cpu = "aarch64",
      target_os = "qnx",
+@@ -187,7 +187,7 @@ qcc.toolchain(
+     name = "score_qcc_aarch64_toolchain",
+     extra_enabled_features = _WARNING_ENABLED_FEATURES,
+     extra_known_features = _WARNING_KNOWN_FEATURES,
+-    sdp_version = "8.0.4",
++    sdp_version = "8.0.5",
+     target_cpu = "aarch64",
+     target_os = "qnx",
+     use_default_package = True,
+@@ -197,7 +197,7 @@ qcc.toolchain(
+     name = "score_qcc_x86_64_toolchain",
+     extra_enabled_features = _WARNING_ENABLED_FEATURES,
+     extra_known_features = _WARNING_KNOWN_FEATURES,
+-    sdp_version = "8.0.4",
++    sdp_version = "8.0.5",
+     target_cpu = "x86_64",
+     target_os = "qnx",
+     use_default_package = True,
 @@ -205,10 +205,9 @@ qcc.toolchain(
  )
  use_repo(
      qcc,
-+    "qnx_sdp_8_0_4_pkg",
++    "qnx_sdp_8_0_5_pkg",
      "score_qcc_aarch64_toolchain",
 -    "score_qcc_aarch64_toolchain_pkg",
      "score_qcc_x86_64_toolchain",
@@ -42,7 +60,7 @@ index ac04e82..b452230 100644
  
  ###############################################################################
 diff --git a/quality/coverage/BUILD b/quality/coverage/BUILD
-index ff392d6..11dda7f 100644
+index ff392d6..e9bcaa1 100644
 --- a/quality/coverage/BUILD
 +++ b/quality/coverage/BUILD
 @@ -59,6 +59,6 @@ score_coverage_reporter(
@@ -50,6 +68,6 @@ index ff392d6..11dda7f 100644
      backend = "gcov",
      coverage_scope = ":coverage_scope",
 -    gcov = "@score_qcc_x86_64_toolchain_pkg//:gcov",
-+    gcov = "@qnx_sdp_8_0_4_pkg//:gcov_x86_64",
++    gcov = "@qnx_sdp_8_0_5_pkg//:gcov_x86_64",
      tags = ["manual"],  # keeps `bazel build //...` on a Linux host from fetching the QNX SDP
  )
