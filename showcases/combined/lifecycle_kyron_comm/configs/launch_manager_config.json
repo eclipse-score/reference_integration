@@ -67,10 +67,10 @@
                 "depends_on": ["state_manager"]
             }
         },
-        "com_api_example": {
-            "description": "Communication API example managed by lifecycle",
+        "com_producer": {
+            "description": "Communication tutorial producer managed by lifecycle",
             "component_properties": {
-                "binary_name": "com-api-example",
+                "binary_name": "producer_app",
                 "application_profile": {
                     "application_type": "Native",
                     "is_self_terminating": true
@@ -87,12 +87,34 @@
             "deployment_config": {
                 "working_dir": "/showcases/data/lifecycle_kyron_comm"
             }
+        },
+        "com_consumer": {
+            "description": "Communication tutorial consumer managed by lifecycle, started once the producer offers",
+            "component_properties": {
+                "binary_name": "sh",
+                "application_profile": {
+                    "application_type": "Native",
+                    "is_self_terminating": true
+                },
+                "ready_condition": {
+                    "process_state": "Running"
+                },
+                "process_arguments": [
+                    "-c",
+                    "sleep 1; exec /showcases/bin/consumer_app -s /showcases/data/lifecycle_kyron_comm/etc/com_mw_com_config.json"
+                ],
+                "depends_on": ["state_manager"]
+            },
+            "deployment_config": {
+                "bin_dir": "/bin",
+                "working_dir": "/showcases/data/lifecycle_kyron_comm"
+            }
         }
     },
     "run_targets": {
         "Startup": {
             "description": "Lifecycle-managed kyron and communication showcase",
-            "depends_on": ["kyron_safety_task", "com_api_example", "state_manager"],
+            "depends_on": ["kyron_safety_task", "com_producer", "com_consumer", "state_manager"],
             "recovery_action": {
                 "switch_run_target": {
                     "run_target": "fallback_run_target"

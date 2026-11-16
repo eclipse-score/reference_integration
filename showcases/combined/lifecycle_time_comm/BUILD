@@ -29,7 +29,7 @@ score_pkg_bundle(
         ":lifecycle_time_comm_configs": "etc/",
         "//showcases/combined/lifecycle_time_comm/configs:logging.json": "etc/logging.json",
         "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
-        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "etc/com_mw_com_config.json",
+        "@score_communication//score/mw/com/doc/tutorial/rust/common:etc/mw_com_config.json": "etc/com_mw_com_config.json",
     },
     package_dir = "lifecycle_time_comm",
 )

@@ -30,7 +30,7 @@ from showcase_runner import run_showcases
 )
 def test_lifecycle_comm_showcase(target):
     """The lifecycle-managed communication showcase launches the communication
-    API example as a process under the lifecycle launch manager, demonstrating
+    tutorial producer and consumer as processes under the lifecycle launch manager, demonstrating
     score_lifecycle and score_communication working together on the platform."""
 
     output = run_showcases(target, "Lifecycle-managed Communication Example")
