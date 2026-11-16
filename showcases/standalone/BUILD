@@ -15,12 +15,15 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
     name = "comm",
-    bins = ["@score_communication//score/mw/com/example/com-api-example:com-api-example"],
+    bins = [
+        "@score_communication//score/mw/com/doc/tutorial/rust/chapter_3:producer_app",
+        "@score_communication//score/mw/com/doc/tutorial/rust/chapter_4:consumer_app",
+    ],
     config_data = [
         "//showcases/standalone:com.score.json",
     ],
     custom_layout = {
-        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "etc/mw_com_config.json",
+        "@score_communication//score/mw/com/doc/tutorial/rust/common:etc/mw_com_config.json": "etc/mw_com_config.json",
     },
     package_dir = "standalone",
 )

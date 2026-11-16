@@ -1,8 +1,8 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 7718dcd..b8b3620 100644
+index dd5e0fd..269497a 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -35,7 +35,7 @@ single_version_override(
+@@ -40,7 +40,7 @@ single_version_override(
      patches = ["//third_party/score_baselibs:restore_qnx8_poll_workaround.patch"],
  )
  
@@ -11,7 +11,7 @@ index 7718dcd..b8b3620 100644
  bazel_dep(name = "score_cpp_policies", version = "0.1.2")
  bazel_dep(name = "score_crates", version = "0.0.13", repo_name = "score_communication_crate_index")
  
-@@ -79,7 +79,7 @@ gcc_toolchains.toolchain(
+@@ -84,7 +84,7 @@ gcc_toolchains.toolchain(
  )
  use_repo(gcc_toolchains, "gcc_toolchain_x86_64")
  
@@ -20,7 +20,7 @@ index 7718dcd..b8b3620 100644
  
  score_gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
  
-@@ -129,12 +129,11 @@ score_gcc.toolchain(
+@@ -134,12 +134,11 @@ score_gcc.toolchain(
  )
  use_repo(
      score_gcc,
@@ -33,8 +33,8 @@ index 7718dcd..b8b3620 100644
 -    "score_qcc_x86_64_toolchain_pkg",
  )
  
- bazel_dep(name = "score_itf", version = "0.6.0", dev_dependency = True)
-@@ -143,14 +142,14 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
+ bazel_dep(name = "score_itf", version = "0.7.0", dev_dependency = True)
+@@ -148,14 +147,14 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
  imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
