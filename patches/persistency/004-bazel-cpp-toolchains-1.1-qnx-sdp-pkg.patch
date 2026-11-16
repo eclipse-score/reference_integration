@@ -1,0 +1,44 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index b9bda6b..08b3533 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -63,7 +63,7 @@ pip.parse(
+ use_repo(pip, "pip_score_persistency_venv_test")
+ 
+ # Toolchain dependencies.
+-bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.5", dev_dependency = True)
++bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.1.0-rc2", dev_dependency = True)
+ 
+ bazel_dep(name = "score_bazel_platforms", version = "1.1.0")
+ bazel_dep(name = "platforms", version = "1.1.0")
+@@ -134,19 +134,18 @@ gcc.toolchain(
+ )
+ use_repo(
+     gcc,
++    "qnx_sdp_8_0_4_pkg",
+     "score_gcc_aarch64_toolchain",
+     "score_gcc_x86_64_toolchain",
+     "score_qcc_aarch64_toolchain",
+-    "score_qcc_aarch64_toolchain_pkg",
+     "score_qcc_x86_64_toolchain",
+-    "score_qcc_x86_64_toolchain_pkg",
+ )
+ 
+ # QNX image toolchains.
+ imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
+ imagefs.toolchain(
+     name = "score_qnx_aarch64_ifs_toolchain",
+-    sdp_to_import = "@score_qcc_aarch64_toolchain_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
+     sdp_version = "8.0.0",
+     target_cpu = "aarch64",
+     target_os = "qnx",
+@@ -154,7 +153,7 @@ imagefs.toolchain(
+ )
+ imagefs.toolchain(
+     name = "score_qnx_x86_64_ifs_toolchain",
+-    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
+     sdp_version = "8.0.0",
+     target_cpu = "x86_64",
+     target_os = "qnx",

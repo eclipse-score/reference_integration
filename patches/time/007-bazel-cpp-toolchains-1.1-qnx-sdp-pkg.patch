@@ -1,0 +1,35 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index cc0a758..59d340d 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -14,7 +14,7 @@ module(name = "score_time")
+ 
+ ## Configure the C++ toolchain
+ 
+-bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.5", dev_dependency = True)
++bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.1.0-rc2", dev_dependency = True)
+ 
+ gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
+ gcc.toolchain(
+@@ -49,11 +49,11 @@ gcc.toolchain(
+ )
+ use_repo(
+     gcc,
++    "qnx_sdp_8_0_4_pkg",
+     "score_gcc_aarch64_toolchain",
+     "score_gcc_x86_64_toolchain",
+     "score_qcc_aarch64_toolchain",
+     "score_qcc_x86_64_toolchain",
+-    "score_qcc_x86_64_toolchain_pkg",
+ )
+ 
+ ## Custom Module Loading
+@@ -248,7 +248,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
+ imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
+ imagefs.toolchain(
+     name = "score_qnx_x86_64_ifs_toolchain",
+-    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
+     # imagefs extension does not remap 8.0.4 -> 8.0.0 for platform constraints,
+     # so use "8.0.0" here to match the only available sdp_version constraint
+     # value in @score_bazel_platforms. The actual SDP binary version comes

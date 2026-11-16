@@ -1,0 +1,44 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 7718dcd..e6b79b5 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -79,7 +79,7 @@ gcc_toolchains.toolchain(
+ )
+ use_repo(gcc_toolchains, "gcc_toolchain_x86_64")
+ 
+-bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.5", dev_dependency = True)
++bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.1.0-rc2", dev_dependency = True)
+ 
+ score_gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
+ 
+@@ -129,12 +129,11 @@ score_gcc.toolchain(
+ )
+ use_repo(
+     score_gcc,
++    "qnx_sdp_8_0_4_pkg",
+     "score_gcc_aarch64_toolchain",
+     "score_gcc_x86_64_toolchain",
+     "score_qcc_aarch64_toolchain",
+-    "score_qcc_aarch64_toolchain_pkg",
+     "score_qcc_x86_64_toolchain",
+-    "score_qcc_x86_64_toolchain_pkg",
+ )
+ 
+ bazel_dep(name = "score_itf", version = "0.6.0", dev_dependency = True)
+@@ -143,14 +142,14 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True
+ imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
+ imagefs.toolchain(
+     name = "score_qnx_x86_64_ifs_toolchain",
+-    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
+     target_cpu = "x86_64",
+     target_os = "qnx",
+     type = "ifs",
+ )
+ imagefs.toolchain(
+     name = "score_qnx_aarch64_ifs_toolchain",
+-    sdp_to_import = "@score_qcc_aarch64_toolchain_pkg",
++    sdp_to_import = "@qnx_sdp_8_0_4_pkg",
+     target_cpu = "aarch64",
+     target_os = "qnx",
+     type = "ifs",
