@@ -577,7 +577,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-3dc7ecf0">
+<div class="need_container docutils container" id="SNCB-0efce07a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_mod_ver_report table" id="mod_vrep__time__report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -646,65 +646,49 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
 
-/* Scales every chart to its column; together with the fixed three-column
-   raster this gives every chart the same size as in the platform report. */
-.score-pie-row img.score-report-pie {
-    width: 100%;
-    height: auto;
+/* All bars of a safety class are one figure, sized for one half of the
+   ASIL B | QM pair; the cap keeps single charts at the same scale. */
+img.score-report-bars {
+    display: block; width: 100%; max-width: 32em; height: auto;
+    margin: 0 0 0.6em 0;
 }
-/* ``.sd-row`` is a flex container without a justification of its own, so
-   this centres the two pies in the three-column raster. */
-.score-pie-row { justify-content: center; }
 
 p.rubric.safety-class-heading {
-    display: inline-block; margin: 1.4em 0 0.5em 0;
+    display: inline-block; margin: 0.9em 0 0.3em 0;
     padding: 0.15em 0.9em; border-radius: 1em;
     font-size: 0.95em; font-weight: 600; color: #ffffff;
 }
 p.rubric.safety-class-heading.safety-asil-b { background: #1f4e79; }
 p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 
-/* Stands in for a whole pie row of a safety class without any Need. */
-.empty-pie {
+/* Stands in for the chart of a safety class without any Need. */
+.empty-chart {
     padding: 0.2em 0.8em; margin-bottom: 0.5em;
     border: 2px dashed #b0b0b0; border-radius: 6px;
     color: #6c757d; font-style: italic;
 }
 
-.chart-legend { display: flex; flex-wrap: wrap; gap: 1.2em 2.5em; }
-.chart-legend-group {
-    display: flex; flex-direction: column; gap: 0.3em;
-    flex: 1 1 20em; font-size: 0.9em;
+/* One-line colour legend above every chart pair; hover explains a colour,
+   the details below explain all colours for keyboard users too. */
+.chart-legend {
+    display: flex; flex-wrap: wrap; gap: 0.3em 1.6em;
+    margin: 0.2em 0 0.2em 0; font-size: 0.85em;
 }
+.chart-legend-group {
+    display: inline-flex; flex-wrap: wrap; align-items: center;
+    gap: 0.2em 0.8em;
+}
+.chart-legend-group > span[title] { cursor: help; }
 .chart-legend-head { font-weight: 600; }
 .chart-legend-dot {
     display: inline-block; width: 0.8em; height: 0.8em;
-    margin-right: 0.5em; border-radius: 50%;
+    margin-right: 0.35em; border-radius: 50%; vertical-align: -0.05em;
     border: 1px solid rgba(0, 0, 0, 0.25);
 }
-</style><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in" open="open">
-<summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text">Legend — status values and chart colours</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<div class="chart-legend">
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Status — ASIL B</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected</span>
-    <span><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
-  </div>
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Status — QM</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (<code>valid_inspected</code> counts here too)</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
-  </div>
-  <div class="chart-legend-group">
-    <span class="chart-legend-head">Test coverage — both classes</span>
-    <span><span class="chart-legend-dot" style="background: #37a12d;"></span>fully covered — at least one test fully verifies the need</span>
-    <span><span class="chart-legend-dot" style="background: #f0a500;"></span>partially covered — only partially verifying tests</span>
-    <span><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered — no verifying test at all</span>
-  </div>
-</div></div>
-</details><section id="components">
+.chart-legend-details { margin: 0 0 0.4em 0; font-size: 0.85em; }
+.chart-legend-details > summary { cursor: pointer; }
+.chart-legend-details > p { margin: 0.4em 0 0 1em; }
+</style><section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Link to this heading">#</a></h2>
 <section id="component-overview">
 <h3>Component Overview<a class="headerlink" href="#component-overview" title="Link to this heading">#</a></h3>
@@ -751,28 +735,24 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 </section>
 <section id="time">
 <span id="comp-time"></span><h3>Time<a class="headerlink" href="#time" title="Link to this heading">#</a></h3>
-<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="component-requirements-statistics">
-<h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
+<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="component-requirements">
+<h4>Component Requirements<a class="headerlink" href="#component-requirements" title="Link to this heading">#</a></h4>
+<section id="statistics">
+<h5>Statistics<a class="headerlink" href="#statistics" title="Link to this heading">#</a></h5>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><details class="chart-legend-details"><summary>What the colours mean</summary><p><span class="chart-legend-head">Status ASIL B</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected<br><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Status QM</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Test coverage</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>fully</code> — at least one test fully verifies the need<br><span class="chart-legend-dot" style="background: #f0a500;"></span><code>partially</code> — only partially verifying tests<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>not covered</code> — no verifying test at all</p></details><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Requirements Status (ASIL B): valid_inspected 0, valid 8, invalid 0" class="score-report-pie" src="../../../_images/score_report_pie_6c87c5b925.svg" />
+<img alt="Time Requirements (ASIL B) — Status: valid_inspected 0, valid 8, invalid 0; Test Coverage: fully covered 0, partially covered 5, not covered 3" class="score-report-bars" src="../../../_images/score_report_bars_cbc442b763.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Requirements Test Coverage (ASIL B): fully covered 0, partially covered 5, not covered 3" class="score-report-pie" src="../../../_images/score_report_pie_dab3ee14d7.svg" />
-</div>
-</div>
-</div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
-<div class="empty-pie">no QM requirements</div></section>
-<section id="component-architecture-statistics">
-<h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
-<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
-<div class="empty-pie">no ASIL B architecture elements</div><p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
-<section id="requirements-traceability">
-<h4>Requirements Traceability<a class="headerlink" href="#requirements-traceability" title="Link to this heading">#</a></h4>
+<div class="empty-chart">no QM requirements</div></div>
+</div>
+</div>
+</section>
+<section id="traceability">
+<h5>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">#</a></h5>
 <p>The following table lists all requirements of this component together with their
 verification status and the tests that (fully or partially) verify them:</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -818,31 +798,31 @@ verification status and the tests that (fully or partially) verify them:</p>
 <td class="needs_title"><p>HighResSteadyClock always-ready snapshot</p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_status"><p>valid</p></td>
-<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/high_res_steady_time/src/high_res_steady_clock_adapter_test.cpp#L29">HighResSteadyClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
+<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/high_res_steady_time/src/high_res_steady_clock_adapter_test.cpp#L29">HighResSteadyClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../time/requirements/index.html#comp_req__steady_time__snapshot">comp_req__steady_time__snapshot</a></p></td>
 <td class="needs_title"><p>SteadyClock always-ready snapshot</p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_status"><p>valid</p></td>
-<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/steady_time/src/steady_clock_adapter_test.cpp#L45">SteadyClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
+<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/steady_time/src/steady_clock_adapter_test.cpp#L45">SteadyClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../time/requirements/index.html#comp_req__system_time__snapshot">comp_req__system_time__snapshot</a></p></td>
 <td class="needs_title"><p>SystemClock always-ready snapshot</p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_status"><p>valid</p></td>
-<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/system_time/src/system_clock_adapter_test.cpp#L45">SystemClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
+<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/system_time/src/system_clock_adapter_test.cpp#L45">SystemClockTest__NowReturnsTimepointSuitableForDurationArithmetic<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../time/requirements/index.html#comp_req__vehicle_time__lifecycle">comp_req__vehicle_time__lifecycle</a></p></td>
 <td class="needs_title"><p>VehicleClock lifecycle operations</p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_status"><p>valid</p></td>
-<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/vehicle_time/src/vehicle_clock_test.cpp#L104">VehicleClockTest__InitForwardsToBackend<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/vehicle_time/src/vehicle_clock_test.cpp#L119">VehicleClockTest__IsAvailableReturnsTrueWhenBackendReports<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/vehicle_time/src/vehicle_clock_test.cpp#L135">VehicleClockTest__IsAvailableReturnsFalseWhenBackendUnavailable<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/vehicle_time/src/vehicle_clock_test.cpp#L151">VehicleClockTest__WaitUntilAvailableForwardsTokenAndDeadlineToBackend<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
+<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/vehicle_time/src/vehicle_clock_test.cpp#L104">VehicleClockTest__InitForwardsToBackend<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/vehicle_time/src/vehicle_clock_test.cpp#L119">VehicleClockTest__IsAvailableReturnsTrueWhenBackendReports<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/vehicle_time/src/vehicle_clock_test.cpp#L135">VehicleClockTest__IsAvailableReturnsFalseWhenBackendUnavailable<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/vehicle_time/src/vehicle_clock_test.cpp#L151">VehicleClockTest__WaitUntilAvailableForwardsTokenAndDeadlineToBackend<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../time/requirements/index.html#comp_req__vehicle_time__snapshot">comp_req__vehicle_time__snapshot</a></p></td>
 <td class="needs_title"><p>VehicleClock returns snapshot with status</p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_status"><p>valid</p></td>
-<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/566783c44f3213b588952d4d22704ffa79123574/score/time/vehicle_time/src/vehicle_clock_test.cpp#L53">VehicleClockTest__NowReturnsSynchronizedStatusAndTimepoint<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
+<td class="needs_testlink"><p><a class="reference external" href="https://github.com/eclipse-score/time/blob/0.3.2/score/time/vehicle_time/src/vehicle_clock_test.cpp#L53">VehicleClockTest__NowReturnsSynchronizedStatusAndTimepoint<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -850,14 +830,24 @@ verification status and the tests that (fully or partially) verify them:</p>
 </div>
 </div>
 </details></section>
-<section id="test-coverage">
-<h4>Test Coverage<a class="headerlink" href="#test-coverage" title="Link to this heading">#</a></h4>
-<div class="score-coverage-report docutils container">
-<p>No coverage data available for this component.</p>
+</section>
+<section id="component-architecture">
+<h4>Component Architecture<a class="headerlink" href="#component-architecture" title="Link to this heading">#</a></h4>
+<section id="id1">
+<h5>Statistics<a class="headerlink" href="#id1" title="Link to this heading">#</a></h5>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
+<div class="empty-chart">no ASIL B architecture elements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
+<div class="empty-chart">no QM architecture elements</div></div>
+</div>
 </div>
 </section>
-<section id="architectural-elements">
-<h4>Architectural Elements<a class="headerlink" href="#architectural-elements" title="Link to this heading">#</a></h4>
+<section id="id2">
+<h5>Traceability<a class="headerlink" href="#id2" title="Link to this heading">#</a></h5>
 <p>The following table lists the architectural elements of this component
 together with their inspection status. Elements that have been formally
 inspected carry the <code class="docutils literal notranslate"><span class="pre">valid_inspected</span></code> status; elements with another
@@ -868,6 +858,13 @@ status have not yet been inspected.</p>
 <p class="needs_filter_warning" id="needtable-modules/score_time/verification_report/module_verification_report-2">No needs passed the filters</p>
 </div>
 </details></section>
+</section>
+<section id="test-coverage">
+<h4>Test Coverage<a class="headerlink" href="#test-coverage" title="Link to this heading">#</a></h4>
+<div class="score-coverage-report docutils container">
+<p>No coverage data available for this component.</p>
+</div>
+</section>
 <section id="verification-safety-analysis-documents">
 <h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#verification-safety-analysis-documents" title="Link to this heading">#</a></h4>
 <p>Presence of the standard verification and safety analysis work products for
@@ -993,28 +990,24 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </section>
 <section id="time-daemon">
 <span id="comp-time-daemon"></span><h3>Time Daemon<a class="headerlink" href="#time-daemon" title="Link to this heading">#</a></h3>
-<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id1">
-<h4>Component Requirements Statistics<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id3">
+<h4>Component Requirements<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<section id="id4">
+<h5>Statistics<a class="headerlink" href="#id4" title="Link to this heading">#</a></h5>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><details class="chart-legend-details"><summary>What the colours mean</summary><p><span class="chart-legend-head">Status ASIL B</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected<br><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Status QM</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Test coverage</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>fully</code> — at least one test fully verifies the need<br><span class="chart-legend-dot" style="background: #f0a500;"></span><code>partially</code> — only partially verifying tests<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>not covered</code> — no verifying test at all</p></details><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Daemon Requirements Status (ASIL B): valid_inspected 0, valid 18, invalid 0" class="score-report-pie" src="../../../_images/score_report_pie_ce71e1bbf0.svg" />
+<img alt="Time Daemon Requirements (ASIL B) — Status: valid_inspected 0, valid 18, invalid 0; Test Coverage: fully covered 0, partially covered 0, not covered 18" class="score-report-bars" src="../../../_images/score_report_bars_37e4235de5.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Daemon Requirements Test Coverage (ASIL B): fully covered 0, partially covered 0, not covered 18" class="score-report-pie" src="../../../_images/score_report_pie_3f00998706.svg" />
-</div>
-</div>
-</div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
-<div class="empty-pie">no QM requirements</div></section>
-<section id="id2">
-<h4>Component Architecture Statistics<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
-<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
-<div class="empty-pie">no ASIL B architecture elements</div><p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
-<section id="id3">
-<h4>Requirements Traceability<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<div class="empty-chart">no QM requirements</div></div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h5>Traceability<a class="headerlink" href="#id5" title="Link to this heading">#</a></h5>
 <p>The following table lists all requirements of this component together with their
 verification status and the tests that (fully or partially) verify them:</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1152,14 +1145,24 @@ verification status and the tests that (fully or partially) verify them:</p>
 </div>
 </div>
 </details></section>
-<section id="id4">
-<h4>Test Coverage<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
-<div class="score-coverage-report docutils container">
-<p>No coverage data available for this component.</p>
+</section>
+<section id="id6">
+<h4>Component Architecture<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<section id="id7">
+<h5>Statistics<a class="headerlink" href="#id7" title="Link to this heading">#</a></h5>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
+<div class="empty-chart">no ASIL B architecture elements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
+<div class="empty-chart">no QM architecture elements</div></div>
+</div>
 </div>
 </section>
-<section id="id5">
-<h4>Architectural Elements<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<section id="id8">
+<h5>Traceability<a class="headerlink" href="#id8" title="Link to this heading">#</a></h5>
 <p>The following table lists the architectural elements of this component
 together with their inspection status. Elements that have been formally
 inspected carry the <code class="docutils literal notranslate"><span class="pre">valid_inspected</span></code> status; elements with another
@@ -1170,8 +1173,15 @@ status have not yet been inspected.</p>
 <p class="needs_filter_warning" id="needtable-modules/score_time/verification_report/module_verification_report-14">No needs passed the filters</p>
 </div>
 </details></section>
-<section id="id6">
-<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+</section>
+<section id="id9">
+<h4>Test Coverage<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<div class="score-coverage-report docutils container">
+<p>No coverage data available for this component.</p>
+</div>
+</section>
+<section id="id10">
+<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
 <p>Presence of the standard verification and safety analysis work products for
 this component. A dash (<code class="docutils literal notranslate"><span class="pre">—</span></code>) means the corresponding document is missing.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1295,28 +1305,24 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </section>
 <section id="time-slave">
 <span id="comp-time-slave"></span><h3>Time Slave<a class="headerlink" href="#time-slave" title="Link to this heading">#</a></h3>
-<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id7">
-<h4>Component Requirements Statistics<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id11">
+<h4>Component Requirements<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<section id="id12">
+<h5>Statistics<a class="headerlink" href="#id12" title="Link to this heading">#</a></h5>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><details class="chart-legend-details"><summary>What the colours mean</summary><p><span class="chart-legend-head">Status ASIL B</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected<br><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Status QM</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Test coverage</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>fully</code> — at least one test fully verifies the need<br><span class="chart-legend-dot" style="background: #f0a500;"></span><code>partially</code> — only partially verifying tests<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>not covered</code> — no verifying test at all</p></details><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
-<div class="empty-pie">no ASIL B requirements</div><p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
+<div class="empty-chart">no ASIL B requirements</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Slave Requirements Status (QM): valid 19, invalid 0" class="score-report-pie" src="../../../_images/score_report_pie_a3d6ef17f7.svg" />
-</div>
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Slave Requirements Test Coverage (QM): fully covered 0, partially covered 0, not covered 19" class="score-report-pie" src="../../../_images/score_report_pie_6e4e69ea2f.svg" />
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
+<img alt="Time Slave Requirements (QM) — Status: valid 19, invalid 0; Test Coverage: fully covered 0, partially covered 0, not covered 19" class="score-report-bars" src="../../../_images/score_report_bars_561703f050.svg" />
 </div>
 </div>
 </div>
 </section>
-<section id="id8">
-<h4>Component Architecture Statistics<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
-<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
-<div class="empty-pie">no ASIL B architecture elements</div><p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
-<section id="id9">
-<h4>Requirements Traceability<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<section id="id13">
+<h5>Traceability<a class="headerlink" href="#id13" title="Link to this heading">#</a></h5>
 <p>The following table lists all requirements of this component together with their
 verification status and the tests that (fully or partially) verify them:</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1460,14 +1466,24 @@ verification status and the tests that (fully or partially) verify them:</p>
 </div>
 </div>
 </details></section>
-<section id="id10">
-<h4>Test Coverage<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
-<div class="score-coverage-report docutils container">
-<p>No coverage data available for this component.</p>
+</section>
+<section id="id14">
+<h4>Component Architecture<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<section id="id15">
+<h5>Statistics<a class="headerlink" href="#id15" title="Link to this heading">#</a></h5>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
+<div class="empty-chart">no ASIL B architecture elements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
+<div class="empty-chart">no QM architecture elements</div></div>
+</div>
 </div>
 </section>
-<section id="id11">
-<h4>Architectural Elements<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<section id="id16">
+<h5>Traceability<a class="headerlink" href="#id16" title="Link to this heading">#</a></h5>
 <p>The following table lists the architectural elements of this component
 together with their inspection status. Elements that have been formally
 inspected carry the <code class="docutils literal notranslate"><span class="pre">valid_inspected</span></code> status; elements with another
@@ -1478,8 +1494,15 @@ status have not yet been inspected.</p>
 <p class="needs_filter_warning" id="needtable-modules/score_time/verification_report/module_verification_report-26">No needs passed the filters</p>
 </div>
 </details></section>
-<section id="id12">
-<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+</section>
+<section id="id17">
+<h4>Test Coverage<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
+<div class="score-coverage-report docutils container">
+<p>No coverage data available for this component.</p>
+</div>
+</section>
+<section id="id18">
+<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
 <p>Presence of the standard verification and safety analysis work products for
 this component. A dash (<code class="docutils literal notranslate"><span class="pre">—</span></code>) means the corresponding document is missing.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1603,38 +1626,25 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </section>
 <section id="time-sync-client">
 <span id="comp-time-sync-client"></span><h3>Time Sync Client<a class="headerlink" href="#time-sync-client" title="Link to this heading">#</a></h3>
-<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id13">
-<h4>Component Requirements Statistics<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id19">
+<h4>Component Requirements<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<section id="id20">
+<h5>Statistics<a class="headerlink" href="#id20" title="Link to this heading">#</a></h5>
+<div class="chart-legend"><span class="chart-legend-group"><span class="chart-legend-head">Status ASIL B</span><span title="agreed and formally inspected"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid_inspected</span><span title="agreed, formal inspection still outstanding"><span class="chart-legend-dot" style="background: #f5c518;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Status QM</span><span title="agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)"><span class="chart-legend-dot" style="background: #37a12d;"></span>valid</span><span title="not agreed; metamodel checks are skipped"><span class="chart-legend-dot" style="background: #ca2828;"></span>invalid</span></span><span class="chart-legend-group"><span class="chart-legend-head">Test coverage</span><span title="at least one test fully verifies the need"><span class="chart-legend-dot" style="background: #37a12d;"></span>fully</span><span title="only partially verifying tests"><span class="chart-legend-dot" style="background: #f0a500;"></span>partially</span><span title="no verifying test at all"><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered</span></span></div><details class="chart-legend-details"><summary>What the colours mean</summary><p><span class="chart-legend-head">Status ASIL B</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected<br><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Status QM</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state (valid_inspected counts here too)<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</p><p><span class="chart-legend-head">Test coverage</span><br><span class="chart-legend-dot" style="background: #37a12d;"></span><code>fully</code> — at least one test fully verifies the need<br><span class="chart-legend-dot" style="background: #f0a500;"></span><code>partially</code> — only partially verifying tests<br><span class="chart-legend-dot" style="background: #ca2828;"></span><code>not covered</code> — no verifying test at all</p></details><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Sync Client Requirements Status (ASIL B): valid_inspected 0, valid 7, invalid 0" class="score-report-pie" src="../../../_images/score_report_pie_4108181ca7.svg" />
+<img alt="Time Sync Client Requirements (ASIL B) — Status: valid_inspected 0, valid 7, invalid 0; Test Coverage: fully covered 0, partially covered 0, not covered 7" class="score-report-bars" src="../../../_images/score_report_bars_54d881ad91.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Sync Client Requirements Test Coverage (ASIL B): fully covered 0, partially covered 0, not covered 7" class="score-report-pie" src="../../../_images/score_report_pie_69d778f05d.svg" />
-</div>
-</div>
-</div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Sync Client Requirements Status (QM): valid 5, invalid 0" class="score-report-pie" src="../../../_images/score_report_pie_ecda5e1eb5.svg" />
-</div>
-<div class="sd-col sd-d-flex-column docutils">
-<img alt="Time Sync Client Requirements Test Coverage (QM): fully covered 0, partially covered 0, not covered 5" class="score-report-pie" src="../../../_images/score_report_pie_eb4bc7e725.svg" />
+<img alt="Time Sync Client Requirements (QM) — Status: valid 5, invalid 0; Test Coverage: fully covered 0, partially covered 0, not covered 5" class="score-report-bars" src="../../../_images/score_report_bars_30b9f74c75.svg" />
 </div>
 </div>
 </div>
 </section>
-<section id="id14">
-<h4>Component Architecture Statistics<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
-<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
-<div class="empty-pie">no ASIL B architecture elements</div><p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
-<div class="empty-pie">no QM architecture elements</div></section>
-<section id="id15">
-<h4>Requirements Traceability<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
+<section id="id21">
+<h5>Traceability<a class="headerlink" href="#id21" title="Link to this heading">#</a></h5>
 <p>The following table lists all requirements of this component together with their
 verification status and the tests that (fully or partially) verify them:</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1736,14 +1746,24 @@ verification status and the tests that (fully or partially) verify them:</p>
 </div>
 </div>
 </details></section>
-<section id="id16">
-<h4>Test Coverage<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
-<div class="score-coverage-report docutils container">
-<p>No coverage data available for this component.</p>
+</section>
+<section id="id22">
+<h4>Component Architecture<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
+<section id="id23">
+<h5>Statistics<a class="headerlink" href="#id23" title="Link to this heading">#</a></h5>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 safety-pair docutils">
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
+<div class="empty-chart">no ASIL B architecture elements</div></div>
+<div class="sd-col sd-d-flex-column docutils">
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
+<div class="empty-chart">no QM architecture elements</div></div>
+</div>
 </div>
 </section>
-<section id="id17">
-<h4>Architectural Elements<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
+<section id="id24">
+<h5>Traceability<a class="headerlink" href="#id24" title="Link to this heading">#</a></h5>
 <p>The following table lists the architectural elements of this component
 together with their inspection status. Elements that have been formally
 inspected carry the <code class="docutils literal notranslate"><span class="pre">valid_inspected</span></code> status; elements with another
@@ -1754,8 +1774,15 @@ status have not yet been inspected.</p>
 <p class="needs_filter_warning" id="needtable-modules/score_time/verification_report/module_verification_report-38">No needs passed the filters</p>
 </div>
 </details></section>
-<section id="id18">
-<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+</section>
+<section id="id25">
+<h4>Test Coverage<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
+<div class="score-coverage-report docutils container">
+<p>No coverage data available for this component.</p>
+</div>
+</section>
+<section id="id26">
+<h4>Verification &amp; Safety Analysis Documents<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
 <p>Presence of the standard verification and safety analysis work products for
 this component. A dash (<code class="docutils literal notranslate"><span class="pre">—</span></code>) means the corresponding document is missing.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in">
@@ -1930,39 +1957,63 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components">Components</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component-overview">Component Overview</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time">Time</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-requirements-statistics">Component Requirements Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-architecture-statistics">Component Architecture Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-requirements">Component Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#statistics">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#traceability">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-architecture">Component Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Traceability</a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage">Test Coverage</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#architectural-elements">Architectural Elements</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-safety-analysis-documents">Verification &amp; Safety Analysis Documents</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-daemon">Time Daemon</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Component Requirements Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Component Architecture Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Requirements Traceability</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Test Coverage</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Architectural Elements</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Verification &amp; Safety Analysis Documents</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Component Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Component Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Test Coverage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Verification &amp; Safety Analysis Documents</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-slave">Time Slave</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Component Requirements Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Component Architecture Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Requirements Traceability</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Test Coverage</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Architectural Elements</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Verification &amp; Safety Analysis Documents</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Component Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Component Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Test Coverage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Verification &amp; Safety Analysis Documents</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-sync-client">Time Sync Client</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Component Requirements Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Component Architecture Statistics</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Requirements Traceability</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Test Coverage</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Architectural Elements</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Verification &amp; Safety Analysis Documents</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Component Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Component Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Statistics</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Traceability</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Test Coverage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Verification &amp; Safety Analysis Documents</a></li>
 </ul>
 </li>
 </ul>

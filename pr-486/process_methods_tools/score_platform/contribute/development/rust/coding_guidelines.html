@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Rust API design guidelines" href="rust_api_design.html" />
+    <link rel="next" title="Rust Coding Rules (MISRA-derived draft)" href="coding_rules/index.html" />
     <link rel="prev" title="Static Analysis" href="certification/tools/static_analysis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -482,7 +482,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../fork/index.html">Enterprise Forking Guide for S-CORE Repositories</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../quality/qms_report.html">Quality Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quality/qms_report.html">Platform Quality Report</a></li>
 
 
 
@@ -576,7 +576,7 @@
                   
   <section id="writing-rust-code-incl-coding-guidelines">
 <h1>Writing Rust Code incl. Coding Guidelines<a class="headerlink" href="#writing-rust-code-incl-coding-guidelines" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-dc608e97">
+<div class="need_container docutils container" id="SNCB-ebdbc049">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__rust_coding_guidelines">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -822,14 +822,20 @@ enforced. If possible the usage of <cite>unsafe</cite> is avoided. To keep the c
 S-CORE process and MISRA references (including
 <a class="reference external" href="https://misra.org.uk/app/uploads/2025/03/MISRA-C-2025-ADD6.pdf">MISRA C:2025 Addendum 6 Applicability of MISRA C:2025 to the Rust Programming Language</a>).
 Research sources such as
-<a class="reference external" href="https://arxiv.org/html/2605.23490v1">MISRust (arXiv:2605.23490v1), Table 3</a>
+<a class="reference external" href="https://arxiv.org/pdf/2605.23490v2">MISRust (arXiv:2605.23490v2), Table 3</a>
 are used as supporting rationale for topic prioritization, not as normative
 compliance criteria.</p>
+<p>Proposed S-CORE rule text for the MISRA C++:2023 guidelines that the SCRC’s own
+cross-reference marks as applicable to Rust, together with an applicability register
+and the evidence expected per rule, is maintained as a draft in
+<a class="reference internal" href="coding_rules/index.html#doc__rust_coding_rules" title="doc__rust_coding_rules"><em class="xref need">Rust Coding Rules (doc__rust_coding_rules)</em></a>. It supplements the
+lint profile described here and binds a component only once adopted through its
+Software Development Plan.</p>
 <p>The recommended <code class="docutils literal notranslate"><span class="pre">[lints.rust]</span></code>, <code class="docutils literal notranslate"><span class="pre">[lints.clippy]</span></code>, and <code class="docutils literal notranslate"><span class="pre">[profile.release]</span></code>
 settings are maintained centrally in the
 <a class="reference external" href="https://github.com/eclipse-score/score_rust_policies">score_rust_policies repository</a>:</p>
 <p>CodeQL is handled separately from this repository; see <em>Rust Tooling: CodeQL</em>
-above and <a class="reference internal" href="../../../platform_management_plan/software_verification.html"><span class="doc">Software verification</span></a>.</p>
+above and <a class="reference internal" href="../../../platform_management_plan/software_verification.html"><span class="doc">Software Verification Plan</span></a>.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/eclipse-score/score_rust_policies/blob/main/clippy/relaxed/Cargo.toml">Practical baseline (relaxed)</a> —
 suitable for general SCORE components.</p></li>
@@ -854,7 +860,7 @@ different policy intent for the compiler and Clippy levels where documented.
 Commented-out, toolchain-dependent candidates are not active options and are
 therefore excluded.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id3">
-<caption><span class="caption-number">Table 157 </span><span class="caption-text">Guideline topics and complete configured tool checks</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 156 </span><span class="caption-text">Guideline topics and complete configured tool checks</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 17.1%" />
 <col style="width: 27.4%" />
@@ -1039,11 +1045,11 @@ high-performance domains.</p>
       </div>
     </a>
     <a class="right-next"
-       href="rust_api_design.html"
+       href="coding_rules/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Rust API design guidelines</p>
+        <p class="prev-next-title">Rust Coding Rules (MISRA-derived draft)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

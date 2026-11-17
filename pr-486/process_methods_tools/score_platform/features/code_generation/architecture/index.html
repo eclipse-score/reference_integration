@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Feature Architecture &#8212; REF_INT  documentation</title>
+    <title>Code Generation Architecture &#8212; REF_INT  documentation</title>
   
   
   
@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Requirements" href="../requirements/index.html" />
+    <link rel="next" title="Code Generation Requirements" href="../requirements/index.html" />
     <link rel="prev" title="Code Generation" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -303,6 +303,10 @@
   
 
   
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -461,16 +465,24 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../architecture/index.html">Platform Architecture</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Platform Features and Logical Interfaces</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../ai_platform/index.html">AI Platform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../baselibs/index.html">Baselibs</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Code Generation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Feature Architecture</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Code Generation Architecture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Code Generation Requirements</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../communication/index.html">Communication</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../daal/index.html">Deterministic App Abstraction Layer</a></li>
+
+
+
+
+
+
+
 <li class="toctree-l3"><a class="reference internal" href="../../diagnostics/index.html">Diagnostic and Fault Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../frameworks/index.html">Frameworks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../feo/index.html">Fixed Execution Order</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../lifecycle/index.html">Lifecycle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../log_and_trace/index.html">Log and Trace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../orchestration/index.html">Orchestration</a></li>
@@ -481,7 +493,7 @@
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../requirements/index.html">Platform Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute/index.html">Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../quality/qms_report.html">Quality Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quality/qms_report.html">Platform Quality Report</a></li>
 
 
 
@@ -553,7 +565,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Code Generation</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Feature Architecture</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Code Generation Architecture</span></li>
   </ul>
 </nav>
 </div>
@@ -570,9 +582,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="feature-architecture">
-<h1>Feature Architecture<a class="headerlink" href="#feature-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-a4943e48">
+  <section id="code-generation-architecture">
+<h1>Code Generation Architecture<a class="headerlink" href="#code-generation-architecture" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-1c40aa27">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__code_generation_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -615,11 +627,13 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-09950308">
+<section id="code-generation-feature">
+<h2>Code Generation Feature<a class="headerlink" href="#code-generation-feature" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-cd5e7dc8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat table" id="feat__code_generation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Code-Generation</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Code Generation</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -659,6 +673,7 @@
 </div>
 </div>
 </section>
+</section>
 
 
                 </article>
@@ -684,7 +699,7 @@
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Requirements</p>
+        <p class="prev-next-title">Code Generation Requirements</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -694,6 +709,24 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-generation-feature">Code Generation Feature</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

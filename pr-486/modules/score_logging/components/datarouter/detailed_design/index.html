@@ -551,7 +551,7 @@
                   
   <section id="detailed-design">
 <h1>Detailed Design<a class="headerlink" href="#detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-bdd33531">
+<div class="need_container docutils container" id="SNCB-6bfeef5a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__datarouter_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -709,8 +709,8 @@ The diagrams show the constraints per building block.</p>
 <section id="external-dependencies">
 <h3>External Dependencies<a class="headerlink" href="#external-dependencies" title="Link to this heading">#</a></h3>
 <p>External dependencies and their relationships are defined in the Bazel BUILD
-targets. The dependency analysis and its findings are part of the checklist item
-IMPL_01_04 in <a class="reference internal" href="chklst_impl_inspection.html"><span class="doc">Implementation Inspection Checklist</span></a>.</p>
+targets. The direct dependencies of each unit, their <code class="docutils literal notranslate"><span class="pre">FFI</span></code> tag and the external
+repositories used transitively are listed in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code>.</p>
 </section>
 <section id="rationale-behind-decomposition-into-units">
 <h3>Rationale Behind Decomposition into Units<a class="headerlink" href="#rationale-behind-decomposition-into-units" title="Link to this heading">#</a></h3>
@@ -723,12 +723,12 @@ replaced independently. The units and their relations are shown in
 <section id="static-diagrams-for-unit-interactions">
 <h2>Static Diagrams for Unit Interactions<a class="headerlink" href="#static-diagrams-for-unit-interactions" title="Link to this heading">#</a></h2>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-5a5d06e204d920339494a15361222d6e81912269.svg" type="image/svg+xml" style="width:2014px;height:540px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-ec33dee088561324b54afb958a7ff60e13bc1898.svg" type="image/svg+xml" style="width:1726px;height:604px;background:#FFFFFF;"></object></p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-632e2715cb08028a11db80355e2f49b6756ce785.svg" type="image/svg+xml" style="width:1020px;height:1380px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-461ef1d454278049412de9c4005718e2bd765b9f.svg" type="image/svg+xml" style="width:1018px;height:1388px;background:#FFFFFF;"></object></p>
 <p>The units that appear in the sequence diagrams and their bindings:</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-52e5f0978804f628aab70e26845265d2a0027817.svg" type="image/svg+xml" style="width:564px;height:2864px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-31a2f41b2087d2eb20a0d57700156a8a0d0ae3bb.svg" type="image/svg+xml" style="width:563px;height:4542px;background:#FFFFFF;"></object></p>
 <p>The diagrams are validated by the <code class="docutils literal notranslate"><span class="pre">architectural_design</span></code> target
 <code class="docutils literal notranslate"><span class="pre">//score/datarouter/doc/design:datarouter_architectural_design</span></code>. The interface
 names in the unit diagram follow the convention of the validator (<code class="docutils literal notranslate"><span class="pre">I&lt;caller&gt;&lt;callee&gt;</span></code>)
@@ -739,10 +739,10 @@ and are not interfaces of the code.</p>
 <h2>Dynamic Diagrams for Unit Interactions<a class="headerlink" href="#dynamic-diagrams-for-unit-interactions" title="Link to this heading">#</a></h2>
 <p>The session handling between a client and the Datarouter:</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-e84d7595c455b52223b6d5c284fd4a6832354b30.svg" type="image/svg+xml" style="width:1749px;height:2905px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-4990a53032656ad447b7d88e78cfc64f6e51a6e4.svg" type="image/svg+xml" style="width:2383px;height:2924px;background:#FFFFFF;"></object></p>
 <p>The configuration session:</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-4dea655941a7693201e4477092c379ecaeace000.svg" type="image/svg+xml" style="width:2427px;height:873px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-ac2ebaf0cf80c8b9409bba5f23efd59da55992b5.svg" type="image/svg+xml" style="width:2440px;height:883px;background:#FFFFFF;"></object></p>
 <p>Further dynamic diagrams (early disconnect, watchdog, filtering) are part of
 <a class="reference internal" href="logging_architecture.html"><span class="doc">Logging: architecture and SW design</span></a>.</p>
 </section>
@@ -770,12 +770,12 @@ part of the headers.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__shm" title="logic_arc_int__logging__shm"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shm)</em></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__shared_memory" title="logic_arc_int__logging__shared_memory"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shared_memory)</em></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code> (<code class="docutils literal notranslate"><span class="pre">score_logging</span></code> <code class="docutils literal notranslate"><span class="pre">score/mw/log</span></code>), used by
 <code class="docutils literal notranslate"><span class="pre">SourceSession</span></code></p></td>
 <td><p>Data router core</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__session_ctrl_channel" title="logic_arc_int__logging__session_ctrl_channel"><em class="xref need">Control Channel (logic_arc_int__logging__session_ctrl_channel)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__datarouter_msg_client" title="logic_arc_int__logging__datarouter_msg_client"><em class="xref need">Control Channel (logic_arc_int__logging__datarouter_msg_client)</em></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">MessagePassingServer</span></code> with <code class="docutils literal notranslate"><span class="pre">MessagePassingServer::ISession</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ISessionHandle</span></code>, messages in <code class="docutils literal notranslate"><span class="pre">data_router_messages.h</span></code></p></td>
 <td><p>Message passing server, data router core</p></td>

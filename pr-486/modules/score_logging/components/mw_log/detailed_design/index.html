@@ -556,7 +556,7 @@
                   
   <section id="mw-log-backend-detailed-design">
 <h1>mw::log Backend Detailed Design<a class="headerlink" href="#mw-log-backend-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-17a7587e">
+<div class="need_container docutils container" id="SNCB-5e64949c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_backend_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -635,7 +635,7 @@ abstractions</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mw_log_file_backend.puml</span></code> in <a class="reference internal" href="file_output_backend.html"><span class="doc">FileOutputBackend</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p>Local allocation of the log slots
-(<a class="reference internal" href="../requirements/requirements.html#comp_req__log__local_allocation_strategy" title="comp_req__log__local_allocation_strategy"><em class="xref need">Local Allocation Strategy (comp_req__log__local_allocation_strategy)</em></a>)</p></td>
+(<a class="reference internal" href="../requirements/requirements.html#comp_req__log__local_allocation_strategy" title="comp_req__log__local_allocation_strategy"><em class="xref need">Heap Allocation Only During... (comp_req__log__local_allocation_strategy)</em></a>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mw_log_file_backend.puml</span></code> in <a class="reference internal" href="file_output_backend.html"><span class="doc">FileOutputBackend</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>A logging call does not block (<a class="reference internal" href="../requirements/requirements.html#comp_req__log__avoid_locks" title="comp_req__log__avoid_locks"><em class="xref need">Avoid Locks (comp_req__log__avoid_locks)</em></a>)</p></td>
@@ -682,11 +682,11 @@ The diagrams show the constraints per building block.</p>
 <tbody>
 <tr class="row-even"><td><p>All units</p></td>
 <td><p>Local allocators instead of the global heap, which is limited to the
-initialization phase (<a class="reference internal" href="../requirements/requirements.html#comp_req__log__local_allocation_strategy" title="comp_req__log__local_allocation_strategy"><em class="xref need">Local Allocation Strategy (comp_req__log__local_allocation_strategy)</em></a>)</p></td>
+initialization phase (<a class="reference internal" href="../requirements/requirements.html#comp_req__log__local_allocation_strategy" title="comp_req__log__local_allocation_strategy"><em class="xref need">Heap Allocation Only During... (comp_req__log__local_allocation_strategy)</em></a>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mw_log_file_backend.puml</span></code> in <a class="reference internal" href="file_output_backend.html"><span class="doc">FileOutputBackend</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Slot handling</p></td>
-<td><p>Bounded loops (<a class="reference internal" href="../requirements/requirements.html#comp_req__log__no_endless_loops" title="comp_req__log__no_endless_loops"><em class="xref need">No Endless Loops (comp_req__log__no_endless_loops)</em></a>)</p></td>
+<td><p>Bounded loops</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mw_log_file_backend.puml</span></code> in <a class="reference internal" href="file_output_backend.html"><span class="doc">FileOutputBackend</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p>File output backend</p></td>
@@ -722,8 +722,9 @@ untrusted</p></td>
 targets.
 FFI classifications are maintained using Bazel target metadata,
 including the <code class="docutils literal notranslate"><span class="pre">FFI</span></code> tag.
-The dependency tree used for implementation inspection and
-safety analysis is generated from the Bazel dependency graph.</p>
+The direct dependencies of each unit, their <code class="docutils literal notranslate"><span class="pre">FFI</span></code> tag and the external
+repositories used transitively are listed in <code class="docutils literal notranslate"><span class="pre">backend_dependencies</span></code>
+and <code class="docutils literal notranslate"><span class="pre">frontend_dependencies</span></code>.</p>
 </section>
 <section id="rationale-behind-decomposition-into-units">
 <h3>Rationale Behind Decomposition into Units<a class="headerlink" href="#rationale-behind-decomposition-into-units" title="Link to this heading">#</a></h3>
@@ -737,7 +738,7 @@ their relations are shown in <code class="docutils literal notranslate"><span cl
 <h2>Static Diagrams for Unit Interactions<a class="headerlink" href="#static-diagrams-for-unit-interactions" title="Link to this heading">#</a></h2>
 <p>The backend composition and recorder relationships are shown below:</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-8f4cb4e85f0f921456f93a757302265fe524d72a.svg" type="image/svg+xml" style="width:3731px;height:1058px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-8f4cb4e85f0f921456f93a757302265fe524d72a.svg" type="image/svg+xml" style="width:3739px;height:1066px;background:#FFFFFF;"></object></p>
 <p>Further static diagrams are part of the unit documents listed under
 <a class="reference internal" href="#units-within-the-component">Units within the Component</a>.</p>
 </section>
@@ -747,7 +748,7 @@ their relations are shown in <code class="docutils literal notranslate"><span cl
 Further dynamic views (sequence diagrams) are part of the unit documents listed
 under <a class="reference internal" href="#units-within-the-component">Units within the Component</a>.</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-04697ef06f0d9344b7491c5f8bcd01a619364483.svg" type="image/svg+xml" style="width:1728px;height:1011px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-fc028be5bcbd24ab172b607e97e5fa79d1969f6b.svg" type="image/svg+xml" style="width:1715px;height:1021px;background:#FFFFFF;"></object></p>
 </section>
 <section id="units-within-the-component">
 <h2>Units within the Component<a class="headerlink" href="#units-within-the-component" title="Link to this heading">#</a></h2>
@@ -770,13 +771,12 @@ the diagrams. The interface documentation is part of the headers.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/architecture/index.html#logic_arc_int__log_cpp__logging" title="logic_arc_int__log_cpp__logging"><em class="xref need">Logging (logic_arc_int__log_cpp__logging)</em></a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mw_log_recorders.puml</span></code> in <a class="reference internal" href="#static-diagrams-for-unit-interactions">Static Diagrams for Unit Interactions</a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/architecture/index.html#logic_arc_int__log_cpp__logging" title="logic_arc_int__log_cpp__logging"><em class="xref need">Logging C++ (logic_arc_int__log_cpp__logging)</em></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mw_log_recorders.puml</span></code> in <a class="reference internal" href="#static-diagrams-for-unit-interactions">Static Diagrams for Unit Interactions</a>.
+The interface is realized by <code class="docutils literal notranslate"><span class="pre">mw::log::Recorder</span></code> (<code class="docutils literal notranslate"><span class="pre">score/mw/log/recorder.h</span></code> in <code class="docutils literal notranslate"><span class="pre">score_baselibs</span></code>).
+The UID is defined in the feature architecture of the <code class="docutils literal notranslate"><span class="pre">score</span></code> repository.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../architecture/component_architecture.html#logic_arc_int__logging__shm" title="logic_arc_int__logging__shm"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shm)</em></a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">datarouter_class_diagram.puml</span></code> in <a class="reference internal" href="datarouter_backend/index.html"><span class="doc">Safe Datarouter Backend</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../architecture/component_architecture.html#logic_arc_int__logging__session_ctrl_channel" title="logic_arc_int__logging__session_ctrl_channel"><em class="xref need">Control Channel (logic_arc_int__logging__session_ctrl_channel)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../architecture/component_architecture.html#logic_arc_int__logging__shared_memory" title="logic_arc_int__logging__shared_memory"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shared_memory)</em></a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">datarouter_class_diagram.puml</span></code> in <a class="reference internal" href="datarouter_backend/index.html"><span class="doc">Safe Datarouter Backend</span></a></p></td>
 </tr>
 </tbody>
