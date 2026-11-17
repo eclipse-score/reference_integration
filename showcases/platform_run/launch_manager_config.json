@@ -133,10 +133,10 @@
                 "depends_on": ["kyron_safety_task"]
             }
         },
-        "com_api_example": {
-            "description": "Test: mw::com sender and receiver",
+        "com_producer": {
+            "description": "Test: mw::com producer, offers the service and publishes samples",
             "component_properties": {
-                "binary_name": "com-api-example",
+                "binary_name": "producer_app",
                 "depends_on": ["kyron_main_macro"],
                 "process_arguments": ["-s", "/showcases/data/comm/etc/mw_com_config.json"]
             },
@@ -144,11 +144,23 @@
                 "working_dir": "/showcases/data/comm"
             }
         },
+        "com_consumer": {
+            "description": "Test: mw::com consumer, finds the producer's service and receives samples",
+            "component_properties": {
+                "binary_name": "sh",
+                "depends_on": ["kyron_main_macro"],
+                "process_arguments": ["-c", "sleep 1; exec /showcases/bin/consumer_app -s /showcases/data/comm/etc/mw_com_config.json"]
+            },
+            "deployment_config": {
+                "bin_dir": "/bin",
+                "working_dir": "/showcases/data/comm"
+            }
+        },
         "platform_info_consumer": {
             "description": "Test: the platform reports the S-CORE version these tests were built for",
             "component_properties": {
                 "binary_name": "platform_info_consumer",
-                "depends_on": ["com_api_example"],
+                "depends_on": ["com_producer", "com_consumer"],
                 "process_arguments": ["--service_instance_manifest", "/usr/bin/platform_info/etc/mw_com_config.json"]
             },
             "deployment_config": {
@@ -200,7 +212,8 @@
                 "log_cpp_init",
                 "kyron_safety_task",
                 "kyron_main_macro",
-                "com_api_example",
+                "com_producer",
+                "com_consumer",
                 "platform_info_consumer",
                 "platform_run_passed"
             ]

@@ -1,35 +1,51 @@
-Expose the com-api-example binary and its mw_com config to the reference
-integration showcase bundle. Upstream dropped the public visibility on the
-rust_binary, and the config file was never exported. The visibility guard golden
-lists the now-public binary.
+Expose the Rust tutorial producer and consumer apps (chapters 3 and 4) and their
+mw_com config to the reference integration showcase bundle; they replace the
+removed com-api-example. The visibility guard golden lists the now-public binaries.
 
 diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
-index be9bc4be..008ccd37 100644
+index be9bc4b..9cd8e42 100644
 --- a/quality/visibility_guard/public_targets.golden
 +++ b/quality/visibility_guard/public_targets.golden
-@@ -53,6 +53,7 @@
+@@ -53,6 +53,8 @@
  //score/mw/com/dependability:mw_com_doc_needs
  //score/mw/com/dependability:mw_com_index
  //score/mw/com/dependability:mw_com_rst
-+//score/mw/com/example/com-api-example:com-api-example
++//score/mw/com/doc/tutorial/rust/chapter_3:producer_app
++//score/mw/com/doc/tutorial/rust/chapter_4:consumer_app
  //score/mw/com/impl/configuration/converter:json_to_flatbuffer_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
-diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
-index 83448e5e..93c0abf5 100644
---- a/score/mw/com/example/com-api-example/BUILD
-+++ b/score/mw/com/example/com-api-example/BUILD
-@@ -38,6 +38,7 @@ rust_binary(
-         "MW_LOG_CONFIG_FILE": "score/mw/com/example/com-api-example/etc/logging.json",
-     },
-     features = ["link_std_cpp_lib"],
-+    visibility = ["//visibility:public"],
-     deps = [
-         ":com-api-example-lib",
-         "//score/mw/com/example/com-api-example/com-api-gen",
-@@ -72,3 +73,7 @@ rust_test(
-         "@score_communication_crate_index//:tokio",
+diff --git a/score/mw/com/doc/tutorial/rust/chapter_3/BUILD b/score/mw/com/doc/tutorial/rust/chapter_3/BUILD
+index c4b9137..47d4e9b 100644
+--- a/score/mw/com/doc/tutorial/rust/chapter_3/BUILD
++++ b/score/mw/com/doc/tutorial/rust/chapter_3/BUILD
+@@ -32,6 +32,7 @@ rust_binary(
+         "@score_baselibs//score/log_rust/score_log",
+         "@score_communication_crate_index//:clap",
      ],
++    visibility = ["//visibility:public"],
+ )
+ 
+ filegroup(
+diff --git a/score/mw/com/doc/tutorial/rust/chapter_4/BUILD b/score/mw/com/doc/tutorial/rust/chapter_4/BUILD
+index cc4b171..2f8dd99 100644
+--- a/score/mw/com/doc/tutorial/rust/chapter_4/BUILD
++++ b/score/mw/com/doc/tutorial/rust/chapter_4/BUILD
+@@ -32,6 +32,7 @@ rust_binary(
+         "@score_baselibs//score/log_rust/score_log",
+         "@score_communication_crate_index//:clap",
+     ],
++    visibility = ["//visibility:public"],
+ )
+ 
+ filegroup(
+diff --git a/score/mw/com/doc/tutorial/rust/common/BUILD b/score/mw/com/doc/tutorial/rust/common/BUILD
+index 72cc7c9..bbcaf34 100644
+--- a/score/mw/com/doc/tutorial/rust/common/BUILD
++++ b/score/mw/com/doc/tutorial/rust/common/BUILD
+@@ -52,3 +52,7 @@ filegroup(
+     ],
+     visibility = ["//score/mw/com/doc/tutorial/rust:__pkg__"],
  )
 +
 +exports_files([

@@ -47,7 +47,8 @@ TEST_APPS = [
     "log_cpp_init",
     "kyron_safety_task",
     "kyron_main_macro",
-    "com_api_example",
+    "com_producer",
+    "com_consumer",
     "platform_info_consumer",
 ]
 
