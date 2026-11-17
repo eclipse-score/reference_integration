@@ -43,4 +43,16 @@ def test_communication_showcase(target):
     receiver process, demonstrating inter-process communication on the
     platform."""
 
-    run_showcases(target, "Communication Sender Receiver Example")
+    output = run_showcases(target, "Communication Sender Receiver Example")
+    # Producer wrote to the IPC channel on every iteration of the 5-step loop.
+    assert output.count("Tire data sent") == 5, (
+        f"Expected 5 sends from producer (one per loop iteration), got:\n{output}"
+    )
+    # Consumer read from the IPC channel at least once — proves a live IPC exchange.
+    assert "samples received" in output, (
+        f"Consumer received no data — IPC exchange did not occur:\n{output}"
+    )
+    # Clean shutdown path reached.
+    assert "=== Lola runtime completed ===" in output, (
+        f"Runtime did not reach its completion banner:\n{output}"
+    )
