@@ -42,3 +42,7 @@ single_version_override(
     module_name = "score_toolchains_rust",
     version = "0.10.0",
 )
+
+# Workaround: libpfm 4.11.0.bcr.1 (pulled in by google_benchmark 1.9.5) downloads from the defunct
+# netcologne.dl.sourceforge.net mirror; 4.11.0.bcr.2 uses downloads.sourceforge.net.
+bazel_dep(name = "libpfm", version = "4.11.0.bcr.2")

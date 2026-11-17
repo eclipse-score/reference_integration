@@ -111,6 +111,9 @@
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
+                "bazel_patches": [
+                    "//patches/kyron:001-pin-flatbuffers-to-integration-version.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "extra_test_config": [],
@@ -231,6 +234,29 @@
                         "//score/..."
                     ]
                 }
+            },
+            "score_security_crypto": {
+                "repo": "https://github.com/etas-contrib/score_inc_security_crypto.git",
+                "hash": "df878ae332c1af77349b563d14738a7055cbf971",
+                "bazel_patches": [
+                    "//patches/score_security_crypto:001-disable-cryptoki-crate-universe.patch",
+                    "//patches/score_security_crypto:002-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//score/crypto/..."
+                    ]
+                },
+                "pin_version": true
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
@@ -362,5 +388,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-21T16:52:15Z"
+    "timestamp": "2026-11-17T10:28:38Z"
 }

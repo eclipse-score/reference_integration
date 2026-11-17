@@ -1,0 +1,17 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -28,6 +28,13 @@
+ bazel_dep(name = "score_docs_as_code", version = "8.0.1")
+ bazel_dep(name = "score_tooling", version = "2.2.1")
+ 
++# score_tooling's flatbuffers 25.9.23 reaches rules_foreign_cc via grpc 1.70.1, opencensus-cpp and
++# google_benchmark 1.8.4. reference_integration resolves flatbuffers 25.12.19.bcr.1 (grpc 1.76.0), which does not.
++# module_tests.py only reads the module's original mod graph and does not yet iterate to apply the
++# --override_module pins according to the final graph, so it would pin rules_foreign_cc, which
++# Bazel then rejects as an override on a nonexistent module. Raising flatbuffers here removes that edge.
++bazel_dep(name = "flatbuffers", version = "25.12.19.bcr.1", dev_dependency = True)
++
+ # LLVM source-based coverage pipeline: the qualified S-CORE coverage tool,
+ # successor of @score_tooling//coverage. See tools/coverage/.
+ bazel_dep(name = "score_coverage", version = "0.3.1", dev_dependency = True)
