@@ -34,24 +34,24 @@ from showcase_runner import run_showcases
 )
 def test_vehicle_time_showcase(target):
     """The vehicle time showcase obtains a combined snapshot of the
-    PTP-synchronized vehicle time and the local monotonic HIRS time,
-    demonstrating the platform's vehicle time base API."""
+    vehicle time and the local monotonic HIRS time via VehicleTimeHandler.
+
+    Note: ``time.score.json`` does not start a time daemon, so the vehicle
+    clock falls back to the local HIRS clock and ``is_reliable=no`` is the
+    expected state.  This test covers the API surface only; synchronization
+    quality requires a time daemon and is tracked separately."""
 
     output = run_showcases(target, "Vehicle Time Example")
-    # Both time fields must co-appear — proves the full combined report was produced.
-    assert "vehicle=" in output, f"No vehicle= field in output:\n{output}"
     assert "hirs=" in output, f"No hirs= field in output:\n{output}"
-    # The vehicle timestamp is a Unix-epoch float; a positive value proves the
-    # time API returned a real reading, not zero or an uninitialised source.
-    match = re.search(r"vehicle=(\d+\.\d+)", output)
+    match = re.search(r"vehicle=(\d+)\.(\d+)", output)
     assert match is not None, f"Could not parse vehicle= timestamp:\n{output}"
-    assert float(match.group(1)) > 0.0, (
-        f"vehicle time must be positive, got: {match.group(1)}"
-    )
+    assert int(match.group(1)) > 0, f"vehicle time seconds must be positive, got: {match.group(1)}"
+    # No time daemon in this showcase; is_reliable=no is expected and intentional.
+    assert "is_reliable=no" in output, f"Expected is_reliable=no (no time_daemon in this showcase):\n{output}"
 
 
 @add_test_properties(
-    partially_verifies=["stkh_req__time__vehicle_time_api"],
+    partially_verifies=["stkh_req__time__absolute_time_api"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
@@ -60,16 +60,13 @@ def test_system_time_showcase(target):
     score_time SystemTimeHandler, demonstrating the platform's system time API."""
 
     output = run_showcases(target, "System Time Example")
-    assert "unix=" in output, f"No unix= field in output:\n{output}"
-    match = re.search(r"unix=(\d+\.\d+)", output)
+    match = re.search(r"unix=(\d+)\.(\d+)", output)
     assert match is not None, f"Could not parse unix= timestamp:\n{output}"
-    assert float(match.group(1)) > 0.0, (
-        f"unix time must be positive, got: {match.group(1)}"
-    )
+    assert int(match.group(1)) > 0, f"unix time seconds must be positive, got: {match.group(1)}"
 
 
 @add_test_properties(
-    partially_verifies=["stkh_req__time__vehicle_time_api"],
+    partially_verifies=["stkh_req__time__monotonic_clock_api"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
@@ -78,29 +75,26 @@ def test_steady_time_showcase(target):
     score_time SteadyTimeHandler, demonstrating the platform's steady time API."""
 
     output = run_showcases(target, "Steady Time Example")
-    assert "monotonic=" in output, f"No monotonic= field in output:\n{output}"
-    match = re.search(r"monotonic=(\d+\.\d+)", output)
-    assert match is not None, f"Could not parse monotonic= timestamp:\n{output}"
-    assert float(match.group(1)) > 0.0, (
-        f"monotonic time must be positive, got: {match.group(1)}"
-    )
+    # Integer pairs avoid misleading float repr: 510.130 s prints as 510.13.
+    samples = [(int(s), int(n)) for s, n in re.findall(r"monotonic=(\d+)\.(\d+) s", output)]
+    assert len(samples) >= 2, f"Expected at least 2 monotonic= samples:\n{output}"
+    assert samples[0][0] > 0, f"Steady time seconds must be positive, got: {samples[0][0]}"
+    assert all(a <= b for a, b in zip(samples, samples[1:])), f"Steady clock went backwards: {samples}"
 
 
 @add_test_properties(
-    partially_verifies=["stkh_req__time__vehicle_time_api"],
+    partially_verifies=["stkh_req__time__high_res_clock_api"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
 def test_high_res_steady_time_showcase(target):
-    """The high-resolution steady time showcase reads the HPTP-local monotonic
-    clock via the score_time HighResSteadyTimeHandler, demonstrating the
-    platform's high-precision time API."""
+    """The high-resolution steady time showcase reads the HPTP-local clock
+    via the score_time HighResSteadyTimeHandler, demonstrating the platform's
+    high-precision time API."""
 
     output = run_showcases(target, "High Resolution Steady Time Example")
-    assert "time=" in output, f"No time= field in output:\n{output}"
-    # Use word boundary so we don't match "vehicle_time=" or similar prefixes.
-    match = re.search(r"\btime=(\d+\.\d+)", output)
-    assert match is not None, f"Could not parse time= field:\n{output}"
-    assert float(match.group(1)) > 0.0, (
-        f"high_res_steady time must be positive, got: {match.group(1)}"
-    )
+    # \b so "vehicle_time=" is not matched.
+    samples = [(int(s), int(n)) for s, n in re.findall(r"\btime=(\d+)\.(\d+) s", output)]
+    assert len(samples) >= 2, f"Expected at least 2 time= samples:\n{output}"
+    assert samples[0][0] > 0, f"High-res steady time seconds must be positive, got: {samples[0][0]}"
+    # No monotonicity check: HighResSteadyClock = CLOCK_REALTIME on Linux (eclipse-score/time#310).
