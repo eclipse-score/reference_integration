@@ -29,6 +29,8 @@ All such tests in this package are combined into a single suite by the
 ``pit`` target in this package's ``BUILD`` file.
 """
 
+import re
+
 from attribute_plugin import add_test_properties
 from showcase_runner import run_showcases
 
@@ -39,20 +41,23 @@ from showcase_runner import run_showcases
     derivation_technique="requirements-analysis",
 )
 def test_communication_showcase(target):
-    """The communication showcase exchanges data between a sender and a
-    receiver process, demonstrating inter-process communication on the
-    platform."""
+    """The communication showcase exchanges tire-pressure data between a
+    producer process and a consumer process, demonstrating inter-process
+    communication on the platform."""
 
     output = run_showcases(target, "Communication Sender Receiver Example")
-    # Producer wrote to the IPC channel on every iteration of the 5-step loop.
+    # SAMPLE_COUNT=5 in chapter_3; == 5 is intentional (not >= 1).
     assert output.count("Tire data sent") == 5, (
         f"Expected 5 sends from producer (one per loop iteration), got:\n{output}"
     )
-    # Consumer read from the IPC channel at least once — proves a live IPC exchange.
-    assert "samples received" in output, (
-        f"Consumer received no data — IPC exchange did not occur:\n{output}"
+    # Rust Debug for f32 omits ".0" on whole numbers; >= 1 because sync discovery may drop the first sample.
+    pressures = [float(m) for m in re.findall(r"Tire \{ pressure: (\d+(?:\.\d+)?) \}", output)]
+    assert len(pressures) >= 1, f"Consumer received no tire pressure samples:\n{output}"
+    assert all(5.0 <= p <= 9.0 for p in pressures), (
+        f"Received tire pressures out of expected range [5.0, 9.0]: {pressures}:\n{output}"
     )
-    # Clean shutdown path reached.
-    assert "=== Producer Operation Completed ===" in output, (
-        f"Producer did not reach its completion banner:\n{output}"
+    assert "Successfully unoffered the service" in output, (
+        f"Producer did not successfully unoffer the service:\n{output}"
     )
+    assert "Producer operation completed" in output, f"Producer did not complete:\n{output}"
+    assert "Consumer operation completed" in output, f"Consumer did not complete:\n{output}"

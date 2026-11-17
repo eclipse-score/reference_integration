@@ -41,5 +41,6 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_configs": "etc/",
         "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
 )
