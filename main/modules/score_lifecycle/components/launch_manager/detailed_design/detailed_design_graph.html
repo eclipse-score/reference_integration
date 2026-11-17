@@ -580,7 +580,7 @@ The Launch Manager main thread runs a cyclic loop and the state of the graph
 state machine defines how events are processed.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-f98a6db846d21c4ea8519fbd5562219769371412.svg" type="image/svg+xml" style="width:1430px;height:1068px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-f98a6db846d21c4ea8519fbd5562219769371412.svg" type="image/svg+xml" style="width:1368px;height:1081px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="component-activation">
@@ -592,12 +592,12 @@ is only scheduled on a thread pool.</p>
 <li><p>starting the process (possibly multiple times)</p></li>
 <li><p>registering the pid in the SafeProcessMap</p></li>
 <li><p>waiting for the ready condition to be fulfilled or ready timeout</p></li>
-<li><p>posing the activation result to the event queue</p></li>
+<li><p>posting the activation result to the event queue</p></li>
 </ul>
 <p>The component activation sequence is executed synchronously on a worker thread.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-1891c9814f58a61d9a7a0c043139487bd4cffb9f.svg" type="image/svg+xml" style="width:2180px;height:2175px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-1891c9814f58a61d9a7a0c043139487bd4cffb9f.svg" type="image/svg+xml" style="width:2282px;height:2310px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="component-deactivation">
@@ -609,12 +609,12 @@ is only scheduled on a thread pool.</p>
 <li><p>stopping the process (if running)</p></li>
 <li><p>waiting for the process to terminate or until shutdown timeout</p></li>
 <li><p>escalating to SIGKILL in case the process did not terminate within the shutdown timeout</p></li>
-<li><p>posing the deactivation result to the event queue. Process crashes during deactivation are ignored.</p></li>
+<li><p>posting the deactivation result to the event queue. Process crashes during deactivation are ignored.</p></li>
 </ul>
 <p>The component deactivation sequence is executed synchronously on a worker thread.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-e0131197d41ce32d4e51e55ae578cf58aab9eb3d.svg" type="image/svg+xml" style="width:2159px;height:1508px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-e0131197d41ce32d4e51e55ae578cf58aab9eb3d.svg" type="image/svg+xml" style="width:2535px;height:1589px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="process-termination">
@@ -624,18 +624,20 @@ time after activation in case of a process crash or a self-terminating process.
 The latter is the focus of the diagram below.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-0dc9d26f914ddbc8ec0f31da394d4f0f75116922.svg" type="image/svg+xml" style="width:2162px;height:1753px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-0dc9d26f914ddbc8ec0f31da394d4f0f75116922.svg" type="image/svg+xml" style="width:2219px;height:1838px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="supervision-failure">
 <h3>Supervision Failure<a class="headerlink" href="#supervision-failure" title="Link to this heading">#</a></h3>
 <p>A component activates the alive supervision once the Running state is reached.
 The supervision failure may be detected at any time and is reported to the component event queue.
-The current failure reaction is to always requesting the fallback Run Target and cancels a running
-transition if there is one.</p>
+The graph forwards the failure to the affected component, which kills its process unless the failure
+is outdated (the component is no longer ready, component was restarted since, or the process has
+already terminated). The resulting unexpected termination then triggers the fallback Run Target as
+described in Process Termination.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-219ce159b2cae83df7aa74c72c284d26780f3033.svg" type="image/svg+xml" style="width:1637px;height:1327px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-a66ab0c7ed02459d741e673a2f44b7751f1d82a7.svg" type="image/svg+xml" style="width:1872px;height:1080px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="run-target-transition">
@@ -649,18 +651,18 @@ the main loop advances the transition. A component that fails ends the
 transition and moves the graph to kAborting.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-7acb8e23eea3790ed1bd236b7208b3da85bc3a18.svg" type="image/svg+xml" style="width:1319px;height:2246px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-7acb8e23eea3790ed1bd236b7208b3da85bc3a18.svg" type="image/svg+xml" style="width:1973px;height:2323px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 <section id="transition-cancellation-preemption">
 <h3>Transition cancellation / preemption<a class="headerlink" href="#transition-cancellation-preemption" title="Link to this heading">#</a></h3>
 <p>When cancelling an ongoing transition it is crucial to leave every component
 in a well-defined state.</p>
-<p>The diagram below defines the point of time a component activation / deactivation
+<p>The diagram below defines the point in time a component activation / deactivation
 may be safely cancelled.</p>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-e919ed01f3b310a9394a65bbdcc2ecf06bf0e6e7.svg" type="image/svg+xml" style="width:2288px;height:2627px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-e919ed01f3b310a9394a65bbdcc2ecf06bf0e6e7.svg" type="image/svg+xml" style="width:2618px;height:2678px;background:#FFFFFF;"></object></p>
 </figure>
 </section>
 </section>
