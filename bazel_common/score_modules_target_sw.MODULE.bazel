@@ -73,9 +73,8 @@ single_version_override(
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "bbfda39a23e3f55384555f8bd41c8a517c457745",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
@@ -84,7 +83,7 @@ git_override(
         "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/logging:007-docs-drop-generated-dependency-pages.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.7",
 )
 
 bazel_dep(name = "score_time")
