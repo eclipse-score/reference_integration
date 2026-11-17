@@ -570,7 +570,7 @@ during typical operations.</p>
 directly — the same <code class="docutils literal notranslate"><span class="pre">Now()</span></code> snapshot pattern used for all clock domains, with no status
 check required.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-4122f2209e91cb3074e3d0cf3b91f5e50033394f.svg" type="image/svg+xml" style="width:1491px;height:856px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-4122f2209e91cb3074e3d0cf3b91f5e50033394f.svg" type="image/svg+xml" style="width:1579px;height:891px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/high_res_steady_time/src/high_res_steady_clock.h"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
 
@@ -599,7 +599,7 @@ check required.</p>
 <p>Measure elapsed time between two points, or derive a deadline, using a clock that is
 guaranteed never to go backward regardless of external time adjustments.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-a4b7af3d4d032b53c48aba6b3b775894f3675816.svg" type="image/svg+xml" style="width:1314px;height:675px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-a4b7af3d4d032b53c48aba6b3b775894f3675816.svg" type="image/svg+xml" style="width:1342px;height:692px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/steady_time/src/steady_clock.h"</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">MyComponent::MeasureElapsed</span><span class="p">()</span>
@@ -626,7 +626,7 @@ guaranteed never to go backward regardless of external time adjustments.</p>
 time matters.  Do not use <code class="docutils literal notranslate"><span class="pre">SystemClock</span></code> for elapsed time or timeouts — the timepoint
 may jump.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-08d6bf458aebb91cf45de740eeb419cf85a97409.svg" type="image/svg+xml" style="width:1312px;height:690px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-08d6bf458aebb91cf45de740eeb419cf85a97409.svg" type="image/svg+xml" style="width:1339px;height:707px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/system_time/src/system_clock.h"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
 
@@ -652,7 +652,7 @@ may jump.</p>
 value. <code class="docutils literal notranslate"><span class="pre">Now()</span></code> returns a single immutable <code class="docutils literal notranslate"><span class="pre">ClockSnapshot</span></code> — the timepoint and its
 <code class="docutils literal notranslate"><span class="pre">VehicleTimeStatus</span></code> are always fetched together, with no separate status call needed.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-8723bd98d22d3338dc844e154a0df6f2910ccdb6.svg" type="image/svg+xml" style="width:1287px;height:918px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-8723bd98d22d3338dc844e154a0df6f2910ccdb6.svg" type="image/svg+xml" style="width:1454px;height:923px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">MyComponent::CheckTime</span><span class="p">()</span>
@@ -723,7 +723,7 @@ time daemon before any time data becomes available.  Until <code class="docutils
 non-blocking <code class="docutils literal notranslate"><span class="pre">IsAvailable()</span></code> probe and the blocking <code class="docutils literal notranslate"><span class="pre">WaitUntilAvailable()</span></code> are useful
 when <code class="docutils literal notranslate"><span class="pre">Init()</span></code> is retried on a background thread.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-0d1c70fe1f567a0307591b8eb5066fb4fdd65a7a.svg" type="image/svg+xml" style="width:960px;height:1000px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-0d1c70fe1f567a0307591b8eb5066fb4fdd65a7a.svg" type="image/svg+xml" style="width:1043px;height:1031px;background:#FFFFFF;"></object></p>
 </div><p><strong>Simple startup (same thread):</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 
@@ -780,7 +780,7 @@ carries the offset, rate correction, and raw timestamps computed by the TimeSlav
 completes; carries the measured peer delay and associated timestamps.</p></li>
 </ul>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-3747f5424c0bd88603398b4dea50a4f02aa0aac3.svg" type="image/svg+xml" style="width:1642px;height:1491px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-3747f5424c0bd88603398b4dea50a4f02aa0aac3.svg" type="image/svg+xml" style="width:1751px;height:1388px;background:#FFFFFF;"></object></p>
 </div><p>Callbacks are invoked asynchronously, not on the thread that registered them.  The callback
 implementation must be thread-safe and should return quickly.  A newly registered callback
 receives the next available data once; afterwards it is invoked only when that data changes.</p>
@@ -826,7 +826,7 @@ but pushed proactively on every change rather than polled per call.</p>
 registration, and subsequently only when the flag set changes.  Rate deviation is
 excluded from the comparison.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-1269b8f4883a191c3bd6d7b37111f7838df37dbf.svg" type="image/svg+xml" style="width:887px;height:964px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-1269b8f4883a191c3bd6d7b37111f7838df37dbf.svg" type="image/svg+xml" style="width:965px;height:939px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">MyService::WatchClockReadiness</span><span class="p">()</span>
@@ -868,7 +868,7 @@ thread-safe.</p>
 bits.  For the higher-level reliability predicates (<code class="docutils literal notranslate"><span class="pre">IsReliable()</span></code>,
 <code class="docutils literal notranslate"><span class="pre">HasBeenSynchronized()</span></code>), see the status flag table and method descriptions in VT1.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../../_images/plantuml-a4d7f818445e0195cc1a18de54d25ab6a2a59776.svg" type="image/svg+xml" style="width:745px;height:527px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-a4d7f818445e0195cc1a18de54d25ab6a2a59776.svg" type="image/svg+xml" style="width:888px;height:544px;background:#FFFFFF;"></object></p>
 </div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
 
