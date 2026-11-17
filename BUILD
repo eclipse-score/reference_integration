@@ -68,7 +68,8 @@ sbom(
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         "//showcases/cli:cli",
-        "@score_communication//score/mw/com/example/com-api-example:com-api-example",
+        "@score_communication//score/mw/com/doc/tutorial/rust/chapter_3:producer_app",
+        "@score_communication//score/mw/com/doc/tutorial/rust/chapter_4:consumer_app",
         "@score_kyron//examples:main_macro",
         "@score_kyron//examples:safety_task",
         "@score_kyron//examples:select",
@@ -101,7 +102,6 @@ sbom(
     # exclude their generated Bazel aliases to avoid duplicate components.
     exclude_patterns = ["rules_python++pip+"],
     generation_context = "build",
-    java_files = ["@score_docs_as_code//src:plantuml.jar"],
     output_formats = ["spdx"],
     python_lockfiles = [
         "//feature_integration_tests/test_cases:requirements.txt.lock",

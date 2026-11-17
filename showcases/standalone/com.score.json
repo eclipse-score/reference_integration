@@ -3,13 +3,23 @@
     "description": "Example for running communication sender and receiver",
     "apps":[
         {
-            "path": "/showcases/bin/com-api-example",
+            "path": "/showcases/bin/producer_app",
             "args": [
                 "-s", "/showcases/data/comm/etc/mw_com_config.json"
             ],
             "env": {
             },
             "dir": "/showcases/data/comm"
+        },
+        {
+            "path": "/showcases/bin/consumer_app",
+            "args": [
+                "-s", "/showcases/data/comm/etc/mw_com_config.json"
+            ],
+            "env": {
+            },
+            "dir": "/showcases/data/comm",
+            "delay": 1
         }
     ]
 }

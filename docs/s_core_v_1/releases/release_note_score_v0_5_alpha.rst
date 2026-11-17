@@ -79,7 +79,7 @@ Zero-copy, shared-memory based inter-process communication for minimal-latency i
 
 - **Version:** ``communication v0.1.1``
 - **Source / tag:** `Communication GitHub release <https://github.com/eclipse-score/communication/archive/refs/tags/v0.1.1.tar.gz>`_
-- **Release notes:** :need:`doc__communication_release_note`
+- **Release notes:** `Communication v0.1.1 release <https://github.com/eclipse-score/communication/releases/tag/v0.1.1>`_
 
 Fixed Execution Order Framework(FEO)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
