@@ -53,6 +53,6 @@ def test_communication_showcase(target):
         f"Consumer received no data — IPC exchange did not occur:\n{output}"
     )
     # Clean shutdown path reached.
-    assert "=== Lola runtime completed ===" in output, (
-        f"Runtime did not reach its completion banner:\n{output}"
+    assert "=== Producer Operation Completed ===" in output, (
+        f"Producer did not reach its completion banner:\n{output}"
     )
