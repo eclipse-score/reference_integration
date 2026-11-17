@@ -31,4 +31,12 @@ def test_logging_showcase(target):
     the console, remote (DLT) and file backends, demonstrating the platform's
     logging support."""
 
-    run_showcases(target, "LoggingApp Demo")
+    output = run_showcases(target, "LoggingApp Demo")
+    # logging_app reached its main log path with mw::log console output (APID EXA).
+    assert "Logging Application DoLogging" in output, (
+        f"logging_app did not reach its main log path:\n{output}"
+    )
+    # dlt_generator ran to completion.
+    assert "DLT generator finished" in output, (
+        f"dlt_generator did not complete its run:\n{output}"
+    )
