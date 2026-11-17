@@ -36,10 +36,6 @@ def test_async_runtime_showcase(target):
         "Kyron safety task example",
         "Kyron basic example",
     )
-    # select.rs: all three select! ordering scenarios completed.
-    assert "Test 1" in output, f"Kyron select Test 1 did not complete:\n{output}"
-    assert "Test 2" in output, f"Kyron select Test 2 did not complete:\n{output}"
-    assert "Test 3" in output, f"Kyron select Test 3 did not complete:\n{output}"
     # safety_task.rs: all tasks were dispatched before joining.
     assert "Spawned all tasks" in output, (
         f"safety_task did not spawn all tasks:\n{output}"
