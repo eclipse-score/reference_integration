@@ -140,6 +140,10 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
   another ref the components would still come from the checkout.
 - Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
   `architecture_diagram.py`.
+- Display size: the figure gets `:width:` `DIAGRAM_WIDTH` (50 % of the content
+  width), so the whole diagram fits on screen; a click opens it in full size.
+  Change the size only in `DIAGRAM_WIDTH`, keep it a percentage (scales with
+  the page) and never set `:height:` (distorts the diagram on narrow screens).
 
 ### 5.2 Content
 
@@ -354,8 +358,8 @@ Put the candidate lists of all passes together, then decide per item:
 Checks:
 
 - [ ] `grep -n "AI-FILL" <note>` is empty.
-- [ ] Overview has the `.. figure::`; the SVG was written by this run and is
-      committed with the note.
+- [ ] Overview has the `.. figure::` with `:width:` `DIAGRAM_WIDTH`; the SVG
+      was written by this run and is committed with the note.
 - [ ] Every software module has a maturity badge; the generator printed
       `maturity (DR-003): ...`; the Overview links DR-003.
 - [ ] The note is the last entry of the release-note `toctree` in

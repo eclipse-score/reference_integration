@@ -3422,8 +3422,8 @@
     },
     "@@score_bazel_cpp_toolchains+//extensions:gcc.bzl%gcc": {
       "general": {
-        "bzlTransitiveDigest": "dbagBniEBfV6XtYv/gaMDsA+MxBN5tmYSPFEeISeDSM=",
-        "usagesDigest": "FQxx6qpnd6gvsFkzV/qOkcftMLTRxTxPm8T697Zj5iI=",
+        "bzlTransitiveDigest": "JGlxCTNSgVs79PkM9q+OKNohhtSpSE8tHCBKaYwNyFg=",
+        "usagesDigest": "52uvUGqpBeoZbBdBFfJ85svZQPYl+tprbEuonh5a8IM=",
         "recordedInputs": [
           "REPO_MAPPING:bazel_tools,rules_cc rules_cc+",
           "REPO_MAPPING:score_bazel_cpp_toolchains+,bazel_tools bazel_tools",
@@ -3472,7 +3472,7 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
             "attributes": {
               "urls": [
-                "https://github.com/eclipse-score/os_autosd/releases/download/v0.0.2/autosd-toolchain-x86_64.tar.gz"
+                "https://github.com/eclipse-score/os_autosd/releases/download/v0.2.0/autosd-toolchain-x86_64.tar.gz"
               ],
               "build_file": "@@score_bazel_cpp_toolchains+//packages/linux/x86_64/autosd/10.0:autosd.BUILD",
               "files": {},
@@ -3481,7 +3481,7 @@
               "patch_strip": 0,
               "patch_tool": "",
               "patches": [],
-              "sha256": "25991056bd29d4cb37b11e42d0c09f55dc61d0b9d703f75d854cf614f688c96f",
+              "sha256": "1ab0d9760b6dfcc1aca0b22ef085c2e9ffc10ddaa049f992d560152900d4e775",
               "strip_prefix": "sysroot",
               "type": ""
             }
@@ -3501,6 +3501,24 @@
               "patches": [],
               "sha256": "7279b1adb50361b21f5266b001980b6febb35fa8d83170901196b9edae3f06d9",
               "strip_prefix": "aarch64-unknown-linux-gnu",
+              "type": ""
+            }
+          },
+          "score_autosd_10_cross_toolchain_pkg": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "urls": [
+                "https://github.com/eclipse-score/os_autosd/releases/download/v0.2.0/autosd-toolchain-crossland.tar.gz"
+              ],
+              "build_file": "@@score_bazel_cpp_toolchains+//packages/linux/aarch64/autosd/10.0:autosd_cross.BUILD",
+              "files": {},
+              "patch_args": [],
+              "patch_cmds": [],
+              "patch_strip": 0,
+              "patch_tool": "",
+              "patches": [],
+              "sha256": "c21025ddc5310c04d0203551ad1cbd1d60cc10842d91ca96c81dbdd9a2373a03",
+              "strip_prefix": "sysroot",
               "type": ""
             }
           },
@@ -3729,6 +3747,68 @@
               "tc_system_toolchain": false,
               "tc_runtime_ecosystem": "",
               "gcc_version": "12.2.0",
+              "cc_toolchain_config": "@@score_bazel_cpp_toolchains+//templates:cc_toolchain_config.bzl.template",
+              "use_base_constraints_only": false
+            }
+          },
+          "score_autosd_10_cross_toolchain": {
+            "repoRuleId": "@@score_bazel_cpp_toolchains+//rules:gcc.bzl%gcc_toolchain",
+            "attributes": {
+              "extra_compile_flags": [],
+              "extra_c_compile_flags": [
+                "-nostdinc",
+                "-isystem",
+                "external/%{toolchain_pkg}%/x86_64/usr/lib/gcc/aarch64-redhat-linux/14/include",
+                "-isystem",
+                "external/%{toolchain_pkg}%/aarch64/usr/include"
+              ],
+              "extra_cxx_compile_flags": [
+                "-nostdinc++",
+                "-isystem",
+                "external/%{toolchain_pkg}%/aarch64/usr/include/c++/14",
+                "-isystem",
+                "external/%{toolchain_pkg}%/aarch64/usr/include/c++/14/aarch64-redhat-linux",
+                "-isystem",
+                "external/%{toolchain_pkg}%/aarch64/usr/include/c++/14/backward",
+                "-nostdinc",
+                "-isystem",
+                "external/%{toolchain_pkg}%/x86_64/usr/lib/gcc/aarch64-redhat-linux/14/include",
+                "-isystem",
+                "external/%{toolchain_pkg}%/aarch64/usr/include"
+              ],
+              "extra_known_features": [],
+              "extra_enabled_features": [],
+              "extra_link_flags": [
+                "-B",
+                "external/%{toolchain_pkg}%/x86_64/usr/bin",
+                "-L",
+                "external/%{toolchain_pkg}%/x86_64/usr/lib/gcc/aarch64-redhat-linux/14",
+                "-L",
+                "external/%{toolchain_pkg}%/aarch64/lib64",
+                "-L",
+                "external/%{toolchain_pkg}%/aarch64/lib",
+                "-L",
+                "external/%{toolchain_pkg}%/aarch64/usr/lib64",
+                "-L",
+                "external/%{toolchain_pkg}%/aarch64/usr/lib",
+                "-lm",
+                "-ldl",
+                "-lrt",
+                "-lstdc++"
+              ],
+              "license_info_variable": "",
+              "license_info_value": "",
+              "license_path": "/opt/score_qnx/license/licenses",
+              "sdk_version": "",
+              "sdp_version": "",
+              "tc_compiler_library_search_paths": [],
+              "tc_cpu": "aarch64",
+              "tc_identifier": "",
+              "tc_os": "linux",
+              "tc_pkg_repo": "score_autosd_10_cross_toolchain_pkg",
+              "tc_system_toolchain": false,
+              "tc_runtime_ecosystem": "autosd10-crossland",
+              "gcc_version": "",
               "cc_toolchain_config": "@@score_bazel_cpp_toolchains+//templates:cc_toolchain_config.bzl.template",
               "use_base_constraints_only": false
             }

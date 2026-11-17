@@ -1,3 +1,4 @@
+#!/bin/bash
 # *******************************************************************************
 # Copyright (c) 2025 Contributors to the Eclipse Foundation
 #
@@ -10,18 +11,38 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-#!/bin/bash
 
 QEMU_ARCH=${QEMU_ARCH:=x86_64}
+HOST_ARCH=$(uname -m)
+
+if [[ "${QEMU_ARCH}" == "aarch64" ]]; then
+    QEMU_MACHINE=virt
+    QEMU_CPU=cortex-a53
+    OVMF_CODE=/usr/share/AAVMF/AAVMF_CODE.fd
+    OVMF_VARS=/usr/share/AAVMF/AAVMF_VARS.fd
+else
+    QEMU_MACHINE=q35
+    QEMU_CPU=host
+    OVMF_CODE=/usr/share/OVMF/OVMF_CODE_4M.fd
+    OVMF_VARS=/usr/share/OVMF/OVMF_VARS_4M.fd
+fi
+
+# Only use KVM when the guest arch matches the host (same-arch virtualization).
+# Cross-arch (e.g. aarch64 guest on an x86_64 runner) must fall back to TCG.
+KVM_ARGS=()
+if [[ "${QEMU_ARCH}" == "${HOST_ARCH}" ]]; then
+    KVM_ARGS=(-enable-kvm)
+    QEMU_CPU=host
+fi
 
 /usr/bin/qemu-system-${QEMU_ARCH} \
--drive file=/usr/share/OVMF/OVMF_CODE_4M.fd,if=pflash,format=raw,unit=0,readonly=on \
--drive file=/usr/share/OVMF/OVMF_VARS_4M.fd,if=pflash,format=raw,unit=1,snapshot=on,readonly=off \
--enable-kvm \
+-drive file=${OVMF_CODE},if=pflash,format=raw,unit=0,readonly=on \
+-drive file=${OVMF_VARS},if=pflash,format=raw,unit=1,snapshot=on,readonly=off \
+"${KVM_ARGS[@]}" \
 -m 5G \
 -smp $(nproc) \
--machine q35 \
--cpu host \
+-machine ${QEMU_MACHINE} \
+-cpu ${QEMU_CPU} \
 -device virtio-net-pci,netdev=n0 \
 -netdev user,id=n0,hostfwd=tcp::2222-:22 \
 -daemonize \

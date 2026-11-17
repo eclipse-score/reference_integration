@@ -113,7 +113,7 @@ def test_remote_logging(datarouter_running, dlt_config):
 
     logger.debug("Found %d messages with app_id: %s, context_id: %s", message_count, APP_ID, CTX_ID)
 
-    assert message_count > 1, (
+    assert message_count > 0, (
         f"Expected atleast one DLT message with app_id: {APP_ID} and context_id: {CTX_ID}, but got {message_count}"
     )
 

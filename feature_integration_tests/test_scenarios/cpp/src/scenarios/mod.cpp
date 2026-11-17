@@ -23,6 +23,7 @@ Scenario::Ptr make_utf8_default_value_get_scenario();
 Scenario::Ptr make_multi_instance_isolation_scenario();
 ScenarioGroup::Ptr supported_datatypes_group();
 ScenarioGroup::Ptr default_values_group();
+ScenarioGroup::Ptr time_scenario_group();
 
 ScenarioGroup::Ptr persistency_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
@@ -42,5 +43,5 @@ ScenarioGroup::Ptr root_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "root",
         std::vector<Scenario::Ptr>{},
-        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group()});
+        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group(), time_scenario_group()});
 }

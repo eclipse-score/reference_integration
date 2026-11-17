@@ -85,6 +85,13 @@ build:autosd-x86_64 --features=-default_link_flags
 build:autosd-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-autosd10
 build:autosd-x86_64 --extra_toolchains=@score_autosd10_x86_64_toolchain//:x86_64-linux-autosd10
 
+build:autosd-crossland --config=_common
+build:autosd-crossland --platforms=@score_bazel_platforms//:aarch64-linux-autosd10-crossland
+build:autosd-crossland --extra_toolchains=@score_autosd_10_cross_toolchain//:aarch64-linux-autosd10-crossland
+build:autosd-crossland --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_aarch64_unknown_linux_gnu
+build:autosd-crossland --@@score_crates+//sysroots:sysroot_source=@score_autosd_10_cross_toolchain//:all_files
+build:autosd-crossland --@@score_crates+//sysroots:sysroot_strip_prefix=aarch64
+
 # Persistency specific flags
 build:ferrocene-coverage-per --config=ferrocene-coverage
 build:ferrocene-coverage-per --@score_baselibs//score/log_rust:safety_level=qm

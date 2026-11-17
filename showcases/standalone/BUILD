@@ -80,20 +80,6 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
-# Persistency has no runnable showcase yet; the upstream test scenarios binary
-# is shipped so that one can be added without changing the image layout.
-# score_pkg_bundle names binaries after their label, hence the alias.
-alias(
-    name = "cpp_tests_persistency",
-    actual = "@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios",
-)
-
-score_pkg_bundle(
-    name = "persistency",
-    bins = ["//showcases/standalone:cpp_tests_persistency"],
-    package_dir = "standalone",
-)
-
 score_pkg_bundle(
     name = "baselibs",
     bins = [
@@ -105,8 +91,15 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
-# Consumer of the platform info service deployed by //deploy/platform_info. It
-# brings no provider of its own, so it fails if the platform does not deploy one.
+score_pkg_bundle(
+    name = "persistency",
+    bins = [
+        "@score_persistency//score/kvs/rust_kvs_tool:kvs_tool",
+    ],
+    config_data = ["//showcases/standalone:persistency.score.json"],
+    package_dir = "standalone",
+)
+
 cc_binary(
     name = "platform_info_consumer",
     srcs = ["platform_info_consumer.cpp"],

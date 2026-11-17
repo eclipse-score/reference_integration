@@ -1,0 +1,215 @@
+{
+    "schema_version": 2,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/showcases/bin",
+            "ready_timeout_ms": 30000,
+            "shutdown_timeout_ms": 2000,
+            "environmental_variables": {
+                "PATH": "/usr/local/bin:/usr/bin:/bin"
+            },
+            "sandbox": {
+                "uid": 0,
+                "gid": 0,
+                "supplementary_group_ids": [],
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 0
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Native",
+                "is_self_terminating": true
+            },
+            "depends_on": ["platform_ready"],
+            "ready_condition": {
+                "process_state": "Terminated"
+            }
+        },
+        "run_target": {
+            "transition_timeout_ms": 120000
+        }
+    },
+    "components": {
+        "datarouter": {
+            "description": "Platform: logging daemon, forwards mw::log remote logs as DLT",
+            "component_properties": {
+                "binary_name": "datarouter",
+                "application_profile": {
+                    "is_self_terminating": false
+                },
+                "depends_on": [],
+                "process_arguments": ["--no_adaptive_runtime"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/datarouter",
+                "ready_timeout_ms": 5000
+            }
+        },
+        "platform_info_service": {
+            "description": "Platform: reports the S-CORE version the platform was built from over mw::com",
+            "component_properties": {
+                "binary_name": "platform_info_service",
+                "application_profile": {
+                    "is_self_terminating": false
+                },
+                "depends_on": ["datarouter"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/platform_info",
+                "ready_timeout_ms": 5000,
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_platform_info_service.json"
+                }
+            }
+        },
+        "platform_ready": {
+            "description": "Barrier: every platform daemon is up; the tests depend only on this",
+            "component_properties": {
+                "binary_name": "true",
+                "depends_on": ["datarouter", "platform_info_service"]
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        },
+        "logging_app": {
+            "description": "Test: logs via mw::log to console and DLT",
+            "component_properties": {
+                "binary_name": "logging_app"
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/logging/logging_app/etc"
+            }
+        },
+        "dlt_generator": {
+            "description": "Test: emits a fixed set of DLT messages via mw::log",
+            "component_properties": {
+                "binary_name": "dlt_generator",
+                "depends_on": ["logging_app"]
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/logging/dlt_generator/etc"
+            }
+        },
+        "log_builtin": {
+            "description": "Test: baselibs built-in logger",
+            "component_properties": {
+                "binary_name": "log_builtin",
+                "depends_on": ["dlt_generator"]
+            }
+        },
+        "log_custom": {
+            "description": "Test: baselibs custom logger",
+            "component_properties": {
+                "binary_name": "log_custom",
+                "depends_on": ["log_builtin"]
+            }
+        },
+        "log_cpp_init": {
+            "description": "Test: baselibs logger initialized from C++, used from Rust",
+            "component_properties": {
+                "binary_name": "log_cpp_init",
+                "depends_on": ["log_custom"]
+            }
+        },
+        "kyron_safety_task": {
+            "description": "Test: Kyron safety task example",
+            "component_properties": {
+                "binary_name": "safety_task",
+                "depends_on": ["log_cpp_init"]
+            }
+        },
+        "kyron_main_macro": {
+            "description": "Test: Kyron basic example",
+            "component_properties": {
+                "binary_name": "main_macro",
+                "depends_on": ["kyron_safety_task"]
+            }
+        },
+        "com_api_example": {
+            "description": "Test: mw::com sender and receiver",
+            "component_properties": {
+                "binary_name": "com-api-example",
+                "depends_on": ["kyron_main_macro"],
+                "process_arguments": ["-s", "/showcases/data/comm/etc/mw_com_config.json"]
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/comm"
+            }
+        },
+        "platform_info_consumer": {
+            "description": "Test: the platform reports the S-CORE version these tests were built for",
+            "component_properties": {
+                "binary_name": "platform_info_consumer",
+                "depends_on": ["com_api_example"],
+                "process_arguments": ["--service_instance_manifest", "/usr/bin/platform_info/etc/mw_com_config.json"]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_platform_info_consumer.json"
+                }
+            }
+        },
+        "platform_run_passed": {
+            "description": "Reports success once the last test finished successfully, then stops the launch manager",
+            "component_properties": {
+                "binary_name": "sh",
+                "depends_on": ["platform_info_consumer"],
+                "process_arguments": ["-c", "echo 'S-CORE platform run: PASSED'; sleep 2; kill -s TERM $PPID"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        },
+        "platform_run_failed": {
+            "description": "Reports failure in the fallback run target, then stops the launch manager",
+            "component_properties": {
+                "binary_name": "sh",
+                "depends_on": ["datarouter"],
+                "process_arguments": ["-c", "echo 'S-CORE platform run: FAILED'; sleep 2; kill -s TERM $PPID"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        }
+    },
+    "run_targets": {
+        "PlatformRun": {
+            "description": "Platform daemons first, then every test application; each test must exit successfully",
+            "depends_on": [
+                "datarouter",
+                "platform_info_service",
+                "platform_ready",
+                "logging_app",
+                "dlt_generator",
+                "log_builtin",
+                "log_custom",
+                "log_cpp_init",
+                "kyron_safety_task",
+                "kyron_main_macro",
+                "com_api_example",
+                "platform_info_consumer",
+                "platform_run_passed"
+            ]
+        }
+    },
+    "initial_run_target": "PlatformRun",
+    "fallback_run_target": {
+        "description": "Keeps the logging daemon to report the failure, then stops",
+        "depends_on": ["datarouter", "platform_run_failed"],
+        "transition_timeout_ms": 10000
+    }
+}

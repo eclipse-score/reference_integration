@@ -1,0 +1,12 @@
+{
+    "name": "S-CORE Platform Run",
+    "description": "The launch manager starts the platform daemons, then every test application; each must exit successfully. Applications log via mw::log to the console and as DLT through the datarouter. Prints PASSED or FAILED at the end.",
+    "apps": [
+        {
+            "path": "/bin/sh",
+            "args": ["-c", "timeout 60 /usr/bin/launch_manager; rc=$?; if [ $rc -eq 124 ]; then echo 'S-CORE platform run: FAILED (PlatformRun not reached within 60 s)'; fi; exit $rc"],
+            "dir": "/showcases/data/platform_run",
+            "env": {}
+        }
+    ]
+}

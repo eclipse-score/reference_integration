@@ -28,16 +28,20 @@ oci.pull(
     tag = "22.04",
 )
 oci.pull(
-    name = "eclipse_autosd10_qemu_amd64",
-    digest = "sha256:63d6fa63889bc9dec05518f1131eadea8a458e3862a869c2955b973f978c06eb",
+    name = "eclipse_autosd10_qemu",
+    digest = "sha256:91560c5c7e80b00347ad0ce8de0ec38c3682b989d3ca2bc63cb35976cb518c5c",
     image = "ghcr.io/eclipse-autosd/eclipse-autosd-bootc-qemu",
-    platforms = ["linux/amd64"],
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
     tag = "latest",
 )
 use_repo(
     oci,
-    "eclipse_autosd10_qemu_amd64",
-    "eclipse_autosd10_qemu_amd64_linux_amd64",
+    "eclipse_autosd10_qemu",
+    "eclipse_autosd10_qemu_linux_amd64",
+    "eclipse_autosd10_qemu_linux_arm64",
     "ubuntu_22_04",
     "ubuntu_22_04_linux_amd64",
 )

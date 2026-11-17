@@ -39,9 +39,9 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}-${{ matrix.arch }}
@@ -104,6 +104,10 @@ jobs:
           fi
           # The CLI does not yet fail on a showcase's exit code; require at least that it completed.
           grep -q "All done!" cli.log || { echo "::error::Showcase CLI did not complete on $DISTRO ($ARCH)"; exit 1; }
+          # The launch manager checks the exit code of every application in the platform run.
+          # Anchored: the CLI also echoes the wrapper command, which contains the FAILED text.
+          grep -q "^S-CORE platform run: PASSED$" cli.log || { echo "::error::S-CORE Platform Run did not pass on $DISTRO ($ARCH)"; exit 1; }
+          if grep -q "^S-CORE platform run: FAILED" cli.log; then echo "::error::S-CORE Platform Run failed on $DISTRO ($ARCH)"; exit 1; fi
   release:
     name: Publish platform and showcases to release
     needs: run

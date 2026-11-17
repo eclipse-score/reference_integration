@@ -16,7 +16,6 @@ on:
     types: [submitted, edited, dismissed]
 jobs:
   check-approvals:
-    name: Verify Required Approvals
     if: startsWith(github.event.pull_request.base.ref, 'releases/')
     runs-on: ubuntu-24.04
     permissions:
@@ -24,9 +23,9 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
