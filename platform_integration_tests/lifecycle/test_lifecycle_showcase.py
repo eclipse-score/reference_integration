@@ -31,4 +31,11 @@ def test_lifecycle_showcase(target):
     a malfunction, demonstrating the platform's health and lifecycle
     management."""
 
-    run_showcases(target, "Simple Health and lifecycle management example")
+    output = run_showcases(target, "Simple Health and lifecycle management example")
+    assert "Run Target Startup" in output, (
+        f"Launch manager did not reach Run Target Startup:\n{output}"
+    )
+    assert "activating recovery state" in output, (
+        f"Health monitor did not trigger recovery to fallback — "
+        f"the showcase's core feature was not demonstrated:\n{output}"
+    )
