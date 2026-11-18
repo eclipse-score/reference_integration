@@ -77,7 +77,7 @@ Management
 ^^^^^^^^^^
 
 .. grid:: 2 4 4 4
-   :class-container: score-grid score-grid-compact
+   :class-container: score-grid pa-grid score-grid-compact
    :gutter: 4
 
    .. grid-item-card:: `Platform Management <https://eclipse-score.github.io/process_description/main/process_areas/platform_management/index.html>`__
@@ -124,7 +124,7 @@ Development
 ^^^^^^^^^^^
 
 .. grid:: 1 2 3 4
-   :class-container: score-grid
+   :class-container: score-grid pa-grid
    :gutter: 4
 
    .. grid-item-card:: `Requirements Engineering <https://eclipse-score.github.io/process_description/main/process_areas/requirements_engineering/index.html>`__
@@ -161,7 +161,7 @@ Support
 ^^^^^^^
 
 .. grid:: 1 2 3 4
-   :class-container: score-grid
+   :class-container: score-grid pa-grid
    :gutter: 4
 
    .. grid-item-card:: `Configuration Management <https://eclipse-score.github.io/process_description/main/process_areas/configuration_management/index.html>`__
