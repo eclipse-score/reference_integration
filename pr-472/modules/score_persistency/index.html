@@ -636,9 +636,13 @@ The old names <code class="docutils literal notranslate"><span class="pre">per-x
 </pre></div>
 </div>
 <p>To run Component / Feature Integration Tests:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>//:cit_tests
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>score-linux-x86_64<span class="w"> </span>//:cit_tests
+bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>score-qnx-x86_64<span class="w"> </span>//:cit_tests
 </pre></div>
 </div>
+<p>The tests run with <a class="reference external" href="https://github.com/eclipse-score/itf">ITF</a> on a target system:
+a Docker container on Linux (requires Docker), a QEMU VM on QNX (requires <code class="docutils literal notranslate"><span class="pre">qemu-system-x86_64</span></code>,
+KVM is optional but makes the tests much faster).</p>
 <section id="module-build-configuration">
 <h2>Module Build Configuration<a class="headerlink" href="#module-build-configuration" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">project_config.bzl</span></code> file at the root of the module defines metadata used by Bazel macros.

@@ -552,7 +552,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-a8965704">
+  <div class="need_container docutils container" id="SNCB-1528eb7b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__datarouter_impl_inspection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -621,7 +621,7 @@ See also <a class="reference internal" href="../../../../../process_methods_tool
 <p>Scope: this checklist covers the Datarouter daemon (<a class="reference internal" href="../index.html#comp__datarouter" title="comp__datarouter"><em class="xref need">Datarouter (comp__datarouter)</em></a>, <code class="docutils literal notranslate"><span class="pre">score/datarouter</span></code>).
 The parts of <a class="reference internal" href="logging_architecture.html"><span class="doc">Logging: architecture and SW design</span></a> about <code class="docutils literal notranslate"><span class="pre">mw::log</span></code> are context and were not compared with the code.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id9">
-<caption><span class="caption-number">Table 126 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id9" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 125 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id9" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 7.9%" />
 <col style="width: 19.8%" />
@@ -705,16 +705,9 @@ read-only mapping. Correct the text.</p></li>
 <td><p>Check the automated dependency analysis.
 Also make sure ASIL rated units also only use ASIL rated libraries.</p></td>
 <td><p>no</p></td>
-<td><p>Dependency and FFI metadata are maintained in Bazel. The direct
-dependencies outside of <code class="docutils literal notranslate"><span class="pre">//score/datarouter</span></code> are listed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bazel</span> <span class="n">query</span> <span class="s1">'let l = kind(".*_library", //score/datarouter/...) except attr(testonly, 1, //score/datarouter/...) in labels(deps, $l) except //score/datarouter/...'</span> <span class="o">--</span><span class="n">keep_going</span> <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">label_kind</span>
-</pre></div>
-</div>
-<p>Those without the <code class="docutils literal notranslate"><span class="pre">FFI</span></code> tag are listed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bazel</span> <span class="n">query</span> <span class="s1">'let l = kind(".*_library", //score/datarouter/...) except attr(testonly, 1, //score/datarouter/...) in (labels(deps, $l) except //score/datarouter/...) except attr(tags, FFI, labels(deps, $l))'</span> <span class="o">--</span><span class="n">keep_going</span> <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">label</span>
-</pre></div>
-</div>
-<p>The Datarouter is QM, the rule “ASIL units only use ASIL-rated
+<td><p>Dependency and FFI metadata are maintained in Bazel. The generated
+<code class="docutils literal notranslate"><span class="pre">dependencies</span></code> page lists the dependencies of each unit.
+The Datarouter is QM, the rule “ASIL units only use ASIL-rated
 libraries” does not apply to it.</p>
 <p>Dependency/configuration findings remain:</p>
 <ul class="simple">
@@ -796,9 +789,9 @@ interface (<a class="reference internal" href="index.html"><span class="doc">Det
 <p>Following issues found:</p>
 <ul class="simple">
 <li><p>The names in the code do not match the UIDs, the mapping exists only in
-the detailed design. Examples: <a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__shm" title="logic_arc_int__logging__shm"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shm)</em></a> is
+the detailed design. Examples: <a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__shared_memory" title="logic_arc_int__logging__shared_memory"><em class="xref need">Log Record Shared-Memory (logic_arc_int__logging__shared_memory)</em></a> is
 implemented by <code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code> (<code class="docutils literal notranslate"><span class="pre">score/mw/log</span></code>),
-<a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__session_ctrl_channel" title="logic_arc_int__logging__session_ctrl_channel"><em class="xref need">Control Channel (logic_arc_int__logging__session_ctrl_channel)</em></a> by
+<a class="reference internal" href="../../mw_log/architecture/component_architecture.html#logic_arc_int__logging__datarouter_msg_client" title="logic_arc_int__logging__datarouter_msg_client"><em class="xref need">Control Channel (logic_arc_int__logging__datarouter_msg_client)</em></a> by
 <code class="docutils literal notranslate"><span class="pre">MessagePassingServer</span></code>, <code class="docutils literal notranslate"><span class="pre">ISession</span></code> and <code class="docutils literal notranslate"><span class="pre">ISessionHandle</span></code>.</p></li>
 <li><p>The DLT output (UDP multicast) and the configuration socket
 (<code class="docutils literal notranslate"><span class="pre">UnixDomainServer</span></code>) have no UID in the architecture.</p></li>
