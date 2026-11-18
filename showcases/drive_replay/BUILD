@@ -24,6 +24,11 @@ cc_library(
     name = "viz_link",
     srcs = ["viz_link.cpp"],
     hdrs = ["viz_link.h"],
+    # QNX keeps socket(), sendto() and inet_pton() in libsocket, not in libc.
+    linkopts = select({
+        "@platforms//os:qnx": ["-lsocket"],
+        "//conditions:default": [],
+    }),
 )
 
 cc_binary(
