@@ -42,12 +42,6 @@ documentation set that downstream product distributions can build on.
 
       :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
-   .. grid-item-card:: 📖 Process, Methods & Tools
-      :link: process_methods_tools/index
-      :link-type: doc
-
-      S-CORE process description, platform standards, and documentation toolchain.
-
    .. grid-item-card:: ✅ Code Quality
       :link: verification_report/index
       :link-type: doc
@@ -59,12 +53,6 @@ documentation set that downstream product distributions can build on.
       Reference Integration workflow and health overview with links to
       :doc:`Integration Process <integration_process/integration_process>` and
       `Integration Status <status_dashboard.html>`_.
-
-   .. grid-item-card:: 🧩 Modules
-      :link: modules/index
-      :link-type: doc
-
-      Central overview for all integrated modules. See :doc:`All Modules <modules/index>`.
 
    .. grid-item-card:: 📝 Release Notes
       :link: s_core_v_1/releases/releases
