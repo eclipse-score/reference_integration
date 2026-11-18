@@ -215,6 +215,12 @@ jobs:
     name: Deploy Documentation to GitHub Pages
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
     needs: test_and_docs
+    # Same group as the daily maintenance workflow (daily.yml): both push to
+    # gh-pages, so they must not run concurrently.
+    concurrency:
+      group: docs-publish
+      cancel-in-progress: false
+      queue: max
     permissions:
       pages: write
       id-token: write
