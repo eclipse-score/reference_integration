@@ -55,6 +55,8 @@ TEST_APPS = [
 # (app id, context id, payload pattern) that every run must put on DLT.
 EXPECTED_DLT = [
     ("DR", "DFLT", r"successfully completed initialization"),
+    ("CFGD", "App", r"ConfigDaemon:: Run InternalConfigProviderService offered"),
+    ("CFGD", "DemJ", r"DemoJson:: Run - Demo parameters loaded"),
     ("EXA", "DFLT", r"Logging Application DoLogging"),
     ("LGGG", "LOGG", r"DLT generator finished"),
     ("PINC", "PINF", r"platform_info_consumer: S-CORE version check passed"),

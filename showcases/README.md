@@ -10,15 +10,32 @@ For remote (DLT) logging, please refer to the following documentation:
 
 `/showcases/bin/cli --examples 'S-CORE Platform Run'` starts the launch manager
 with [platform_run/launch_manager_config.json](platform_run/launch_manager_config.json).
-It starts the datarouter and the platform info service, then the test
-applications one after another; each must exit with code 0. Once all have, the
-launch manager reaches the run target `PlatformRun` and the run prints
-`S-CORE platform run: PASSED`, otherwise `FAILED` (at the latest after 60 s).
+It starts the datarouter, the platform info service and the config daemon,
+then the test applications one after another; each must exit with code 0.
+Once all have, the launch manager reaches the run target `PlatformRun` and the
+run prints `S-CORE platform run: PASSED`, otherwise `FAILED` (at the latest
+after 60 s).
 
 All processes log via mw::log to the console and as DLT through the datarouter
 (UDP multicast `239.255.42.99:3490`). The launch manager logs at debug level to
 DLT ([platform_run/logging.json](platform_run/logging.json)), including every
 process start and termination.
+
+## Config management
+
+The platform deploys the config daemon (`//deploy/config_management`). In the
+platform run the launch manager keeps it running as a platform daemon, with
+[platform_run/logging_config_daemon.json](platform_run/logging_config_daemon.json)
+as its mw::log configuration (app id `CFGD`).
+
+`/showcases/bin/cli --examples 'Config Management Daemon Example'` runs the
+deployed daemon on its own: it loads the demo parameters from
+`/usr/bin/config_management/etc/demo_parameters.json`, offers them over mw::com
+and is stopped with SIGTERM after 10 s. The test
+`//platform_integration_tests/config_management` runs this showcase and checks
+that the daemon offered its config provider service and loaded the parameters.
+The `[Lifecycle client] FD 111 is invalid for kRunning report` error line is
+expected there, as the daemon runs without the launch manager.
 
 ## Platform integration test
 
@@ -30,6 +47,8 @@ no `FAILED` line, and in the DLT trace:
 | App id / context | Expected payload                                                            |
 |------------------|-----------------------------------------------------------------------------|
 | `DR` / `DFLT`    | `successfully completed initialization`                                     |
+| `CFGD` / `App`   | `ConfigDaemon:: Run InternalConfigProviderService offered`                  |
+| `CFGD` / `DemJ`  | `DemoJson:: Run - Demo parameters loaded`                                   |
 | `EXA` / `DFLT`   | `Logging Application DoLogging`                                             |
 | `LGGG` / `LOGG`  | `DLT generator finished`                                                    |
 | `PINC` / `PINF`  | `platform_info_consumer: S-CORE version check passed`                       |

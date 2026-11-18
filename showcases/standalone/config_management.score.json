@@ -1,14 +1,22 @@
 {
     "name": "Config Management Daemon Example",
-    "description": "Example for running the config management daemon with demo parameters (non functional yet)",
+    "description": "Example for running the config management daemon with demo parameters",
     "apps": [
         {
             "path": "/usr/bin/config_management/config_daemon",
             "args": [
                 "-s", "/usr/bin/config_management/etc/mw_com_config.json"
             ],
-            "env": {},
+            "env": {
+                "MW_LOG_CONFIG_FILE": "/showcases/data/config_management/etc/logging.json"
+            },
             "dir": "/usr/bin/config_management"
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["config_daemon", "SIGTERM"],
+            "env": {},
+            "delay": 10
         }
     ]
 }

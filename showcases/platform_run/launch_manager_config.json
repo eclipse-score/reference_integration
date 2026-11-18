@@ -69,11 +69,33 @@
                 }
             }
         },
+        "config_daemon": {
+            "description": "Platform: loads the demo parameters from JSON and offers them to applications over mw::com",
+            "component_properties": {
+                "binary_name": "config_daemon",
+                "application_profile": {
+                    "is_self_terminating": false
+                },
+                "depends_on": ["datarouter"],
+                "process_arguments": ["-s", "/usr/bin/config_management/etc/mw_com_config.json"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/config_management",
+                "working_dir": "/usr/bin/config_management",
+                "ready_timeout_ms": 5000,
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_config_daemon.json"
+                }
+            }
+        },
         "platform_ready": {
             "description": "Barrier: every platform daemon is up; the tests depend only on this",
             "component_properties": {
                 "binary_name": "true",
-                "depends_on": ["datarouter", "platform_info_service"]
+                "depends_on": ["datarouter", "platform_info_service", "config_daemon"]
             },
             "deployment_config": {
                 "bin_dir": "/bin"
@@ -204,6 +226,7 @@
             "depends_on": [
                 "datarouter",
                 "platform_info_service",
+                "config_daemon",
                 "platform_ready",
                 "logging_app",
                 "dlt_generator",

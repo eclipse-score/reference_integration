@@ -13,6 +13,7 @@
 
 exports_files([
     "logging_app.json",
+    "config_daemon_logging.json",
     "dlt_generator.json",
     "platform_info_consumer.json",
 ])

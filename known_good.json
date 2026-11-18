@@ -249,19 +249,7 @@
                     "extra_test_config": [
                         "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
                     ],
-                    "exclude_test_targets": [
-                        "//score/config_management/config_daemon/code/services/details:unit_test_internal_config_provider_service_impl",
-                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
-                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
-                        "//score/config_management/config_daemon/code:main_function_test",
-                        "//score/config_management/config_daemon/code/data_model/details:unit_test",
-                        "//score/config_management/config_provider/code/parameter_set:unit_test",
-                        "//score/config_management/dependability/..."
-                    ],
-                    "test_notes": {
-                        "//score/config_management/config_daemon/code/data_model/details:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657",
-                        "//score/config_management/config_provider/code/parameter_set:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657"
-                    },
+                    "exclude_test_targets": [],
                     "langs": [
                         "cpp"
                     ],
@@ -276,6 +264,10 @@
                         "//score/config_management/config_provider/code/config_provider/error:unit_test",
                         "//score/config_management/config_provider/code/parameter_set:unit_test",
                         "//score/config_management/config_provider/code/persistency:unit_tests_host",
+                        "//score/config_management/config_daemon/code:main_function_test",
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_factory_impl",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//tests/cpp:cpp_test_main"
                     ]
                 }

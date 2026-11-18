@@ -73,13 +73,16 @@ score_pkg_bundle(
 
 # The config daemon and its configuration are part of the deployed platform
 # (//deploy/config_management). This showcase only contributes the manifest
-# that drives the deployed daemon.
+# that drives the deployed daemon and the console logging config it runs with.
 score_pkg_bundle(
     name = "config_management",
     bins = [],
     config_data = [
         "//showcases/standalone:config_management.score.json",
     ],
+    custom_layout = {
+        "//showcases/standalone/configs:config_daemon_logging.json": "etc/logging.json",
+    },
     package_dir = "standalone",
 )
 
