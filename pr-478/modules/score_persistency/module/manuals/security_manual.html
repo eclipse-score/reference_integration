@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Release Note" href="../release/release_note.html" />
+    <link rel="next" title="Persistency Release Note" href="../release/release_note.html" />
     <link rel="prev" title="Safety Manual" href="safety_manual.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -479,7 +479,7 @@
 <li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Security Manual</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../release/release_note.html">Release Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/release_note.html">Persistency Release Note</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../safety_mgt/index.html">Safety Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../security_mgt/index.html">Security Management</a></li>
 </ul>
@@ -565,7 +565,7 @@
                   
   <section id="security-manual">
 <h1>Security Manual<a class="headerlink" href="#security-manual" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-8d503747">
+<div class="need_container docutils container" id="SNCB-5ed25f7a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_security_manual">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -702,7 +702,7 @@
 <h2>Assumptions of Use<a class="headerlink" href="#assumptions-of-use" title="Link to this heading">#</a></h2>
 <section id="aou-requirements">
 <h3>AoU Requirements<a class="headerlink" href="#aou-requirements" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-223a66c8">
+<div class="need_container docutils container" id="SNCB-60c24d13">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__storage_access_rights">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -748,7 +748,7 @@ its group) can read or write the storage files, snapshot files and default-value
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-248df72e">
+<div class="need_container docutils container" id="SNCB-3156da28">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__defaults_read_only">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -793,7 +793,7 @@ values can not be modified at runtime.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-e86112ec">
+<div class="need_container docutils container" id="SNCB-aacfeaf6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__confidentiality">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -839,7 +839,7 @@ pairs unencrypted.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-bd5af220">
+<div class="need_container docutils container" id="SNCB-37216f7d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__manipulation_protection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -973,7 +973,7 @@ For the feature Persistency the platform security manual and this module securit
 <div class="line">Persistency is a library which is executed in the process and with the OS user of the calling application. It has no own
 process, no inter-process communication and no network interface. Its attack surface consists of its API, used by
 the application, and of the files it stores in and loads from the file system (storage, snapshot and
-default-values files, see <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency KVS Feature Arc... (doc__persistency_kvs_architecture)</em></a>).</div>
+default-values files, see <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency Feature Archite... (doc__persistency_kvs_architecture)</em></a>).</div>
 <div class="line">Access control: the component does not implement own access controls, but relies on the access rights of the file
 system (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__permission_control" title="comp_req__kvs__permission_control"><em class="xref need">Permission Control (comp_req__kvs__permission_control)</em></a>). Access and permission errors of the file system are reported to the
 application (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__permission_err_hndl" title="comp_req__kvs__permission_err_hndl"><em class="xref need">Permission Error Handling (comp_req__kvs__permission_err_hndl)</em></a>). The separation of the data stores of different applications
@@ -996,7 +996,7 @@ storage environment (<a class="reference internal" href="#aou_req__persistency__
 test purposes. It has no special rights and can only access the KVS storage accessible to the OS user running it,
 which is restricted by <a class="reference internal" href="#aou_req__persistency__storage_access_rights" title="aou_req__persistency__storage_access_rights"><em class="xref need">Storage Access Rights (aou_req__persistency__storage_access_rights)</em></a>. It is recommended not to deploy the KVS
 tool in production software images, to keep the attack surface small.</div>
-<div class="line">The security analysis of the feature is documented in <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">STRIDE (doc__persistency_stride)</em></a>.</div>
+<div class="line">The security analysis of the feature is documented in <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">Persistency STRIDE (doc__persistency_stride)</em></a>.</div>
 </div>
 </section>
 <section id="software-bill-of-material-sbom">
@@ -1025,8 +1025,8 @@ release workflow.</div>
 <div class="line-block">
 <div class="line">Module user manual: <a class="reference internal" href="user_manual.html#doc__persistency_user_manual" title="doc__persistency_user_manual"><em class="xref need">Persistency User Manual (doc__persistency_user_manual)</em></a></div>
 <div class="line">Module security plan: <a class="reference internal" href="../security_mgt/module_security_plan.html#doc__persistency_security_plan" title="doc__persistency_security_plan"><em class="xref need">Persistency Security Plan (doc__persistency_security_plan)</em></a></div>
-<div class="line">Feature security analysis: <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">STRIDE (doc__persistency_stride)</em></a></div>
-<div class="line">Feature architecture: <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency KVS Feature Arc... (doc__persistency_kvs_architecture)</em></a></div>
+<div class="line">Feature security analysis: <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">Persistency STRIDE (doc__persistency_stride)</em></a></div>
+<div class="line">Feature architecture: <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency Feature Archite... (doc__persistency_kvs_architecture)</em></a></div>
 <div class="line">Component architecture: <a class="reference internal" href="../../components/kvs/architecture/component_architecture.html#doc__kvs_component_architecture" title="doc__kvs_component_architecture"><em class="xref need">KVS Component Architecture (doc__kvs_component_architecture)</em></a></div>
 <div class="line">Component requirements: <a class="reference internal" href="../../components/kvs/requirements/requirements.html#doc__kvs_requirements" title="doc__kvs_requirements"><em class="xref need">KVS Requirements (doc__kvs_requirements)</em></a></div>
 </div>
@@ -1057,7 +1057,7 @@ release workflow.</div>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Release Note</p>
+        <p class="prev-next-title">Persistency Release Note</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

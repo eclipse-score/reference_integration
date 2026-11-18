@@ -557,7 +557,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-ebf3e581">
+  <div class="need_container docutils container" id="SNCB-24a6654f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_backend_impl_inspection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -623,8 +623,8 @@ by linking to C++ or Rust specific documentation.</p>
 <p>It is mandatory to fill in the “passed” column with “yes” or “no” for each checklist item and additionally to add in the remarks why it is passed or not passed.
 In case of “no” an issue link to the issue tracking system has to be added in the last column (if not solved in the same issue).
 See also <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/general_concepts/score_review_concept.html#doc_concept__wp_inspections" title="doc_concept__wp_inspections"><em class="xref need">Work product Inspections Co... (doc_concept__wp_inspections)</em></a> for further information about reviews in general and inspection in particular.</p>
-<div class="pst-scrollable-table-container"><table class="table" id="id7">
-<caption><span class="caption-number">Table 127 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id7" title="Link to this table">#</a></caption>
+<div class="pst-scrollable-table-container"><table class="table" id="id4">
+<caption><span class="caption-number">Table 126 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 7.9%" />
 <col style="width: 19.8%" />
@@ -659,17 +659,9 @@ of the backend registration is in <code class="docutils literal notranslate"><sp
 <td><p>Is the implementation according to specification?</p></td>
 <td><p>Check if the linked component requirements are fulfilled
 and detailed design also matches architecture description.</p></td>
-<td><p>no</p></td>
-<td><p>The detailed design matches the component architecture (units, interfaces).
-Two requirements without a test link were linked to existing tests.
-Remaining requirement-to-test traceability gaps are tracked in
-<a class="reference external" href="https://github.com/eclipse-score/logging/issues/319">#319</a>.</p>
-<p>The former datarouter design described a rate limit (fixed sleep after
-each incoming request). The code has no such sleep and no component,
-feature or safety requirement mentions a rate limit. The text was
-replaced by the implemented limits (see <code class="docutils literal notranslate"><span class="pre">datarouter_backend/index</span></code>).</p>
-</td>
-<td><p>Requirement tests: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/319">#319</a>.</p></td>
+<td><p>yes</p></td>
+<td><p>comp_req__log__avoid_signal_processing is coverd by clang-tidy checker.</p></td>
+<td></td>
 </tr>
 <tr class="row-even"><td><p>IMPL_01_03</p></td>
 <td><p>Are the design decisions and constraints documented?</p></td>
@@ -683,99 +675,54 @@ implementation, including bounded work and message-size limits.</p></td>
 <td><p>Are all external libraries used by the component specified in the detailed design?</p></td>
 <td><p>Check the automated dependency analysis.
 Also make sure ASIL rated units also only use ASIL rated libraries.</p></td>
-<td><p>no</p></td>
-<td><p>Dependency and FFI metadata are maintained in Bazel. The direct
-dependencies outside of <code class="docutils literal notranslate"><span class="pre">//score/mw/log</span></code> are listed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bazel</span> <span class="n">query</span> <span class="s1">'let l = kind(".*_library", //score/mw/log/...) except attr(testonly, 1, //score/mw/log/...) in labels(deps, $l) except //score/mw/log/...'</span> <span class="o">--</span><span class="n">keep_going</span> <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">label_kind</span>
-</pre></div>
-</div>
-<p>Those without the <code class="docutils literal notranslate"><span class="pre">FFI</span></code> tag are listed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bazel</span> <span class="n">query</span> <span class="s1">'let l = kind(".*_library", //score/mw/log/...) except attr(testonly, 1, //score/mw/log/...) in (labels(deps, $l) except //score/mw/log/...) except attr(tags, FFI, labels(deps, $l))'</span> <span class="o">--</span><span class="n">keep_going</span> <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">label</span>
-</pre></div>
-</div>
-<p>Dependency/configuration findings remain:</p>
+<td><p>yes</p></td>
+<td><p>Dependency and FFI metadata are maintained in Bazel. The generated
+<code class="docutils literal notranslate"><span class="pre">backend_dependencies</span></code> and <code class="docutils literal notranslate"><span class="pre">frontend_dependencies</span></code> pages
+list the dependencies of each unit.</p>
+<p>Dependency/configuration findings:</p>
 <ul class="simple">
-<li><p>Remove unused <code class="docutils literal notranslate"><span class="pre">//score/concurrency:thread_pool</span></code> dependency, if confirmed
-unused for all affected configurations.</p></li>
-<li><p>Correct the unresolved <code class="docutils literal notranslate"><span class="pre">//score/mw/log/detail/dlt_trace</span></code>
-dependency in the <code class="docutils literal notranslate"><span class="pre">shm_dma_enabled</span></code> configuration.</p></li>
-<li><p>Migrate uses of the deprecated <code class="docutils literal notranslate"><span class="pre">high_resolution_steady_clock</span></code>
-target to the supported replacement after compatibility review.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">//score/mw/log/detail/dlt_trace</span></code> is not defined in this repository,
+so the <code class="docutils literal notranslate"><span class="pre">shm_dma_enabled</span></code> configuration does not build here.
+Accepted as deviation.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">high_resolution_steady_clock</span></code> target is deprecated and its
+replacement is not available in the open source dependencies.
+Accepted as deviation.</p></li>
 </ul>
 </td>
-<td><p>To be added</p></td>
+<td></td>
 </tr>
 <tr class="row-even"><td><p>IMPL_02_01</p></td>
 <td><p>Are the static and dynamic code analysis reports verified for violations?</p></td>
 <td><p>All violations in ASIL related code must be justified. This includes the checks of coding guidelines.</p></td>
 <td><p>no</p></td>
-<td><p>Refer to the generated <a class="reference internal" href="../../../verification_report/module_verification_report.html"><span class="doc">verification report</span></a>
-and revision-specific CI results.</p>
-<p>Following issues need to be addressed:</p>
-<ul class="simple">
-<li><p>Resolve or justify coverage gaps see: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/318">#318</a></p></li>
-<li><p>Integrate and verify the required CodeQL analysis see: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/336">#336</a></p></li>
-<li><p>39 of 118 suppressions have no justification and use AUTOSAR C++14 ids.</p></li>
-<li><p>Memcheck (valgrind 3.22.0) is not part of CI. No errors and no definite leaks in the unit tests found in manual runs.</p></li>
-</ul>
+<td><p>Static code analysis is covered by: AddressSanitizer + UndefinedBehaviorSanitizer + LeakSanitizer + ThreadSanitizer.</p>
+<p>Static code analysis with MISRA cpp23 checks is planned: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/262">#262</a></p>
+<p>Dynamic code analysis using valgrind is planned: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/389">#389</a></p>
 </td>
-<td><ul class="simple">
-<li><p>Coverage: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/318">#318</a>.</p></li>
-<li><p>CodeQL <a class="reference external" href="https://github.com/eclipse-score/logging/issues/336">#336</a>.</p></li>
-<li><p>Missing suppressions justification: To be added.</p></li>
-<li><p>Missing Memcheck CI job: To be added.</p></li>
-</ul>
-</td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><p>IMPL_02_02</p></td>
 <td><p>Do manual checks, that are derived from the coding guideline, find no safety critical error?</p></td>
 <td><p>Check this for the programming language used (e.g. C++ &lt;link_to_checks_list&gt;, Rust &lt;link_to_checks_list&gt;)</p></td>
 <td><p>no</p></td>
-<td><p>The manual MISRA C++:2023 checks are not done yet.</p>
+<td><p>The manual MISRA C++:2023 checks are not done yet. Accepted as deviation,
+new tooling will be set up soon: <a class="reference external" href="https://github.com/eclipse-score/logging/issues/262">#262</a></p>
 <p>Following issues found in <a class="reference external" href="https://eclipse-score.github.io/score/main/contribute/development/cpp/coding_guidelines.html">C++ guideline</a>:</p>
 <ul class="simple">
 <li><p>The coding guideline asks to avoid the prefix <code class="docutils literal notranslate"><span class="pre">I</span></code> for interfaces and to
-append <code class="docutils literal notranslate"><span class="pre">Impl</span></code> to implementations. Decide whether <code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code> / <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code>
-naming is an accepted coding-guideline deviation.</p></li>
+append <code class="docutils literal notranslate"><span class="pre">Impl</span></code> to implementations. The <code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code> / <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code>
+naming is accepted as coding-guideline deviation.</p></li>
 </ul>
 </td>
-<td><p>To be added</p></td>
+<td></td>
 </tr>
 <tr class="row-even"><td><p>IMPL_03_01</p></td>
 <td><p>Do the UID of the interface in component documentation match the implemented interface names of the unit?</p></td>
 <td><p>Compare interface UIDs (which contains the interface name) in component architecture/detailed design documentation
 with public interfaces in source code (e.g. API headers, traits, public types/functions).</p></td>
-<td><p>no</p></td>
-<td><p>The mapping of the architecture interfaces to the source code interfaces is
-shown in the diagrams listed in the detailed design.</p>
-<p>Following issues found:</p>
-<ul>
-<li><p>The names of the source code interfaces differ from the architecture
-interface UIDs, the mapping is only given in the diagrams of the
-detailed design.
-Examples:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">logic_arc_int__log_cpp__logging</span></code> is implemented by
-<code class="docutils literal notranslate"><span class="pre">mw::log::Recorder</span></code>, which is defined in <code class="docutils literal notranslate"><span class="pre">score_baselibs</span></code>
-(<code class="docutils literal notranslate"><span class="pre">score/mw/log/recorder.h</span></code>). The name has no relation to the UID.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">logic_arc_int__logging__shm</span></code> is realized by four names:
-<code class="docutils literal notranslate"><span class="pre">SharedMemoryWriter</span></code>, <code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code>, <code class="docutils literal notranslate"><span class="pre">SharedData</span></code> and
-<code class="docutils literal notranslate"><span class="pre">BufferEntryHeader</span></code>. No single name matches the UID.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">logic_arc_int__logging__session_ctrl_channel</span></code> is realized by
-<code class="docutils literal notranslate"><span class="pre">DatarouterMessageClient</span></code> and the messages in
-<code class="docutils literal notranslate"><span class="pre">data_router_messages.h</span></code>. “Session control channel” does not
-appear in the code.</p></li>
-<li><p>The internal interface <code class="docutils literal notranslate"><span class="pre">mw::log::detail::Backend</span></code> has no
-architecture UID.</p></li>
-</ul>
-<p>Action: decide whether to adapt the UIDs in the architecture, to
-rename the interfaces in the code, or to accept the mapping in the
-detailed design as a documented deviation. <code class="docutils literal notranslate"><span class="pre">ISharedMemoryReader</span></code> is
-also affected by the <code class="docutils literal notranslate"><span class="pre">I</span></code> prefix finding in IMPL_02_02.</p>
-</li>
-</ul>
-</td>
-<td><p>To be added</p></td>
+<td><p>yes</p></td>
+<td></td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><p>IMPL_03_02</p></td>
 <td><p>Are detailed design and source code consistent and is the respective traceability established ?</p></td>
@@ -783,25 +730,14 @@ also affected by the <code class="docutils literal notranslate"><span class="pre
 (e.g. naming of interfaces, units, functions/operations/messages, data types).
 Check if the folder/file names of the units and its source code matches the intended functionality.
 For example if a unit is named “communication” it should not contain code for “data processing”.</p></td>
-<td><p>no</p></td>
+<td><p>yes</p></td>
 <td><p>Backend designs were reconciled with their implementations.
 The slog backend and the syslog backend have no design document, their
 implementation is self-explanatory (see IMPL_01_01). The design of the
 backend registration is in <code class="docutils literal notranslate"><span class="pre">score_baselibs</span></code> (see IMPL_01_01).
 The design of the wait-free producer queue (<code class="docutils literal notranslate"><span class="pre">detail/wait_free_producer_queue/README.md</span></code>, <code class="docutils literal notranslate"><span class="pre">design/*.puml</span></code>)
-is not part of this detailed design and was not compared with the code.</p>
-<p>Following issues found:</p>
-<ul class="simple">
-<li><p>The README example uses <code class="docutils literal notranslate"><span class="pre">AlternatingReader</span></code>, which does not exist (the
-classes are <code class="docutils literal notranslate"><span class="pre">AlternatingReadOnlyReader</span></code> and
-<code class="docutils literal notranslate"><span class="pre">AlternatingReaderProxy</span></code>). Its diagram links are relative to the
-repository root and do not resolve in the documentation. Action: correct
-the names, move the design under <code class="docutils literal notranslate"><span class="pre">score/mw/log/design/backend</span></code> and
-link it by symbolic links like the other units, and
-compare the diagrams with the code.</p></li>
-</ul>
-</td>
-<td><p>To be added</p></td>
+is not part of this detailed design and was not compared with the code.</p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
