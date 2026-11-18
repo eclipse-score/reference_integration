@@ -12,8 +12,7 @@
 # *******************************************************************************
 exports_files(
     [
-        "001-disable-cryptoki-crate-universe.patch",
-        "002-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+        "001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
     ],
     visibility = ["//visibility:public"],
 )
