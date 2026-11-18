@@ -1,8 +1,8 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 1ef404f..c322fed 100644
+index 180bbe8..7c8c94a 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -49,7 +49,7 @@ bazel_dep(name = "rules_cc", version = "0.2.22")
+@@ -63,7 +63,7 @@ bazel_dep(name = "rules_cc", version = "0.2.22")
  # *******************************************************************************
  bazel_dep(
      name = "score_bazel_cpp_toolchains",
@@ -11,7 +11,7 @@ index 1ef404f..c322fed 100644
      dev_dependency = True,
  )
  
-@@ -91,7 +91,7 @@ gcc.toolchain(
+@@ -105,7 +105,7 @@ gcc.toolchain(
  # *******************************************************************************
  gcc.toolchain(
      name = "score_qcc_x86_64_toolchain",
@@ -20,7 +20,7 @@ index 1ef404f..c322fed 100644
      target_cpu = "x86_64",
      target_os = "qnx",
      use_default_package = True,
-@@ -103,7 +103,7 @@ gcc.toolchain(
+@@ -117,7 +117,7 @@ gcc.toolchain(
  # *******************************************************************************
  gcc.toolchain(
      name = "score_qcc_aarch64_toolchain",
@@ -29,7 +29,7 @@ index 1ef404f..c322fed 100644
      target_cpu = "aarch64",
      target_os = "qnx",
      use_default_package = True,
-@@ -111,12 +111,11 @@ gcc.toolchain(
+@@ -125,12 +125,11 @@ gcc.toolchain(
  )
  use_repo(
      gcc,
@@ -43,7 +43,7 @@ index 1ef404f..c322fed 100644
  )
  
  # *******************************************************************************
-@@ -180,7 +179,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.0.3", dev_dependency = True
+@@ -177,7 +176,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.0.3", dev_dependency = True
  imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
  imagefs.toolchain(
      name = "score_qnx_x86_64_ifs_toolchain",
@@ -52,7 +52,7 @@ index 1ef404f..c322fed 100644
      sdp_version = "8.0.0",
      target_cpu = "x86_64",
      target_os = "qnx",
-@@ -188,7 +187,7 @@ imagefs.toolchain(
+@@ -185,7 +184,7 @@ imagefs.toolchain(
  )
  imagefs.toolchain(
      name = "score_qnx_aarch64_ifs_toolchain",
