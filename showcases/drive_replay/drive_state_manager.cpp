@@ -86,6 +86,10 @@ int main(int argc, const char* argv[])
 
     score::mw::lifecycle::report_running();
 
+    // Declared before the client: its destructor waits for running callbacks, which use this state.
+    std::mutex activations_mutex{};
+    std::deque<Activation> activations{};
+
     auto client_result = score::mw::lifecycle::ILmControl::Create("StateManager/LaunchManager/Instance");
     if (!client_result.has_value())
     {
@@ -94,8 +98,6 @@ int main(int argc, const char* argv[])
     }
     std::unique_ptr<score::mw::lifecycle::ILmControl> client = std::move(client_result).value();
 
-    std::mutex activations_mutex{};
-    std::deque<Activation> activations{};
     const auto registered = client->register_run_target_activation_callback(
         [&activations_mutex, &activations](RunTargetActivationSource source, RunTargetName target) {
             const std::lock_guard<std::mutex> lock{activations_mutex};
