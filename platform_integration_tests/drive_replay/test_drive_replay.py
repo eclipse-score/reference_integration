@@ -48,7 +48,7 @@ EXPECTED_DLT = [
     ("FCW", "FCW", r"FORWARD COLLISION WARNING", (1, None)),
     ("FCW", "FCW", r"CRITICAL, brake now", (1, None)),
     (*_FAULT_INJECTED, (1, 1)),
-    (*_SUPERVISION_FAILED, (1, None)),
+    (*_SUPERVISION_FAILED, (1, 1)),
     # one recovery for the hang, one for the crash; a spontaneous supervision failure adds a third
     ("LM", "LM", r"Completed the request for Run Target\s+fallback_run_target", (2, 2)),
     ("DSM", "SM", r"launch manager recovered a failure", (2, 2)),
