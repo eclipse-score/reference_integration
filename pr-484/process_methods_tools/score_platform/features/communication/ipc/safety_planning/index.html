@@ -74,7 +74,7 @@
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" />
     <link rel="next" title="SOME/IP-Gateway" href="../../some_ip_gateway/index.html" />
-    <link rel="prev" title="IPC Failure Modes and Effects Analysis" href="../safety_analysis/fmea.html" />
+    <link rel="prev" title="IPC Requirements" href="../requirements/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -465,7 +465,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html">Platform Architecture</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../index.html">Platform Features and Logical Interfaces</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../../ai_platform/index.html">AI Platform</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../baselibs/index.html">Baselibs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../code_generation/index.html">Code Generation</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../../index.html">Communication</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../../architecture/index.html">Communication Architecture</a></li>
@@ -475,8 +475,16 @@
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../configuration/index.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../daal/index.html">Deterministic App Abstraction Layer</a></li>
+
+
+
+
+
+
+
 <li class="toctree-l3"><a class="reference internal" href="../../../diagnostics/index.html">Diagnostic and Fault Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../frameworks/index.html">Frameworks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../feo/index.html">Fixed Execution Order</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/index.html">Lifecycle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../log_and_trace/index.html">Log and Trace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../orchestration/index.html">Orchestration</a></li>
@@ -487,7 +495,7 @@
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../requirements/index.html">Platform Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../contribute/index.html">Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../quality/qms_report.html">Quality Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../quality/qms_report.html">Platform Quality Report</a></li>
 
 
 
@@ -581,7 +589,7 @@
                   
   <section id="ipc-safety-work-products-list">
 <span id="safety-planning-ipc"></span><h1>IPC Safety Work Products List<a class="headerlink" href="#ipc-safety-work-products-list" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-350822ff">
+<div class="need_container docutils container" id="SNCB-0196178e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__com_ipc_safety_wp">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -600,7 +608,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../score_process_description/process_areas/safety_management/safety_management_workproducts.html#wp__platform_safety_plan" title="doc__com_ipc_safety_wp">wp__platform_safety_plan</a></span></span></div>
 </span></div>
@@ -628,18 +636,20 @@
 <h2>Tailoring<a class="headerlink" href="#tailoring" title="Link to this heading">#</a></h2>
 <p>Additional to the tailoring in the SW platform project as defined in the <a class="reference internal" href="../../../../../score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_plan.html#doc__platform_safety_plan" title="doc__platform_safety_plan"><em class="xref need">Platform Safety Plan (doc__platform_safety_plan)</em></a> we define here the additional tailoring on feature level.</p>
 <ul class="simple">
-<li><p>Excluded for this feature are additionally the following work products (and their related requirements):</p>
-<ul>
-<li><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_inspect" title="wp__requirements_inspect"><em class="xref need">Requirements Inspection (wp__requirements_inspect)</em></a>: in version 0.5 the inspections have to be done by the user</p></li>
-<li><p><a class="reference internal" href="../../../../../score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__sw_arch_verification" title="wp__sw_arch_verification"><em class="xref need">Architecture Verification (wp__sw_arch_verification)</em></a>: in version 0.5 the inspections have to be done by the user</p></li>
-</ul>
-</li>
+<li><p>The feature level artefacts are additionally partly tailored as in below list, as we use an “external” SEooC
+which provides the feature level artefacts as linked below.</p></li>
+<li><p>There is an overlap in two work products between the expectation formulated in the feature request,
+which defines feature requirements and interfaces and the work products provided in <a class="reference external" href="https://github.com/eclipse-score/communication">Communication Repository</a>.
+Both versions are linked below. A comparison of these has to be performed and inconsistencies resolved as part of inspections - see <a class="reference external" href="https://github.com/eclipse-score/communication/issues/1490">ticket</a></p></li>
+<li><p>AoU in <a class="reference external" href="https://github.com/eclipse-score/communication">Communication Repository</a> are provided in a different format as needed by S-CORE documentation (e.g. the safety manual),
+so a copy of the AoU in docs_as-code format has to be provided.
+Original and Copy are linked below. It need to be confirmed that those are equal as part of inspections - see <a class="reference external" href="https://github.com/eclipse-score/communication/issues/1490">ticket</a></p></li>
 </ul>
 </section>
 <section id="inter-process-communication-safety-work-products">
 <h2>Inter-process Communication Safety Work Products<a class="headerlink" href="#inter-process-communication-safety-work-products" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="table" id="id1">
-<caption><span class="caption-number">Table 148 </span><span class="caption-text">Feature Inter-process Communication Workproducts</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<div class="pst-scrollable-table-container"><table class="table" id="id3">
+<caption><span class="caption-number">Table 147 </span><span class="caption-text">Feature Inter-process Communication Workproducts</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Workproduct Id</p></th>
 <th class="head"><p>Link to process</p></th>
@@ -651,42 +661,45 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/change_management/change_management_workproducts.html#wp__feat_request" title="wp__feat_request"><em class="xref need">Feature Request (wp__feat_request)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/change_management/guidance/change_management_feature_template.html#gd_temp__change_feature_request" title="gd_temp__change_feature_request"><em class="xref need">Feature Request Template (gd_temp__change_feature_request)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../index.html#doc__com_ipc" title="doc__com_ipc"><em class="xref need">Inter-process Communication (doc__com_ipc)</em></a></p></td>
+<td><p><a class="reference internal" href="../index.html#doc__com_ipc" title="doc__com_ipc"><em class="xref need">Inter-process Communication (doc__com_ipc)</em></a>, <a class="reference internal" href="../../index.html#doc__com" title="doc__com"><em class="xref need">Communication (doc__com)</em></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_feat" title="wp__requirements_feat"><em class="xref need">Feature Requirements (wp__requirements_feat)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/guidance/requirements_templates.html#gd_temp__req_feat_req" title="gd_temp__req_feat_req"><em class="xref need">Feature Requirements Template (gd_temp__req_feat_req)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../requirements/index.html#doc__ipc_requirements" title="doc__ipc_requirements"><em class="xref need">IPC Requirements (doc__ipc_requirements)</em></a>, <a class="reference internal" href="../../requirements/index.html#doc__communication_requirements" title="doc__communication_requirements"><em class="xref need">Communication Requirements (doc__communication_requirements)</em></a></p></td>
+<td><p><a class="reference internal" href="../requirements/index.html#doc__ipc_requirements" title="doc__ipc_requirements"><em class="xref need">IPC Requirements (doc__ipc_requirements)</em></a>, <a class="reference internal" href="../../requirements/index.html#doc__communication_requirements" title="doc__communication_requirements"><em class="xref need">Communication Requirements (doc__communication_requirements)</em></a>
+<a class="github reference external" href="https://github.com/eclipse-score/communication/blob/main/score/mw/com/dependability/requirements/feature_requirements/feature_requirements_ipc.trlc">eclipse-score/communication</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_feat_aou" title="wp__requirements_feat_aou"><em class="xref need">Feature Assumptions of Use (wp__requirements_feat_aou)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/guidance/requirements_templates.html#gd_temp__req_aou_req" title="gd_temp__req_aou_req"><em class="xref need">AoU Requirement Template (gd_temp__req_aou_req)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../requirements/index.html#doc__ipc_requirements" title="doc__ipc_requirements"><em class="xref need">IPC Requirements (doc__ipc_requirements)</em></a>, <a class="reference internal" href="../../requirements/index.html#doc__communication_requirements" title="doc__communication_requirements"><em class="xref need">Communication Requirements (doc__communication_requirements)</em></a></p></td>
+<td><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#doc__communication_aou" title="doc__communication_aou"><em class="xref need">Communication Assumptions o... (doc__communication_aou)</em></a>,
+<a class="github reference external" href="https://github.com/eclipse-score/communication/blob/main/score/mw/com/dependability/safety_analysis/aou.trlc">eclipse-score/communication</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__feature_arch" title="wp__feature_arch"><em class="xref need">Feature Architecture (wp__feature_arch)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/architecture_design/guidance/feature_architecture_template.html#gd_temp__arch_feature" title="gd_temp__arch_feature"><em class="xref need">Feature Architecture Templates (gd_temp__arch_feature)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../architecture/index.html#doc__ipc_architecture" title="doc__ipc_architecture"><em class="xref need">IPC Architecture (doc__ipc_architecture)</em></a></p></td>
+<td><p><a class="reference internal" href="../../architecture/index.html#doc__communication_architecture" title="doc__communication_architecture"><em class="xref need">Communication Architecture (doc__communication_architecture)</em></a>,
+<a class="github reference external" href="https://github.com/eclipse-score/communication/tree/main/score/mw/com/dependability/architectural_design/static_design">eclipse-score/communication</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_fmea" title="wp__feature_fmea"><em class="xref need">Feature FMEA (wp__feature_fmea)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/safety_analysis/guidance/fmea_templates.html#gd_temp__feat_saf_fmea" title="gd_temp__feat_saf_fmea"><em class="xref need">Feature FMEA Template (gd_temp__feat_saf_fmea)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../safety_analysis/fmea.html#doc__ipc_fmea" title="doc__ipc_fmea"><em class="xref need">IPC FMEA (doc__ipc_fmea)</em></a></p></td>
+<td><p><a class="github reference external" href="https://github.com/eclipse-score/communication/tree/main/score/mw/com/dependability/safety_analysis">eclipse-score/communication</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_dfa" title="wp__feature_dfa"><em class="xref need">Feature DFA (wp__feature_dfa)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/safety_analysis/guidance/dfa_templates.html#gd_temp__feat_saf_dfa" title="gd_temp__feat_saf_dfa"><em class="xref need">Feature DFA Templates (gd_temp__feat_saf_dfa)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p><a class="reference internal" href="../safety_analysis/dfa.html#doc__ipc_dfa" title="doc__ipc_dfa"><em class="xref need">IPC DFA (doc__ipc_dfa)</em></a></p></td>
+<td><p>covered by safety analysis link above</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_inspect" title="wp__requirements_inspect"><em class="xref need">Requirements Inspection (wp__requirements_inspect)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/requirements_engineering/guidance/requirements_inspection_checklist.html#gd_chklst__req_inspection" title="gd_chklst__req_inspection"><em class="xref need">Requirements Inspection Che... (gd_chklst__req_inspection)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p>tailored</p></td>
+<td><p>partly tailored as several checks are automated, gap analysis tbd, check score vs. communication repo</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__sw_arch_verification" title="wp__sw_arch_verification"><em class="xref need">Architecture Verification (wp__sw_arch_verification)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/architecture_design/guidance/architecture_inspection_checklist.html#gd_chklst__arch_inspection_checklist" title="gd_chklst__arch_inspection_checklist"><em class="xref need">Architecture Inspection Che... (gd_chklst__arch_inspection_checklist)</em></a></p></td>
 <td><p>valid</p></td>
-<td><p>tailored</p></td>
+<td><p>partly tailored as several checks are automated, gap analysis tbd, check score vs. communication repo</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/verification/verification_workproducts.html#wp__verification_feat_int_test" title="wp__verification_feat_int_test"><em class="xref need">Feature Integration test (wp__verification_feat_int_test)</em></a></p></td>
 <td><p><a class="reference internal" href="../../../../../score_process_description/process_areas/verification/guidance/verification_guideline.html#gd_guidl__verification_guide" title="gd_guidl__verification_guide"><em class="xref need">Verification Guideline (gd_guidl__verification_guide)</em></a></p></td>
@@ -696,6 +709,7 @@
 </tbody>
 </table>
 </div>
+<p>Note: Above links to communication repository are to the version as defined in reference integration.</p>
 </section>
 <section id="feature-safety-package">
 <h2>Feature Safety Package<a class="headerlink" href="#feature-safety-package" title="Link to this heading">#</a></h2>
@@ -900,16 +914,150 @@ A summary of the status is also documented in the project’s documentation mana
 </table>
 </div>
 </div>
+<p>Test and traceability status in communication repository:
+<a class="reference external" href="https://eclipse-score.github.io/communication/latest/docs/sphinx/mw_com_index/traceability_report/feature_requirements.html">https://eclipse-score.github.io/communication/latest/docs/sphinx/mw_com_index/traceability_report/feature_requirements.html</a></p>
 </section>
 <section id="feature-aou-status">
 <h3>Feature AoU Status<a class="headerlink" href="#feature-aou-status" title="Link to this heading">#</a></h3>
-<p class="needs_filter_warning" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-2">No needs passed the filters</p>
-<p class="needs_filter_warning" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-3">No needs passed the filters</p>
+<div class="needstable_wrapper docutils container" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-2">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-2-table_node">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__27">aou_req__communication__27</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__14">aou_req__communication__14</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__8">aou_req__communication__8</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__10">aou_req__communication__10</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__4">aou_req__communication__4</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__34">aou_req__communication__34</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__3">aou_req__communication__3</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__2">aou_req__communication__2</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__9">aou_req__communication__9</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__32">aou_req__communication__32</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__19">aou_req__communication__19</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__24">aou_req__communication__24</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__26">aou_req__communication__26</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__1">aou_req__communication__1</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__6">aou_req__communication__6</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__16">aou_req__communication__16</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__12">aou_req__communication__12</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__29">aou_req__communication__29</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__7">aou_req__communication__7</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__13">aou_req__communication__13</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__25">aou_req__communication__25</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__11">aou_req__communication__11</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__20">aou_req__communication__20</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__17">aou_req__communication__17</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__15">aou_req__communication__15</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__5">aou_req__communication__5</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__22">aou_req__communication__22</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__31">aou_req__communication__31</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__18">aou_req__communication__18</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__28">aou_req__communication__28</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__30">aou_req__communication__30</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__21">aou_req__communication__21</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/communication/docs/requirements/aou_req.html#aou_req__communication__23">aou_req__communication__23</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The original AoUs are in communication repository and are not documented as sphinx-needs, these are “valid” as soon as merged.</p>
 </section>
 <section id="feature-architecture-status">
 <h3>Feature Architecture Status<a class="headerlink" href="#feature-architecture-status" title="Link to this heading">#</a></h3>
-<p class="needs_filter_warning" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-4">No needs passed the filters</p>
-<p class="needs_filter_warning" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-5">No needs passed the filters</p>
+<div class="needstable_wrapper docutils container" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-3">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-process_methods_tools/score_platform/features/communication/ipc/safety_planning/index-3-table_node">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../architecture/index.html#logic_arc_int__communication__user">logic_arc_int__communication__user</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The main architectural views are in communication repository and are not documented as sphinx-needs, these are “valid” as soon as merged.</p>
 </section>
 </section>
 </section>
@@ -925,12 +1073,12 @@ A summary of the status is also documented in the project’s documentation mana
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../safety_analysis/fmea.html"
+       href="../requirements/index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">IPC Failure Modes and Effects Analysis</p>
+        <p class="prev-next-title">IPC Requirements</p>
       </div>
     </a>
     <a class="right-next"

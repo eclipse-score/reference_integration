@@ -555,7 +555,7 @@
                   
   <section id="time-daemon-detailed-design">
 <span id="id1"></span><h1>Time Daemon Detailed Design<a class="headerlink" href="#time-daemon-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-1b7e555f">
+<div class="need_container docutils container" id="SNCB-6b2a3a4b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__time_daemon_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -614,7 +614,7 @@
 </ol>
 <p>The raw architectural diagram is represented below.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-473a57eeec65344302b97c8751ed0efd3df0338d.svg" type="image/svg+xml" style="width:720px;height:1022px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-473a57eeec65344302b97c8751ed0efd3df0338d.svg" type="image/svg+xml" style="width:728px;height:1030px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
 <section id="rationale-behind-decomposition-into-units">
@@ -639,14 +639,14 @@ and clear responsibility boundaries critical for ASIL_B safety qualification.</p
 <p>Main classes and unit relationships are presented on this diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><figure class="align-center">
 <p class="plantuml">
-<object data="../../../../_images/plantuml-a180c3a4511f0be68a0dd309735b44c9191cdda1.svg" type="image/svg+xml" style="width:1804px;height:935px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-a180c3a4511f0be68a0dd309735b44c9191cdda1.svg" type="image/svg+xml" style="width:1812px;height:943px;background:#FFFFFF;"></object></p>
 </figure>
 </div></section>
 <section id="deployment-view">
 <h3>Deployment View<a class="headerlink" href="#deployment-view" title="Link to this heading">#</a></h3>
 <p>The design deployment and process architecture is represented on this diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-dca23645957979b9c12765a484e4fe6d382a5b73.svg" type="image/svg+xml" style="width:378px;height:899px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-dca23645957979b9c12765a484e4fe6d382a5b73.svg" type="image/svg+xml" style="width:386px;height:907px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
 <section id="dynamic-diagrams-for-unit-interactions">
@@ -655,7 +655,7 @@ and clear responsibility boundaries critical for ASIL_B safety qualification.</p
 <h3>Data and Control Flow<a class="headerlink" href="#data-and-control-flow" title="Link to this heading">#</a></h3>
 <p>The data and control flow between units is presented in the following diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-158420416470a9ed733136cdaf677a7029fe897e.svg" type="image/svg+xml" style="width:1863px;height:1142px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-158420416470a9ed733136cdaf677a7029fe897e.svg" type="image/svg+xml" style="width:1839px;height:1201px;background:#FFFFFF;"></object></p>
 </div><p>On this view you can see several execution scopes:</p>
 <ol class="arabic simple">
 <li><p><strong>PTP retrieving scope</strong> — retrieves latest PTP data and publishes to <code class="docutils literal notranslate"><span class="pre">input_ptp_data</span></code> topic</p></li>
@@ -746,7 +746,7 @@ it invokes <code class="docutils literal notranslate"><span class="pre">CreateCo
 The status remains <code class="docutils literal notranslate"><span class="pre">kIdle</span></code>. Successful daemon initialization therefore means that setup is complete, not that
 machine initialization or startup is complete.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-4736766b272d01fb2f9b86c345416178bad0769c.svg" type="image/svg+xml" style="width:702px;height:605px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-4736766b272d01fb2f9b86c345416178bad0769c.svg" type="image/svg+xml" style="width:736px;height:627px;background:#FFFFFF;"></object></p>
 </div><p>The four status values have the following actions:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">kIdle</span></code></dt><dd><p>The handler has not been started. <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> does nothing in this state. After setup, <code class="docutils literal notranslate"><span class="pre">Start()</span></code>
@@ -793,108 +793,108 @@ receives <code class="docutils literal notranslate"><span class="pre">Stop()</sp
 <h5>Application Interaction Views<a class="headerlink" href="#application-interaction-views" title="Link to this heading">#</a></h5>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-4150303638f1e8780e2bfdc6f5903745c1ec4849.svg" type="image/svg+xml" style="width:1582px;height:898px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-4150303638f1e8780e2bfdc6f5903745c1ec4849.svg" type="image/svg+xml" style="width:1590px;height:906px;background:#FFFFFF;"></object></p>
 </div><p>Initialization sequence showing component creation order and MessageBroker subscription wiring:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-6ce222cfc20ac35a5cf88b3ea7123514ef6b371e.svg" type="image/svg+xml" style="width:1867px;height:1053px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-6ce222cfc20ac35a5cf88b3ea7123514ef6b371e.svg" type="image/svg+xml" style="width:1833px;height:1052px;background:#FFFFFF;"></object></p>
 </div><p>Application orchestration is split into four views. Startup, handler starting, and shutdown belong to the same
 <code class="docutils literal notranslate"><span class="pre">TimeDaemon::Run()</span></code> call, which returns only after shutdown. Handler state transitions and initialization-result
 handling are covered by <a class="reference internal" href="#time-daemon-handler-lifecycle"><span class="std std-ref">Generic Handler Lifecycle</span></a>.</p>
 <p>Setup: creation and topic wiring of each handler’s machines.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-50e474ba18c1d10a526b3c0774547675f484be1d.svg" type="image/svg+xml" style="width:845px;height:591px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-50e474ba18c1d10a526b3c0774547675f484be1d.svg" type="image/svg+xml" style="width:835px;height:602px;background:#FFFFFF;"></object></p>
 </div><p>Startup: launch of each handler’s initialization worker.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-f88f3175b79f17604c184af2269c70b828a0f337.svg" type="image/svg+xml" style="width:719px;height:400px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-f88f3175b79f17604c184af2269c70b828a0f337.svg" type="image/svg+xml" style="width:724px;height:421px;background:#FFFFFF;"></object></p>
 </div><p>Handler starting: asynchronous machine initialization, non-blocking result handling, and machine startup.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-7978161972a116dadfba1249bb52dac9b919c3de.svg" type="image/svg+xml" style="width:1178px;height:731px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-7978161972a116dadfba1249bb52dac9b919c3de.svg" type="image/svg+xml" style="width:1275px;height:840px;background:#FFFFFF;"></object></p>
 </div><p>Shutdown: reverse-order stopping of handlers and proactive machines.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-467c878416d870ece4a95ce7031fafaedf1511fd.svg" type="image/svg+xml" style="width:857px;height:412px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-467c878416d870ece4a95ce7031fafaedf1511fd.svg" type="image/svg+xml" style="width:965px;height:447px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
 <section id="messagebroker">
 <h4>MessageBroker<a class="headerlink" href="#messagebroker" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-617fdce39548f984693858a63abf569f1cc00b66.svg" type="image/svg+xml" style="width:1006px;height:603px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-617fdce39548f984693858a63abf569f1cc00b66.svg" type="image/svg+xml" style="width:1014px;height:611px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-df1869c200a393b49c4eb9150797733cc23ad1d1.svg" type="image/svg+xml" style="width:983px;height:741px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-df1869c200a393b49c4eb9150797733cc23ad1d1.svg" type="image/svg+xml" style="width:997px;height:738px;background:#FFFFFF;"></object></p>
 </div><p>Message flow through MessageBroker showing topic distribution to multiple subscribers:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-5295df758f1c546eee9263e627d20b97f6556e3c.svg" type="image/svg+xml" style="width:721px;height:448px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-5295df758f1c546eee9263e627d20b97f6556e3c.svg" type="image/svg+xml" style="width:761px;height:479px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="controlflowdivider">
 <h4>ControlFlowDivider<a class="headerlink" href="#controlflowdivider" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-0772d139727770b371eead220497038b637fa6ef.svg" type="image/svg+xml" style="width:739px;height:884px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-0772d139727770b371eead220497038b637fa6ef.svg" type="image/svg+xml" style="width:747px;height:892px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-fe92d6af4dc5d52d680019565f0dc2290da42f50.svg" type="image/svg+xml" style="width:728px;height:650px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-fe92d6af4dc5d52d680019565f0dc2290da42f50.svg" type="image/svg+xml" style="width:722px;height:647px;background:#FFFFFF;"></object></p>
 </div><p>Thread separation and periodic republishing workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-60d5b054d8874bcb5164e89873ab01054a574284.svg" type="image/svg+xml" style="width:958px;height:1050px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-60d5b054d8874bcb5164e89873ab01054a574284.svg" type="image/svg+xml" style="width:957px;height:1085px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="ptpmachine">
 <h4>PTPMachine<a class="headerlink" href="#ptpmachine" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-3e343146bbc6fafb873ed5fa55fb089f5db3c053.svg" type="image/svg+xml" style="width:701px;height:868px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-3e343146bbc6fafb873ed5fa55fb089f5db3c053.svg" type="image/svg+xml" style="width:709px;height:876px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-6e500c3749a0eb64702ad7ab25882baaffec5edd.svg" type="image/svg+xml" style="width:777px;height:902px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-6e500c3749a0eb64702ad7ab25882baaffec5edd.svg" type="image/svg+xml" style="width:787px;height:889px;background:#FFFFFF;"></object></p>
 </div><p>PTP data retrieval cycle from shared memory:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-d6d4787931f6f0aa8e36ba25d4eea98995e79a1f.svg" type="image/svg+xml" style="width:841px;height:680px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-d6d4787931f6f0aa8e36ba25d4eea98995e79a1f.svg" type="image/svg+xml" style="width:824px;height:701px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="shmptpengine">
 <h4>ShmPTPEngine<a class="headerlink" href="#shmptpengine" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-d29a175316e2e1fcbfe7eebacdb7ac70bb9e0fd8.svg" type="image/svg+xml" style="width:1028px;height:1267px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-d29a175316e2e1fcbfe7eebacdb7ac70bb9e0fd8.svg" type="image/svg+xml" style="width:1036px;height:1275px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-14093b4fd1931905a60e77ec8880b60fc4769745.svg" type="image/svg+xml" style="width:1434px;height:1023px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-14093b4fd1931905a60e77ec8880b60fc4769745.svg" type="image/svg+xml" style="width:1427px;height:1024px;background:#FFFFFF;"></object></p>
 </div><p>Shared memory read from TimeSlave gPTP publisher:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-14693ec728e73c80b107e90f68d0127abc65a37e.svg" type="image/svg+xml" style="width:1424px;height:907px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-14693ec728e73c80b107e90f68d0127abc65a37e.svg" type="image/svg+xml" style="width:1591px;height:966px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="verificationmachine">
 <h4>VerificationMachine<a class="headerlink" href="#verificationmachine" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-a9ca6f2d6f1a12afe6cc27d749433479480ca3bc.svg" type="image/svg+xml" style="width:997px;height:851px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-a9ca6f2d6f1a12afe6cc27d749433479480ca3bc.svg" type="image/svg+xml" style="width:1005px;height:859px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-e5e8387034e6641cf758f7145010a23c47218a4b.svg" type="image/svg+xml" style="width:912px;height:723px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-e5e8387034e6641cf758f7145010a23c47218a4b.svg" type="image/svg+xml" style="width:922px;height:710px;background:#FFFFFF;"></object></p>
 </div><p>Time data validation stages (sync check, timeout, jump detection):</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-930e7333c201d98c573fdbedff7c02d06367a996.svg" type="image/svg+xml" style="width:1128px;height:775px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-930e7333c201d98c573fdbedff7c02d06367a996.svg" type="image/svg+xml" style="width:1113px;height:782px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="ipc-machine">
 <h4>IPC Machine<a class="headerlink" href="#ipc-machine" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-9c4d2a9b5c13b29aa92713dc03407ad7f42b0957.svg" type="image/svg+xml" style="width:1001px;height:726px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-9c4d2a9b5c13b29aa92713dc03407ad7f42b0957.svg" type="image/svg+xml" style="width:1009px;height:734px;background:#FFFFFF;"></object></p>
 </div><p>Initialization workflow:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-7904b8c305960d42719c65188e5bb8a602a3022a.svg" type="image/svg+xml" style="width:1412px;height:650px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-7904b8c305960d42719c65188e5bb8a602a3022a.svg" type="image/svg+xml" style="width:1433px;height:671px;background:#FFFFFF;"></object></p>
 </div><p>Qualified time snapshot publishing to client shared memory:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-43c82e462c74124cde7f5f3f0c1a05ddc11faefd.svg" type="image/svg+xml" style="width:775px;height:511px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-43c82e462c74124cde7f5f3f0c1a05ddc11faefd.svg" type="image/svg+xml" style="width:898px;height:542px;background:#FFFFFF;"></object></p>
 </div><p>Client-side receive from TimeDaemon shared memory channel:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-b50708919257c4e8b35a44a54b4bb0bfec3d6e11.svg" type="image/svg+xml" style="width:470px;height:341px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-b50708919257c4e8b35a44a54b4bb0bfec3d6e11.svg" type="image/svg+xml" style="width:500px;height:358px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
 <section id="logging-configuration">
 <h3>Logging configuration<a class="headerlink" href="#logging-configuration" title="Link to this heading">#</a></h3>
 <p>The daemon should have the following logging contexts:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id2">
-<caption><span class="caption-number">Table 140 </span><span class="caption-text">Logging Contexts</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 139 </span><span class="caption-text">Logging Contexts</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 20.0%" />
@@ -1036,7 +1036,7 @@ handling are covered by <a class="reference internal" href="#time-daemon-handler
 <li><p>A <code class="docutils literal notranslate"><span class="pre">score::time::qvt</span></code> library for diagnostic applications</p></li>
 </ol>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-032ed61c547eb5d04119e2021abce407c33e4841.svg" type="image/svg+xml" style="width:531px;height:1051px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-032ed61c547eb5d04119e2021abce407c33e4841.svg" type="image/svg+xml" style="width:539px;height:1059px;background:#FFFFFF;"></object></p>
 </div><p>The <code class="docutils literal notranslate"><span class="pre">Qualified</span> <span class="pre">Vehicle</span> <span class="pre">Time</span></code> component is integrated into the existing processing pipeline:</p>
 <ol class="arabic simple">
 <li><p>It subscribes to the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">verified_ptp_data</span></a> topic from the <code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code></p></li>
@@ -1050,7 +1050,7 @@ handling are covered by <a class="reference internal" href="#time-daemon-handler
 </ol>
 <p>The extended data flow with Qualified Vehicle Time integration is shown below:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-bd32b7cf5de617efbb5d36f8f71f592ddb0fe7f8.svg" type="image/svg+xml" style="width:2661px;height:1681px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-bd32b7cf5de617efbb5d36f8f71f592ddb0fe7f8.svg" type="image/svg+xml" style="width:2636px;height:1754px;background:#FFFFFF;"></object></p>
 </div></section>
 <section id="example-based-on-absolute-time-integration">
 <h5>Example based on Absolute Time integration<a class="headerlink" href="#example-based-on-absolute-time-integration" title="Link to this heading">#</a></h5>
@@ -1064,10 +1064,10 @@ handling are covered by <a class="reference internal" href="#time-daemon-handler
 </ol>
 <p>The way how it is integrated is presented below.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-e9ef24beeeef03bc7ce7906dbe8307cce2e70a5a.svg" type="image/svg+xml" style="width:777px;height:1088px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-e9ef24beeeef03bc7ce7906dbe8307cce2e70a5a.svg" type="image/svg+xml" style="width:785px;height:1096px;background:#FFFFFF;"></object></p>
 </div><p>The control and data flow with Absolute Time integration is shown below.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-1e08ea95f72ffde2b319d9df6f6f906810252897.svg" type="image/svg+xml" style="width:1435px;height:751px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-1e08ea95f72ffde2b319d9df6f6f906810252897.svg" type="image/svg+xml" style="width:1469px;height:768px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
 </section>

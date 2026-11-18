@@ -467,7 +467,7 @@
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Lifecycle</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4 current active"><a class="reference internal" href="index.html">Feature Architecture</a></li>
-<li class="toctree-l4"><a class="reference internal" href="chklst_arc_inspection.html">Lifecycle Architecture Inspection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="arc_inspection.html">Lifecycle Architecture Inspection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
 
@@ -567,7 +567,7 @@
 <h2>Launch Manager initial startup<a class="headerlink" href="#launch-manager-initial-startup" title="Link to this heading">#</a></h2>
 <p>The <em>Initial Run Target</em> configuration is shown in
 <a class="reference internal" href="index.html#lifecycle-configuration-structure"><span class="std std-ref">Configuration Structure</span></a>.</p>
-<div class="need_container docutils container" id="SNCB-59124b42">
+<div class="need_container docutils container" id="SNCB-3b7ce68e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__lcm_startup">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -575,7 +575,7 @@
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid_inspected</span></span></span></div>
 <div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
 <div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
 </div>
@@ -597,11 +597,11 @@
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-1ad1a2b9a956d865868417afc6fa5b64062d8d1c.svg" type="image/svg+xml" style="width:791px;height:625px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-1ad1a2b9a956d865868417afc6fa5b64062d8d1c.svg" type="image/svg+xml" style="width:802px;height:677px;background:#FFFFFF;"></object></p>
 </figure>
 <p>In case of initialization failure, the Launch Manager fails to start.
 Once initialization is successful, the Launch Manager activates the configured initial Run Target.</p>
-<p>For detailed Run Target activation sequence refer to <a class="reference internal" href="run_target_activation.html"><span class="doc">Run Target activation</span></a>.</p>
+<p>For the detailed Run Target activation sequence, refer to <a class="reference internal" href="run_target_activation.html"><span class="doc">Run Target activation</span></a>.</p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -621,7 +621,7 @@ Once initialization is successful, the Launch Manager activates the configured i
 </section>
 <section id="launch-manager-shutdown">
 <h2>Launch Manager shutdown<a class="headerlink" href="#launch-manager-shutdown" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-d7d1d72f">
+<div class="need_container docutils container" id="SNCB-b7384aef">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__lcm_shutdown">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -629,7 +629,7 @@ Once initialization is successful, the Launch Manager activates the configured i
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid_inspected</span></span></span></div>
 <div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
 <div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
 </div>
@@ -650,10 +650,10 @@ Once initialization is successful, the Launch Manager activates the configured i
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-7a366ccb787280e6031565b1ef348fe2facc0e4c.svg" type="image/svg+xml" style="width:966px;height:434px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-7a366ccb787280e6031565b1ef348fe2facc0e4c.svg" type="image/svg+xml" style="width:963px;height:498px;background:#FFFFFF;"></object></p>
 <p>When the Launch Manager receives a SIGTERM signal, it will initiate transition to Run Target <cite>Off</cite> which leads to termination of all components.
-Afterwards, Launch Manager process itself exits.</p>
-<p>For detailed Run Target activation sequence refer to <a class="reference internal" href="run_target_activation.html"><span class="doc">Run Target activation</span></a>.</p>
+Afterwards, the Launch Manager process itself exits.</p>
+<p>For the detailed Run Target activation sequence, refer to <a class="reference internal" href="run_target_activation.html"><span class="doc">Run Target activation</span></a>.</p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">

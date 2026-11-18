@@ -1080,6 +1080,7 @@ class doc_tool {
   +id
   +security_affected
   +status
+  +tool_version
   +version
   +approver [optional]*
   +author [optional]*
@@ -1090,7 +1091,6 @@ class doc_tool {
   +source_code_link [optional]*
   +tcl [optional]*
   +testlink [optional]*
-  +tool_version [optional]*
 }
 class document {
   +id
@@ -1559,8 +1559,6 @@ document --&gt; workproduct : realizes
 document ..&gt; mod : belongs_to
 document ..&gt; comp : belongs_to
 document ..&gt; feat : belongs_to
-feat ..&gt; logic_arc_int : includes
-feat ..&gt; logic_arc_int_op : includes
 feat ..&gt; logic_arc_int : provides
 feat ..&gt; logic_arc_int_op : provides
 feat ..&gt; logic_arc_int : uses
@@ -1587,8 +1585,8 @@ feat_sec_ana ..&gt; aou_req : mitigated_by
 gd_chklst ..&gt; std_req : complies
 gd_guidl ..&gt; std_req : complies
 gd_method ..&gt; std_req : complies
+gd_req --&gt; workflow : satisfies
 gd_req ..&gt; std_req : complies
-gd_req ..&gt; workflow : satisfies
 gd_temp ..&gt; std_req : complies
 logic_arc_int ..&gt; feat_req : fulfils
 logic_arc_int ..&gt; feat : included_by
@@ -3972,6 +3970,7 @@ class doc_tool {
   +id
   +security_affected
   +status
+  +tool_version
   +version
   +approver [optional]*
   +author [optional]*
@@ -3982,7 +3981,6 @@ class doc_tool {
   +source_code_link [optional]*
   +tcl [optional]*
   +testlink [optional]*
-  +tool_version [optional]*
 }
 class tool_usecase {
   +id
@@ -4034,48 +4032,48 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(draft|evaluated|qualified|released|rejected)$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tool_version</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">approver</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">author</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">reviewer</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety_affected</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tcl</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(LOW|HIGH)$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tool_version</span></code></p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -4381,8 +4379,6 @@ class logic_arc_int_op {
 }
 comp --&gt; feat : belongs_to
 document ..&gt; feat : belongs_to
-feat ..&gt; logic_arc_int : includes
-feat ..&gt; logic_arc_int_op : includes
 feat ..&gt; logic_arc_int : provides
 feat ..&gt; logic_arc_int_op : provides
 feat ..&gt; logic_arc_int : uses
@@ -4467,14 +4463,10 @@ click logic_arc_int_op href &quot;#logic-arc-int-op&quot; &quot;Open logic_arc_i
 </thead>
 <tbody>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">includes</span></code></p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">logic_arc_int,</span> <span class="pre">logic_arc_int_op</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">provides</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">logic_arc_int,</span> <span class="pre">logic_arc_int_op</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">uses</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">logic_arc_int,</span> <span class="pre">logic_arc_int_op</span></code></p></td>
 </tr>
@@ -6161,8 +6153,8 @@ class workflow {
   +source_code_link [optional]*
   +testlink [optional]*
 }
+gd_req --&gt; workflow : satisfies
 gd_req ..&gt; std_req : complies
-gd_req ..&gt; workflow : satisfies
 tool_req --&gt; gd_req : satisfies
 workflow ..&gt; gd_req : contains
 style std_req fill:#E1D5E7,stroke:#666,color:#000
@@ -6225,13 +6217,13 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">complies</span></code></p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">std_req</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">satisfies</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">workflow</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">complies</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">std_req</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -6442,7 +6434,6 @@ class logic_arc_int_op {
 comp ..&gt; logic_arc_int : implements
 comp ..&gt; logic_arc_int : uses
 comp_arc_sta ..&gt; logic_arc_int : uses
-feat ..&gt; logic_arc_int : includes
 feat ..&gt; logic_arc_int : provides
 feat ..&gt; logic_arc_int : uses
 feat_arc_sta --&gt; logic_arc_int : includes
@@ -6602,7 +6593,6 @@ class real_arc_int_op {
   +source_code_link [optional]*
   +testlink [optional]*
 }
-feat ..&gt; logic_arc_int_op : includes
 feat ..&gt; logic_arc_int_op : provides
 feat ..&gt; logic_arc_int_op : uses
 feat_arc_sta --&gt; logic_arc_int_op : includes
@@ -9026,6 +9016,7 @@ class doc_tool {
   +id
   +security_affected
   +status
+  +tool_version
   +version
   +approver [optional]*
   +author [optional]*
@@ -9036,7 +9027,6 @@ class doc_tool {
   +source_code_link [optional]*
   +tcl [optional]*
   +testlink [optional]*
-  +tool_version [optional]*
 }
 class potential_tool_malfunction {
   +id
@@ -9304,7 +9294,7 @@ class workproduct {
   +source_code_link [optional]*
   +testlink [optional]*
 }
-gd_req ..&gt; workflow : satisfies
+gd_req --&gt; workflow : satisfies
 workflow --&gt; role : approved_by
 workflow --&gt; workproduct : input
 workflow --&gt; workproduct : output
@@ -9435,6 +9425,7 @@ class doc_tool {
   +id
   +security_affected
   +status
+  +tool_version
   +version
   +approver [optional]*
   +author [optional]*
@@ -9445,7 +9436,6 @@ class doc_tool {
   +source_code_link [optional]*
   +tcl [optional]*
   +testlink [optional]*
-  +tool_version [optional]*
 }
 class document {
   +id

@@ -631,18 +631,18 @@ The application developer determines when this state is reached. Other
 components can then safely rely on its services, and the Launch Manager can
 continue evaluating the startup procedure.</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-d396b8b5b31cfdd233e24bbe0cf6d4d15c52fd70.svg" type="image/svg+xml" style="width:564px;height:178px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-d396b8b5b31cfdd233e24bbe0cf6d4d15c52fd70.svg" type="image/svg+xml" style="width:575px;height:188px;background:#FFFFFF;"></object></p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-2583864ac7d8a490b445a8a82f72fa28cbfbc887.svg" type="image/svg+xml" style="width:570px;height:268px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-2583864ac7d8a490b445a8a82f72fa28cbfbc887.svg" type="image/svg+xml" style="width:580px;height:278px;background:#FFFFFF;"></object></p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-cbfa358f4ba251813a3066538d743340a470dcc5.svg" type="image/svg+xml" style="width:593px;height:268px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-cbfa358f4ba251813a3066538d743340a470dcc5.svg" type="image/svg+xml" style="width:603px;height:278px;background:#FFFFFF;"></object></p>
 </section>
 <section id="run-targets">
 <span id="lm-run-targets"></span><h3>Run Targets<a class="headerlink" href="#run-targets" title="Link to this heading">#</a></h3>
 <p>A <strong>Run Target</strong> defines a named collection of components that are
 intended to be active together. Only <strong>one Run Target can be active at a
 time</strong>. When a Run Target is activated, the Launch Manager transitions
-the system exclusively to that target, any components not assigned to it
+the system exclusively to that target; any components not assigned to it
 are terminated.</p>
 <p>When a Run Target is activated, the Launch Manager performs the
 following:</p>
@@ -664,7 +664,7 @@ reasons:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The exact interleaving of terminations and starts during a transition is not
-defined, new components may be started before, after, or concurrently with
+defined; new components may be started before, after, or concurrently with
 the termination of outgoing components. If a component depends on another
 being fully stopped or fully ready before it proceeds, this should be
 expressed using dependencies between components or run-targets rather than
@@ -691,7 +691,7 @@ the list of components assigned to the dependent <strong>Run Target</strong> is 
 included in the list of components of the primary <strong>Run Target</strong>.</p>
 <p>Dependencies in the <strong>Launch Manager</strong> are resolved transitively.
 When a <strong>Run Target</strong> is activated, the <strong>Launch Manager</strong> does not only start
-the components and <strong>Run Targets</strong> directly listed in its <code class="docutils literal notranslate"><span class="pre">depends_on</span></code>, it
+the components and <strong>Run Targets</strong> directly listed in its <code class="docutils literal notranslate"><span class="pre">depends_on</span></code>; it
 follows the full dependency chain recursively until all dependencies are
 accounted for.</p>
 <p>This means that a component brought in by a <strong>Run Target</strong> dependency is
@@ -716,13 +716,13 @@ components and each having components exclusive to them. When
 transitioning from <em>Startup</em> to <em>Full</em>, the Launch Manager deactivates
 components not assigned to <em>Full</em> and activates those that are.</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-a7102d49c99a95c2e78c101b29385db32c9fa415.svg" type="image/svg+xml" style="width:430px;height:362px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-a7102d49c99a95c2e78c101b29385db32c9fa415.svg" type="image/svg+xml" style="width:438px;height:370px;background:#FFFFFF;"></object></p>
 <p>The order in which components are started and stopped within a
 transition is determined by their configured dependencies.
 And so the following is the sequence diagram showing the
 processes being started:</p>
 <p class="plantuml">
-<object data="../../../../../_images/plantuml-2f589745ec0a6a80690ba89d282fb1affc6aa6df.svg" type="image/svg+xml" style="width:504px;height:345px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-2f589745ec0a6a80690ba89d282fb1affc6aa6df.svg" type="image/svg+xml" style="width:514px;height:355px;background:#FFFFFF;"></object></p>
 </section>
 </section>
 </section>
