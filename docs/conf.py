@@ -78,6 +78,8 @@ html_theme_options = {
     },
     "show_toc_level": 2,
     "navigation_with_keys": False,
+    # Show every top-level section in the header instead of folding some into "More".
+    "header_links_before_dropdown": 100,
 }
 
 # score_logging v0.2.5 symlinks design docs/PlantUML files from score/ into docs/,
