@@ -1,0 +1,43 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# Recurring maintenance: marks/closes stale pull requests, cleans up old
+# documentation versions on gh-pages, checks the docs for dead links and prunes
+# obsolete GitHub Actions caches.
+# See https://github.com/eclipse-score/cicd-workflows/blob/main/.github/workflows/daily.md
+name: Daily Maintenance
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Daily at 3am UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  pages: write
+  id-token: write
+  actions: write
+
+jobs:
+  daily:
+    uses: eclipse-score/cicd-workflows/.github/workflows/daily.yml@200f97be787848974e55d1f4ef5615efbaa97ff8 # daily/v0.0.0
+    # Same group as the docs-deploy job in test_and_docs.yml: both push to
+    # gh-pages, so they must not run concurrently.
+    concurrency:
+      group: docs-publish
+      cancel-in-progress: false
+      queue: max
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
