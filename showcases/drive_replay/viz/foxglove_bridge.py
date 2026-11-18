@@ -279,6 +279,23 @@ class _Receiver(asyncio.DatagramProtocol):
 Handler = Callable[[bytes], Awaitable[None]]
 
 
+RECORD_NUMBERS = {
+    "drive": ("seq", "lap", "t", "ego_x", "ego_v", "lead_x", "lead_v", "gap"),
+    "warn": ("ttc", "level_id"),
+    "system": (),
+}
+
+
+def is_valid_record(record: Any) -> bool:
+    """A demo record is a JSON object of a known type whose numeric fields are numbers."""
+    if not isinstance(record, dict) or record.get("type") not in RECORD_NUMBERS:
+        return False
+    return all(
+        isinstance(record.get(field), (int, float)) and not isinstance(record.get(field), bool)
+        for field in RECORD_NUMBERS[record["type"]]
+    )
+
+
 def _stamp(now_ns: int) -> dict[str, int]:
     return {"sec": now_ns // 1_000_000_000, "nsec": now_ns % 1_000_000_000}
 
@@ -340,8 +357,10 @@ class DemoBridge:
             record = json.loads(datagram)
         except (UnicodeDecodeError, json.JSONDecodeError):
             return
+        if not is_valid_record(record):
+            return
         now_ns = time.time_ns()
-        kind = record.get("type")
+        kind = record["type"]
         if kind == "drive":
             self._replay_rx = time.monotonic()
             await self._on_drive(record, now_ns)

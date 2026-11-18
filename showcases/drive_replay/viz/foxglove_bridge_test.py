@@ -12,6 +12,7 @@
 # *******************************************************************************
 """Unit tests of the Lichtblick bridge: DLT parsing, log filtering, schemas and the 3D scene."""
 
+import asyncio
 import json
 import struct
 import sys
@@ -124,3 +125,43 @@ def test_scene_marks_the_warning_offline_without_fresh_fcw_records():
 
     assert lead["cubes"][0]["color"] == foxglove_bridge.COLOR_OFFLINE
     assert any(text["text"] == "FCW OFFLINE" for text in ego["texts"])
+
+
+_DRIVE = {"type": "drive", "seq": 1, "lap": 1, "t": 0.1, "ego_x": 0.0, "ego_v": 1, "lead_x": 1, "lead_v": 1, "gap": 1}
+
+
+@pytest.mark.parametrize(
+    "datagram",
+    [
+        b"[]",
+        b'"drive"',
+        b'{"type": "drive"}',
+        json.dumps({**_DRIVE, "ego_x": "x"}).encode(),
+        b'{"type": "warn", "ttc": "1.8", "level_id": 2}',
+        b'{"type": "unknown"}',
+    ],
+)
+def test_malformed_records_are_dropped_without_stopping_the_bridge(datagram):
+    # server=None: publishing a record would raise, so dropping it is the only way to pass
+    bridge = foxglove_bridge.DemoBridge(server=None)
+
+    asyncio.run(bridge.on_record(datagram))
+
+
+def test_records_of_the_demo_apps_are_valid():
+    drive = {
+        "type": "drive",
+        "seq": 7,
+        "lap": 1,
+        "t": 1.5,
+        "ego_x": 3.0,
+        "ego_v": 22.2,
+        "lead_x": 40.0,
+        "lead_v": 20.0,
+        "gap": 37.0,
+        "phase": "cruise",
+    }
+    warn = {"type": "warn", "seq": 7, "ttc": 9.9, "level": "OK", "level_id": 0, "warn_count": 0, "start_count": 1}
+    system = {"type": "system", "run_target": "Drive", "source": "initial", "degraded": False, "recoveries": 0}
+
+    assert all(foxglove_bridge.is_valid_record(r) for r in (drive, warn, system))
