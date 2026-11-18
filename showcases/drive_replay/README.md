@@ -58,18 +58,6 @@ S-CORE interfaces, dotted arrows are lifecycle reports and the optional visualiz
 | ⑧ | `datarouter` → laptop | score_logging, datarouter ([deploy/logging/etc](../../deploy/logging/etc)) | DLT over UDP multicast | all logs as DLT, viewed in Chipmunk ([viz/chipmunk_presets.json](viz/chipmunk_presets.json)) or forwarded to Lichtblick |
 | ⑨ | apps → bridge (optional, off by default) | none, plain UDP ([viz_link.h](viz_link.h)) | JSON over UDP | `drive` (positions, speeds, gap), `warn` (TTC, level, counters), `system` (Run Target, degraded) |
 
-### S-CORE modules per process
-
-| Process | communication | lifecycle | logging | persistency |
-|---|---|---|---|---|
-| `launch_manager` | offers `LmControlService` | is the launch manager, evaluates alive supervision | logs to DLT | – |
-| `drive_state_manager` | `ILmControl` client | State Manager, `report_running()` | logs to DLT | – |
-| `replay_app` | offers `DriveData` | `report_running()` | logs to DLT | – |
-| `warn_app` | uses `DriveData` | health monitor (heartbeat), `report_running()` | logs to DLT | KVS |
-| `datarouter` | – | started as `Native` component | is the DLT daemon | – |
-
-score_baselibs is used underneath by all of them (argument parsing, result types, `mw::log` frontend).
-
 ## Fault handling
 
 If `warn_app` hangs (no more heartbeats) or crashes, the launch manager switches to the
