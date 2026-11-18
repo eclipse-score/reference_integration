@@ -52,13 +52,14 @@ except ImportError:
 # Configure logging
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
-# Where each known_good group's documentation is mounted in the combined docs site. The two
-# sections are a property of ref_int's site structure (docs/modules/index.rst and
-# docs/process_methods_tools/index.rst, whose toctrees are filled from these mounts at build
-# time), not of the module set, so the mapping lives here rather than in known_good.json.
-DOCS_SECTION_BY_GROUP = {
-    "target_sw": "modules",
-    "tooling": "process_methods_tools",
+# All module documentation is mounted under one page, docs/modules/index.rst. Each known_good
+# group fills one of that page's toctrees (its section), selected by toctree index: functional
+# (target_sw) and non-functional (tooling) modules. This is a property of ref_int's site
+# structure, not of the module set, so the mapping lives here rather than in known_good.json.
+DOCS_SECTION = "modules"
+DOCS_TOCTREE_BY_GROUP = {
+    "target_sw": 0,
+    "tooling": 1,
 }
 
 
@@ -202,8 +203,9 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
     """Generate docs_bundles.bzl: the docs() bundle mounts for the combined docs site.
 
     Unlike the other generated artifacts this one spans every group, since ref_int builds a
-    single Sphinx site: each group's modules mount under that group's section (see
-    DOCS_SECTION_BY_GROUP). Modules are mounted unless they opt out with ``"docs": false``.
+    single Sphinx site: every module mounts under DOCS_SECTION and is listed in its group's
+    toctree there (see DOCS_TOCTREE_BY_GROUP). Modules are mounted unless they opt out with
+    ``"docs": false``.
 
     Args:
             known_good: Parsed known_good.json.
@@ -216,21 +218,22 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
     mounted_by: Dict[str, str] = {}
 
     for group_name, group_modules in known_good.modules.items():
-        section = DOCS_SECTION_BY_GROUP.get(group_name)
+        toctree_index = DOCS_TOCTREE_BY_GROUP.get(group_name)
 
         for module in group_modules.values():
             if not module.docs.enabled:
                 continue
 
-            if section is None:
+            if toctree_index is None:
                 raise SystemExit(
                     f"Module {module.name} is in group '{group_name}', which has no docs section. "
-                    f"Add it to DOCS_SECTION_BY_GROUP in {Path(__file__).name} (alongside a matching "
-                    f"docs/<section>/index.rst), or set '\"docs\": false' for the group's modules."
+                    f"Add it to DOCS_TOCTREE_BY_GROUP in {Path(__file__).name} (alongside a matching "
+                    f"toctree in docs/{DOCS_SECTION}/index.rst), or set '\"docs\": false' for the "
+                    "group's modules."
                 )
 
             bundle = module.docs.bundle or f"@{module.name}//:docs_bundle"
-            mount_at = module.docs.mount_at or f"{section}/{module.name}"
+            mount_at = module.docs.mount_at or f"{DOCS_SECTION}/{module.name}"
 
             if mount_at in mounted_by:
                 raise SystemExit(
@@ -242,6 +245,8 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
             lines = ["    {", f'        "bundle": "{bundle}",', f'        "mount_at": "{mount_at}",']
             if module.docs.attach_to:
                 lines.append(f'        "attach_to": "{module.docs.attach_to}",')
+            elif toctree_index and not module.docs.mount_at:
+                lines.append(f'        "toctree_index": {toctree_index},')
             lines.append("    },")
             entries.append("\n".join(lines) + "\n")
 

@@ -44,14 +44,30 @@ def _module(name: str, **kwargs) -> Module:
 
 
 def test_group_decides_the_section():
-    """target_sw mounts under modules/, tooling under process_methods_tools/."""
+    """Both groups mount under modules/; tooling is listed in the second (non-functional) toctree."""
     content = generate_docs_bundles_content(
         _known_good({"target_sw": [_module("score_logging")], "tooling": [_module("score_platform")]})
     )
 
     assert '"bundle": "@score_logging//:docs_bundle",' in content
-    assert '"mount_at": "modules/score_logging",' in content
-    assert '"mount_at": "process_methods_tools/score_platform",' in content
+    assert '"mount_at": "modules/score_logging",\n    },' in content
+    assert '"mount_at": "modules/score_platform",\n        "toctree_index": 1,' in content
+
+
+def test_toctree_index_is_omitted_for_overridden_placement():
+    """A custom mount_at/attach_to points at another page, whose toctrees the group index does not describe."""
+    content = generate_docs_bundles_content(
+        _known_good(
+            {
+                "tooling": [
+                    _module("score_platform", docs=Docs(mount_at="platform")),
+                    _module("score_itf", docs=Docs(attach_to="index")),
+                ]
+            }
+        )
+    )
+
+    assert "toctree_index" not in content
 
 
 def test_docs_are_mounted_by_default():

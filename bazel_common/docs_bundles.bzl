@@ -42,18 +42,22 @@ DOCS_BUNDLES = [
     },
     {
         "bundle": "@score_itf//:docs_bundle",
-        "mount_at": "process_methods_tools/score_itf",
+        "mount_at": "modules/score_itf",
+        "toctree_index": 1,
     },
     {
         "bundle": "@score_platform//:docs_bundle",
-        "mount_at": "process_methods_tools/score_platform",
+        "mount_at": "modules/score_platform",
+        "toctree_index": 1,
     },
     {
         "bundle": "@score_docs_as_code//:docs_bundle",
-        "mount_at": "process_methods_tools/score_docs_as_code",
+        "mount_at": "modules/score_docs_as_code",
+        "toctree_index": 1,
     },
     {
         "bundle": "@score_process_description//:docs_bundle",
-        "mount_at": "process_methods_tools/score_process_description",
+        "mount_at": "modules/score_process_description",
+        "toctree_index": 1,
     },
 ]

@@ -49,27 +49,29 @@ automatically exposes a public ``//:docs_bundle`` target.
 `bazel_common/docs_bundles.bzl <https://github.com/eclipse-score/reference_integration/blob/main/bazel_common/docs_bundles.bzl>`_,
 which the ``docs(bundles = DOCS_BUNDLES, ...)`` call in the top-level `BUILD
 <https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ file
-consumes. **Which of the two site sections your module lands in follows from the
-group it sits in** — no extra declaration, and no toctree to edit: the section
-pages (``docs/modules/index.rst`` and ``docs/process_methods_tools/index.rst``)
-carry empty toctrees that the mounts fill at build time.
+consumes. **Which of the two sections of the Modules page your module lands in
+follows from the group it sits in** — no extra declaration, and no toctree to
+edit: ``docs/modules/index.rst`` carries one empty toctree per section that the
+mounts fill at build time.
 
 .. list-table::
    :header-rows: 1
    :widths: 26 26 48
 
    * - Group in ``known_good.json``
-     - Mounted under
+     - Listed under
      - Your module belongs here if it is…
    * - ``modules.target_sw``
-     - ``modules/<module_name>``
+     - Functional Modules
      - an S-CORE **software module** that ships in the integration
        (communication, persistency, logging, kyron, baselibs, …). This is the
        common case.
    * - ``modules.tooling``
-     - ``process_methods_tools/<module_name>``
+     - Non-Functional Modules
      - a **tooling / process** repo (platform, process_description,
        docs-as-code, …) rather than a shipped software module.
+
+Either way the module's documentation is mounted under ``modules/<module_name>``.
 
 So for a normal module you do nothing beyond adding it to ``known_good.json``
 and re-running the generator:
