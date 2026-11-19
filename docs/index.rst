@@ -42,11 +42,11 @@ documentation set that downstream product distributions can build on.
 
       :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
-   .. grid-item-card:: ✅ Code Quality
+   .. grid-item-card:: ✅ Verification Reports
       :link: verification_report/index
       :link-type: doc
 
-      Platform and module verification reports and test coverage results.
+      Platform and module verification reports including test coverage and code quality results.
 
    .. grid-item-card:: 🔗 Integration
 
