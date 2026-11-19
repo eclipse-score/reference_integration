@@ -10,7 +10,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_pkg//pkg:pkg.bzl", "pkg_deb")
+load("@os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
+load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 pkg_tar(
@@ -72,36 +73,12 @@ pkg_deb(
     version = "1.0.0",
 )
 
-genrule(
-    name = "fastdev-image",
-    # Keep the vanilla network configuration for QEMU user-mode networking;
-    # the os_images network package is for the ITF bridge.
-    srcs = [
-        ":platform_deb",
-        ":showcases_deb",
-        "@os_images//ebclfsa_aarch64_prebuild:vanilla-image",
-        "@os_images//ebclfsa_aarch64_prebuild:kernel",
-        "@os_images//ebclfsa_aarch64:sshd_config_deb",
+ebclfsa_aarch64_prebuild(
+    base_image = "@ebclfsa_qemu_release_archive//file",
+    packages = [
         ":crinit_config_deb",
+        ":platform_deb",
         ":scripts_deb",
-        "@os_images//ebclfsa_aarch64_prebuild:build_image.sh",
-    ],
-    outs = [
-        "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-    ],
-    cmd = " \
-        $(location @os_images//ebclfsa_aarch64_prebuild:build_image.sh) \
-            $(RULEDIR) \
-            $$(dirname $(location @os_images//ebclfsa_aarch64_prebuild:vanilla-image)) \
-            $(RULEDIR)/ebcl-qemuarm64-deployed \
-            $(location :platform_deb) \
-            $(location :showcases_deb) \
-            $(location @os_images//ebclfsa_aarch64:sshd_config_deb) \
-            $(location :crinit_config_deb) \
-            $(location :scripts_deb) \
-    ",
-    visibility = [
-        "//visibility:public",
+        ":showcases_deb",
     ],
 )
