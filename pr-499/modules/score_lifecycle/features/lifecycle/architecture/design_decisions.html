@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=142ef54a" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=1457cf58" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
@@ -434,7 +434,8 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Functional Modules</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
 
@@ -463,8 +464,9 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">time_daemon Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">Time</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Non-Functional Modules</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_itf/index.html">Score ITF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_platform/index.html">S-CORE Platform Documentation</a></li>
@@ -546,7 +548,7 @@
 <span id="lifecycle-design-decisions"></span><h1>Design Decisions<a class="headerlink" href="#design-decisions" title="Link to this heading">#</a></h1>
 <section id="in-process-health-monitor">
 <h2>In-Process Health Monitor<a class="headerlink" href="#in-process-health-monitor" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-925aff1e">
+<div class="need_container docutils container" id="SNCB-970cdd43">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__lifecycle__in_process_health_monitor">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -679,7 +681,7 @@ counter (or some more complex mathematical function), further checkpoints for de
 </section>
 <section id="launch-manager-starts-processes-on-a-thread-pool">
 <h2>Launch Manager starts processes on a thread pool<a class="headerlink" href="#launch-manager-starts-processes-on-a-thread-pool" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-09e17440">
+<div class="need_container docutils container" id="SNCB-0f649047">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__lifecycle__thread_pool_process">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -740,7 +742,7 @@ Fast startup is an important performance goal for the Launch Manager.</p>
 </section>
 <section id="launch-manager-alive-monitoring-is-polling-based">
 <h2>Launch Manager Alive Monitoring is polling-based<a class="headerlink" href="#launch-manager-alive-monitoring-is-polling-based" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-55557713">
+<div class="need_container docutils container" id="SNCB-79005634">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__lifecycle__lm_alive_polling">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -803,7 +805,7 @@ Configure the cycle time to balance the desired detection time against acceptabl
 </section>
 <section id="flatbuffer-configuration">
 <h2>Flatbuffer configuration<a class="headerlink" href="#flatbuffer-configuration" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-e977719c">
+<div class="need_container docutils container" id="SNCB-faf72e2c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__lifecycle__flatbuffer_config">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -863,7 +865,7 @@ Compared with a textual format such as JSON, the FlatBuffers binary configuratio
 </section>
 <section id="kill-process-after-supervision-failure">
 <h2>Kill process after supervision failure<a class="headerlink" href="#kill-process-after-supervision-failure" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-03722565">
+<div class="need_container docutils container" id="SNCB-7335923c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__lifecycle__kill_supervision_fail">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
