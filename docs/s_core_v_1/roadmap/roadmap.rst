@@ -29,7 +29,7 @@ Selected modules are fully implemented and tested.
 .. image:: ../../_assets/sw_arch_v_1.drawio.svg
    :alt: S-CORE v1 Software Architecture
    :align: center
-   :width: 100%
+   :width: 50%
 
 .. list-table::
    :widths: 30 70
