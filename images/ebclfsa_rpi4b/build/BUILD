@@ -30,6 +30,15 @@ pkg_tar(
     package_dir = "/etc/crinit/crinit.d",
 )
 
+# The static address of the image, replacing /etc/config/network of the base image. Set at build time
+# with SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS, see images/network/README.md.
+pkg_tar(
+    name = "network_config_tar",
+    srcs = ["@score_pi_network//:netifd/network"],
+    mode = "0644",
+    package_dir = "/etc/config",
+)
+
 genrule(
     name = "fastdev-image",
     srcs = [
@@ -37,6 +46,7 @@ genrule(
         "//showcases:showcases_pkg_tar",
         ":extract-fastdev-image",
         ":crinit_config_tar",
+        ":network_config_tar",
         "build_image.py",
     ],
     outs = ["ebcl-rpi4b-deployed/fastdev-trixie-ebclfsa-rpi4b.wic"],
@@ -47,6 +57,7 @@ genrule(
         "$(location //deploy:platform_tar)",
         "$(location //showcases:showcases_pkg_tar)",
         "$(location :crinit_config_tar)",
+        "$(location :network_config_tar)",
     ]),
     visibility = [
         "//visibility:public",

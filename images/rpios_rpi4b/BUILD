@@ -18,6 +18,9 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 # Raspberry Pi OS is downloaded and checked by its sha256 (bazel_common/score_images.MODULE.bazel).
 # It allows root login without a password, like the QEMU image, so it is not for production.
 #
+# The address is static, 192.168.7.2/24 unless SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS are set
+# (images/network/README.md).
+#
 # Build with the Linux aarch64 configuration, the one of the release archives:
 #   bazel build --config=linux-aarch64 //images/rpios_rpi4b:image
 # The result is bazel-bin/images/rpios_rpi4b/deployed/raspios-rpi4b.wic, to flash to an SD card.
@@ -44,11 +47,22 @@ pkg_tar(
     },
 )
 
+# The static address of the image, as the NetworkManager profile of eth0 (it takes the place of the
+# automatic DHCP connection). NetworkManager ignores profiles that others can read, hence mode 0600. Set
+# at build time with SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS, see images/network/README.md.
+pkg_tar(
+    name = "network_config_tar",
+    srcs = ["@score_pi_network//:networkmanager/score-static.nmconnection"],
+    mode = "0600",
+    package_dir = "/etc/NetworkManager/system-connections",
+)
+
 genrule(
     name = "image",
     srcs = [
         ":prepared",
         ":systemd_config_tar",
+        ":network_config_tar",
         "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
         "//images/ebclfsa_rpi4b/build:build_image.py",
@@ -61,6 +75,7 @@ genrule(
         "$(location //deploy:platform_tar)",
         "$(location //showcases:showcases_pkg_tar)",
         "$(location :systemd_config_tar)",
+        "$(location :network_config_tar)",
     ]),
     visibility = ["//visibility:public"],
 )

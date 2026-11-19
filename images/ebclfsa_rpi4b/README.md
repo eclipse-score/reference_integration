@@ -18,3 +18,15 @@ of a copy of the image. This needs `debugfs` (e2fsprogs) and `python3`, and no p
 
 Like the QEMU image, it allows root login without a password and is meant for integration tests,
 not for production.
+
+## Network
+
+The image has a static address, `192.168.7.2/24` on `eth0` (bridge `br0`), gateway `192.168.7.1`,
+and no DHCP or link-local fallback. Set another one at build time:
+
+```bash
+SCORE_PI_ADDRESS=10.0.0.20/24 SCORE_PI_GATEWAY=10.0.0.1 bazel build --config=eb-aarch64 //images/ebclfsa_rpi4b:image
+```
+
+See [`../network/README.md`](../network/README.md). The Raspberry Pi OS image is in
+[`../rpios_rpi4b`](../rpios_rpi4b/README.md).
