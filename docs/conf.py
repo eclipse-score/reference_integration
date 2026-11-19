@@ -93,20 +93,39 @@ def _relax_path_check(_app, config) -> None:
             mount["path_check"] = "off"
 
 
-# Toctree titles for mounted modules whose page title is not a good navigation label.
-_TOCTREE_TITLES = {"modules/score_time/index": "Time"}
+# Navigation labels for the mounted module docs, so the Modules list, the section navigation
+# and prev/next links use plain module names instead of each module's own page title.
+_MODULE_NAV_TITLES = {
+    "modules/score_baselibs/index": "Base Libraries",
+    "modules/score_persistency/index": "Persistency",
+    "modules/score_kyron/index": "Kyron",
+    "modules/score_lifecycle/index": "Lifecycle",
+    "modules/score_logging/index": "Logging",
+    "modules/score_time/index": "Time",
+    "modules/score_itf/index": "Integration Test Framework",
+    "modules/score_platform/index": "Platform",
+    "modules/score_docs_as_code/index": "Docs-as-Code",
+    "modules/score_process_description/index": "Process Description",
+}
 
 
-def _retitle_toctree_entries(_app, doctree) -> None:
-    from sphinx import addnodes
+def _apply_module_nav_title(app, _doctree) -> None:
+    from docutils import nodes
 
-    for toctree in doctree.findall(addnodes.toctree):
-        toctree["entries"] = [(title or _TOCTREE_TITLES.get(ref), ref) for title, ref in toctree["entries"]]
+    docname = app.env.current_document.docname
+    title = _MODULE_NAV_TITLES.get(docname)
+    if title is None:
+        return
+    # A new node, so env.longtitles (the HTML <title>) keeps the page's own title.
+    app.env.titles[docname] = nodes.title(title, title)
+    first_entry = next(app.env.tocs[docname].findall(nodes.reference), None)
+    if first_entry is not None:
+        first_entry.children[:] = [nodes.Text(title)]
 
 
 # Defined here, not as a docs/*.py extension: the sandboxed needs_json build only ships conf.py.
 def setup(app):
     # After score_mounts (300) has filled config.mounts, before sphinx_mounts (400) reads it.
     app.connect("config-inited", _relax_path_check, priority=350)
-    # After sphinx_mounts (400) has wired the mounted modules into the toctrees.
-    app.connect("doctree-read", _retitle_toctree_entries, priority=450)
+    # After Sphinx's title and toctree collectors (500) have recorded the page title.
+    app.connect("doctree-read", _apply_module_nav_title, priority=600)
