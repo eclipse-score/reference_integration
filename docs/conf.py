@@ -93,7 +93,20 @@ def _relax_path_check(_app, config) -> None:
             mount["path_check"] = "off"
 
 
+# Toctree titles for mounted modules whose page title is not a good navigation label.
+_TOCTREE_TITLES = {"modules/score_time/index": "Time"}
+
+
+def _retitle_toctree_entries(_app, doctree) -> None:
+    from sphinx import addnodes
+
+    for toctree in doctree.findall(addnodes.toctree):
+        toctree["entries"] = [(title or _TOCTREE_TITLES.get(ref), ref) for title, ref in toctree["entries"]]
+
+
 # Defined here, not as a docs/*.py extension: the sandboxed needs_json build only ships conf.py.
 def setup(app):
     # After score_mounts (300) has filled config.mounts, before sphinx_mounts (400) reads it.
     app.connect("config-inited", _relax_path_check, priority=350)
+    # After sphinx_mounts (400) has wired the mounted modules into the toctrees.
+    app.connect("doctree-read", _retitle_toctree_entries, priority=450)
