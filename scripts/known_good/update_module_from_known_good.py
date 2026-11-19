@@ -245,7 +245,11 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
             lines = ["    {", f'        "bundle": "{bundle}",', f'        "mount_at": "{mount_at}",']
             if module.docs.attach_to:
                 lines.append(f'        "attach_to": "{module.docs.attach_to}",')
-            elif toctree_index and not module.docs.mount_at:
+            # docs() attaches to the mount_at parent's index unless attach_to says otherwise.
+            parent = mount_at.rpartition("/")[0]
+            host_doc = module.docs.attach_to or (f"{parent}/index" if parent else "index")
+            # The group's toctree index only describes the toctrees of the Modules page.
+            if toctree_index and host_doc == f"{DOCS_SECTION}/index":
                 lines.append(f'        "toctree_index": {toctree_index},')
             lines.append("    },")
             entries.append("\n".join(lines) + "\n")
