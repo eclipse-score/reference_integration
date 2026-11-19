@@ -28,6 +28,7 @@ genrule(
 pkg_tar(
     name = "crinit_config_tar",
     srcs = [
+        "//images/ebclfsa_aarch64/build/config-overlay:etc/crinit/crinit.d/diagnostics.crinit",
         "//images/ebclfsa_aarch64/build/config-overlay:etc/crinit/crinit.d/getty-console.crinit",
     ],
     mode = "0755",

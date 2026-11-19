@@ -27,6 +27,10 @@ score_pkg_bundle(
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/standalone:platform_info_pkg_files",
+        # Linux only: the OpenSOVD components that it runs are not supported on QNX, so it is not
+        # part of :showcases_bundle below.
+        "//showcases/diagnostics:diagnostics_pkg_files",
+        "//showcases/diagnostics:diagnostics_databases",
     ],
     package_dir = "showcases",
 )

@@ -13,6 +13,7 @@
 exports_files(
     [
         "usr/bin/delayed-start.sh",
+        "etc/crinit/crinit.d/diagnostics.crinit",
         "etc/crinit/crinit.d/getty-console.crinit",
     ],
 )

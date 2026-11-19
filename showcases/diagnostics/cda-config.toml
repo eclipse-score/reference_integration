@@ -1,0 +1,37 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# The configuration of the CDA in the Diagnostics Stack showcase. The settings of the ECUs are
+# appended to it (see BUILD).
+flash_files_path = "/tmp/opensovd-cda/flash"
+
+[database]
+dir = "/showcases/data/diagnostics/databases"
+exit_no_database_loaded = true
+
+[runtime_update_config]
+storage_dir = "/tmp/opensovd-cda/storage"
+
+# The CDA finds the ECUs by DoIP broadcast to 255.255.255.255. With the tester address 0.0.0.0 the
+# host picks the interface and the source address from its routes, so this configuration needs no
+# address of the host. It does need a route for the broadcast, for example a default route: without
+# one the CDA stops at startup with "Failed to send VIR: ... Network is unreachable". The subnet mask
+# 0.0.0.0 accepts vehicle announcements from any address.
+[doip]
+tester_address = "0.0.0.0"
+tester_subnet = "0.0.0.0"
+
+[server]
+address = "127.0.0.1"
+port = 20002
+
