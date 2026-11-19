@@ -38,17 +38,27 @@ fail() {
     exit 1
 }
 
-# request <port> <path>: prints the status line and, on the next line, the body of a GET to this
-# host. Prints nothing if nothing listens or the whole answer does not arrive within 5 seconds, so a
-# listener that never answers cannot block the check.
+# The addresses of this host to try, the loopback address first: the gateway listens on all
+# addresses, or on the Raspberry Pi images on the address of the image only.
+hosts() {
+    echo 127.0.0.1
+    ip -4 -o addr show 2>/dev/null | awk '$2 != "lo" { sub("/.*", "", $4); print $4 }'
+}
+
+# request <port> <path>: prints the status line and, on the next line, the body of a GET to the
+# first address of this host that answers. Prints nothing if nothing listens or the whole answer
+# does not arrive within 5 seconds, so a listener that never answers cannot block the check.
 request() {
-    timeout 5 bash -c '
-        exec 3<>"/dev/tcp/127.0.0.1/$1" || exit 1
-        printf "GET %s HTTP/1.0\r\n\r\n" "$2" >&3
-        read -r status <&3
-        body="$(cat <&3 | tr -d "\r" | sed "1,/^\$/d")"
-        echo "$status"
-        echo "$body"' request "$1" "$2" 2>/dev/null
+    local host
+    for host in $(hosts); do
+        timeout 5 bash -c '
+            exec 3<>"/dev/tcp/$1/$2" || exit 1
+            printf "GET %s HTTP/1.0\r\nHost: %s:%s\r\n\r\n" "$3" "$1" "$2" >&3
+            read -r status <&3
+            body="$(cat <&3 | tr -d "\r" | sed "1,/^\$/d")"
+            echo "$status"
+            echo "$body"' request "$host" "$1" "$2" 2>/dev/null && return 0
+    done
 }
 
 # The CDA offers the app sovd2uds, the gateway its own app score-diagnostics: both are listed only
