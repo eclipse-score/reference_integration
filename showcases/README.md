@@ -6,6 +6,13 @@ For remote (DLT) logging, please refer to the following documentation:
  
 [Remote logging](https://github.com/eclipse-score/logging/blob/main/score/datarouter/doc/guideline/dlt_capture_demo.md)
 
+# Drive Replay Demo
+
+A scripted highway drive into a forward collision warning, supervised by the launch
+manager: a hanging or crashing warning function is detected, the system falls back to a
+degraded mode and recovers, visible step by step in the DLT log. See
+[drive_replay/README.md](drive_replay/README.md).
+
 # S-CORE Platform Run
 
 `/showcases/bin/cli --examples 'S-CORE Platform Run'` starts the launch manager

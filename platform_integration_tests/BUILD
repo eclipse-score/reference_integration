@@ -52,6 +52,7 @@ test_suite(
         "//platform_integration_tests/combined",
         "//platform_integration_tests/communication",
         "//platform_integration_tests/config_management",
+        "//platform_integration_tests/drive_replay",
         "//platform_integration_tests/kyron",
         "//platform_integration_tests/lifecycle",
         "//platform_integration_tests/logging",
