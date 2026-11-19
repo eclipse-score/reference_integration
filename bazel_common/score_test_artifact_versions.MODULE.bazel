@@ -47,7 +47,7 @@ single_version_override(
 # netcologne.dl.sourceforge.net mirror; 4.11.0.bcr.2 uses downloads.sourceforge.net.
 bazel_dep(name = "libpfm", version = "4.11.0.bcr.2")
 
-# score_security_crypto builds soft_hsm with rules_foreign_cc's cmake rule, which does not know the
+# score_crypto builds soft_hsm with rules_foreign_cc's cmake rule, which does not know the
 # QNX target OS (CMAKE_SYSTEM_NAME "QNX"). Overrides of non-root modules are ignored, so the patch
 # has to be applied from here.
 bazel_dep(name = "rules_foreign_cc", version = "0.16.0")

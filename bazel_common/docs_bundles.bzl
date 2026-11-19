@@ -41,8 +41,8 @@ DOCS_BUNDLES = [
         "mount_at": "modules/score_time",
     },
     {
-        "bundle": "@score_security_crypto//:docs_bundle",
-        "mount_at": "modules/score_security_crypto",
+        "bundle": "@score_crypto//:docs_bundle",
+        "mount_at": "modules/score_crypto",
     },
     {
         "bundle": "@score_itf//:docs_bundle",

@@ -133,8 +133,8 @@ score_pkg_bundle(
 score_pkg_bundle(
     name = "crypto",
     bins = [
-        "@score_security_crypto//score/crypto/src/daemon:crypto_daemon",
-        "@score_security_crypto//score/cryptoki:cryptoki_cdylib",
+        "@score_crypto//score/crypto/src/daemon:crypto_daemon",
+        "@score_crypto//score/cryptoki:cryptoki_cdylib",
     ],
     package_dir = "standalone",
 )
