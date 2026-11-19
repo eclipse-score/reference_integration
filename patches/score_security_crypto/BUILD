@@ -13,6 +13,7 @@
 exports_files(
     [
         "001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+        "002-soft-hsm-ignore-host-pkg-config.patch",
     ],
     visibility = ["//visibility:public"],
 )
