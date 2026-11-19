@@ -100,16 +100,15 @@ single_version_override(
     version = "0.3.3",
 )
 
-bazel_dep(name = "score_security_crypto")
+bazel_dep(name = "score_crypto")
 git_override(
-    module_name = "score_security_crypto",
-    commit = "73050924d8cafe1b6626185e9eb0ae70216920c7",
+    module_name = "score_crypto",
+    commit = "0568b709cafd7e956cb65b287153b90c38815f05",
     patch_strip = 1,
     patches = [
-        "//patches/score_security_crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-        "//patches/score_security_crypto:002-soft-hsm-ignore-host-pkg-config.patch",
+        "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
     ],
-    remote = "https://github.com/etas-contrib/score_inc_security_crypto.git",
+    remote = "https://github.com/etas-contrib/score_crypto.git",
 )
 
 bazel_dep(name = "score_config_management")
