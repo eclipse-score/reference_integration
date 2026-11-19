@@ -167,6 +167,25 @@ body.wide-content-page .bd-content .bd-article-container {
     color: #ffffff !important;
 }
 
+/* Flush with the surrounding text column instead of indented by the container padding. */
+.landing-grid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Two columns with equal-height rows, so tiles line up across rows too. */
+@media (min-width: 768px) {
+    .landing-grid > .sd-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 1fr;
+    }
+
+    .landing-grid > .sd-row > .sd-col {
+        width: auto;
+    }
+}
+
 /* score-grid cards (also on mounted module pages): white body text instead of
    docs-as-code's lilac default; cards that set their own color keep it. */
 .score-grid {
