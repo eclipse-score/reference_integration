@@ -47,6 +47,7 @@ genrule(
         ":extract-fastdev-image",
         ":crinit_config_tar",
         ":network_config_tar",
+        "//images/network:diagnostics_config_tar",
         "build_image.py",
     ],
     outs = ["ebcl-rpi4b-deployed/fastdev-trixie-ebclfsa-rpi4b.wic"],
@@ -58,6 +59,7 @@ genrule(
         "$(location //showcases:showcases_pkg_tar)",
         "$(location :crinit_config_tar)",
         "$(location :network_config_tar)",
+        "$(location //images/network:diagnostics_config_tar)",
     ]),
     visibility = [
         "//visibility:public",

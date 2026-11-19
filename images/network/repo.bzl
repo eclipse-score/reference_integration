@@ -74,6 +74,22 @@ def _is_ipv4(value):
             return False
     return True
 
+def _netmask(prefix):
+    bits = (0xFFFFFFFF << (32 - prefix)) & 0xFFFFFFFF
+    return ".".join([str((bits >> shift) & 255) for shift in [24, 16, 8, 0]])
+
+# The diagnostics of the images use the address of the image instead of 0.0.0.0: the CDA broadcasts
+# its DoIP vehicle identification request from its tester address (with 0.0.0.0 sending it needs a
+# route and fails without one), and the gateway listens on the address of the image.
+_CDA_SED = """\
+s|^tester_address = .*|tester_address = "{address}"|
+s|^tester_subnet = .*|tester_subnet = "{subnet}"|
+"""
+
+_GATEWAY_SED = """\
+s|"SCORE_GATEWAY_ADDRESS": "[^"]*:\\([0-9]*\\)"|"SCORE_GATEWAY_ADDRESS": "{address}:\\1"|
+"""
+
 def _check_address(address):
     parts = address.split("/")
     if len(parts) != 2 or not _is_ipv4(parts[0]) or not parts[1].isdigit() or int(parts[1]) < 1 or int(parts[1]) > 32:
@@ -101,8 +117,13 @@ def _pi_network_impl(rctx):
         gateway = "," + gateway if gateway else "",
         dns = "".join([d + ";" for d in dns]),
     ))
+    host, prefix = address.split("/")
+    rctx.file("diagnostics/cda.sed", _CDA_SED.format(address = host, subnet = _netmask(int(prefix))))
+    rctx.file("diagnostics/gateway.sed", _GATEWAY_SED.format(address = host))
     rctx.file("BUILD.bazel", """\
 exports_files([
+    "diagnostics/cda.sed",
+    "diagnostics/gateway.sed",
     "netifd/network",
     "networkmanager/score-static.nmconnection",
 ])
@@ -111,5 +132,5 @@ exports_files([
 pi_network = repository_rule(
     implementation = _pi_network_impl,
     environ = ["SCORE_PI_ADDRESS", "SCORE_PI_GATEWAY", "SCORE_PI_DNS"],
-    doc = "The network configuration files of the Raspberry Pi images, from SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS.",
+    doc = "The network configuration files of the Raspberry Pi images and the addresses of the diagnostics, from SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS.",
 )

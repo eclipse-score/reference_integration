@@ -63,6 +63,7 @@ genrule(
         ":prepared",
         ":systemd_config_tar",
         ":network_config_tar",
+        "//images/network:diagnostics_config_tar",
         "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
         "//images/ebclfsa_rpi4b/build:build_image.py",
@@ -76,6 +77,7 @@ genrule(
         "$(location //showcases:showcases_pkg_tar)",
         "$(location :systemd_config_tar)",
         "$(location :network_config_tar)",
+        "$(location //images/network:diagnostics_config_tar)",
     ]),
     visibility = ["//visibility:public"],
 )
