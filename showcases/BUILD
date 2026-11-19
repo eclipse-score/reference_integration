@@ -24,6 +24,7 @@ score_pkg_bundle(
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/standalone:persistency_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
+        "//showcases/drive_replay:drive_replay_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/standalone:platform_info_pkg_files",
@@ -39,6 +40,7 @@ score_pkg_bundle(
 
 pkg_filegroup(
     name = "showcases_bundle",
+    # Used by the QNX images; drive_replay is left out, it is only built and tested for Linux.
     srcs = [
         ":showcases_pkg_files",
         "//showcases/combined/kyron_logging:kyron_logging_showcase_pkg_files",
