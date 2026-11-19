@@ -137,9 +137,16 @@ to the owner of the device.
 The showcases start the platform daemons they need themselves; nothing has to
 be started beforehand.
 
-### S-CORE image for the Raspberry Pi 4B
+### S-CORE images for the Raspberry Pi 4B
 
-Instead of Raspberry Pi OS, the S-CORE image of EB corbos Linux for Safety Applications for the
-Raspberry Pi 4B has the platform, the showcases and the diagnostics service deployed in it, like
-the QEMU image. Build it with `bazel build --config=eb-aarch64 //images/ebclfsa_rpi4b:image` and
-flash the `.wic` file to an SD card, see [images/ebclfsa_rpi4b](../images/ebclfsa_rpi4b/README.md).
+Instead of installing the archives by hand, build an SD card image that has the platform, the
+showcases and the diagnostics service deployed in it, like the QEMU image, and flash its `.wic`
+file:
+
+| Base | Build | See |
+|---|---|---|
+| Raspberry Pi OS Lite (64-bit) | `bazel build --config=linux-aarch64 //images/rpios_rpi4b:image` | [images/rpios_rpi4b](../images/rpios_rpi4b/README.md) |
+| EB corbos Linux for Safety Applications | `bazel build --config=eb-aarch64 //images/ebclfsa_rpi4b:image` | [images/ebclfsa_rpi4b](../images/ebclfsa_rpi4b/README.md) |
+
+Both have a static address that is set at build time, see
+[images/network](../images/network/README.md).
