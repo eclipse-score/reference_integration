@@ -21,7 +21,7 @@ Planning Approach
 
 .. note::
 
-   This page is **a short summary** of how the S-CORE v1.0 roadmap is
+   This page is **a short summary** of how the S-CORE v1 roadmap is
    planned. The authoritative planning procedure — covering project
    management, release management, change management and the underlying
    governance — is described in the
