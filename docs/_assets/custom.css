@@ -193,6 +193,24 @@ body.wide-content-page .bd-content .bd-article-container {
 }
 
 /* ---------------------------------------------------------------------------
+ * Modules page (docs/modules/index.rst): a plain list that continues a toctree
+ * (modules linked rather than mounted) looks like further toctree entries.
+ * ---------------------------------------------------------------------------*/
+
+.toctree-wrapper:has(+ ul.modules-list-continued) > ul {
+    margin-bottom: 0;
+}
+
+ul.modules-list-continued {
+    padding-left: 0;
+    list-style: none;
+}
+
+ul.modules-list-continued > li {
+    margin-bottom: 0.2em;
+}
+
+/* ---------------------------------------------------------------------------
  * RST line-blocks inside list-tables:
  * Sphinx wraps the indented "| ..." continuation in a <blockquote>, which
  * adds a left border and a tinted background. Inside a status table we want

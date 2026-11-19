@@ -28,13 +28,13 @@ S-CORE software modules that ship in the integration.
    :titlesonly:
    :maxdepth: 1
 
+.. Communication publishes no docs bundle; its dependable element docs are copied next
+   to this site by CI, so they are linked here instead of mounted.
 
-Dependable element documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. rst-class:: modules-list-continued
 
-Built per module in CI and published next to these docs:
-
-* `Communication (mw_com) <score_communication/dependable_element/mw_com_doc/index.html>`_
+* `Communication <score_communication/dependable_element/mw_com_doc/index.html>`_
+  (mw_com, built per module in CI and published next to these docs)
 
 Non-Functional Modules
 ----------------------
