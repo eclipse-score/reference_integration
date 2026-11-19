@@ -1,0 +1,11 @@
+--- a/third_party/soft_hsm/BUILD
++++ b/third_party/soft_hsm/BUILD
+@@ -49,6 +49,8 @@
+     "RUN_AES_KEY_WRAP__TRYRUN_OUTPUT": "",
+     "RUN_AES_KEY_WRAP_PAD": "0",
+     "RUN_AES_KEY_WRAP_PAD__TRYRUN_OUTPUT": "",
++    # Assumed fix for the QNX ECC probe: a host openssl.pc would add -ldl, which QNX lacks.
++    "CMAKE_DISABLE_FIND_PACKAGE_PkgConfig": "ON",
+     # Ignore deprecation warnings for SoftHSM source code
+     "CMAKE_CXX_FLAGS": "-Wno-error=deprecated-declarations",
+ }

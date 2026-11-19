@@ -46,3 +46,24 @@ single_version_override(
 # Workaround: libpfm 4.11.0.bcr.1 (pulled in by google_benchmark 1.9.5) downloads from the defunct
 # netcologne.dl.sourceforge.net mirror; 4.11.0.bcr.2 uses downloads.sourceforge.net.
 bazel_dep(name = "libpfm", version = "4.11.0.bcr.2")
+
+# score_security_crypto builds soft_hsm with rules_foreign_cc's cmake rule, which does not know the
+# QNX target OS (CMAKE_SYSTEM_NAME "QNX"). Overrides of non-root modules are ignored, so the patch
+# has to be applied from here.
+bazel_dep(name = "rules_foreign_cc", version = "0.16.0")
+single_version_override(
+    module_name = "rules_foreign_cc",
+    patch_strip = 1,
+    patches = ["//patches/rules_foreign_cc:001-qnx-cmake-system-name.patch"],
+    version = "0.16.0",
+)
+
+# score_openssl 0.2.1 fails to build for glibc targets whose toolchain passes -D_XOPEN_SOURCE=700
+# (e.g. AutoSD): syscall() and madvise() are hidden in crypto/mem_sec.c. Main adds -D_GNU_SOURCE
+# (eclipse-score/openssl#16). Drop once that is part of a release.
+bazel_dep(name = "score_openssl")
+git_override(
+    module_name = "score_openssl",
+    commit = "89e1591f40a82fde66b3850a8a7a385db630f8a9",
+    remote = "https://github.com/eclipse-score/openssl.git",
+)
