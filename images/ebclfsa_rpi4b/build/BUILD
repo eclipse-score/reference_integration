@@ -52,3 +52,8 @@ genrule(
         "//visibility:public",
     ],
 )
+
+exports_files(
+    ["build_image.py"],
+    visibility = ["//images/rpios_rpi4b:__pkg__"],
+)
