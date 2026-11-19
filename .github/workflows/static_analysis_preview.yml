@@ -1,0 +1,91 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# POC, delete before merge: builds the docs with the CodeQL findings of the latest
+# multi-repo scan on main in the module verification reports.
+name: Static Analysis Report Preview (temporary)
+permissions:
+  contents: read
+  actions: read
+on:
+  push:
+    branches:
+      - poc/static-analysis-codeql
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          # Reuse (read only) the disk cache of "Code Quality & Documentation" on main.
+          disk-cache: Code Quality & Documentation
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: false
+      - name: Set up Python 3
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: graphviz
+          cache: false
+      - name: Find latest CodeQL multi-repo scan on main
+        id: codeql
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id=$(gh api "repos/${{ github.repository }}/actions/workflows/codeql-multiple-repo-scan.yml/runs?branch=main&status=success&per_page=1" --jq '.workflow_runs[0].id')
+          echo "Using CodeQL run ${run_id}"
+          echo "run-id=${run_id}" >> "$GITHUB_OUTPUT"
+      - name: Download CodeQL SARIF
+        uses: actions/download-artifact@v4
+        with:
+          name: codeql-sarif-results
+          path: codeql-sarif
+          run-id: ${{ steps.codeql.outputs.run-id }}
+          github-token: ${{ github.token }}
+      - name: Prepare SARIF for the docs build
+        run: |
+          python3 scripts/static_analysis/prepare_codeql_sarif.py \
+            codeql-sarif/cpp.sarif static-analysis-report/codeql.sarif
+      - name: Build documentation
+        run: |
+          bazel run \
+            --lockfile_mode=error \
+              //:docs_shim -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
+          tar -cf docs-preview.tar _build
+      - name: Upload documentation
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: static-analysis-preview-docs
+          path: docs-preview.tar
+          retention-days: 7
