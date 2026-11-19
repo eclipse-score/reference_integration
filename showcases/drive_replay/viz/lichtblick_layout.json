@@ -1,0 +1,190 @@
+{
+  "configById": {
+    "3D!scene": {
+      "followMode": "follow-position",
+      "followTf": "ego",
+      "scene": {
+        "enableStats": false,
+        "backgroundColor": "#15171c",
+        "transforms": {
+          "showLabel": false,
+          "axisScale": 0
+        }
+      },
+      "transforms": {
+        "frame:map": {
+          "visible": false
+        },
+        "frame:ego": {
+          "visible": false
+        }
+      },
+      "topics": {
+        "/scene": {
+          "visible": true
+        }
+      },
+      "layers": {
+        "grid": {
+          "visible": false,
+          "layerId": "foxglove.Grid"
+        }
+      },
+      "cameraState": {
+        "perspective": true,
+        "distance": 55,
+        "phi": 62,
+        "thetaOffset": 90,
+        "targetOffset": [
+          22,
+          0,
+          0
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    },
+    "Plot!ttc": {
+      "title": "Time to collision / gap",
+      "paths": [
+        {
+          "value": "/adas/fcw.ttc",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "label": "TTC [s]"
+        },
+        {
+          "value": "/drive/frame.gap",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "label": "gap [m]"
+        }
+      ],
+      "minYValue": 0,
+      "maxYValue": 40,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": true,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "followingViewWidth": 40
+    },
+    "Plot!speed": {
+      "title": "Speed",
+      "paths": [
+        {
+          "value": "/drive/frame.ego_kmh",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "label": "ego [km/h]"
+        },
+        {
+          "value": "/drive/frame.lead_kmh",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "label": "lead [km/h]"
+        }
+      ],
+      "minYValue": 0,
+      "maxYValue": 90,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": true,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "followingViewWidth": 40
+    },
+    "Indicator!fcw": {
+      "path": "/system/health.fcw_alive",
+      "style": "background",
+      "fallbackColor": "#b71c1c",
+      "fallbackLabel": "FCW OFFLINE",
+      "rules": [
+        {
+          "operator": "=",
+          "rawValue": "true",
+          "color": "#1b5e20",
+          "label": "FCW alive"
+        }
+      ]
+    },
+    "StateTransitions!state": {
+      "paths": [
+        {
+          "value": "/system/state.run_target",
+          "timestampMethod": "receiveTime",
+          "label": "Run Target"
+        },
+        {
+          "value": "/adas/fcw.level",
+          "timestampMethod": "receiveTime",
+          "label": "FCW level"
+        }
+      ],
+      "isSynced": true,
+      "showPoints": false,
+      "xAxisRange": 40
+    },
+    "RosOut!log": {
+      "searchTerms": [],
+      "minLogLevel": 2,
+      "topicToRender": "/log"
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": {
+      "direction": "column",
+      "first": "3D!scene",
+      "second": {
+        "direction": "row",
+        "first": "Plot!ttc",
+        "second": "Plot!speed"
+      },
+      "splitPercentage": 55
+    },
+    "second": {
+      "direction": "column",
+      "first": {
+        "direction": "row",
+        "first": "Indicator!fcw",
+        "second": "StateTransitions!state",
+        "splitPercentage": 25
+      },
+      "second": "RosOut!log",
+      "splitPercentage": 28
+    },
+    "splitPercentage": 50
+  }
+}
