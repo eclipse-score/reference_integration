@@ -10,8 +10,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# POC, delete before merge: builds the docs with the CodeQL findings of the latest
-# multi-repo scan on main in the module verification reports.
+# POC, delete before merge: scans all modules with CodeQL in this run and builds the
+# docs with these findings in the module verification reports.
 name: Static Analysis Report Preview (temporary)
 permissions:
   contents: read
@@ -25,7 +25,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  codeql:
+    uses: ./.github/workflows/codeql-multiple-repo-scan.yml
+    permissions:
+      contents: write
+      security-events: write
+      packages: read
+      actions: read
   docs:
+    needs: codeql
     runs-on: ubuntu-24.04
     steps:
       - name: Clean disk space
@@ -56,21 +64,11 @@ jobs:
         with:
           packages: graphviz
           cache: false
-      - name: Find latest CodeQL multi-repo scan on main
-        id: codeql
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          run_id=$(gh api "repos/${{ github.repository }}/actions/workflows/codeql-multiple-repo-scan.yml/runs?branch=main&status=success&per_page=1" --jq '.workflow_runs[0].id')
-          echo "Using CodeQL run ${run_id}"
-          echo "run-id=${run_id}" >> "$GITHUB_OUTPUT"
-      - name: Download CodeQL SARIF
+      - name: Download CodeQL SARIF of this run
         uses: actions/download-artifact@v4
         with:
           name: codeql-sarif-results
           path: codeql-sarif
-          run-id: ${{ steps.codeql.outputs.run-id }}
-          github-token: ${{ github.token }}
       - name: Prepare SARIF for the docs build
         run: |
           python3 scripts/static_analysis/prepare_codeql_sarif.py \
