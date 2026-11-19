@@ -40,7 +40,7 @@ documentation set that downstream product distributions can build on.
       :link: s_core_v_1/roadmap/roadmap
       :link-type: doc
 
-      :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
+      :doc:`S-Core v1 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
    .. grid-item-card:: ✅ Verification Reports
       :link: verification_report/index
@@ -66,6 +66,6 @@ documentation set that downstream product distributions can build on.
    Modules <modules/index>
    Verification Reports <verification_report/index>
    Integration Status <status_dashboard>
-   S-Core v1.0 <s_core_v_1/index>
+   S-Core v1 <s_core_v_1/index>
    Releases <s_core_v_1/releases/releases>
    Integration Process <integration_process/integration_process>
