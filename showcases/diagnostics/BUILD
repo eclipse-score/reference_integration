@@ -48,7 +48,7 @@ score_pkg_bundle(
 
 # The configuration of the CDA: the paths and the address of this showcase, followed by the settings
 # that the ECUs of the CDA's ECU simulator need (some of them only work with it). The CDA listens on
-# the loopback address only: its clients use the gateway.
+# a Unix domain socket only, /run/opensovd-cda.sock: its clients use the gateway.
 genrule(
     name = "cda_config",
     srcs = [

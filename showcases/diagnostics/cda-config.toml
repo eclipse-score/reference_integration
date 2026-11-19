@@ -32,7 +32,10 @@ storage_dir = "/tmp/opensovd-cda/storage"
 tester_address = "0.0.0.0"
 tester_subnet = "0.0.0.0"
 
+# The CDA listens on a Unix domain socket only, not on a TCP port: its clients use the gateway,
+# which forwards to it there (SCORE_UPSTREAM_URL in launch_manager_config.json). /run exists on the
+# targets.
 [server]
-address = "127.0.0.1"
-port = 20002
+transport = "unix_socket"
+unix_socket = "/run/opensovd-cda.sock"
 

@@ -74,7 +74,7 @@ The OpenSOVD gateway (the one of `inc_diagnostics`, which forwards to the CDA wh
 (`//deploy/diagnostics`) are deployed as binaries only. Their configuration and the ECU
 databases are test data of the CDA's ECU simulator, so they belong to the showcase
 `Diagnostics Stack` (`//showcases/diagnostics`, installed in `/showcases/data/diagnostics`), which
-starts both, with the gateway forwarding to the CDA (`SCORE_UPSTREAM_URL`), and checks that the CDA loads the databases and reports ready and that the gateway lists the apps of the CDA next to its own. The platform
+starts both, with the gateway forwarding to the CDA over a Unix domain socket (`SCORE_UPSTREAM_URL`), and checks that the CDA loads the databases and reports ready and that the gateway lists the apps of the CDA next to its own. The platform
 integration test `//platform_integration_tests/diagnostics` runs it on Linux x86_64.
 
 Long term each S-CORE module should export its own deployment package
