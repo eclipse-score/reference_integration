@@ -596,169 +596,169 @@
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__alg_catalog">dec_rec__crypto__alg_catalog</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__alg_catalog">dec_rec__crypto__alg_catalog</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>``AlgorithmId`` stays the string on the wire, in the configs and in stored key metadata. A constexpr catalog (``score/crypto/src/daemon/common/algorithm_catalog.hpp``) maps every known name, by exact match, to an ``Algorithm`` enumerator and an ``AlgorithmDescriptor`` holding category, key type, key length, hash, curve, mode and fixed output size. The daemon resolves each name to its catalog row once, where the request enters it, and refuses a name the catalog does not know; providers receive the row, never the name, and decide support from its typed fields.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>proposed</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__alg_id_fixed_cap_str">dec_rec__crypto__alg_id_fixed_cap_str</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__alg_id_fixed_cap_str">dec_rec__crypto__alg_id_fixed_cap_str</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>``AlgorithmId`` is defined as ``FixedCapacityString&lt;64&gt;`` rather than a compile-time enum or std::string, providing open-set extensibility with deterministic stack allocation. 64 bytes covers the longest currently-known PQC identifier (e.g., &quot;SLH-DSA-SHA2-128s&quot;) with comfortable headroom. All constructors and assignments are noexcept.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__allocate_return_type">dec_rec__crypto__allocate_return_type</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__allocate_return_type">dec_rec__crypto__allocate_return_type</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>All overloads of ``IMemoryAllocator::Allocate()`` return ``score::mw::crypto::IReadWriteMemory`` rather than a score::baselibs memory type.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/data_manager/docs/index.html#dec_rec__crypto__central_data_node_manager">dec_rec__crypto__central_data_node_manager</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/data_manager/docs/index.html#dec_rec__crypto__central_data_node_manager">dec_rec__crypto__central_data_node_manager</a></p></td>
 <td class="needs_context"><p>doc__crypto_feat_architecture</p></td>
 <td class="needs_decision"><p>Extract state information into a central Data Manager component.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__conn_anchor_persistent_ids">dec_rec__crypto__conn_anchor_persistent_ids</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__conn_anchor_persistent_ids">dec_rec__crypto__conn_anchor_persistent_ids</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>The IPC connection to the crypto daemon is the anchor for kPersistent resource IDs. All ICryptoStack instances within the same application share a single connection, ensuring that the same resource name always resolves to the same numeric CryptoResourceId regardless of which stack or context resolves it. ID assignment is on-demand per connection, and each application gets its own isolated connection with an independent ID namespace.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__context_reset_reuse">dec_rec__crypto__context_reset_reuse</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__context_reset_reuse">dec_rec__crypto__context_reset_reuse</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>``IStreamingContext`` exposes a ``Reset()`` method returning the context to</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__cry_res_grd_lifetime">dec_rec__crypto__cry_res_grd_lifetime</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__cry_res_grd_lifetime">dec_rec__crypto__cry_res_grd_lifetime</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Transient key lifetime is managed exclusively in the daemon via reference counting. The guard holds a type-erased IPC release handle; Create*Context() increments the daemon ref-count atomically. The guard may be destroyed after Create*Context() returns. On client disconnect, the daemon bulk-frees all resources for that client.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__ipc_boundary_copy">dec_rec__crypto__ipc_boundary_copy</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__ipc_boundary_copy">dec_rec__crypto__ipc_boundary_copy</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>The control plane IPC layer on the daemon side shall create exactly one owning copy of all incoming request data at the deserialization boundary. All subsequent daemon-internal processing shall operate on non-owning references into that single owned copy. This prevents time-of-check-time-of-use (TOCTOU) attacks on control information while minimising memory copies within the daemon. The data plane is explicitly excluded — it carries only opaque data payloads and may use zero-copy transfer.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__ipc_fixed_worker_executor">dec_rec__crypto__ipc_fixed_worker_executor</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__ipc_fixed_worker_executor">dec_rec__crypto__ipc_fixed_worker_executor</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Use a purpose-built FixedWorkerWorkItemExecutor to implement the adapter's admission, worker initialization, startup reporting, and restart requirements without an additional scheduler around a generic thread pool.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__ipc_request_work_admission">dec_rec__crypto__ipc_request_work_admission</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__ipc_request_work_admission">dec_rec__crypto__ipc_request_work_admission</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Do not queue request operations in the daemon. Return kProviderBusy when no worker is idle, and let the Crypto API handle it.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__key_op_permission_bitmask">dec_rec__crypto__key_op_permission_bitmask</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__key_op_permission_bitmask">dec_rec__crypto__key_op_permission_bitmask</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Per-key usage restrictions are encoded as a ``KeyOperationPermission`` bitmask (named bit-flag capabilities: ``kEncrypt``, ``kDecrypt``, ``kSign``, ``kVerify``, ``kDerive``, ``kWrap``, ``kExport``, ``kGenerate``). The daemon enforces the bitmask at context creation time; operations not permitted by the key's bitmask return ``kKeyOperationNotPermitted``.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/ipc/docs/architecture/design_decisions.html#dec_rec__crypto__lola_message_passing_ipc">dec_rec__crypto__lola_message_passing_ipc</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/ipc/docs/architecture/design_decisions.html#dec_rec__crypto__lola_message_passing_ipc">dec_rec__crypto__lola_message_passing_ipc</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Use LoLa Message Passing, implemented with the score::message_passing API, as the crypto daemon control-plane IPC transport.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__memory_allocator_separation">dec_rec__crypto__memory_allocator_separation</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__memory_allocator_separation">dec_rec__crypto__memory_allocator_separation</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>``IMemoryAllocator`` is a standalone interface independent of ``ICryptoStack``. It represents the data plane, can be injected into components that need only memory management, and enables isolated unit testing — none of which are possible if it is coupled to the control-plane ``ICryptoStack``.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__no_abi_compatibility_ipc">dec_rec__crypto__no_abi_compatibility_ipc</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__no_abi_compatibility_ipc">dec_rec__crypto__no_abi_compatibility_ipc</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>ABI compatibility for the IPC layer between the crypto library and daemon is deferred until the API and wire format are stable. Once stable, a versioned wire format (FlatBuffers is the primary candidate) will be introduced to allow independent deployment of library and daemon versions.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>proposed</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__per_op_params">dec_rec__crypto__per_op_params</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__per_op_params">dec_rec__crypto__per_op_params</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Key management operations (``GenerateKey``, ``DeriveKey``, ``AgreeKey``, ``UnwrapKey``, ``ImportKey``, ``WrapKey``) are encapsulated in dedicated fluent-builder parameter structs. Dual overloads support both ephemeral keys (returning ``CryptoResourceGuard``) and direct-to-slot writes (returning ``bool``). KDF configuration is represented as a structured ``KdfParameters`` type rather than opaque byte spans, providing type safety and extensibility.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>proposed</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__send_notify_ipc_interaction">dec_rec__crypto__send_notify_ipc_interaction</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions.html#dec_rec__crypto__send_notify_ipc_interaction">dec_rec__crypto__send_notify_ipc_interaction</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Use Send for non-blocking request submission and Notify for the operation result or a negative server-side submission result.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__synchronous_ipc">dec_rec__crypto__synchronous_ipc</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__synchronous_ipc">dec_rec__crypto__synchronous_ipc</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>All IPC calls between the client library and the crypto daemon are synchronous (blocking). No callback, future, or async-notify pattern is exposed in the V1 public API.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__two_layer_timeout">dec_rec__crypto__two_layer_timeout</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__two_layer_timeout">dec_rec__crypto__two_layer_timeout</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>Two-layer timeout model selected for bounded behaviour at both layers.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__unified_enc_dec_contexts">dec_rec__crypto__unified_enc_dec_contexts</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/crypto/components/crypto/architecture/design_decisions.html#dec_rec__crypto__unified_enc_dec_contexts">dec_rec__crypto__unified_enc_dec_contexts</a></p></td>
 <td class="needs_context"><p>doc__crypto_architecture</p></td>
 <td class="needs_decision"><p>A single ``ICipherContext`` type is used for both encryption and decryption, with direction configured via ``CipherContextConfig``. Sign, verify, MAC, and AEAD are each separate context types under the ``IStreamingContext`` hierarchy. The algorithm identifier and key type determine whether the operation is symmetric or asymmetric at runtime. Separate ``SymmetricEncryptContext`` / ``AsymmetricEncryptContext`` types were rejected for increased complexity without benefit.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__crl_co_location">dec_rec__crypto_cert_mgmt__crl_co_location</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__crl_co_location">dec_rec__crypto_cert_mgmt__crl_co_location</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>A CRL is stored in an optional ``[crl]`` section of the certificate slot's KV deployment descriptor. There is no independent CRL registry, CRL resource type, or CRL-specific DataNode. The slot is the resolution unit for both the certificate and its associated CRL.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__deny_mutation">dec_rec__crypto_cert_mgmt__deny_mutation</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__deny_mutation">dec_rec__crypto_cert_mgmt__deny_mutation</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>All certificate slot and trust-store mutations (StoreCertificate, ImportCrl, AddMember, RemoveMember, EnableMember, DisableMember) are default-deny. Write access is granted only to UIDs listed in the slot or trust-store access policy. Reads do not require explicit authorisation beyond resource resolution.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__notify_ownership">dec_rec__crypto_cert_mgmt__notify_ownership</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__notify_ownership">dec_rec__crypto_cert_mgmt__notify_ownership</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>Certificate-slot and CRL mutations are reachable only through CertManagementService::UpdateSlot (overloaded for certificates and CRLs), ClearSlot, and ClearSlotCrl. Each performs the underlying CertSlotManager write and then, when the stored content may have changed, notifies every trust store referencing the slot, whether the write succeeded or failed. CertSlotManager itself has no trust-store awareness and never calls TrustStoreManager.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__parser_authority">dec_rec__crypto_cert_mgmt__parser_authority</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__parser_authority">dec_rec__crypto_cert_mgmt__parser_authority</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>Slot loading, certificate-management operations, and trust-store metadata use a single canonical ``ICertParser`` for the whole component. The supplying provider is either named explicitly in the certificate configuration or selected by the certificate-management capability default. It is never selected by the client or by a per-context provider hint.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__provider_boundary">dec_rec__crypto_cert_mgmt__provider_boundary</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__provider_boundary">dec_rec__crypto_cert_mgmt__provider_boundary</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>The certificate management component receives DER or PEM bytes from a provider via ``ICertParser`` and stores an immutable ``CertObject`` value. Provider-specific handles (PKCS#11 object handles, HSM references), raw private keys, and provider internal types do not cross the certificate management boundary in either direction.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__trst_str_mem">dec_rec__crypto_cert_mgmt__trst_str_mem</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__trst_str_mem">dec_rec__crypto_cert_mgmt__trst_str_mem</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>A trust store configured without a deployment path keeps its member state (enabled flags and accepted fingerprints) in memory for the life of the process. Nothing is read at startup or written, so a restart restores the configuration. A state change still takes effect and reports success. Stores with a deployment path persist their state as described in the trust-store validity record.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__trst_str_vdty">dec_rec__crypto_cert_mgmt__trst_str_vdty</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__trst_str_vdty">dec_rec__crypto_cert_mgmt__trst_str_vdty</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>A trust store whose members cannot all be resolved, or whose persisted state exists but cannot be used, is invalid. An invalid store is reported when it is resolved, bound, read, or mutated, and it never runs with a subset of its members or with default state. Reading an existing member certificate or CRL that fails is returned to the caller; an empty member slot and a missing CRL are valid. A change that increases trust is persisted before it is published to the running store; a change that reduces trust takes effect immediately.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__ts_ref_slots">dec_rec__crypto_cert_mgmt__ts_ref_slots</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/cert_management/docs/architecture/design_decisions.html#dec_rec__crypto_cert_mgmt__ts_ref_slots">dec_rec__crypto_cert_mgmt__ts_ref_slots</a></p></td>
 <td class="needs_context"><p>doc__crypto_cert_management_architecture</p></td>
 <td class="needs_decision"><p>Trust-store membership is expressed as typed references to named certificate slots, never as raw filesystem paths or inline certificate bytes. The slot is the indirection point for loading, caching, and change notification.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_security_crypto/score/crypto/src/daemon/common/storage/docs/architecture/design_decisions.html#dec_rec__crypto_common_storage__atomic_writes">dec_rec__crypto_common_storage__atomic_writes</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_crypto/score/crypto/src/daemon/common/storage/docs/architecture/design_decisions.html#dec_rec__crypto_common_storage__atomic_writes">dec_rec__crypto_common_storage__atomic_writes</a></p></td>
 <td class="needs_context"><p>doc__crypto_common_storage_architecture</p></td>
 <td class="needs_decision"><p>Whole-file replacements use one shared storage primitive. It writes the complete new content to a temporary file beside the target and then replaces the target, so a reader sees either the previous complete file or the new one. The replacement is atomic but not durable across power loss: the new content may be lost and the previous content kept.</p></td>
 <td class="needs_consequences"><p></p></td>
