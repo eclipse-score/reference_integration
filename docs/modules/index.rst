@@ -17,7 +17,8 @@ Modules
 
 .. The toctrees below stay empty in source: the `bundles` of the `docs()` macro in the root
    BUILD file mount every module from known_good.json here, target_sw modules into the
-   first toctree and tooling modules into the second (see `toctree_index`).
+   first toctree and tooling modules into the second (see `toctree_index`). Their captions
+   group the left section navigation; on this page the section headings show instead.
 
 Functional Modules
 ------------------
@@ -25,6 +26,8 @@ Functional Modules
 S-CORE software modules that ship in the integration.
 
 .. toctree::
+   :caption: Functional Modules
+   :class: modules-toc
    :titlesonly:
    :maxdepth: 1
 
@@ -42,5 +45,7 @@ Non-Functional Modules
 Process description, platform standards, test framework and documentation toolchain.
 
 .. toctree::
+   :caption: Non-Functional Modules
+   :class: modules-toc
    :titlesonly:
    :maxdepth: 1
