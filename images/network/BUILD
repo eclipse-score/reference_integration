@@ -48,6 +48,7 @@ genrule(
         "sed -f $(location @score_pi_network//:diagnostics/gateway.sed) $(location //showcases/diagnostics:launch_manager_config.json) > $@",
         "[ \"$$(grep -c '\"SCORE_GATEWAY_ADDRESS\": \"0.0.0.0:' $@)\" = 0 ]",
         "[ \"$$(grep -c '\"SCORE_GATEWAY_ADDRESS\": ' $@)\" = 1 ]",
+        "[ \"$$(grep -c '\"SCORE_GATEWAY_MDNS\": ' $@)\" -le 1 ]",
     ]),
 )
 

@@ -23,6 +23,7 @@ Set these environment variables when you run Bazel:
 | `SCORE_PI_ADDRESS` | IPv4 address with prefix length | `192.168.7.2/24` |
 | `SCORE_PI_GATEWAY` | IPv4 address of the gateway, empty for none | `192.168.7.1` |
 | `SCORE_PI_DNS` | comma separated IPv4 addresses of DNS servers | `8.8.8.8` |
+| `SCORE_PI_MDNS` | vehicle identification that the gateway announces via mDNS/DNS-SD, empty for no announcement | `S-CORE-RPI4B` |
 
 ```sh
 SCORE_PI_ADDRESS=10.0.0.20/24 SCORE_PI_GATEWAY=10.0.0.1 SCORE_PI_DNS=10.0.0.1,1.1.1.1 \
@@ -61,6 +62,12 @@ deployed after the showcases), so they change with `SCORE_PI_ADDRESS` as well:
   only accepts vehicle announcements from the subnet of the image.
 - The gateway listens on the address of the image only, port 7690. The CDA keeps listening on the
   loopback address, its clients use the gateway.
+- The gateway announces itself via mDNS/DNS-SD as a `_sovd._tcp` service (ISO 17978-3 §5.11) on
+  the interface of that address, with the TXT records `identification` (`SCORE_PI_MDNS`) and
+  `accessurl` (`http://<address>:7690/sovd`). The launch manager configuration gets
+  `SCORE_GATEWAY_MDNS` next to `SCORE_GATEWAY_ADDRESS`; with an empty `SCORE_PI_MDNS` it is left
+  out. A machine on the same network finds the Raspberry Pi with `dns-sd -B _sovd._tcp` (macOS) or
+  `avahi-browse -rt _sovd._tcp` (Linux).
 
 How the copies are made:
 

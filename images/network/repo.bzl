@@ -90,6 +90,21 @@ _GATEWAY_SED = """\
 s|"SCORE_GATEWAY_ADDRESS": "[^"]*:\\([0-9]*\\)"|"SCORE_GATEWAY_ADDRESS": "{address}:\\1"|
 """
 
+# With an identification, the gateway announces itself via mDNS/DNS-SD (ISO 17978-3 §5.11):
+# SCORE_GATEWAY_MDNS is added next to its address.
+_GATEWAY_MDNS_SED = """\
+s|\\("SCORE_GATEWAY_ADDRESS": "[^"]*"\\)|\\1, "SCORE_GATEWAY_MDNS": "{identification}"|
+"""
+
+DEFAULT_MDNS = "S-CORE-RPI4B"
+
+def _check_mdns(identification):
+    if len(identification) > 240:
+        fail("SCORE_PI_MDNS is at most 240 characters, not %d" % len(identification))
+    for c in identification.elems():
+        if not (c.isalnum() or c in "-_. "):
+            fail("SCORE_PI_MDNS may only have letters, digits, '-', '_', '.' and spaces, not '%s'" % identification)
+
 def _check_address(address):
     parts = address.split("/")
     if len(parts) != 2 or not _is_ipv4(parts[0]) or not parts[1].isdigit() or int(parts[1]) < 1 or int(parts[1]) > 32:
@@ -99,6 +114,8 @@ def _pi_network_impl(rctx):
     address = rctx.getenv("SCORE_PI_ADDRESS", DEFAULT_ADDRESS)
     gateway = rctx.getenv("SCORE_PI_GATEWAY", DEFAULT_GATEWAY)
     dns = [d.strip() for d in rctx.getenv("SCORE_PI_DNS", DEFAULT_DNS).split(",") if d.strip()]
+    mdns = rctx.getenv("SCORE_PI_MDNS", DEFAULT_MDNS).strip()
+    _check_mdns(mdns)
 
     _check_address(address)
     if gateway and not _is_ipv4(gateway):
@@ -119,7 +136,8 @@ def _pi_network_impl(rctx):
     ))
     host, prefix = address.split("/")
     rctx.file("diagnostics/cda.sed", _CDA_SED.format(address = host, subnet = _netmask(int(prefix))))
-    rctx.file("diagnostics/gateway.sed", _GATEWAY_SED.format(address = host))
+    rctx.file("diagnostics/gateway.sed", _GATEWAY_SED.format(address = host) +
+                                         (_GATEWAY_MDNS_SED.format(identification = mdns) if mdns else ""))
     rctx.file("BUILD.bazel", """\
 exports_files([
     "diagnostics/cda.sed",
@@ -131,6 +149,6 @@ exports_files([
 
 pi_network = repository_rule(
     implementation = _pi_network_impl,
-    environ = ["SCORE_PI_ADDRESS", "SCORE_PI_GATEWAY", "SCORE_PI_DNS"],
-    doc = "The network configuration files of the Raspberry Pi images and the addresses of the diagnostics, from SCORE_PI_ADDRESS, SCORE_PI_GATEWAY and SCORE_PI_DNS.",
+    environ = ["SCORE_PI_ADDRESS", "SCORE_PI_GATEWAY", "SCORE_PI_DNS", "SCORE_PI_MDNS"],
+    doc = "The network configuration files of the Raspberry Pi images and the addresses of the diagnostics, from SCORE_PI_ADDRESS, SCORE_PI_GATEWAY, SCORE_PI_DNS and SCORE_PI_MDNS.",
 )
