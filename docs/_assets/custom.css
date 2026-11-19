@@ -215,6 +215,12 @@ ul.modules-list-continued > li {
     display: none;
 }
 
+/* A module index with a second top-level heading (persistency's "Quick Start") would
+   otherwise add an extra entry pointing into that module's page. */
+.toctree-wrapper.modules-toc li.toctree-l1:has(> a[href*="#"]) {
+    display: none;
+}
+
 /* ---------------------------------------------------------------------------
  * RST line-blocks inside list-tables:
  * Sphinx wraps the indented "| ..." continuation in a <blockquote>, which
