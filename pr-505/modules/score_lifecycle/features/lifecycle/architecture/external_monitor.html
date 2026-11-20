@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=00d56e3b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=51185784" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
@@ -437,10 +437,10 @@
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Functional Modules</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Lifecycle</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Lifecycle Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Lifecycle</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4 current active"><a class="reference internal" href="index.html">Feature Architecture</a></li>
@@ -464,14 +464,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">time_daemon Documentation</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Non-Functional Modules</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_itf/index.html">Integration Test Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_platform/index.html">Platform</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_docs_as_code/index.html">Docs-as-Code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../score_process_description/index.html">Process Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../process_methods_tools/index.html">Process, Methods, and Tools</a></li>
 </ul>
 </div>
 </nav></div>
@@ -516,7 +513,7 @@
     <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Modules</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Lifecycle</a></li>
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Lifecycle Documentation</a></li>
     
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Features</a></li>
@@ -551,7 +548,7 @@
 <p>The following participants are related to the concept.</p>
 <section id="launch-manager">
 <h2>Launch Manager<a class="headerlink" href="#launch-manager" title="Link to this heading">#</a></h2>
-<p>As the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> is a critical component for the system, it shall
+<p>As the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> is a critical component for the system, it shall
 support alive monitoring of itself.
 This means it must implement internal health management, such as a worker
 thread, that wakes up every N milliseconds, checks if the component is in a
@@ -559,7 +556,7 @@ consistent state, and sends a notification to the external monitor.</p>
 </section>
 <section id="id1">
 <h2>External monitor<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>The aliveness of the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> shall be monitored by an <a class="reference external" href="https://en.wikipedia.org/wiki/Watchdog_timer">external
+<p>The aliveness of the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> shall be monitored by an <a class="reference external" href="https://en.wikipedia.org/wiki/Watchdog_timer">external
 monitor, or a watchdog</a>, to be
 able to detect “hanging” of the <cite>Launch Manager</cite>.
 The implementation of the external watchdog is out of scope in S-CORE, as it
@@ -569,24 +566,24 @@ is ECU and/or project specific.</p>
 <h2>Watchdog Proxy<a class="headerlink" href="#watchdog-proxy" title="Link to this heading">#</a></h2>
 <p>The component <cite>Watchdog Proxy</cite> is the project specific logical component, which
 has to implement the logical interface <cite>HealthStatus</cite> and translate alive
-events from the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> as project specific messages to the
+events from the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> as project specific messages to the
 <cite>External monitor</cite>.
 The channel for sending these notifications is project specific, and can be for
 example <cite>GPIO</cite>, <cite>UART</cite> or <cite>SPI</cite>.
 In a hypervisor based environment, the <cite>external monitor</cite> could also run on
 the same SoC as a software-only solution.</p>
 <p>The <cite>Watchdog Proxy</cite> implementation is not specified in the S-CORE with high
-details, as the realization depends heavily on OS, <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> or
+details, as the realization depends heavily on OS, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> or
 even project specific needs.
-For example, in Linux and <cite>systemd</cite> as the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a>, the
+For example, in Linux and <cite>systemd</cite> as the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a>, the
 interface can be <cite>/dev/watchdog</cite>, and <cite>systemd</cite> can use the interface directly.</p>
 <p>In QNX, one could implement a component listening to the events (or even polling)
-from the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> and translate these events as hardware specific
+from the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> and translate these events as hardware specific
 notifications.</p>
 </section>
 <section id="dynamic-architecture">
 <h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-c79ae732">
+<div class="need_container docutils container" id="SNCB-99a5f6a4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__watch">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -607,8 +604,8 @@ notifications.</p>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../score_platform/features/lifecycle/architecture/index.html#feat__lifecycle" title="feat_arc_dyn__lifecycle__watch">feat__lifecycle</a></span></span></div>
-<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__lm_self_health_check" title="feat_arc_dyn__lifecycle__watch">feat_req__lifecycle__lm_self_health_check</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#feat__lifecycle" title="feat_arc_dyn__lifecycle__watch">feat__lifecycle</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__lm_self_health_check" title="feat_arc_dyn__lifecycle__watch">feat_req__lifecycle__lm_self_health_check</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -631,7 +628,7 @@ notifications.</p>
 <td><p>The configuration. (notification interval, startup grace period, etc.) Additionally, if a watchdog interface is used, the used interface name (e.g. /dev/watchdog) must be configurable.</p></td>
 </tr>
 <tr class="row-odd"><td><p>002</p></td>
-<td><p>If the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> provides a client library implementation, the library must connect and attach to the <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a></p></td>
+<td><p>If the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> provides a client library implementation, the library must connect and attach to the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p>006</p></td>
 <td><p>Check the internal status and trigger alive notification (007)</p></td>
@@ -643,7 +640,7 @@ notifications.</p>
 <td><p>Watchdog to check if the notification fits the expected window</p></td>
 </tr>
 <tr class="row-odd"><td><p>018</p></td>
-<td><p>If the status check fails, do not trigger alive notification (or <a class="reference internal" href="../../../../score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> has crashed)</p></td>
+<td><p>If the status check fails, do not trigger alive notification (or <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> has crashed)</p></td>
 </tr>
 <tr class="row-even"><td><p>019</p></td>
 <td><p>If there is no alive notification, trigger watchdog error reaction</p></td>

@@ -167,54 +167,6 @@ body.wide-content-page .bd-content .bd-article-container {
     color: #ffffff !important;
 }
 
-/* Flush with the surrounding text column instead of indented by the container padding. */
-.landing-grid {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-/* Two columns with equal-height rows, so tiles line up across rows too. */
-@media (min-width: 768px) {
-    .landing-grid > .sd-row {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 1fr;
-    }
-
-    .landing-grid > .sd-row > .sd-col {
-        width: auto;
-    }
-}
-
-/* ---------------------------------------------------------------------------
- * Modules page (docs/modules/index.rst): a plain list that continues a toctree
- * (modules linked rather than mounted) looks like further toctree entries.
- * ---------------------------------------------------------------------------*/
-
-.toctree-wrapper:has(+ ul.modules-list-continued) > ul {
-    margin-bottom: 0;
-}
-
-ul.modules-list-continued {
-    padding-left: 0;
-    list-style: none;
-}
-
-ul.modules-list-continued > li {
-    margin-bottom: 0.2em;
-}
-
-/* The toctree captions only group the left navigation; the page has section headings. */
-.toctree-wrapper.modules-toc > p.caption {
-    display: none;
-}
-
-/* A module index with a second top-level heading (persistency's "Quick Start") would
-   otherwise add an extra entry pointing into that module's page. */
-.toctree-wrapper.modules-toc li.toctree-l1:has(> a[href*="#"]) {
-    display: none;
-}
-
 /* ---------------------------------------------------------------------------
  * RST line-blocks inside list-tables:
  * Sphinx wraps the indented "| ..." continuation in a <blockquote>, which
