@@ -554,7 +554,7 @@ release.
    * - `Baselibs <https://github.com/eclipse-score/baselibs/tree/v0.2.17>`__
      - ``v0.2.17``
      - `v0.2.13 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.13>`__ · `v0.2.14 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.14>`__ · `v0.2.15 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.15>`__ · `v0.2.16 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16>`__ · `v0.2.17 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17>`__
-     - :doc:`Verification report </modules/score_baselibs/verification_report/module_verification_report>`
+     - :doc:`Verification report </modules/functional_modules/score_baselibs/verification_report/module_verification_report>`
    * - `Communication <https://github.com/eclipse-score/communication/tree/v0.6.0>`__
      - ``v0.6.0``
      - `v0.5.0 <https://github.com/eclipse-score/communication/releases/tag/v0.5.0>`__ · `v0.6.0 <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__
@@ -566,7 +566,7 @@ release.
    * - `Persistency <https://github.com/eclipse-score/persistency/tree/v0.4.0>`__
      - ``v0.4.0``
      - `v0.4.0 <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__
-     - :doc:`Verification report </modules/score_persistency/verification_report/module_verification_report>`
+     - :doc:`Verification report </modules/functional_modules/score_persistency/verification_report/module_verification_report>`
    * - `Kyron <https://github.com/eclipse-score/kyron/tree/v0.1.6>`__
      - ``v0.1.6``
      - `v0.1.5 <https://github.com/eclipse-score/kyron/releases/tag/v0.1.5>`__ · `v0.1.6 <https://github.com/eclipse-score/kyron/releases/tag/v0.1.6>`__
@@ -574,11 +574,11 @@ release.
    * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/v0.10.0>`__
      - ``v0.10.0``
      - `v0.7.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.7.0>`__ · `v0.8.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__ · `v0.9.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__ · `v0.10.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__
-     - :doc:`Verification report </modules/score_lifecycle/verification_report/module_verification_report>`
+     - :doc:`Verification report </modules/functional_modules/score_lifecycle/verification_report/module_verification_report>`
    * - `Logging <https://github.com/eclipse-score/logging/tree/v0.2.6>`__
      - ``v0.2.6``
      - `v0.2.5 <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__ · `v0.2.6 <https://github.com/eclipse-score/logging/releases/tag/v0.2.6>`__
-     - :doc:`Verification report </modules/score_logging/verification_report/module_verification_report>`
+     - :doc:`Verification report </modules/functional_modules/score_logging/verification_report/module_verification_report>`
    * - `Time <https://github.com/eclipse-score/time/tree/v0.3.1>`__
      - ``v0.3.1``
      - `v0.3.0 <https://github.com/eclipse-score/time/releases/tag/v0.3.0>`__ · `v0.3.1 <https://github.com/eclipse-score/time/releases/tag/v0.3.1>`__

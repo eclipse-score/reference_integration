@@ -69,4 +69,3 @@ documentation set that downstream product distributions can build on.
    S-Core v1.0 <s_core_v_1/index>
    Releases <s_core_v_1/releases/releases>
    Integration Process <integration_process/integration_process>
-   Process & Tools <process_methods_tools/index>
