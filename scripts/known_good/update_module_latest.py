@@ -150,7 +150,9 @@ def main(argv: list[str]) -> int:
     if args.no_gh and shutil.which("gh") is not None:
         print("INFO: --no-gh specified; ignoring installed 'gh' CLI", file=sys.stderr)
 
-    for mod in known_good.modules.values():
+    # known_good.modules is grouped: {"target_sw": {name: Module}, "tooling": {...}}.
+    all_modules = [mod for group in known_good.modules.values() for mod in group.values()]
+    for mod in all_modules:
         if mod.pin_version:
             print(f"{mod.name}: pinned, skipping")
             continue

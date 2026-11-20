@@ -103,8 +103,9 @@ class KnownGood:
                 dry_run: If True, print instead of writing
         """
 
-        # Update timestamp before writing
-        self.timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
+        # Update timestamp before writing. strftime, not isoformat() + "Z": an aware
+        # datetime's isoformat() already ends in "+00:00", which gave "...+00:00Z".
+        self.timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
         output_json = json.dumps(self.to_dict(), indent=4, sort_keys=False) + "\n"
 
