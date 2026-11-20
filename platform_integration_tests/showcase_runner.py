@@ -29,7 +29,9 @@ def run_showcases(target, *names: str) -> str:
     combined output is returned for app-specific checks.
     """
     selection = ",".join(names)
-    exit_code, out = target.execute(f"{_CLI} --examples='{selection}'")
+    # Apps such as the lifecycle control daemon report on stderr; merge it so
+    # the returned output is complete on every target backend.
+    exit_code, out = target.execute(f"{_CLI} --examples='{selection}' 2>&1")
     output = out.decode(errors="replace")
     logger.info(output)
     assert exit_code == 0, f"Showcase CLI exited with {exit_code}:\n{output}"
