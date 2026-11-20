@@ -32,7 +32,7 @@ modules can be combined into a coherent, releaseable platform baseline,
 including the expected integration structure, verification artifacts, and
 documentation set that downstream product distributions can build on.
 
-.. grid:: 1 1 3 3
+.. grid:: 1 1 2 2
    :gutter: 3
    :class-container: landing-grid
 
