@@ -14,10 +14,10 @@
 
 .. _v1_0_release_plan:
 
-S-CORE v1.0 Roadmap
-====================
+S-CORE v1 Roadmap
+=================
 
-This document describes the release planning for **S-CORE v1.0**, organized around the
+This document describes the release planning for **S-CORE v1**, organized around the
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
 and covers **two overarching project goals**:
 
@@ -27,9 +27,9 @@ Feature Completeness
 Selected modules are fully implemented and tested.
 
 .. image:: ../../_assets/sw_arch_v_1.drawio.svg
-   :alt: S-CORE v1.0 Software Architecture
+   :alt: S-CORE v1 Software Architecture
    :align: center
-   :width: 100%
+   :width: 50%
 
 .. list-table::
    :widths: 30 70
@@ -181,26 +181,6 @@ Support
 
 .. note::
 
-   We will also work on the other process areas, but they are not in the main focus for S-CORE v1.0
+   We will also work on the other process areas, but they are not in the main focus for S-CORE v1
    (shown grayed out above).
-
-Status & Next Steps
--------------------
-
-.. raw:: html
-   :file: ../../_assets/pi_timeline_2026.drawio.svg
-
-.. raw:: html
-
-   <div style="margin-top: 2rem;"></div>
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   Planning Approach <planning_approach>
-   Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
-   Release Gate v0.9 — Implementation <pi2>
-   Release Gate v0.10 — Verification <pi3>
-   Release Gate v1.0 — Hardening & Release <pi4>
 
