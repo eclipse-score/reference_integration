@@ -46,20 +46,15 @@ use_repo(
     "ubuntu_22_04_linux_amd64",
 )
 
-bazel_dep(name = "os_images", version = "0.0.0")
-git_override(
-    module_name = "os_images",
-    commit = "4d452f0b0522e9f381fcec17ff40b52da7c13764",
-    remote = "https://github.com/eclipse-score/os_images.git",
-)
+bazel_dep(name = "score_os_images", version = "0.0.4")
 
 http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 http_file(
     name = "ebclfsa_qemu_release_archive",
     downloaded_file_path = "score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
-    sha256 = "c85d1c01ad1f148a59489dd779792bf89e6b98a1677f9b1210cabd0cae44fe74",
-    urls = ["https://github.com/eclipse-score/os_images/releases/download/v0.0.2/score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz"],
+    sha256 = "f9f0b775ea0a5ad05d72337068d9d2877bb5b9b135118c9760c0e55498293942",
+    urls = ["https://github.com/eclipse-score/os_images/releases/download/v0.0.4/score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz"],
 )
 
 bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
