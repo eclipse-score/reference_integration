@@ -32,9 +32,8 @@ modules can be combined into a coherent, releaseable platform baseline,
 including the expected integration structure, verification artifacts, and
 documentation set that downstream product distributions can build on.
 
-.. grid:: 1 1 3 3
+.. grid:: 1 1 2 2
    :gutter: 3
-   :class-container: landing-grid
 
    .. grid-item-card:: 📊 Status & Roadmap
       :link: s_core_v_1/roadmap/roadmap
@@ -42,29 +41,17 @@ documentation set that downstream product distributions can build on.
 
       :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
-   .. grid-item-card:: 📖 Process, Methods & Tools
-      :link: process_methods_tools/index
-      :link-type: doc
-
-      S-CORE process description, platform standards, and documentation toolchain.
-
-   .. grid-item-card:: ✅ Code Quality
+   .. grid-item-card:: ✅ Verification Reports
       :link: verification_report/index
       :link-type: doc
 
-      Platform and module verification reports and test coverage results.
+      Platform and module verification reports including test coverage and code quality results.
 
    .. grid-item-card:: 🔗 Integration
 
       Reference Integration workflow and health overview with links to
       :doc:`Integration Process <integration_process/integration_process>` and
       `Integration Status <status_dashboard.html>`_.
-
-   .. grid-item-card:: 🧩 Modules
-      :link: modules/index
-      :link-type: doc
-
-      Central overview for all integrated modules. See :doc:`All Modules <modules/index>`.
 
    .. grid-item-card:: 📝 Release Notes
       :link: s_core_v_1/releases/releases
@@ -78,7 +65,6 @@ documentation set that downstream product distributions can build on.
    Modules <modules/index>
    Verification Reports <verification_report/index>
    Integration Status <status_dashboard>
-   S-Core v1.0 <s_core_v_1/index>
+   S-Core v1.0 <s_core_v_1/roadmap/roadmap>
    Releases <s_core_v_1/releases/releases>
    Integration Process <integration_process/integration_process>
-   Process & Tools <process_methods_tools/index>

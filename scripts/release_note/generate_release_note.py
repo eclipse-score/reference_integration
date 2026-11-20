@@ -62,6 +62,8 @@ SECTIONS = {
 
 # Module verification reports are linked from the current docs tree (same convention as the platform report).
 VERIFICATION_INDEX = "docs/verification_report/modules/index.rst"
+# Docs sections the modules are mounted in, see DOCS_SECTION_BY_GROUP in update_module_from_known_good.py.
+MODULE_DOC_SECTIONS = ("modules/functional_modules", "modules/process_methods_tools")
 # Modules that publish their verification evidence as dependable elements (with L.O.B.S.T.E.R. traceability
 # reports) in their own versioned docs instead of an S-CORE module verification report: key -> docs URL of a tag.
 MODULE_DOCS = {
@@ -277,10 +279,17 @@ def resolve(key: str, module: dict, cache: dict[str, dict[str, str]]) -> Entry:
     return Entry(key, name, repo_url, None, commit, commit, at_tag=matches[-1] if matches else None)
 
 
+def module_docname(docname: str, key: str) -> bool:
+    """Whether a Sphinx docname belongs to the docs mounted for module *key*."""
+    return docname.startswith(tuple(f"{section}/{key}/" for section in MODULE_DOC_SECTIONS))
+
+
 def verification_docs() -> dict[str, str]:
     """Map module key -> Sphinx doc path, parsed from the module verification report index."""
     text = (REPO_ROOT / VERIFICATION_INDEX).read_text()
-    return {m.group(2): m.group(1) for m in re.finditer(r":doc:`[^`<]*<(/modules/(\w+)/[^>\s]+)>`", text)}
+    sections = "|".join(re.escape(s) for s in MODULE_DOC_SECTIONS)
+    pattern = rf":doc:`[^`<]*<(/(?:{sections})/(\w+)/[^>\s]+)>`"
+    return {m.group(2): m.group(1) for m in re.finditer(pattern, text)}
 
 
 def collect(known_good: dict) -> dict[str, list[Entry]]:

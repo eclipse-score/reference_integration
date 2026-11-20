@@ -18,42 +18,42 @@
 DOCS_BUNDLES = [
     {
         "bundle": "@score_baselibs//:docs_bundle",
-        "mount_at": "modules/score_baselibs",
+        "mount_at": "modules/functional_modules/score_baselibs",
     },
     {
         "bundle": "@score_persistency//:docs_bundle",
-        "mount_at": "modules/score_persistency",
+        "mount_at": "modules/functional_modules/score_persistency",
     },
     {
         "bundle": "@score_kyron//:docs_bundle",
-        "mount_at": "modules/score_kyron",
+        "mount_at": "modules/functional_modules/score_kyron",
     },
     {
         "bundle": "@score_lifecycle//:docs_bundle",
-        "mount_at": "modules/score_lifecycle",
+        "mount_at": "modules/functional_modules/score_lifecycle",
     },
     {
         "bundle": "@score_logging//:docs_bundle",
-        "mount_at": "modules/score_logging",
+        "mount_at": "modules/functional_modules/score_logging",
     },
     {
         "bundle": "@score_time//:docs_bundle",
-        "mount_at": "modules/score_time",
+        "mount_at": "modules/functional_modules/score_time",
     },
     {
         "bundle": "@score_itf//:docs_bundle",
-        "mount_at": "process_methods_tools/score_itf",
+        "mount_at": "modules/process_methods_tools/score_itf",
     },
     {
         "bundle": "@score_platform//:docs_bundle",
-        "mount_at": "process_methods_tools/score_platform",
+        "mount_at": "modules/functional_modules/score_platform",
     },
     {
         "bundle": "@score_docs_as_code//:docs_bundle",
-        "mount_at": "process_methods_tools/score_docs_as_code",
+        "mount_at": "modules/process_methods_tools/score_docs_as_code",
     },
     {
         "bundle": "@score_process_description//:docs_bundle",
-        "mount_at": "process_methods_tools/score_process_description",
+        "mount_at": "modules/process_methods_tools/score_process_description",
     },
 ]
