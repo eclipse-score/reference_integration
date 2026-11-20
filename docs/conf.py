@@ -45,6 +45,9 @@ extensions = [
     "score_sphinx_bundle",
 ]
 
+# Some mounted baselibs and logging docs lack required architecture links.
+score_cross_module_compatibility_allow_missing_mandatory_links = True
+
 exclude_patterns = [
     # The following entries are not required when building the documentation via 'bazel
     # build //:docs', as that command runs in a sandboxed environment. However, when
