@@ -19,15 +19,26 @@ codeql_sca(
     configs = ["linux-x86_64"],
     safety_level = "ASIL",
     targets = [
+        # Positive patterns only: negative ones are not forwarded to the compile-commands aquery.
+        # Left out: lifecycle health_monitor/src/rust (miri/loom tests without toolchain), the
+        # concurrency benchmark (dev-only google_benchmark) and the persistency test scenarios.
         "@score_baselibs//score/...",
-        "@score_lifecycle//score/...",
-        "@score_persistency//score/kvs/...",
-        # Same exclusions as the module tests in known_good.json (no toolchain on linux-x86_64).
-        "-@score_lifecycle//score/health_monitor/src/rust:miri_tests",
-        "-@score_lifecycle//score/health_monitor/src/rust:loom_tests",
-        # Needs the dev-only dependency google_benchmark of lifecycle.
-        "-@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_benchmark",
-        "-@score_persistency//score/kvs/tests/test_scenarios/...",
-        "-@score_persistency//score/kvs/tests/test_cases/...",
+        "@score_lifecycle//score/health_monitor:all",
+        "@score_lifecycle//score/health_monitor/src/cpp/...",
+        "@score_lifecycle//score/launch_manager:all",
+        "@score_lifecycle//score/launch_manager/src/alive/...",
+        "@score_lifecycle//score/launch_manager/src/lifecycle_client/...",
+        "@score_lifecycle//score/launch_manager/src/lm_control/...",
+        "@score_lifecycle//score/launch_manager/src/daemon:all",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/alive_monitor/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/common:all",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency/details/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/control/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/osal/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/process_group_manager/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/recovery_client/...",
+        "@score_lifecycle//score/launch_manager/src/daemon/src/watchdog/...",
+        "@score_persistency//score/kvs:all",
     ],
 )
