@@ -16,6 +16,7 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -32,11 +33,25 @@ TEMPLATE_DIR = Path(__file__).parent / "assets"
 
 
 def _find_repo_root() -> Path:
+    build_working_dir = os.environ.get("BUILD_WORKING_DIRECTORY")
+    if build_working_dir and (Path(build_working_dir) / "known_good.json").exists():
+        return Path(build_working_dir).resolve()
     candidate = Path(__file__).resolve()
     for parent in candidate.parents:
         if (parent / "known_good.json").exists():
             return parent
     return Path.cwd()
+
+
+def copy_coverage_dashboards(repo_root: Path, output_dir: Path) -> bool:
+    """Copy coverage dashboard artifacts to documentation build directory if available."""
+    coverage_dir = repo_root / "artifacts" / "coverage"
+    if coverage_dir.is_dir():
+        target_dir = output_dir / "coverage"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(coverage_dir, target_dir, dirs_exist_ok=True)
+        return True
+    return False
 
 
 def _resolve_path_from_bazel(path: Path) -> Path:
@@ -227,6 +242,10 @@ def _run(args: argparse.Namespace) -> int:
             print(f"warning: failed to parse SBOM {sbom_path}: {e}", file=sys.stderr)
 
     write_report(known_good, output, token=token, sbom_packages=sbom_packages)
+
+    repo_root = Path(args.known_good) if (Path(args.known_good) / "known_good.json").exists() else _find_repo_root()
+    if copy_coverage_dashboards(repo_root, output.parent):
+        print(f"Copied coverage dashboards to {output.parent / 'coverage'}")
 
     if token:
         print(f"Report written to {output} (current hashes fetched from GitHub)")
