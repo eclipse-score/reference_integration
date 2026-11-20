@@ -188,7 +188,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../s_core_v_1/index.html">
+  <a class="nav-link nav-internal" href="../s_core_v_1/roadmap/roadmap.html">
     S-Core v1
   </a>
 </li>
@@ -200,30 +200,13 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" current active">
-  <a class="nav-link dropdown-item nav-internal" href="integration_process.html">
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="integration_process.html">
     Integration Process
   </a>
 </li>
 
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../process_methods_tools/index.html">
-    Process & Tools
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -361,7 +344,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../s_core_v_1/index.html">
+  <a class="nav-link nav-internal" href="../s_core_v_1/roadmap/roadmap.html">
     S-Core v1
   </a>
 </li>
@@ -377,13 +360,6 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="integration_process.html">
     Integration Process
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../process_methods_tools/index.html">
-    Process & Tools
   </a>
 </li>
 
@@ -567,8 +543,9 @@ automatically exposes a public <code class="docutils literal notranslate"><span 
 which the <code class="docutils literal notranslate"><span class="pre">docs(bundles</span> <span class="pre">=</span> <span class="pre">DOCS_BUNDLES,</span> <span class="pre">...)</span></code> call in the top-level <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/BUILD">BUILD</a> file
 consumes. <strong>Which of the two site sections your module lands in follows from the
 group it sits in</strong> — no extra declaration, and no toctree to edit: the section
-pages (<code class="docutils literal notranslate"><span class="pre">docs/modules/index.rst</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/process_methods_tools/index.rst</span></code>)
-carry empty toctrees that the mounts fill at build time.</p>
+pages (<code class="docutils literal notranslate"><span class="pre">docs/modules/functional_modules/index.rst</span></code> and
+<code class="docutils literal notranslate"><span class="pre">docs/modules/process_methods_tools/index.rst</span></code>) carry empty toctrees that the
+mounts fill at build time.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 26.0%" />
@@ -583,19 +560,22 @@ carry empty toctrees that the mounts fill at build time.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">modules/&lt;module_name&gt;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modules/functional_modules/&lt;module_name&gt;</span></code></p></td>
 <td><p>an S-CORE <strong>software module</strong> that ships in the integration
 (communication, persistency, logging, kyron, baselibs, …). This is the
 common case.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modules.tooling</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">process_methods_tools/&lt;module_name&gt;</span></code></p></td>
-<td><p>a <strong>tooling / process</strong> repo (platform, process_description,
-docs-as-code, …) rather than a shipped software module.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modules/process_methods_tools/&lt;module_name&gt;</span></code></p></td>
+<td><p>a <strong>tooling / process</strong> repo (process_description, docs-as-code, …)
+rather than a shipped software module.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>A module can be listed in the other section with an explicit <code class="docutils literal notranslate"><span class="pre">docs.mount_at</span></code>
+in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>; <code class="docutils literal notranslate"><span class="pre">score_platform</span></code> uses this to appear under the
+functional modules.</p>
 <p>So for a normal module you do nothing beyond adding it to <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>
 and re-running the generator:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scripts/known_good/update_module_from_known_good.py<span class="w"> </span>--known<span class="w"> </span>known_good.json<span class="w"> </span><span class="se">\</span>
