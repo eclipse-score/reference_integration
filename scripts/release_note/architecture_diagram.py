@@ -156,7 +156,7 @@ def load_components(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[st
 
     def owner(need: dict) -> grn.Entry | None:
         docname = need.get("docname") or ""
-        return next((e for e in entries if docname.startswith(f"modules/{e.key}/")), None)
+        return next((e for e in entries if grn.module_docname(docname, e.key)), None)
 
     for need in needs.values():
         if need["type"] == "comp" and (e := owner(need)):
@@ -179,7 +179,7 @@ def assess_maturity(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[st
     """DR-003 maturity per module, see the release-note skill for the criteria."""
     result = {}
     for e in entries:
-        own = [n for n in needs.values() if (n.get("docname") or "").startswith(f"modules/{e.key}/")]
+        own = [n for n in needs.values() if grn.module_docname(n.get("docname") or "", e.key)]
         has_report = any(n["type"] == "mod_ver_report" for n in own) or bool(grn.dependable_elements(e))
         reqs = [n for n in own if n["type"] == "comp_req"]
         complete = bool(reqs) and all(n.get("fully_verifies_back") and _inspected(n) for n in reqs)
