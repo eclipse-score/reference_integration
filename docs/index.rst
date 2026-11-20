@@ -34,7 +34,6 @@ documentation set that downstream product distributions can build on.
 
 .. grid:: 1 1 2 2
    :gutter: 3
-   :class-container: landing-grid
 
    .. grid-item-card:: 📊 Status & Roadmap
       :link: s_core_v_1/roadmap/roadmap
