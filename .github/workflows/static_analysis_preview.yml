@@ -62,6 +62,8 @@ jobs:
         env:
           SCORE_CODEQL_INCLUDE_GLOBS: "**/external/score_*/**"
         run: |
+          # Queries only report on files below the source root, the modules live below the output base.
+          export SCORE_CODEQL_SOURCE_ROOT="$(bazel info output_base)"
           bazel run --lockfile_mode=error //scripts/static_analysis:sca_linux -- \
             --output-dir="${GITHUB_WORKSPACE}/_codeql_sca" \
             --no-fail-sarif-quality --no-fail-suppressions
