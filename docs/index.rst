@@ -66,6 +66,6 @@ documentation set that downstream product distributions can build on.
    Modules <modules/index>
    Verification Reports <verification_report/index>
    Integration Status <status_dashboard>
-   S-Core v1.0 <s_core_v_1/index>
+   S-Core v1.0 <s_core_v_1/roadmap/roadmap>
    Releases <s_core_v_1/releases/releases>
    Integration Process <integration_process/integration_process>
