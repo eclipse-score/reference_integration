@@ -184,23 +184,3 @@ Support
    We will also work on the other process areas, but they are not in the main focus for S-CORE v1
    (shown grayed out above).
 
-Status & Next Steps
--------------------
-
-.. raw:: html
-   :file: ../../_assets/pi_timeline_2026.drawio.svg
-
-.. raw:: html
-
-   <div style="margin-top: 2rem;"></div>
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   Planning Approach <planning_approach>
-   Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
-   Release Gate v0.9 — Implementation <pi2>
-   Release Gate v0.10 — Verification <pi3>
-   Release Gate v1.0 — Hardening & Release <pi4>
-
