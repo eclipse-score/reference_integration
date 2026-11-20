@@ -33,9 +33,14 @@ single_version_override(
 )
 
 bazel_dep(name = "score_tools")
-single_version_override(
+git_override(
     module_name = "score_tools",
-    version = "0.0.4",
+    commit = "6be16bcf2f4fdf4e67d945a3c098b32fad5d2f1b",
+    patch_strip = 1,
+    patches = [
+        "//patches/tools:001-codeql-analyse-selected-external-repos.patch",
+    ],
+    remote = "https://github.com/eclipse-score/tools.git",
 )
 
 bazel_dep(name = "score_tooling")
@@ -70,7 +75,7 @@ single_version_override(
 bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
-    commit = "dcd0678fb4a883e46a885bfea3812bc731ab3822",
+    commit = "3f4a296d1d6487bb85fa1d4fd5d443111162eb95",
     patch_strip = 1,
     patches = [
         "//patches/docs_as_code:001-keep-new-metamodel-checks-info-only.patch",

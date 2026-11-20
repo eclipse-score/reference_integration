@@ -1,0 +1,31 @@
+diff --git a/codeql/score_codeql/compile_commands_filter.py b/codeql/score_codeql/compile_commands_filter.py
+index 4028cb6..51e8a3d 100644
+--- a/codeql/score_codeql/compile_commands_filter.py
++++ b/codeql/score_codeql/compile_commands_filter.py
+@@ -24,6 +24,7 @@ import argparse
+ import fnmatch
+ import json
+ import logging
++import os
+ import re
+ import shlex
+ from collections.abc import Iterable, Sequence
+@@ -141,8 +142,17 @@ def filter_commands(
+ 
+     kept = []
+     removed = []
++    # Integration workspaces analyse selected Bazel modules from external/.
++    include = [
++        g for g in os.environ.get("SCORE_CODEQL_INCLUDE_GLOBS", "").split(":") if g
++    ]
++    external_globs = [g for g in globs if g != "**/external/**"]
+     for entry in entries:
+-        if matches_any(entry_path_candidates(entry), globs):
++        paths = entry_path_candidates(entry)
++        entry_globs = (
++            external_globs if include and matches_any(paths, include) else globs
++        )
++        if matches_any(paths, entry_globs):
+             removed.append(entry.get("file", ""))
+         else:
+             kept.append(entry)

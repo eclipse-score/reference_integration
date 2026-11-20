@@ -10,8 +10,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# POC, delete before merge: scans all modules with CodeQL in this run and builds the
-# docs with these findings in the module verification reports.
+# POC, delete before merge: analyses the integrated modules with the Bazel based CodeQL
+# tooling of score_tools (tools#69) and builds the docs with these findings in the
+# module verification reports, all in this run.
 name: Static Analysis Report Preview (temporary)
 permissions:
   contents: read
@@ -25,16 +26,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  codeql:
-    uses: ./.github/workflows/codeql-multiple-repo-scan.yml
-    permissions:
-      contents: write
-      security-events: write
-      packages: read
-      actions: read
   docs:
-    needs: codeql
     runs-on: ubuntu-24.04
+    timeout-minutes: 180
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1.1
@@ -64,15 +58,28 @@ jobs:
         with:
           packages: graphviz
           cache: false
-      - name: Download CodeQL SARIF of this run
-        uses: actions/download-artifact@v4
-        with:
-          name: codeql-sarif-results
-          path: codeql-sarif
-      - name: Prepare SARIF for the docs build
+      - name: CodeQL analysis (score_tools codeql_sca, ASIL preset)
+        env:
+          SCORE_CODEQL_INCLUDE_GLOBS: "**/external/score_*/**"
         run: |
-          python3 scripts/static_analysis/prepare_codeql_sarif.py \
-            codeql-sarif/cpp.sarif static-analysis-report/codeql.sarif
+          bazel run --lockfile_mode=error //scripts/static_analysis:sca_linux -- \
+            --output-dir="${GITHUB_WORKSPACE}/_codeql_sca" \
+            --no-fail-sarif-quality --no-fail-suppressions
+          cat _codeql_sca/results/summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Hand the per-report SARIF files to the docs build
+        # code-scanning.sarif drops all results outside this repository, i.e. all module findings.
+        run: |
+          mkdir -p static-analysis-report
+          find _codeql_sca/results -maxdepth 1 -name '*.sarif' ! -name code-scanning.sarif \
+            -exec cp {} static-analysis-report/ \;
+          ls -la static-analysis-report
+      - name: Upload CodeQL results
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: codeql-sca-results
+          path: _codeql_sca/results
+          retention-days: 7
       - name: Build documentation
         run: |
           bazel run \
