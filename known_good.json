@@ -114,6 +114,9 @@
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
+                "bazel_patches": [
+                    "//patches/kyron:001-pin-flatbuffers-to-integration-version.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "extra_test_config": [],
@@ -237,6 +240,28 @@
                     ]
                 }
             },
+            "score_crypto": {
+                "repo": "https://github.com/etas-contrib/score_crypto.git",
+                "hash": "0568b709cafd7e956cb65b287153b90c38815f05",
+                "bazel_patches": [
+                    "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//score/..."
+                    ]
+                },
+                "pin_version": true
+            },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
@@ -278,7 +303,7 @@
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
                 "docs": false,
-                "version": "0.0.15"
+                "hash": "871234431b05bc99b249fb5db775bbe850ed7f0d"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
@@ -356,5 +381,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-13T14:08:13Z"
+    "timestamp": "2026-11-17T10:28:38Z"
 }

@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-13T14:08:13Z
+# Generated from known_good.json at 2026-11-17T10:28:38Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
@@ -56,6 +56,10 @@ single_version_override(
 bazel_dep(name = "score_kyron")
 single_version_override(
     module_name = "score_kyron",
+    patch_strip = 1,
+    patches = [
+        "//patches/kyron:001-pin-flatbuffers-to-integration-version.patch",
+    ],
     version = "0.1.6",
 )
 
@@ -97,6 +101,17 @@ single_version_override(
         "//patches/time:003-undev-rules-imagefs.patch",
     ],
     version = "0.3.2",
+)
+
+bazel_dep(name = "score_crypto")
+git_override(
+    module_name = "score_crypto",
+    commit = "0568b709cafd7e956cb65b287153b90c38815f05",
+    patch_strip = 1,
+    patches = [
+        "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+    ],
+    remote = "https://github.com/etas-contrib/score_crypto.git",
 )
 
 bazel_dep(name = "score_config_management")
