@@ -38,6 +38,9 @@ Follow `.github/instructions/known-good-json.instructions.md` and
 - If the pinned `hash`/`version` is newer than the latest release (the release
   is an ancestor of it, compare `ahead_by == 0`, `behind_by > 0`), the pin is
   kept unchanged and shown as *kept* in the table.
+- `--use-head MODULE …` pins the given modules to the head commit of their
+  `branch` (as `hash`) instead of the latest release, e.g. when a needed fix is
+  only on `main`; shown as *branch head* in the table.
 
 ## 3. Report table (done by the script)
 

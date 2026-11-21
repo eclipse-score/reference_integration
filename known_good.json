@@ -6,7 +6,10 @@
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:003-export-aou-requirements.patch"
+                    "//patches/baselibs:003-export-aou-requirements.patch",
+                    "//patches/baselibs:004-make-log-examples-visible.patch",
+                    "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch",
+                    "//patches/baselibs:006-mark-unmitigated-safety-analyses-as-draft.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -35,7 +38,7 @@
                         "//..."
                     ]
                 },
-                "version": "0.2.19"
+                "version": "0.2.18"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
@@ -107,7 +110,7 @@
                         "//:unit_tests"
                     ]
                 },
-                "version": "0.5.0"
+                "version": "0.4.1"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -206,8 +209,10 @@
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "version": "0.3.3",
+                "version": "0.3.2",
                 "bazel_patches": [
+                    "//patches/time:004-rename-ubuntu-image-pull.patch",
+                    "//patches/time:005-use-sanitizer-bool-flags.patch",
                     "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/time:003-undev-rules-imagefs.patch"
                 ],
@@ -235,7 +240,7 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "version": "0.3.5",
+                "version": "0.3.4",
                 "bazel_patches": [
                     "//patches/config_management:001-expose-mw-com-config.patch",
                     "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
@@ -282,7 +287,7 @@
             },
             "score_devcontainer": {
                 "repo": "https://github.com/eclipse-score/devcontainer.git",
-                "version": "1.13.0",
+                "version": "1.12.0",
                 "docs": false,
                 "pin_version": true
             },
@@ -354,5 +359,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-21T16:09:13Z"
+    "timestamp": "2026-11-13T14:08:13Z"
 }
