@@ -24,8 +24,10 @@ Usage:
       [--known-good known_good.json] [--apply] [--report pre_release_report.md]
 
 Without --apply only the report is produced. With --apply every module gets
-``"version": "<latest>"`` instead of its hash; regenerate the Bazel files and the
-lockfile afterwards (see .github/skills/pre-release/SKILL.md).
+``"version": "<latest>"`` instead of its hash, unless the pinned hash or version is
+newer than the latest release (release is an ancestor of it); then the pin is kept.
+Regenerate the Bazel files and the lockfile afterwards (see
+.github/skills/pre-release/SKILL.md).
 
 Environment:
   GITHUB_TOKEN or GITHUB_PAT for the GitHub API (release dates, commit counts).
@@ -82,6 +84,12 @@ class Release:
     head_sha: str | None = None
     head_tag: str | None = None
     head_date: dt.date | None = None
+    kept: bool = False
+
+    @property
+    def now_ref(self) -> str | None:
+        """Ref the module is pinned to after --apply."""
+        return self.current_ref if self.kept else self.tag
 
 
 def http_json(url: str, *, github: bool = False) -> dict | list | None:
@@ -219,17 +227,19 @@ def collect(known_good_path: Path) -> list[Release]:
                 entry.head_tag = tag_at(entry.slug, entry.head_sha)
                 if entry.head_tag:
                     entry.head_date = release_date(entry.slug, entry.head_tag)
-                entry.commits = compare_counts(entry.slug, entry.tag, entry.head_sha)[0]
                 entry.current_tag, entry.current_date = pinned_release(module)
                 if module.hash and entry.current_tag:
                     entry.current = entry.current_tag.removeprefix("v")
                 entry.current_ref = entry.current_tag or module.hash
                 if entry.current_ref:
                     entry.delta = compare_counts(entry.slug, entry.current_ref, entry.tag)
+                    entry.kept = entry.delta[0] == 0 and entry.delta[1] > 0
+                entry.commits = compare_counts(entry.slug, entry.now_ref, entry.head_sha)[0]
             except Exception as e:  # noqa: BLE001
                 entry.error = str(e)
             print(
-                f"{entry.module}: {entry.current} -> {entry.version or '-'}"
+                f"{entry.module}: {entry.current} -> {entry.current if entry.kept else entry.version or '-'}"
+                f"{' (kept, newer than ' + str(entry.version) + ')' if entry.kept else ''}"
                 f" ({entry.tag or '-'}, {entry.date or '-'}, {entry.commits if entry.commits is not None else '-'}"
                 f" commits since){' ERROR: ' + entry.error if entry.error else ''}",
                 file=sys.stderr,
@@ -242,7 +252,7 @@ def apply_versions(path: Path, releases: list[Release]) -> None:
     text = path.read_text(encoding="utf-8")
     data = json.loads(text)
     for r in releases:
-        if not r.version:
+        if not r.version or r.kept:
             continue
         modules = data["modules"][r.group]
         modules[r.module] = {
@@ -263,6 +273,10 @@ def render(releases: list[Release], today: dt.date) -> str:
         if not r.version:
             return "-"
         cell = ref_cell(r, r.version, r.tag, r.date)
+        if r.kept:
+            kept = ref_cell(r, r.current, r.current_tag, r.current_date)
+            link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.current_ref}"
+            return f"{kept} kept, [+{r.delta[1]}]({link}) since latest release {cell}"
         if not r.delta:
             return cell
         ahead, behind = r.delta
@@ -278,7 +292,7 @@ def render(releases: list[Release], today: dt.date) -> str:
             return "-"
         label = r.head_tag.removeprefix("v") if r.head_tag else r.head_sha[:8]
         count = f"**{r.commits}**" if r.commits >= BOLD_COMMITS else str(r.commits)
-        link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.head_sha}"
+        link = f"https://github.com/{r.slug}/compare/{r.now_ref}...{r.head_sha}"
         return f"{ref_cell(r, label, r.head_tag, r.head_date)} [{count}]({link})"
 
     lines = [
@@ -291,11 +305,12 @@ def render(releases: list[Release], today: dt.date) -> str:
         ),
         (
             "- **Now:** latest registry release this PR switches to (release date), followed by the commits"
-            " it gains (+) or drops (-, bold) compared to Before."
+            " it gains (+) or drops (-, bold) compared to Before. If Before is newer than the latest"
+            " release, Before is kept (followed by its commits since that release)."
         ),
         (
             "- **Head:** head commit of the module's branch, shown as release if a tag points at it"
-            " (commit or release date), followed by the commits since the Now release,"
+            " (commit or release date), followed by the commits since Now,"
             f" bold from {BOLD_COMMITS} on."
         ),
         "- **OK/NOK:** set by hand.",

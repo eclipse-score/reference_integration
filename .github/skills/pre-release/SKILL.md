@@ -35,6 +35,9 @@ Follow `.github/instructions/known-good-json.instructions.md` and
   otherwise `v<version>`.
 - `--apply` swaps `hash`/`version` for the new `version` in place and bumps
   `timestamp`; no other key in `known_good.json` changes (no model re-serialization).
+- If the pinned `hash`/`version` is newer than the latest release (the release
+  is an ancestor of it, compare `ahead_by == 0`, `behind_by > 0`), the pin is
+  kept unchanged and shown as *kept* in the table.
 
 ## 3. Report table (done by the script)
 
@@ -49,8 +52,8 @@ The report has a single table with every module. The columns are fixed:
 | Column | Content |
 |---|---|
 | `Before` | Release or commit pinned in `known_good.json` so far, (date) |
-| `Now` | Latest registry release, (date), then the commits it gains (`+N`) or drops (`-N`, bold; `+N/-M` if diverged) compared to `Before` |
-| `Head` | Head commit of the module's `branch` (default `main`), (date), then the commits since the `Now` release, bold from 10 on |
+| `Now` | Latest registry release, (date), then the commits it gains (`+N`) or drops (`-N`, bold; `+N/-M` if diverged) compared to `Before`; if `Before` is newer than the release: `Before` *kept*, `+N` since the latest release |
+| `Head` | Head commit of the module's `branch` (default `main`), (date), then the commits since `Now`, bold from 10 on |
 | `OK/NOK` | Empty |
 
 Every commit count links to the GitHub commit list (compare view).
