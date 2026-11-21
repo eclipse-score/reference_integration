@@ -42,9 +42,10 @@ _MULTICAST_ROUTE_CMD = "ip route add 224.0.0.0/4 dev eth0 2>/dev/null || true"
 TEST_APPS = [
     "logging_app",
     "dlt_generator",
-    "log_builtin",
-    "log_custom",
-    "log_cpp_init",
+    # TODO: re-enable with the baselibs showcase (showcases/standalone/BUILD).
+    # "log_builtin",
+    # "log_custom",
+    # "log_cpp_init",
     "kyron_safety_task",
     "kyron_main_macro",
     "com_producer",
