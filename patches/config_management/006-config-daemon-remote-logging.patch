@@ -1,0 +1,17 @@
+config_management 0.3.5 switched the config daemon libraries from
+@score_logging//score/mw/log to @score_baselibs//score/mw/log:frontend, so the
+daemon no longer links the DLT (remote) backend and kRemote falls back to
+console. Link the logging backends into the binary again.
+
+diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
+index f044bb6..c80905d 100644
+--- a/score/config_management/config_daemon/code/BUILD
++++ b/score/config_management/config_daemon/code/BUILD
+@@ -75,5 +75,7 @@ cc_binary(
+         "//score/config_management/config_daemon/code/factory/details:factory_impl",
+         "@score_lifecycle//score/launch_manager:lifecyclemanager_cc",
+         "@score_lifecycle//score/launch_manager:runapplication_cc",
++        # Links the mw::log backends (incl. DLT/remote); the libraries only depend on the frontend.
++        "@score_logging//score/mw/log",
+     ],
+ )
