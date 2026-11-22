@@ -57,8 +57,9 @@ single_version_override(
 )
 
 bazel_dep(name = "score_lifecycle")
-single_version_override(
+git_override(
     module_name = "score_lifecycle",
+    commit = "cc65b0b12596ea6dcb4da8ef438e7a3617486ab5",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
@@ -66,7 +67,7 @@ single_version_override(
         "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/lifecycle:006-undev-cpp-policies.patch",
     ],
-    version = "0.10.1",
+    remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
