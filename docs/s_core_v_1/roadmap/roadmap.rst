@@ -26,10 +26,14 @@ Feature Completeness
 
 Selected modules are fully implemented and tested.
 
-.. image:: ../../_assets/sw_arch_v_1.drawio.svg
+.. figure:: ../../_assets/sw_arch_v_1.drawio.svg
    :alt: S-CORE v1 Software Architecture
    :align: center
    :width: 50%
+
+   S-CORE v1 Software Architecture
+
+The following modules are in scope for S-CORE v1:
 
 .. list-table::
    :widths: 30 70
