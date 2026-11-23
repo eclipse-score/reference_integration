@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=d6826432" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=89f02737" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
@@ -189,7 +189,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -345,7 +345,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -450,7 +450,6 @@
 <li class="toctree-l3"><a class="reference internal" href="components/index.html">Component documentation</a></li>
 </ul>
 </details></li>
-
 <li class="toctree-l2"><a class="reference internal" href="../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../score_logging/index.html">Logging</a></li>
@@ -608,14 +607,19 @@ It integrates best practices for build, test, CI/CD and documentation.</p>
 <p>The example <code class="docutils literal notranslate"><span class="pre">basic.rs</span></code> is executed with <code class="docutils literal notranslate"><span class="pre">cargo</span> <span class="pre">run</span> <span class="pre">-p</span> <span class="pre">rust_kvs</span> <span class="pre">--example</span> <span class="pre">basic</span></code>, the other examples accordingly with their file name.
 The integration of the module into a Bazel project is described in <code class="docutils literal notranslate"><span class="pre">examples/README.md</span></code>.</p>
 </section>
-</section>
 <section id="quick-start-building-and-testing">
-<span id="quick-start-building-testing"></span><h1>Quick Start - Building and Testing<a class="headerlink" href="#quick-start-building-and-testing" title="Link to this heading">#</a></h1>
+<span id="quick-start-building-testing"></span><h2>Quick Start - Building and Testing<a class="headerlink" href="#quick-start-building-and-testing" title="Link to this heading">#</a></h2>
 <p>To build the module:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span>build<span class="w"> </span>--config<span class="o">=</span>score-linux-x86_64<span class="w"> </span>--<span class="w"> </span>//score/...
 </pre></div>
 </div>
 <p>Building without an explicit <code class="docutils literal notranslate"><span class="pre">--config</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">score-linux-x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">score-qnx-x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">score-qnx-aarch64</span></code>) is not supported.
+The config <code class="docutils literal notranslate"><span class="pre">score-linux-aarch64</span></code> is supported too.
+Its tests need <code class="docutils literal notranslate"><span class="pre">qemu-user</span></code>.
+The QNX configs need QNX SDP credentials (<code class="docutils literal notranslate"><span class="pre">SCORE_QNX_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">SCORE_QNX_PASSWORD</span></code>) and a QNX license.
+Run the QNX unit tests with <code class="docutils literal notranslate"><span class="pre">run-under-qnx-x86_64</span></code> or <code class="docutils literal notranslate"><span class="pre">run-under-qnx-aarch64</span></code>.
+These configs run the tests in a QEMU VM and need <code class="docutils literal notranslate"><span class="pre">qemu-system-x86_64</span></code> or <code class="docutils literal notranslate"><span class="pre">qemu-system-aarch64</span></code>.
+The x86_64 VM uses KVM when it is available.
 The old names <code class="docutils literal notranslate"><span class="pre">per-x86_64-linux</span></code>, <code class="docutils literal notranslate"><span class="pre">per-x86_64-qnx</span></code> and <code class="docutils literal notranslate"><span class="pre">per-arm64-qnx</span></code> still work as deprecated aliases.</p>
 <p>To run all tests:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>//...
@@ -633,6 +637,7 @@ bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span
 <p>The tests run with <a class="reference external" href="https://github.com/eclipse-score/itf">ITF</a> on a target system:
 a Docker container on Linux (requires Docker), a QEMU VM on QNX (requires <code class="docutils literal notranslate"><span class="pre">qemu-system-x86_64</span></code>,
 KVM is optional but makes the tests much faster).</p>
+</section>
 <section id="module-build-configuration">
 <h2>Module Build Configuration<a class="headerlink" href="#module-build-configuration" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">project_config.bzl</span></code> file at the root of the module defines metadata used by Bazel macros.
@@ -701,20 +706,14 @@ See <a class="reference external" href="https://eclipse-score.github.io/score/ma
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Persistency Documentation</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-documentation">Feature Documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-documentation">Module Documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-documentation">Component Documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-building-and-testing">Quick Start - Building and Testing</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-building-and-testing">Quick Start - Building and Testing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-build-configuration">Module Build Configuration</a></li>
 </ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>

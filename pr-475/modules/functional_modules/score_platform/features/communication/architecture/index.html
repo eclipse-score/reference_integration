@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=d6826432" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=89f02737" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
@@ -189,7 +189,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -345,7 +345,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -444,7 +444,6 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../../index.html">Functional Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
-
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -458,6 +457,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../code_generation/index.html">Code Generation</a></li>
 <li class="toctree-l4 current active"><a class="reference internal" href="../index.html">Communication</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../crypto/index.html">Crypto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../daal/index.html">Deterministic App Abstraction Layer</a></li>
 
 
@@ -472,7 +472,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../log_and_trace/index.html">Log and Trace</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../orchestration/index.html">Orchestration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../persistency/index.html">Persistency</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../security_crypto/index.html">Security &amp; Cryptography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../time/index.html">Time</a></li>
 </ul>
 </details></li>
@@ -573,7 +572,7 @@
                   
   <section id="communication-architecture">
 <span id="com-architecture"></span><h1>Communication Architecture<a class="headerlink" href="#communication-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-b3197381">
+<div class="need_container docutils container" id="SNCB-df2c94df">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__communication_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -628,7 +627,7 @@
 <span id="com-static-architecture"></span><h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
 <p>As discussed in <a class="reference internal" href="../index.html#com-rationale"><span class="std std-ref">Rationale</span></a>, the overall architecture of the communication framework must be layered. This is required, to separate the frontend from the underlying communication mechanisms (also called bindings).</p>
 <p>This ensures a stable public API, independent of the underlying binding(s). At the same time, the communication framework can support many different communication protocols in a flexible manner.</p>
-<div class="need_container docutils container" id="SNCB-81c26ddb">
+<div class="need_container docutils container" id="SNCB-26b72cc6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat table" id="feat__com_communication">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -675,7 +674,7 @@
 <section id="interface-description">
 <h3>Interface Description<a class="headerlink" href="#interface-description" title="Link to this heading">#</a></h3>
 <p>The public API for communication is defined as:</p>
-<div class="need_container docutils container" id="SNCB-b2cbbfe6">
+<div class="need_container docutils container" id="SNCB-b8b0dae8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__communication__user">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -724,7 +723,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f7f26e5d">
+<div class="need_container docutils container" id="SNCB-89f48cc1">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__initialize">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -767,7 +766,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5ff67ee8">
+<div class="need_container docutils container" id="SNCB-fe11baf7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__offer_service">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -810,7 +809,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-be539529">
+<div class="need_container docutils container" id="SNCB-56247a1b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__update">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -853,7 +852,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-16ba3f86">
+<div class="need_container docutils container" id="SNCB-151d4c8d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__send">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -896,7 +895,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-28549240">
+<div class="need_container docutils container" id="SNCB-b298dca6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__startfindserv">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -939,7 +938,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f30f5d19">
+<div class="need_container docutils container" id="SNCB-1885fc93">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__createproxy">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -982,7 +981,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-16c1eb16">
+<div class="need_container docutils container" id="SNCB-81a9fbea">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__subscribe">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1025,7 +1024,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-636820c2">
+<div class="need_container docutils container" id="SNCB-64122faf">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__com__getnewsamples">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">

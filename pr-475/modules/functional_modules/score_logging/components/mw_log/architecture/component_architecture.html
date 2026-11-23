@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=d6826432" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=89f02737" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
@@ -189,7 +189,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -345,7 +345,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -444,7 +444,6 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../../index.html">Functional Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
-
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../index.html">Logging</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -543,7 +542,7 @@
                   
   <section id="component-architecture">
 <span id="id1"></span><h1>Component Architecture<a class="headerlink" href="#component-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-ce6dc2be">
+<div class="need_container docutils container" id="SNCB-4a5f6f04">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_backend_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -609,7 +608,7 @@
 <p>The components are designed to cover the expectations from the feature architecture
 (i.e. if already exists a definition it should be taken over and enriched).</p>
 <p>A component can optional also consist of lower level components to further structure the architecture. The component and its static views can also optionally use interfaces provided by other components.</p>
-<div class="need_container docutils container" id="SNCB-82623cc5">
+<div class="need_container docutils container" id="SNCB-a8973d00">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__mw_log_backend">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -656,7 +655,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c834b9b2">
+<div class="need_container docutils container" id="SNCB-0dcfaa21">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__log__sv">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -709,7 +708,7 @@
 </section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-f03a2cc8">
+<div class="need_container docutils container" id="SNCB-6a69f12f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__logging__shared_memory">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -730,8 +729,10 @@
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__mw_log_backend" title="logic_arc_int__logging__shared_memory">comp__mw_log_backend</a></span></span></div>
+<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__asil_support" title="logic_arc_int__logging__shared_memory">feat_req__logging__asil_support</a></span></span></div>
+<div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__mw_log_backend" title="logic_arc_int__logging__shared_memory">comp__mw_log_backend</a></span></span></div>
 <div class="line">used by: <span class="uses"><span><a class="reference internal" href="../../datarouter/index.html#comp__datarouter" title="logic_arc_int__logging__shared_memory">comp__datarouter</a></span></span></div>
+<div class="line">included by: <span class="included_by"><span><a class="reference internal" href="../../../../score_platform/features/log_and_trace/logging/architecture/index.html#feat__logging" title="logic_arc_int__logging__shared_memory">feat__logging</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -756,7 +757,7 @@ see <a class="reference internal" href="#logic_arc_int__logging__datarouter_msg_
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ab4b92fe">
+<div class="need_container docutils container" id="SNCB-ed21c701">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__logging__datarouter_msg_client">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -777,8 +778,10 @@ see <a class="reference internal" href="#logic_arc_int__logging__datarouter_msg_
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__mw_log_backend" title="logic_arc_int__logging__datarouter_msg_client">comp__mw_log_backend</a></span></span></div>
+<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__asil_support" title="logic_arc_int__logging__datarouter_msg_client">feat_req__logging__asil_support</a></span></span></div>
+<div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__mw_log_backend" title="logic_arc_int__logging__datarouter_msg_client">comp__mw_log_backend</a></span></span></div>
 <div class="line">used by: <span class="uses"><span><a class="reference internal" href="../../datarouter/index.html#comp__datarouter" title="logic_arc_int__logging__datarouter_msg_client">comp__datarouter</a></span></span></div>
+<div class="line">included by: <span class="included_by"><span><a class="reference internal" href="../../../../score_platform/features/log_and_trace/logging/architecture/index.html#feat__logging" title="logic_arc_int__logging__datarouter_msg_client">feat__logging</a></span></span></div>
 </span></div>
 </div>
 </td>

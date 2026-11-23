@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/custom.css?v=d6826432" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/custom.css?v=89f02737" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
@@ -189,7 +189,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -345,7 +345,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -472,7 +472,6 @@
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../../../score_persistency/index.html">Persistency Documentation</a></li>
-
 <li class="toctree-l2"><a class="reference internal" href="../../../../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../../../score_logging/index.html">Logging</a></li>
@@ -571,21 +570,22 @@
 JSON parser.
 The JSON data must be provided to the parser as
 * a path to a file
-* a character buffer
-* a stream, e.g. a file or string stream.</p>
+* a character buffer.</p>
 <p>The JSON document size and the number of concurrently parsed documents is not restricted by vaJson.</p>
 <section id="sequences">
 <h3>Sequences<a class="headerlink" href="#sequences" title="Link to this heading">#</a></h3>
 <p class="plantuml">
-<object data="../../../../../../../../../_images/plantuml-3f61ac42ca08ec53f0c93a547724f03afb738be4.svg" type="image/svg+xml" style="width:1371px;height:1806px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../../../../_images/plantuml-3f61ac42ca08ec53f0c93a547724f03afb738be4.svg" type="image/svg+xml" style="width:1218px;height:1337px;background:#FFFFFF;"></object></p>
 </section>
 </section>
 <section id="encoding">
 <h2>Encoding<a class="headerlink" href="#encoding" title="Link to this heading">#</a></h2>
-<p>Since all JSON characters are ASCII compliant and the score::json::vajson::internal::StructureParser just passes the data
-from the input stream to the event handler the user must handle the encoding.</p>
-<p>The method <code class="docutils literal notranslate"><span class="pre">score::json::vajson::JsonData::GetEncoding()</span></code> returns the detected encoding if the input stream contains a byte
-order mark (BOM).</p>
+<p>JSON syntax is ASCII-based, but JSON strings can contain UTF-8 encoded characters. The
+score::json::vajson::internal::StructureParser decodes JSON string escapes, including the two-character escapes and
+the <code class="docutils literal notranslate"><span class="pre">\uXXXX</span></code> escapes, before reporting strings and keys to the event handler. An escaped code point is reported
+UTF-8 encoded, and a UTF-16 surrogate pair is combined into the single code point it denotes. UTF-8 bytes
+present directly in the input are passed through without transcoding, so the user must provide input in the expected
+encoding and handle any application-specific encoding needs.</p>
 </section>
 <section id="data-items">
 <h2>Data Items<a class="headerlink" href="#data-items" title="Link to this heading">#</a></h2>
@@ -611,25 +611,20 @@ that are instantiated by themselves depending on the last event.</p>
 </section>
 <section id="number-formatting">
 <h2>Number formatting<a class="headerlink" href="#number-formatting" title="Link to this heading">#</a></h2>
-<p>A Number of the input stream is reported to the applications event handler by calling OnNumber().
+<p>A number in the document is reported to the applications event handler by calling OnNumber().
 The parameter of the function (score::json::vajson::JsonNumber) contains the number and can provide it in different formats
 to the application:</p>
 <ul class="simple">
-<li><p>boolean</p></li>
 <li><p>unsigned int (any unsigned integer smaller or equal to unsigned long long int)</p></li>
 <li><p>signed int (any signed integer smaller or equal to long long int)</p></li>
 <li><p>float</p></li>
 <li><p>double</p></li>
-<li><p>score::json::vajson::JsonNumber (for further processing by the application)</p></li>
 </ul>
-<p>The application can also try to convert the number to a user defined format by calling
-score::json::vajson::JsonNumber::Convert.</p>
 </section>
 <section id="error-reporting">
 <h2>Error reporting<a class="headerlink" href="#error-reporting" title="Link to this heading">#</a></h2>
 <p>Upon detection of an error, the parser returns from Parse() with an ara::core::Result&lt;void&gt; and one of the errors
-defined in score::json::vajson::JsonErrc.
-Also, the position in the stream where the error has occurred is reported.</p>
+defined in score::json::vajson::JsonErrc.</p>
 </section>
 </section>
 
