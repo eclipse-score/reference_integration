@@ -60,6 +60,8 @@ The whole setup is open source.
 To simplify the deployment and focus on the integration itself, this demo uses pre-built binary assets.
 These consist of a pre-built image and a cross-compilation toolchain.
 Both assets are referenced in the corresponding Bazel targets and are automatically downloaded on demand.
+Bazel uses the `os_images` prebuilt-image macro to install the S-CORE platform,
+showcases, and integration configuration into that image.
 
 The pre-built image provides a so called "fast-dev" integration for EBcLfSA,
 which makes development and debugging of high integrity applications easy.
@@ -68,6 +70,20 @@ It checks at runtime, whether high integrity applications adhere to certain assu
 
 Note that this image represents a development image but not a production image of Linux for Safety Application.
 It is aimed at demonstrating development with focus on key features and AoUs.
+
+### Run the image and connect over SSH
+
+Start the image with `bazel run --config=eb-aarch64 //images/ebclfsa_aarch64:run`.
+After it has booted, connect from a separate terminal:
+
+```bash
+key=$(mktemp)
+install -m 600 bazel-bin/images/ebclfsa_aarch64/build/base/ssh_target_key "$key"
+ssh -o IdentitiesOnly=yes -i "$key" -p 2222 root@localhost
+rm -f "$key"
+```
+
+The release image uses its bundled development key instead of password authentication.
 
 ## Main constraints for high-integrity applications
 

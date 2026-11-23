@@ -24,9 +24,12 @@
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
-alias(
+filegroup(
     name = "image",
-    actual = "//images/ebclfsa_aarch64/build:fastdev-image",
+    srcs = [
+        "//images/ebclfsa_aarch64/build:image",
+        "//images/ebclfsa_aarch64/build:kernel",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -36,12 +39,14 @@ sh_binary(
         "//runners/qemu_aarch64/scripts:run_qemu.sh",
     ],
     args = [
-        "$(locations :image)",
+        "$(location //images/ebclfsa_aarch64/build:kernel)",
+        "$(location //images/ebclfsa_aarch64/build:image)",
         "-append",
         "'root=/dev/vda1 sdk_enable lisa_syscall_whitelist=2026 rw sharedmem.enable_sharedmem=0 init=/usr/bin/ebclfsa-cflinit'",
     ],
     data = [
-        ":image",
+        "//images/ebclfsa_aarch64/build:image",
+        "//images/ebclfsa_aarch64/build:kernel",
     ],
     env = {"RUNFILES_LIB_DEBUG": "1"},
     use_bash_launcher = True,
