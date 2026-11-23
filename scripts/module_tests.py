@@ -454,6 +454,11 @@ def codeql_args(module, bazel_wrapper: Path, output_dir: Path) -> list[str]:
         f"--output-dir={output_dir}",
         "--no-fail-sarif-quality",
         "--no-fail-suppressions",
+        # Report what could be extracted; the extraction summary lists the failed commands.
+        "--max-failed-command-pct=25",
+        "--max-commands-with-issues-pct=100",
+        "--max-missing-commands-pct=25",
+        "--max-unique-parse-errors=1000",
         module.metadata.code_root_path,
         *(f"-{target}" for target in module.metadata.exclude_test_targets),
     ]
@@ -496,6 +501,9 @@ def codeql(args: argparse.Namespace) -> int:
         sys.exit(f"{args.module} is not a target_sw module in known_good.json")
     work = args.work_dir.resolve()
     workspace, out, env, pinned, unpinned = _prepare_module(module, known, work, add_score_tools=True)
+    # The tool's nested bazel calls do not pass a lockfile mode, a module's own .bazelrc may set error.
+    with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
+        rc.write("common --lockfile_mode=update\n")
 
     results = out / "codeql"
     exit_code, _ = streamed(["bazel", *codeql_args(module, work / "bin" / "bazel", results)], workspace, env)
