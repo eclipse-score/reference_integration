@@ -35,7 +35,8 @@ public:
 
     void run(const std::string& input) const final {
         auto params{KvsParameters::from_json_section(input, "kvs_parameters_1")};
-        auto kvs{create_kvs(params)};
+        const auto kvs_instance{create_kvs(params)};
+        auto& kvs{*kvs_instance};
 
         auto set_result{kvs.set_value("checksum_test_key", KvsValue{1.0})};
         if (!set_result) {
