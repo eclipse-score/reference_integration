@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-21T16:52:15Z
+# Generated from known_good.json at 2026-11-17T10:28:38Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 # Documentation bundle mounts for the docs() macro in the root BUILD file.
@@ -42,7 +42,7 @@ DOCS_BUNDLES = [
     },
     {
         "bundle": "@score_crypto//:docs_bundle",
-        "mount_at": "modules/score_crypto",
+        "mount_at": "modules/functional_modules/score_crypto",
     },
     {
         "bundle": "@score_itf//:docs_bundle",
