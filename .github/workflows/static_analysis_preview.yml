@@ -39,7 +39,7 @@ jobs:
         id: modules
         env:
           # Temporary: only rerun the module under investigation (empty = all).
-          ONLY_MODULES: score_communication
+          ONLY_MODULES: ""
         run: |
           echo "modules=$(jq -c --arg only "${ONLY_MODULES}" '.modules.target_sw | to_entries
             | map(select((.value.metadata.langs // ["cpp", "rust"]) | index("cpp"))) | map(.key)
