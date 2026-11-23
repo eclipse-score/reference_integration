@@ -37,9 +37,13 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: List modules
         id: modules
+        env:
+          # Temporary: only rerun the module under investigation (empty = all).
+          ONLY_MODULES: score_communication
         run: |
-          echo "modules=$(jq -c '.modules.target_sw | to_entries
-            | map(select((.value.metadata.langs // ["cpp", "rust"]) | index("cpp"))) | map(.key)' known_good.json)" >> "$GITHUB_OUTPUT"
+          echo "modules=$(jq -c --arg only "${ONLY_MODULES}" '.modules.target_sw | to_entries
+            | map(select((.value.metadata.langs // ["cpp", "rust"]) | index("cpp"))) | map(.key)
+            | map(. as $m | select($only == "" or ($only | split(",") | any(. == $m)))) ' known_good.json)" >> "$GITHUB_OUTPUT"
   codeql:
     name: CodeQL ${{ matrix.module }}
     needs: modules

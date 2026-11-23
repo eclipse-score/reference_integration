@@ -504,6 +504,8 @@ def codeql(args: argparse.Namespace) -> int:
     # The tool's nested bazel calls do not pass a lockfile mode, a module's own .bazelrc may set error.
     with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
         rc.write("common --lockfile_mode=update\n")
+        # Experiment: the script bootstrap (communication) seems to drop the bundle's ext/ runfiles.
+        rc.write("build --@rules_python//python/config_settings:bootstrap_impl=system_python\n")
 
     results = out / "codeql"
     # Query packs from the pinned release assets; the registry fallback of the analysis is flaky.
