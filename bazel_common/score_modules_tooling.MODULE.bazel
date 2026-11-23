@@ -21,6 +21,13 @@ git_override(
     remote = "https://github.com/eclipse-score/score-crates.git",
 )
 
+bazel_dep(name = "score_openssl")
+git_override(
+    module_name = "score_openssl",
+    commit = "89e1591f40a82fde66b3850a8a7a385db630f8a9",
+    remote = "https://github.com/eclipse-score/openssl.git",
+)
+
 bazel_dep(name = "score_itf")
 single_version_override(
     module_name = "score_itf",

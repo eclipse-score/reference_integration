@@ -57,13 +57,3 @@ single_version_override(
     patches = ["//patches/rules_foreign_cc:001-qnx-cmake-system-name.patch"],
     version = "0.16.0",
 )
-
-# score_openssl 0.2.1 fails to build for glibc targets whose toolchain passes -D_XOPEN_SOURCE=700
-# (e.g. AutoSD): syscall() and madvise() are hidden in crypto/mem_sec.c. Main adds -D_GNU_SOURCE
-# (eclipse-score/openssl#16). Drop once that is part of a release.
-bazel_dep(name = "score_openssl")
-git_override(
-    module_name = "score_openssl",
-    commit = "89e1591f40a82fde66b3850a8a7a385db630f8a9",
-    remote = "https://github.com/eclipse-score/openssl.git",
-)
