@@ -1,10 +1,10 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 645864d..b883ceb 100644
+index d8b3a43..09d8dd8 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -53,15 +53,15 @@ bazel_dep(name = "score_rust_policies", version = "0.0.5")
- bazel_dep(name = "score_process_description", version = "2.2.2")
- bazel_dep(name = "score_platform", version = "0.7.2")
+ bazel_dep(name = "score_process_description", version = "2.2.5")
+ bazel_dep(name = "score_platform", version = "0.7.6")
  
 -bazel_dep(name = "score_itf", version = "0.7.0", dev_dependency = True)
 +bazel_dep(name = "score_itf", version = "0.7.0")
@@ -30,8 +30,8 @@ index 645864d..b883ceb 100644
  oci.pull(
      name = "ubuntu_24_04",
      digest = "sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30",
-@@ -104,7 +104,7 @@ bazel_dep(name = "score_toolchains_rust", version = "0.10.0", dev_dependency = T
- bazel_dep(name = "score_crates", version = "0.0.13")
+@@ -104,7 +104,7 @@ bazel_dep(name = "score_toolchains_rust", version = "0.10.1", dev_dependency = T
+ bazel_dep(name = "score_crates", version = "0.0.15")
  
  # TRLC dependency for requirements traceability
 -bazel_dep(name = "trlc", version = "0.0.0", dev_dependency = True)
@@ -39,15 +39,3 @@ index 645864d..b883ceb 100644
  git_override(
      module_name = "trlc",
      commit = "720dcf6704f574f81050a42f62d560165e2a1b01",  # trlc-3.1.1 (score_tooling 3.0.2 needs trlc 3.1.1)
-diff --git a/score/test/component/defs.bzl b/score/test/component/defs.bzl
-index 665f891..0177a69 100644
---- a/score/test/component/defs.bzl
-+++ b/score/test/component/defs.bzl
-@@ -66,7 +66,6 @@ def py_logging_itf_test(name, srcs, filesystem, filesystem_pkg, extra_oci_tars =
-             filesystem_pkg,
-         ],
-         build_file = "{}:init_build".format(_ENV),
--        extra_build_files = ["{}:system_build".format(_ENV)],
-         target_compatible_with = [
-             "@platforms//cpu:x86_64",
-             "@platforms//os:qnx",

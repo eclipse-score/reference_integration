@@ -17,12 +17,14 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
+    codeql_args,
     combine_reports,
     count_testcases,
     coverage_args,
     graph_modules,
     lcov_percentages,
     normalize_lcov,
+    normalize_sarif,
     override_rc,
     report,
 )
@@ -48,6 +50,36 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
+
+
+def test_codeql_args_keep_module_configs_but_use_unified_gcc():
+    metadata = SimpleNamespace(
+        test_args=["--config=x86_64-linux", "--config=asan_ubsan_lsan", "--keep_going", "//score/..."],
+        langs=["cpp"],
+        code_root_path="//score/...",
+        exclude_test_targets=["//score/a:b_test"],
+    )
+    args = codeql_args(SimpleNamespace(metadata=metadata), Path("/w/bin/bazel"), Path("/w/out"))
+    assert args[:5] == ["run", "--lockfile_mode=update", "@score_tools//codeql:sca", "--", "--bazel=/w/bin/bazel"]
+    assert args[5:7] == ["--config=x86_64-linux", "--config=unified"]
+    assert args[-2:] == ["//score/...", "-//score/a:b_test"]
+
+
+def test_normalize_sarif_rebases_module_files_into_external_namespace():
+    location = {"physicalLocation": {"artifactLocation": {"uri": "score/a.cpp", "uriBaseId": "%SRCROOT%"}}}
+    absolute = {"physicalLocation": {"artifactLocation": {"uri": "file:///w/mod/score/b.h"}}}
+    document = {
+        "runs": [
+            {
+                "originalUriBaseIds": {"%SRCROOT%": {"uri": "file:///w/mod/"}},
+                "results": [{"locations": [location], "relatedLocations": [absolute]}],
+            }
+        ]
+    }
+    run = normalize_sarif(document, "score_mod", Path("/w/mod"))["runs"][0]
+    assert "originalUriBaseIds" not in run
+    assert location["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/a.cpp"}
+    assert absolute["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/b.h"}
 
 
 def test_coverage_args_put_unified_config_before_target_separator():

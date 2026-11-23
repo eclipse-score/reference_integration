@@ -79,6 +79,30 @@ def test_render_now_links_commits_compared_to_before_minus_bold():
     assert f"(2026-11-09) [+0]{link} |" in rows[3]
 
 
+def test_render_kept_pin_newer_than_release():
+    entry = Release("score_a", "target_sw", "o/a", "main", "abcdef12", "1.0.0", "v1.0.0", TODAY, 4)
+    entry.current_ref, entry.current_date, entry.delta, entry.kept = "abcdef1234", dt.date(2026, 11, 10), (0, 5), True
+    entry.head_sha, entry.head_date = "1234567890abcdef", dt.date(2026, 11, 11)
+    report = render([entry], TODAY)
+    assert (
+        "| `abcdef12` (2026-11-10) kept, [+5](https://github.com/o/a/compare/v1.0.0...abcdef1234)"
+        " since latest release [1.0.0](https://github.com/o/a/releases/tag/v1.0.0) (2026-11-09) |"
+    ) in report
+    assert "[4](https://github.com/o/a/compare/abcdef1234...1234567890abcdef) | |" in report
+
+
+def test_render_use_head_shows_head_as_now():
+    entry = Release("score_a", "target_sw", "o/a", "main", "1.0.0", "1.0.0", "v1.0.0", TODAY, 0)
+    entry.use_head, entry.head_ahead = True, 7
+    entry.head_sha, entry.head_date = "1234567890abcdef", dt.date(2026, 11, 11)
+    report = render([entry], TODAY)
+    assert (
+        "| `12345678` (2026-11-11) branch head, [+7](https://github.com/o/a/compare/v1.0.0...1234567890abcdef)"
+        " since latest release [1.0.0](https://github.com/o/a/releases/tag/v1.0.0) (2026-11-09) |"
+    ) in report
+    assert "[0](https://github.com/o/a/compare/1234567890abcdef...1234567890abcdef) | |" in report
+
+
 def test_render_before_shows_release_of_tagged_commit():
     entry = Release("score_a", "target_sw", "o/a", "main", "0.9.0", "1.0.0", "v1.0.0", TODAY, 0)
     entry.current_tag, entry.current_date = "v0.9.0", dt.date(2026, 10, 1)
@@ -115,12 +139,13 @@ def test_apply_versions_touches_only_version_and_timestamp(tmp_path):
     releases = [
         Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0"),
         Release("score_b", "target_sw", "o/b", "main", "0.1.0", "0.2.0"),
-        Release("score_c", "target_sw", "o/c", "main", "def"),
+        Release("score_c", "target_sw", "o/c", "main", "def", "2.0.0", kept=True),
     ]
+    releases[1].use_head, releases[1].head_sha = True, "fedcba98"
     apply_versions(path, releases)
     text = path.read_text()
     assert '"repo": "r",\n                "version": "1.0.0",\n                "metadata"' in text
-    assert '"version": "0.2.0"' in text
+    assert '"hash": "fedcba98"' in text
     assert '"hash": "def"' in text
     assert "rust_coverage_config" not in text
     assert not text.endswith("\n")

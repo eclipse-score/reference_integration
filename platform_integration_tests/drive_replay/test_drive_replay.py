@@ -85,7 +85,8 @@ def analyze_dlt(record) -> list[str]:
 
     injected = _find(record, *_FAULT_INJECTED)
     failures = _find(record, *_SUPERVISION_FAILED)
-    if injected and failures and failures[0].epoch_time < injected[0].epoch_time:
+    # ITF's epoch_time is a string with a mis-padded fraction; compare the raw storage timestamps.
+    if injected and failures and failures[0].raw_msg.storage_timestamp < injected[0].raw_msg.storage_timestamp:
         findings.append("warn_app supervision failed before the fault was injected (spontaneous failure)")
     return findings
 

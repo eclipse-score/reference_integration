@@ -45,6 +45,9 @@ extensions = [
     "score_sphinx_bundle",
 ]
 
+# Some mounted baselibs and logging docs lack required architecture links.
+score_cross_module_compatibility_allow_missing_mandatory_links = True
+
 exclude_patterns = [
     # The following entries are not required when building the documentation via 'bazel
     # build //:docs', as that command runs in a sandboxed environment. However, when
@@ -82,7 +85,7 @@ html_theme_options = {
 
 # score_logging v0.2.5 symlinks design docs/PlantUML files from score/ into docs/,
 # which sphinx-mounts reports as path_escape. Remove once its bundle is self-contained.
-_PATH_CHECK_OFF = {"modules/score_logging"}
+_PATH_CHECK_OFF = {"modules/functional_modules/score_logging"}
 
 
 def _relax_path_check(_app, config) -> None:

@@ -13,6 +13,7 @@
 """Run a known_good module's own unit tests against the dependency set ref_int resolves.
 
   run <module>      test <module> at its known_good commit with those versions forced
+  codeql <module>   analyse <module> the same way with score_tools' CodeQL tooling (POC)
   report <dir>      write the verification report's unit test and coverage summaries
 
 Every module in the module's dependency graph that ref_int also resolves is pinned with
@@ -335,19 +336,36 @@ def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[s
         shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
 
 
-def run(args: argparse.Namespace) -> int:
-    known = load_known_good(REF_INT / "known_good.json")
-    module = known.modules["target_sw"].get(args.module)
-    if module is None:
-        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+def _add_score_tools(workspace: Path) -> None:
+    """Make ref_int's score_tools (CodeQL tooling) available; an existing dependency is pinned anyway."""
+    module_file = workspace / "MODULE.bazel"
+    if re.search(r'bazel_dep\(\s*name\s*=\s*"score_tools"', module_file.read_text()):
+        return
+    source = fetch({"score_tools"}).get("score_tools")
+    if source is None:
+        sys.exit("could not fetch score_tools in ref_int")
+    with module_file.open("a") as f:
+        f.write(
+            'bazel_dep(name = "score_tools", dev_dependency = True)\n'
+            f'local_path_override(module_name = "score_tools", path = "{source}")\n'
+        )
+
+
+def _prepare_module(module, known, work: Path, *, add_score_tools: bool = False):
+    """The module as root workspace with ref_int's versions pinned.
+
+    Returns the workspace, its report dir, the environment for the bazel wrapper and the
+    pinned/unpinned modules.
+    """
     # ref_int's committed lock plus --lockfile_mode=error make this the same set in every job.
     resolved = graph_modules(mod_graph(REF_INT, None, "error"))
 
-    work = args.work_dir.resolve()
     workspace, out = _setup_working_dir(work, module.name)
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
     _apply_extra_dependency_overrides(workspace, known.modules["tooling"]["score_devcontainer"].version)
+    if add_score_tools:
+        _add_score_tools(workspace)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
@@ -377,6 +395,15 @@ def run(args: argparse.Namespace) -> int:
     rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
+    return workspace, out, env, pinned, unpinned
+
+
+def run(args: argparse.Namespace) -> int:
+    known = load_known_good(REF_INT / "known_good.json")
+    module = known.modules["target_sw"].get(args.module)
+    if module is None:
+        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, args.work_dir.resolve())
 
     coverage_enabled = module.name in COVERAGE_MODULES
     command = coverage_args(
@@ -402,6 +429,93 @@ def run(args: argparse.Namespace) -> int:
     _collect_dependable_element_docs(workspace, out, module.metadata.dependable_element_docs, env)
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
     _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
+    return exit_code
+
+
+def codeql_args(module, bazel_wrapper: Path, output_dir: Path) -> list[str]:
+    """score_tools' CodeQL analysis of the module's code root, built with ref_int's unified GCC."""
+    split = module.metadata.test_args.index("--") if "--" in module.metadata.test_args else None
+    configs = [
+        arg
+        for arg in module.metadata.test_args[:split]
+        if arg.startswith("--config=") and arg != "--config=asan_ubsan_lsan"
+    ]
+    configs.append("--config=unified")
+    if "rust" in module.metadata.langs:
+        configs.append("--config=unified-rust")
+    return [
+        "run",
+        "--lockfile_mode=update",
+        "@score_tools//codeql:sca",
+        "--",
+        f"--bazel={bazel_wrapper}",
+        *configs,
+        "--safety-level=ASIL",
+        f"--output-dir={output_dir}",
+        "--no-fail-sarif-quality",
+        "--no-fail-suppressions",
+        module.metadata.code_root_path,
+        *(f"-{target}" for target in module.metadata.exclude_test_targets),
+    ]
+
+
+def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
+    """Rebase workspace-relative SARIF locations into ref_int's external module namespace."""
+
+    def rebase(uri: str) -> str:
+        path = uri.removeprefix("file://")
+        if path.startswith("/"):
+            if not Path(path).is_relative_to(workspace):
+                return uri
+            path = Path(path).relative_to(workspace).as_posix()
+        return path if path.startswith("external/") else f"external/{module}+/{path}"
+
+    def visit(node) -> None:
+        if isinstance(node, dict):
+            if isinstance(node.get("uri"), str):
+                node["uri"] = rebase(node["uri"])
+                node.pop("uriBaseId", None)
+            for value in node.values():
+                visit(value)
+        elif isinstance(node, list):
+            for value in node:
+                visit(value)
+
+    for sarif_run in document.get("runs", []):
+        # The base points into the module workspace of this job only.
+        sarif_run.pop("originalUriBaseIds", None)
+    visit(document.get("runs", []))
+    return document
+
+
+def codeql(args: argparse.Namespace) -> int:
+    """Analyse a module with CodeQL as root workspace, like ``run`` with ref_int's versions."""
+    known = load_known_good(REF_INT / "known_good.json")
+    module = known.modules["target_sw"].get(args.module)
+    if module is None:
+        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+    work = args.work_dir.resolve()
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, work, add_score_tools=True)
+
+    results = out / "codeql"
+    exit_code, _ = streamed(["bazel", *codeql_args(module, work / "bin" / "bazel", results)], workspace, env)
+    # code-scanning.sarif keeps only findings in the module itself (no dependencies, no toolchain).
+    sarif = results / "results" / "code-scanning.sarif"
+    if sarif.is_file():
+        document = normalize_sarif(json.loads(sarif.read_text(encoding="utf-8")), module.name, workspace)
+        target = out / "static_analysis" / f"{module.name}.sarif"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(document) + "\n", encoding="utf-8")
+    else:
+        exit_code = exit_code or 1
+    summary = [f"## {module.name}: CodeQL exit code {exit_code}", ""]
+    if unpinned:
+        summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
+    summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
+    tool_summary = results / "results" / "summary.md"
+    if tool_summary.is_file():
+        summary += ["", tool_summary.read_text(encoding="utf-8")]
+    append_to_step_summary("\n".join(summary) + "\n")
     return exit_code
 
 
@@ -451,6 +565,10 @@ def main() -> int:
     run_parser.add_argument("module")
     run_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_tests")
     run_parser.set_defaults(func=run)
+    codeql_parser = sub.add_parser("codeql")
+    codeql_parser.add_argument("module")
+    codeql_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_codeql")
+    codeql_parser.set_defaults(func=codeql)
     report_parser = sub.add_parser("report")
     report_parser.add_argument("reports_dir", type=Path, help="directory with one 'run' report per module")
     report_parser.add_argument("--out-dir", type=Path, default=REF_INT / "docs" / "verification_report")

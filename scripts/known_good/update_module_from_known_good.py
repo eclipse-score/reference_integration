@@ -53,12 +53,12 @@ except ImportError:
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 # Where each known_good group's documentation is mounted in the combined docs site. The two
-# sections are a property of ref_int's site structure (docs/modules/index.rst and
-# docs/process_methods_tools/index.rst, whose toctrees are filled from these mounts at build
-# time), not of the module set, so the mapping lives here rather than in known_good.json.
+# sections are a property of ref_int's site structure (docs/modules/functional_modules/index.rst
+# and docs/modules/process_methods_tools/index.rst, whose toctrees are filled from these mounts at
+# build time), not of the module set, so the mapping lives here rather than in known_good.json.
 DOCS_SECTION_BY_GROUP = {
-    "target_sw": "modules",
-    "tooling": "process_methods_tools",
+    "target_sw": "modules/functional_modules",
+    "tooling": "modules/process_methods_tools",
 }
 
 

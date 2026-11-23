@@ -1,6 +1,6 @@
 ..
    # *******************************************************************************
-   # Copyright (c) 2025 Contributors to the Eclipse Foundation
+   # Copyright (c) 2026 Contributors to the Eclipse Foundation
    #
    # See the NOTICE file(s) distributed with this work for additional
    # information regarding copyright ownership.
@@ -12,12 +12,13 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-S-Core v1.0
-===========
+Functional Modules
+==================
+
+.. The target_sw modules from known_good.json (plus score_platform) are mounted below this page
+   and wired into its toctree at build time by the `bundles` of the `docs()` macro in the root
+   BUILD file.
 
 .. toctree::
    :titlesonly:
    :maxdepth: 1
-
-   Releases <releases/releases>
-   Roadmap <roadmap/roadmap>

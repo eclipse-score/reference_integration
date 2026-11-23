@@ -45,11 +45,13 @@ public:
     // Flush to persistent storage
     bool flush();
 
+    ~KvsInstance();
+
 private:
-    KvsInstance(const KvsParameters& params, score::mw::per::kvs::Kvs&& kvs);
+    KvsInstance(const KvsParameters& params, std::shared_ptr<score::mw::per::kvs::Kvs> kvs);
 
     KvsParameters params_;
-    score::mw::per::kvs::Kvs kvs_;
+    std::shared_ptr<score::mw::per::kvs::Kvs> kvs_;
 };
 
 #endif  // INTERNALS_PERSISTENCY_KVS_INSTANCE_H_

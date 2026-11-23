@@ -15,10 +15,8 @@
 Process, Methods, and Tools
 ============================
 
-.. Process, Methods, and Tools documentation is mounted here automatically via the `bundles`
-   parameter of the `docs()` macro in the root BUILD file (see
-   `attach_to: "process_methods_tools"`), which wires each module's index
-   into this page's toctree at build time.
+.. The tooling modules from known_good.json are mounted below this page and wired into its
+   toctree at build time by the `bundles` of the `docs()` macro in the root BUILD file.
 
 .. toctree::
    :titlesonly:

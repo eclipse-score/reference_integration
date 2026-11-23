@@ -17,18 +17,18 @@ Module Verification Reports
 
 This page lists the per-module verification reports.
 
-* :doc:`Baselibs </modules/score_baselibs/verification_report/module_verification_report>`
-* :doc:`Lifecycle </modules/score_lifecycle/verification_report/module_verification_report>`
-* :doc:`Logging </modules/score_logging/verification_report/module_verification_report>`
-* :doc:`Persistency </modules/score_persistency/verification_report/module_verification_report>`
-* :doc:`Time </modules/score_time/verification_report/module_verification_report>`
+* :doc:`Baselibs </modules/functional_modules/score_baselibs/verification_report/module_verification_report>`
+* :doc:`Lifecycle </modules/functional_modules/score_lifecycle/verification_report/module_verification_report>`
+* :doc:`Logging </modules/functional_modules/score_logging/verification_report/module_verification_report>`
+* :doc:`Persistency </modules/functional_modules/score_persistency/verification_report/module_verification_report>`
+* :doc:`Time </modules/functional_modules/score_time/verification_report/module_verification_report>`
 
 .. toctree::
    :titlesonly:
    :hidden:
 
-   Baselibs </modules/score_baselibs/verification_report/module_verification_report>
-   Lifecycle </modules/score_lifecycle/verification_report/module_verification_report>
-   Logging </modules/score_logging/verification_report/module_verification_report>
-   Persistency </modules/score_persistency/verification_report/module_verification_report>
-   Time </modules/score_time/verification_report/module_verification_report>
+   Baselibs </modules/functional_modules/score_baselibs/verification_report/module_verification_report>
+   Lifecycle </modules/functional_modules/score_lifecycle/verification_report/module_verification_report>
+   Logging </modules/functional_modules/score_logging/verification_report/module_verification_report>
+   Persistency </modules/functional_modules/score_persistency/verification_report/module_verification_report>
+   Time </modules/functional_modules/score_time/verification_report/module_verification_report>
