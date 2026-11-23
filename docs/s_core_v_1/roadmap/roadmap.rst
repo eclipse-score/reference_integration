@@ -17,7 +17,7 @@
 S-CORE v1 Roadmap
 =================
 
-This document describes the release planning for **S-CORE v1**, organized around the
+This document describes the scope of the release **S-CORE v1**, organized around the
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
 and covers **two overarching project goals**:
 
