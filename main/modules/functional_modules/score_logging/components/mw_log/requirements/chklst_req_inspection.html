@@ -444,7 +444,6 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../../index.html">Functional Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
-
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../index.html">Logging</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -541,7 +540,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-1b1ff87e">
+  <div class="need_container docutils container" id="SNCB-4aeb68af">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_backend_req_inspection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -594,10 +593,10 @@
 <h2>Conduct<a class="headerlink" href="#conduct" title="Link to this heading">#</a></h2>
 <p>As described in the concept <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/general_concepts/score_review_concept.html#doc_concept__wp_inspections" title="doc_concept__wp_inspections"><em class="xref need">Work product Inspections Co... (doc_concept__wp_inspections)</em></a> the following “inspection roles” are expected to be filled:</p>
 <ul class="simple">
-<li><p>content responsible (author): &lt;contributor/committer explicitly named here, who is the main author, as can be seen in config mgt tooling&gt;</p></li>
-<li><p>reviewer: &lt;contributor/committer explicitly named here, who is the main content reviewer, must be different from content responsible&gt;</p></li>
-<li><p>moderator: &lt;committer explicitly named here, who is is the safety manager, security manager or quality manager initiating the inspection&gt;</p></li>
-<li><p>test expert: &lt;one of the reviewers explicitly named here, to cover REQ_08_01 as described&gt;</p></li>
+<li><p>content responsible (author): <a class="github reference external" href="https://github.com/MaciejKaszynski">MaciejKaszynski</a></p></li>
+<li><p>reviewer: <a class="github reference external" href="https://github.com/rmaddikery">rmaddikery</a></p></li>
+<li><p>moderator: <a class="github reference external" href="https://github.com/aschemmel-tech">aschemmel-tech</a></p></li>
+<li><p>test expert: &lt;one of the reviewers explicitly named here, to cover REQ_08_01 as described for ASIL-B quality&gt;</p></li>
 </ul>
 </section>
 <section id="checklist">
@@ -636,14 +635,14 @@ See also <a class="reference internal" href="../../../../../process_methods_tool
 <td><p>Is the requirement description <em>comprehensible</em> ?</p></td>
 <td><p>If you think the requirement is hard to understand, comment here.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>REQ_02_02</p></td>
 <td><p>Is the requirement description <em>unambiguous</em> ?</p></td>
 <td><p>Especially search for “weak words” like “about”, “etc.”, “relevant” and others (see the internet documentation on this). This check shall be supported by tooling.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>REQ_02_03</p></td>
@@ -657,14 +656,14 @@ See also <a class="reference internal" href="../../../../../process_methods_tool
 <td><p>Is the requirement description <em>feasible</em> ?</p></td>
 <td><p>If at the time of the inspection the requirement has already some implementation, the answer is yes. This can be checked via traces, but also <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/requirements_engineering/guidance/requirements_process_reqs.html#gd_req__req_attr_impl" title="gd_req__req_attr_impl"><em class="xref need">Requirement attribute: link... (gd_req__req_attr_impl)</em></a> shows this. In case the requirement has no implementation at the time of inspection (i.e. not implemented at least as “proof-of-concept”), a development expert should be invited to the Pull-Request review to explicitly check this item.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>REQ_02_05</p></td>
 <td><p>Is the requirement description <em>independent from implementation</em> ?</p></td>
 <td><p>This checkpoint should improve requirements definition in the sense that the “what” is described and not the “how” - the latter should be described in architecture/design derived from the requirement. But there can also be a good reason for this, for example we would require using a file format like JSON and even specify the formatting standard already on stakeholder requirement level because we want to be compatible. A finding in this checkpoint does not mean there is a safety problem in the requirement.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>REQ_03_01</p></td>
@@ -681,7 +680,7 @@ log sink.</p></td>
 <td><p>Is the requirement <em>internally and externally consistent</em>?</p></td>
 <td><p>Does the requirement contradict other requirements within the same or higher levels? One may restrict the search to the feature for component requirements, for features to other features using same components. Is the description of the requirement consistent with all its attributes (if not already part of another check, e.g. does the title fit?).</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>REQ_05_01</p></td>
@@ -700,28 +699,28 @@ Feature Architecture, so the Feature and Component Requirements should
 determine the input data use and setting of output data for these
 interfaces. Are all output values defined?</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>REQ_07_01</p></td>
 <td><p>Is the <em>safety</em> attribute set correctly?</p></td>
 <td><p>Derived requirements are checked automatically, see <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/requirements_engineering/guidance/requirements_process_reqs.html#gd_req__req_linkage_safety" title="gd_req__req_linkage_safety"><em class="xref need">Requirements linkage safety (gd_req__req_linkage_safety)</em></a>. But for the top level requirements (and also all AoU) this needs to be checked manually for correctness.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>REQ_07_02</p></td>
 <td><p>Is the attribute <em>security</em> set correctly?</p></td>
 <td><p>For component requirements this checklist item is supported by automated check: “Every requirement which satisfies a feature requirement with security attribute set to YES inherits this”. But the component requirements/architecture may additionally also be subject to a <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/security_analysis/security_analysis_workproducts.html#wp__sw_component_security_analysis" title="wp__sw_component_security_analysis"><em class="xref need">Component Security Analysis (wp__sw_component_security_analysis)</em></a>.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><p>REQ_08_01</p></td>
 <td><p>Is the requirement <em>verifiable</em>?</p></td>
 <td><p>If at the time of the inspection already tests are created for the requirement, the answer is yes. This can be checked via traces, but also <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/requirements_engineering/guidance/requirements_process_reqs.html#gd_req__req_attr_test_covered" title="gd_req__req_attr_test_covered"><em class="xref need">Requirement attribute: comp... (gd_req__req_attr_test_covered)</em></a> shows this. In case the requirement is not sufficiently traced to test cases already, a test expert is invited to the inspection to give their opinion whether the requirement is formulated in a way that supports test development and the available test infrastructure is sufficient to perform the test.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>REQ_08_02</p></td>
@@ -736,14 +735,14 @@ verification by design or code review.</p></td>
 <td><p>Do the requirements that define a safety mechanism specify the error reaction leading to a safe state?</p></td>
 <td><p>Alternatively to the safe state there could also be “repair” mechanisms. Also do not forget to consider REQ_05_01 for these.</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>REQ_10_01</p></td>
 <td><p>Is the requirement description <em>complete</em> ?</p></td>
 <td><p>For every requirement in the inspection, follow to its parent (feature) requirement(s) and then check if this/these are fulfilled completely by its/their linked children (component requirements, including those which are not in scope of the inspection).</p></td>
 <td><p>Yes</p></td>
-<td></td>
+<td><p>&lt;comment why it is “Yes”&gt;</p></td>
 <td></td>
 </tr>
 </tbody>
@@ -751,12 +750,102 @@ verification by design or code review.</p></td>
 </div>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>The above checklist entries must be filled according to your component requirements in scope.</p>
+<p>The above checklist entries must be filled according to your component requirements in scope.
+It is mandatory to fill remarks also for checklist entries which are passed, to be able to understand the verdict.</p>
 </div>
-<p>Note: If a Review ID is not applicable for your requirement, then state “”n/a” in status and comment accordingly in remarks.</p>
-<p>The following requirements in “valid” state and with “inspected” tag set are in the scope of this inspection:</p>
-<p class="needs_filter_warning" id="needtable-modules/functional_modules/score_logging/components/mw_log/requirements/chklst_req_inspection-0">No needs passed the filters</p>
-<p>And also the following AoUs in “valid” state and with “inspected” tag set (for these please answer the questions above as if the AoUs are requirements, except question REQ_03_01):</p>
+<p>Note: If a Review ID is not applicable for your requirement, then state “”n/a” in status and comment accordingly in remarks. For example “no stakeholder requirement (no rationale needed)”</p>
+<p>The following requirements in “valid_inspected” state are in the scope of this inspection:</p>
+<div class="needstable_wrapper docutils container" id="needtable-modules/functional_modules/score_logging/components/mw_log/requirements/chklst_req_inspection-0">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/functional_modules/score_logging/components/mw_log/requirements/chklst_req_inspection-0-table_node">
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Tags</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__autosar_log_trace_spec">comp_req__log__autosar_log_trace_spec</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__avoid_locks">comp_req__log__avoid_locks</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__avoid_signal_processing">comp_req__log__avoid_signal_processing</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__cross_locking">comp_req__log__cross_locking</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__dlt_verbose_mode">comp_req__log__dlt_verbose_mode</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__file_backend_activation">comp_req__log__file_backend_activation</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__file_descriptor_flags">comp_req__log__file_descriptor_flags</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__forward_to_system_logger">comp_req__log__forward_to_system_logger</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__local_allocation_strategy">comp_req__log__local_allocation_strategy</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__inactive_logstream">comp_req__log__inactive_logstream</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__index_size_checking">comp_req__log__index_size_checking</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__memory_bound_checking">comp_req__log__memory_bound_checking</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__log_loss_detect">comp_req__log__log_loss_detect</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__remote_backend_activation">comp_req__log__remote_backend_activation</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__send_to_datarouter">comp_req__log__send_to_datarouter</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__shm_file_permissions">comp_req__log__shm_file_permissions</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__system_backend_activation">comp_req__log__system_backend_activation</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="requirements.html#comp_req__log__write_to_local_file">comp_req__log__write_to_local_file</a></p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
+<td class="needs_tags"><p>mw_log_backend</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And also the following AoUs in “valid_inspected” state (for these please answer the questions above as if the AoUs are requirements, except questions REQ_03_01 and REQ_03_02):</p>
 <p class="needs_filter_warning" id="needtable-modules/functional_modules/score_logging/components/mw_log/requirements/chklst_req_inspection-1">No needs passed the filters</p>
 </section>
 </section>
