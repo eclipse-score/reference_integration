@@ -14,10 +14,10 @@
 
 .. _v1_0_release_plan:
 
-S-CORE v1 Roadmap
-=================
+S-CORE v1.x Roadmap
+===================
 
-This document describes the scope of the release **S-CORE v1**, organized around the
+This document describes the scope of the release **S-CORE v1.x**, organized around the
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
 and covers **two overarching project goals**:
 
@@ -27,13 +27,13 @@ Feature Completeness
 Selected modules are fully implemented and tested.
 
 .. figure:: ../../_assets/sw_arch_v_1.drawio.svg
-   :alt: S-CORE v1 Software Architecture
+   :alt: S-CORE v1.x Software Architecture
    :align: center
    :width: 75%
 
-   S-CORE v1 Software Architecture
+   S-CORE v1.x Software Architecture
 
-The following modules are in scope for S-CORE v1:
+The following modules are in scope for S-CORE v1.x:
 
 .. list-table::
    :widths: 30 70
@@ -81,7 +81,7 @@ Management
 ^^^^^^^^^^
 
 .. grid:: 2 4 4 4
-   :class-container: score-grid score-grid-compact
+   :class-container: score-grid
    :gutter: 4
 
    .. grid-item-card:: `Platform Management <https://eclipse-score.github.io/process_description/main/process_areas/platform_management/index.html>`__
@@ -185,6 +185,6 @@ Support
 
 .. note::
 
-   We will also work on the other process areas, but they are not in the main focus for S-CORE v1
+   We will also work on the other process areas, but they are not in the main focus for S-CORE v1.x
    (shown grayed out above).
 
