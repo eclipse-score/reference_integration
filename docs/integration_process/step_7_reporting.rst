@@ -154,7 +154,7 @@ Verification & status reports
 -----------------------------
 
 The consolidated reports live under
-`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_, the roadmap under
+`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_, the S-CORE v1.x target under
 `docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_
 and the release-wide progress overview next to the release notes under
 `docs/s_core_v_1/releases <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/releases>`_.

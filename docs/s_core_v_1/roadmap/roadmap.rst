@@ -14,8 +14,8 @@
 
 .. _v1_0_release_plan:
 
-S-CORE v1.x Roadmap
-===================
+S-CORE v1.x Target
+==================
 
 This document describes the scope of the release **S-CORE v1.x**, organized around the
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
@@ -42,9 +42,7 @@ The following modules are in scope for S-CORE v1.x:
    * - Module
      - Notes
    * - `Baselibs <https://github.com/eclipse-score/baselibs>`__
-     - Base libraries (C++)
-   * - `Baselibs Rust <https://github.com/eclipse-score/baselibs>`__
-     - Base libraries (Rust)
+     - Base libraries (C++ and Rust)
    * - `Communication <https://github.com/eclipse-score/communication>`__
      - IPC / service-oriented communication
    * - `Logging <https://github.com/eclipse-score/logging>`__

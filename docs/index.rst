@@ -35,11 +35,11 @@ documentation set that downstream product distributions can build on.
 .. grid:: 1 1 2 2
    :gutter: 3
 
-   .. grid-item-card:: 📊 Status & Roadmap
+   .. grid-item-card:: 🎯 S-CORE v1.x Target
       :link: s_core_v_1/roadmap/roadmap
       :link-type: doc
 
-      :doc:`S-CORE v1.x Roadmap <s_core_v_1/roadmap/roadmap>`.
+      :doc:`S-CORE v1.x Target <s_core_v_1/roadmap/roadmap>`: module scope and qualifiable state.
 
    .. grid-item-card:: ✅ Verification Reports
       :link: verification_report/index
