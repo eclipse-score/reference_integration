@@ -506,6 +506,8 @@ def codeql(args: argparse.Namespace) -> int:
         rc.write("common --lockfile_mode=update\n")
 
     results = out / "codeql"
+    # Query packs from the pinned release assets; the registry fallback of the analysis is flaky.
+    streamed(["bazel", "run", "--lockfile_mode=update", "@score_tools//codeql:fetch_packs"], workspace, env)
     exit_code, _ = streamed(["bazel", *codeql_args(module, work / "bin" / "bazel", results)], workspace, env)
     # code-scanning.sarif keeps only findings in the module itself (no dependencies, no toolchain).
     sarif = results / "results" / "code-scanning.sarif"
