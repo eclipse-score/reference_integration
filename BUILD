@@ -29,8 +29,8 @@ alias(
 #
 # The bundle mounts are generated from known_good.json into
 # //bazel_common:docs_bundles.bzl: every module is mounted under its group's section
-# (target_sw -> modules/, tooling -> process_methods_tools/) unless it sets
-# '"docs": false' there. Change the module list in known_good.json, not here, and
+# (target_sw -> modules/functional_modules/, tooling -> modules/process_methods_tools/) unless
+# it sets '"docs": false' there. Change the module list in known_good.json, not here, and
 # regenerate with scripts/known_good/update_module_from_known_good.py.
 docs(
     bundles = DOCS_BUNDLES,

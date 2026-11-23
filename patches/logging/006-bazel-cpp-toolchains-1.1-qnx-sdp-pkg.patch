@@ -1,5 +1,5 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index b883ceb..27cf562 100644
+index 09d8dd8..07e657b 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -66,7 +66,7 @@ bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
@@ -26,7 +26,7 @@ index b883ceb..27cf562 100644
  # Toolchains and extensions
 -bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.5", dev_dependency = True)
 +bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.1.0-rc2", dev_dependency = True)
- bazel_dep(name = "score_toolchains_rust", version = "0.10.0", dev_dependency = True)
+ bazel_dep(name = "score_toolchains_rust", version = "0.10.1", dev_dependency = True)
  
  # S-CORE crates
 @@ -114,7 +114,7 @@ git_override(
@@ -47,10 +47,10 @@ index b883ceb..27cf562 100644
      target_cpu = "x86_64",
      target_os = "qnx",
      use_default_package = True,
-@@ -144,12 +144,11 @@ gcc.toolchain(
- )
- use_repo(
-     gcc,
+@@ -169,12 +169,11 @@ use_repo(
+     "score_autosd10_aarch64_toolchain",
+     "score_autosd10_x86_64_toolchain",
+     "score_ebclfsa_toolchain",
 +    "qnx_sdp_8_0_5_pkg",
      "score_gcc_aarch64_toolchain",
      "score_gcc_x86_64_toolchain",
@@ -60,7 +60,7 @@ index b883ceb..27cf562 100644
 -    "score_qcc_x86_64_toolchain_pkg",
  )
  
- llvm = use_extension(
+ ferrocene = use_extension(
 diff --git a/quality/coverage/BUILD b/quality/coverage/BUILD
 index c97ba8a..7cbc69e 100644
 --- a/quality/coverage/BUILD

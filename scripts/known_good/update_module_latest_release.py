@@ -24,8 +24,11 @@ Usage:
       [--known-good known_good.json] [--apply] [--report pre_release_report.md]
 
 Without --apply only the report is produced. With --apply every module gets
-``"version": "<latest>"`` instead of its hash; regenerate the Bazel files and the
-lockfile afterwards (see .github/skills/pre-release/SKILL.md).
+``"version": "<latest>"`` instead of its hash, unless the pinned hash or version is
+newer than the latest release (release is an ancestor of it); then the pin is kept.
+Modules given with --use-head are pinned to the head commit of their branch instead.
+Regenerate the Bazel files and the lockfile afterwards (see
+.github/skills/pre-release/SKILL.md).
 
 Environment:
   GITHUB_TOKEN or GITHUB_PAT for the GitHub API (release dates, commit counts).
@@ -82,6 +85,16 @@ class Release:
     head_sha: str | None = None
     head_tag: str | None = None
     head_date: dt.date | None = None
+    kept: bool = False
+    use_head: bool = False
+    head_ahead: int | None = None
+
+    @property
+    def now_ref(self) -> str | None:
+        """Ref the module is pinned to after --apply."""
+        if self.use_head:
+            return self.head_sha
+        return self.current_ref if self.kept else self.tag
 
 
 def http_json(url: str, *, github: bool = False) -> dict | list | None:
@@ -200,13 +213,14 @@ def head_commit(slug: str, branch: str) -> tuple[str, dt.date]:
     return commit["sha"], parse_date(commit["commit"]["committer"]["date"])
 
 
-def collect(known_good_path: Path) -> list[Release]:
+def collect(known_good_path: Path, use_head: frozenset[str] = frozenset()) -> list[Release]:
     known_good = load_known_good(known_good_path)
     releases = []
     for group, modules in known_good.modules.items():
         for module in modules.values():
             current = module.version or (module.hash[:8] if module.hash else "?")
             entry = Release(module.name, group, module.owner_repo, module.branch, current)
+            entry.use_head = module.name in use_head
             releases.append(entry)
             try:
                 found = registry_release(module.name)
@@ -219,17 +233,23 @@ def collect(known_good_path: Path) -> list[Release]:
                 entry.head_tag = tag_at(entry.slug, entry.head_sha)
                 if entry.head_tag:
                     entry.head_date = release_date(entry.slug, entry.head_tag)
-                entry.commits = compare_counts(entry.slug, entry.tag, entry.head_sha)[0]
                 entry.current_tag, entry.current_date = pinned_release(module)
                 if module.hash and entry.current_tag:
                     entry.current = entry.current_tag.removeprefix("v")
                 entry.current_ref = entry.current_tag or module.hash
                 if entry.current_ref:
                     entry.delta = compare_counts(entry.slug, entry.current_ref, entry.tag)
+                    entry.kept = not entry.use_head and entry.delta[0] == 0 and entry.delta[1] > 0
+                if entry.use_head:
+                    entry.head_ahead = compare_counts(entry.slug, entry.tag, entry.head_sha)[0]
+                entry.commits = compare_counts(entry.slug, entry.now_ref, entry.head_sha)[0]
             except Exception as e:  # noqa: BLE001
                 entry.error = str(e)
+            now = entry.head_sha[:8] if entry.use_head and entry.head_sha else None
             print(
-                f"{entry.module}: {entry.current} -> {entry.version or '-'}"
+                f"{entry.module}: {entry.current} -> {now or (entry.current if entry.kept else entry.version or '-')}"
+                f"{' (branch head)' if now else ''}"
+                f"{' (kept, newer than ' + str(entry.version) + ')' if entry.kept else ''}"
                 f" ({entry.tag or '-'}, {entry.date or '-'}, {entry.commits if entry.commits is not None else '-'}"
                 f" commits since){' ERROR: ' + entry.error if entry.error else ''}",
                 file=sys.stderr,
@@ -238,15 +258,19 @@ def collect(known_good_path: Path) -> list[Release]:
 
 
 def apply_versions(path: Path, releases: list[Release]) -> None:
-    """Swap hash/version for the new version in place; leave every other key untouched."""
+    """Swap hash/version for the new version (or head hash) in place; leave every other key untouched."""
     text = path.read_text(encoding="utf-8")
     data = json.loads(text)
     for r in releases:
-        if not r.version:
-            continue
         modules = data["modules"][r.group]
+        if r.use_head and r.head_sha:
+            key_new, value_new = "hash", r.head_sha
+        elif r.version and not r.kept:
+            key_new, value_new = "version", r.version
+        else:
+            continue
         modules[r.module] = {
-            ("version" if key == "hash" else key): (r.version if key in ("hash", "version") else value)
+            (key_new if key in ("hash", "version") else key): (value_new if key in ("hash", "version") else value)
             for key, value in modules[r.module].items()
         }
     data["timestamp"] = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -263,6 +287,15 @@ def render(releases: list[Release], today: dt.date) -> str:
         if not r.version:
             return "-"
         cell = ref_cell(r, r.version, r.tag, r.date)
+        if r.use_head and r.head_sha:
+            label = r.head_tag.removeprefix("v") if r.head_tag else r.head_sha[:8]
+            head = ref_cell(r, label, r.head_tag, r.head_date)
+            link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.head_sha}"
+            return f"{head} branch head, [+{r.head_ahead}]({link}) since latest release {cell}"
+        if r.kept:
+            kept = ref_cell(r, r.current, r.current_tag, r.current_date)
+            link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.current_ref}"
+            return f"{kept} kept, [+{r.delta[1]}]({link}) since latest release {cell}"
         if not r.delta:
             return cell
         ahead, behind = r.delta
@@ -278,7 +311,7 @@ def render(releases: list[Release], today: dt.date) -> str:
             return "-"
         label = r.head_tag.removeprefix("v") if r.head_tag else r.head_sha[:8]
         count = f"**{r.commits}**" if r.commits >= BOLD_COMMITS else str(r.commits)
-        link = f"https://github.com/{r.slug}/compare/{r.tag}...{r.head_sha}"
+        link = f"https://github.com/{r.slug}/compare/{r.now_ref}...{r.head_sha}"
         return f"{ref_cell(r, label, r.head_tag, r.head_date)} [{count}]({link})"
 
     lines = [
@@ -291,11 +324,13 @@ def render(releases: list[Release], today: dt.date) -> str:
         ),
         (
             "- **Now:** latest registry release this PR switches to (release date), followed by the commits"
-            " it gains (+) or drops (-, bold) compared to Before."
+            " it gains (+) or drops (-, bold) compared to Before. If Before is newer than the latest"
+            " release, Before is kept (followed by its commits since that release). Modules set to their"
+            " branch head show the head commit (followed by its commits since the latest release)."
         ),
         (
             "- **Head:** head commit of the module's branch, shown as release if a tag points at it"
-            " (commit or release date), followed by the commits since the Now release,"
+            " (commit or release date), followed by the commits since Now,"
             f" bold from {BOLD_COMMITS} on."
         ),
         "- **OK/NOK:** set by hand.",
@@ -318,10 +353,13 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--known-good", default="known_good.json", type=Path)
     parser.add_argument("--apply", action="store_true", help="Write the latest versions into --known-good")
     parser.add_argument("--report", type=Path, help="Write the markdown report (PR body section) here")
+    parser.add_argument(
+        "--use-head", nargs="+", default=[], metavar="MODULE", help="Pin these modules to their branch head"
+    )
     parser.add_argument("--today", type=dt.date.fromisoformat, default=dt.date.today(), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
 
-    releases = collect(args.known_good)
+    releases = collect(args.known_good, frozenset(args.use_head))
     report = render(releases, args.today)
     if args.report:
         args.report.write_text(report, encoding="utf-8")

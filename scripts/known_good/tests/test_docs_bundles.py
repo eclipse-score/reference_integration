@@ -44,21 +44,21 @@ def _module(name: str, **kwargs) -> Module:
 
 
 def test_group_decides_the_section():
-    """target_sw mounts under modules/, tooling under process_methods_tools/."""
+    """target_sw mounts under modules/functional_modules/, tooling under modules/process_methods_tools/."""
     content = generate_docs_bundles_content(
-        _known_good({"target_sw": [_module("score_logging")], "tooling": [_module("score_platform")]})
+        _known_good({"target_sw": [_module("score_logging")], "tooling": [_module("score_itf")]})
     )
 
     assert '"bundle": "@score_logging//:docs_bundle",' in content
-    assert '"mount_at": "modules/score_logging",' in content
-    assert '"mount_at": "process_methods_tools/score_platform",' in content
+    assert '"mount_at": "modules/functional_modules/score_logging",' in content
+    assert '"mount_at": "modules/process_methods_tools/score_itf",' in content
 
 
 def test_docs_are_mounted_by_default():
     """A module that says nothing about docs is mounted: that is the common case."""
     content = generate_docs_bundles_content(_known_good({"target_sw": [_module("score_baselibs")]}))
 
-    assert '"mount_at": "modules/score_baselibs",' in content
+    assert '"mount_at": "modules/functional_modules/score_baselibs",' in content
 
 
 def test_docs_false_opts_a_module_out():
@@ -75,7 +75,7 @@ def test_docs_false_opts_a_module_out():
     )
 
     assert "score_communication" not in content
-    assert '"mount_at": "modules/score_logging",' in content
+    assert '"mount_at": "modules/functional_modules/score_logging",' in content
 
 
 def test_overrides_are_passed_through():
@@ -133,7 +133,7 @@ def test_duplicate_mount_fails():
                 {
                     "target_sw": [
                         _module("score_logging"),
-                        _module("score_other", docs=Docs(mount_at="modules/score_logging")),
+                        _module("score_other", docs=Docs(mount_at="modules/functional_modules/score_logging")),
                     ]
                 }
             )

@@ -6,10 +6,7 @@
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:003-export-aou-requirements.patch",
-                    "//patches/baselibs:004-make-log-examples-visible.patch",
-                    "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch",
-                    "//patches/baselibs:006-mark-unmitigated-safety-analyses-as-draft.patch"
+                    "//patches/baselibs:003-export-aou-requirements.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -38,7 +35,7 @@
                         "//..."
                     ]
                 },
-                "version": "0.2.18"
+                "version": "0.2.19"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
@@ -110,7 +107,7 @@
                         "//:unit_tests"
                     ]
                 },
-                "version": "0.4.1"
+                "version": "0.5.0"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -134,7 +131,8 @@
                     "//patches/lifecycle:002-undev-integration-test-deps.patch",
                     "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
                     "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/lifecycle:006-undev-cpp-policies.patch"
+                    "//patches/lifecycle:006-undev-cpp-policies.patch",
+                    "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -162,14 +160,13 @@
                         "//..."
                     ]
                 },
-                "version": "0.10.1"
+                "hash": "cc65b0b12596ea6dcb4da8ef438e7a3617486ab5"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
                 "bazel_patches": [
                     "//patches/logging:002-undev-component-test-deps.patch",
                     "//patches/logging:003-relative-verification-report-links.patch",
-                    "//patches/logging:005-docs-external-needs.patch",
                     "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/logging:007-docs-drop-generated-dependency-pages.patch"
                 ],
@@ -205,14 +202,12 @@
                         "-//score/test/component/..."
                     ]
                 },
-                "version": "0.2.7"
+                "hash": "dc2973f775d13a0bfc07615014ca56bf93a59c9b"
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "version": "0.3.2",
+                "version": "0.3.3",
                 "bazel_patches": [
-                    "//patches/time:004-rename-ubuntu-image-pull.patch",
-                    "//patches/time:005-use-sanitizer-bool-flags.patch",
                     "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/time:003-undev-rules-imagefs.patch"
                 ],
@@ -240,10 +235,12 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "version": "0.3.4",
+                "version": "0.3.5",
                 "bazel_patches": [
                     "//patches/config_management:001-expose-mw-com-config.patch",
-                    "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                    "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+                    "//patches/config_management:005-persistency-0.5-shared-kvs.patch",
+                    "//patches/config_management:006-config-daemon-remote-logging.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -287,7 +284,7 @@
             },
             "score_devcontainer": {
                 "repo": "https://github.com/eclipse-score/devcontainer.git",
-                "version": "1.12.0",
+                "version": "1.13.0",
                 "docs": false,
                 "pin_version": true
             },
@@ -308,11 +305,10 @@
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "version": "0.7.6",
-                "bazel_patches": [
-                    "//patches/platform:001-unique-feature-time-requirements-id.patch",
-                    "//patches/platform:002-relative-doc-links-in-architecture-overview.patch"
-                ]
+                "docs": {
+                    "mount_at": "modules/functional_modules/score_platform"
+                },
+                "hash": "05665bfc08112b64321a79a0eabc2e5fe664a4c5"
             },
             "score_rules_imagefs": {
                 "repo": "https://github.com/eclipse-score/rules_imagefs.git",
@@ -366,5 +362,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-13T14:08:13Z"
+    "timestamp": "2026-11-21T16:52:15Z"
 }

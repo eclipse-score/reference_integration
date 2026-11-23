@@ -22,6 +22,7 @@
 #include <chrono>
 #include <iostream>
 #include <locale>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
@@ -143,29 +144,29 @@ inline std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(const std::o
  * the provided KvsParameters to a KvsBuilder and returns the constructed Kvs.
  *
  * @param params Parsed KVS parameters from the test input JSON.
- * @return Constructed Kvs instance.
+ * @return Shared pointer to the opened Kvs instance.
  * @throws std::runtime_error if the build fails.
  */
-inline score::mw::per::kvs::Kvs create_kvs(const KvsParameters& params) {
+inline std::shared_ptr<score::mw::per::kvs::Kvs> create_kvs(const KvsParameters& params) {
     score::mw::per::kvs::KvsBuilder builder{
         score::mw::per::kvs::InstanceId{params.instance_id.value}};
 
     if (const auto defaults = to_need_flag(params.defaults)) {
-        builder = builder.need_defaults_flag(*defaults);
+        builder.Defaults(*defaults);
     }
     if (const auto kvs_load = to_need_flag(params.kvs_load)) {
-        builder = builder.need_kvs_flag(*kvs_load);
+        builder.KvsLoad(*kvs_load);
     }
     if (params.dir.has_value()) {
-        builder = builder.dir(std::string(*params.dir));
+        builder.WorkingDir(std::string(*params.dir));
     }
 
-    auto build_result = builder.build();
+    auto build_result = builder.Build();
     if (!build_result) {
         throw std::runtime_error(std::string(build_result.error().Message()));
     }
 
-    return std::move(build_result.value());
+    return std::move(build_result).value();
 }
 
 }  // namespace kvs_build_helpers

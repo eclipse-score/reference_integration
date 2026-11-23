@@ -186,8 +186,14 @@ std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(const std::optional
 
 }  // namespace
 
-KvsInstance::KvsInstance(const KvsParameters& params, score::mw::per::kvs::Kvs&& kvs)
+KvsInstance::KvsInstance(const KvsParameters& params, std::shared_ptr<score::mw::per::kvs::Kvs> kvs)
     : params_(params), kvs_(std::move(kvs)) {}
+
+KvsInstance::~KvsInstance() {
+    // persistency keeps opened instances in a process-wide registry; unregister so a reopen reloads from disk.
+    kvs_.reset();
+    static_cast<void>(score::kvs::Unregister(score::kvs::InstanceId{params_.instance_id.value}));
+}
 
 std::optional<std::shared_ptr<KvsInstance>> KvsInstance::create(const KvsParameters& params) {
     using namespace score::mw::per::kvs;
@@ -196,25 +202,25 @@ std::optional<std::shared_ptr<KvsInstance>> KvsInstance::create(const KvsParamet
         KvsBuilder builder{score::mw::per::kvs::InstanceId{params.instance_id.value}};
 
         if (params.snapshot_max_count.has_value()) {
-            builder = builder.snapshot_max_count(static_cast<std::size_t>(*params.snapshot_max_count));
+            builder.SnapshotMaxCount(static_cast<std::size_t>(*params.snapshot_max_count));
         }
 
         if (const auto defaults = to_need_flag(params.defaults)) {
-            builder = builder.need_defaults_flag(*defaults);
+            builder.Defaults(*defaults);
         }
         if (const auto kvs_load = to_need_flag(params.kvs_load)) {
-            builder = builder.need_kvs_flag(*kvs_load);
+            builder.KvsLoad(*kvs_load);
         }
         if (params.dir.has_value()) {
-            builder = builder.dir(std::string(*params.dir));
+            builder.WorkingDir(std::string(*params.dir));
         }
 
-        auto build_result = builder.build();
+        auto build_result = builder.Build();
         if (!build_result) {
             return std::nullopt;
         }
 
-        return std::shared_ptr<KvsInstance>(new KvsInstance(params, std::move(build_result.value())));
+        return std::shared_ptr<KvsInstance>(new KvsInstance(params, std::move(build_result).value()));
 
     } catch (const std::exception& e) {
         std::cerr << "Error creating KVS instance: " << e.what() << std::endl;
@@ -287,12 +293,12 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
 }
 
 bool KvsInstance::set_value(const std::string& key, double value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
+    auto result = kvs_->set_value(key, score::mw::per::kvs::KvsValue{value});
     return static_cast<bool>(result);
 }
 
 std::optional<double> KvsInstance::get_value(const std::string& key) {
-    auto result = kvs_.get_value(key);
+    auto result = kvs_->get_value(key);
     if (!result) {
         return std::nullopt;
     }
@@ -316,7 +322,7 @@ std::optional<double> KvsInstance::get_value(const std::string& key) {
 }
 
 std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
-    auto result = kvs_.get_value(key);
+    auto result = kvs_->get_value(key);
     if (!result) {
         return std::nullopt;
     }
@@ -329,7 +335,7 @@ std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
 }
 
 std::optional<double> KvsInstance::get_default_value_f64(const std::string& key) {
-    auto result = kvs_.get_default_value(key);
+    auto result = kvs_->get_default_value(key);
     if (!result) {
         return std::nullopt;
     }
@@ -342,21 +348,21 @@ std::optional<double> KvsInstance::get_default_value_f64(const std::string& key)
 }
 
 bool KvsInstance::remove_key(const std::string& key) {
-    auto result = kvs_.remove_key(key);
+    auto result = kvs_->remove_key(key);
     return static_cast<bool>(result);
 }
 
 bool KvsInstance::reset() {
-    auto result = kvs_.reset();
+    auto result = kvs_->reset();
     return static_cast<bool>(result);
 }
 
 bool KvsInstance::reset_key(const std::string& key) {
-    auto result = kvs_.SetValueToDefault(key);
+    auto result = kvs_->SetValueToDefault(key);
     return static_cast<bool>(result);
 }
 
 bool KvsInstance::flush() {
-    auto result = kvs_.flush();
+    auto result = kvs_->flush();
     return static_cast<bool>(result);
 }
