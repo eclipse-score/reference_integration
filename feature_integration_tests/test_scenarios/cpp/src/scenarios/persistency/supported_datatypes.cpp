@@ -40,7 +40,8 @@ public:
 
     void run(const std::string& input) const final {
         KvsParameters params = KvsParameters::from_json_section(input, "kvs_parameters_1");
-        Kvs kvs = create_kvs(params);
+        const auto kvs_instance = create_kvs(params);
+        Kvs& kvs = *kvs_instance;
 
         std::unordered_map<std::string, KvsValue> nested_obj = {{"sub-number", KvsValue(789.0)}};
         std::vector<KvsValue> arr = {
@@ -82,7 +83,8 @@ public:
 
     void run(const std::string& input) const final {
         KvsParameters params = KvsParameters::from_json_section(input, "kvs_parameters_1");
-        Kvs kvs = create_kvs(params);
+        const auto kvs_instance = create_kvs(params);
+        Kvs& kvs = *kvs_instance;
 
         auto check = [](auto result, const std::string& key) {
             if (!result) {

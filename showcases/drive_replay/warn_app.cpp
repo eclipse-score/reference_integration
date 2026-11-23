@@ -169,7 +169,8 @@ int main(int argc, const char* argv[])
         logger.LogError() << "cannot open persistency KVS";
         return 1;
     }
-    auto kvs = std::move(kvs_result).value();
+    const auto kvs_instance = std::move(kvs_result).value();
+    auto& kvs = *kvs_instance;
     const std::int64_t start_count = ReadCounter(kvs, "start_count") + 1;
     std::int64_t warn_count = ReadCounter(kvs, "warn_count");
     WriteCounter(kvs, "start_count", start_count);

@@ -1,8 +1,8 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 22f02b8..b9bda6b 100644
+index 547d6e9..af51da7 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -37,13 +37,13 @@ bazel_dep(name = "score_coverage", version = "0.4.2", dev_dependency = True)
+@@ -39,14 +39,14 @@ bazel_dep(name = "score_coverage", version = "0.4.2", dev_dependency = True)
  # Bump once score_rust_policies supports aspect_rules_lint >= 2.6.
  bazel_dep(name = "aspect_rules_lint", version = "2.5.2", dev_dependency = True)
  bazel_dep(name = "buildifier_prebuilt", version = "8.5.1.3", dev_dependency = True)
@@ -11,6 +11,7 @@ index 22f02b8..b9bda6b 100644
  bazel_dep(name = "rules_oci", version = "2.3.0", dev_dependency = True)
  bazel_dep(name = "rules_pkg", version = "1.2.0", dev_dependency = True)
  bazel_dep(name = "score_itf", version = "0.7.0", dev_dependency = True)
+ bazel_dep(name = "score_qnx_unit_tests", version = "0.3.0", dev_dependency = True)
 -bazel_dep(name = "score_sbom", version = "0.1.1", dev_dependency = True)
 +bazel_dep(name = "score_sbom", version = "0.1.1")
  bazel_dep(name = "score_rust_policies", version = "0.0.5", dev_dependency = True)
@@ -19,7 +20,7 @@ index 22f02b8..b9bda6b 100644
  
  # Python toolchain configuration
  PYTHON_VERSION = "3.12"
-@@ -54,7 +54,7 @@ python.toolchain(
+@@ -57,7 +57,7 @@ python.toolchain(
      python_version = PYTHON_VERSION,
  )
  
@@ -28,10 +29,10 @@ index 22f02b8..b9bda6b 100644
  pip.parse(
      hub_name = "pip_score_persistency_venv_test",
      python_version = PYTHON_VERSION,
-@@ -69,7 +69,7 @@ bazel_dep(name = "score_bazel_platforms", version = "1.1.0")
+@@ -72,7 +72,7 @@ bazel_dep(name = "score_bazel_platforms", version = "1.3.0")
  bazel_dep(name = "platforms", version = "1.1.0")
  
- bazel_dep(name = "score_toolchains_rust", version = "0.10.0", dev_dependency = True)
+ bazel_dep(name = "score_toolchains_rust", version = "0.10.1", dev_dependency = True)
 -bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True)
 +bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
  bazel_dep(name = "score_cpp_policies", version = "0.1.2", dev_dependency = True)
