@@ -19,37 +19,92 @@ on:
   push:
     branches:
       - main
-# Do not flood CI with unneeded previous runs in PR
+  # Called by unified_workflow.yml. The event triggers above stay until the unified pipeline is
+  # the required check (rollout stage D); inputs are empty for those standalone runs, and a
+  # non-empty resolved_inputs is what marks a called run.
+  workflow_call:
+    inputs:
+      fresh:
+        description: Build and test from scratch (no disk cache, no cached test results).
+        type: boolean
+        required: false
+        default: false
+      resolved_inputs:
+        description: >-
+          Name of the resolved-inputs artifact to restore. Set by unified_workflow.yml, which also marks the run as called; empty for standalone runs (committed files).
+        type: string
+        required: false
+        default: ''
+# Do not flood CI with unneeded previous runs in PR. Literal prefix and a per-run group when
+# called: inside a call github.workflow is the caller's name, and the leaves of one unified run
+# must not share a group with each other or with the caller.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+  group: build-and-test-qnx-${{ inputs.resolved_inputs != '' && github.run_id || github.event.pull_request.number }}
+  cancel-in-progress: ${{ inputs.resolved_inputs == '' && github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
 jobs:
   qnx-build-x86_64:
     name: x86_64
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
-    environment: ${{ inputs.environment-name }}
     permissions:
       contents: read
-      pull-requests: read
     env:
       # Read access to eclipse-score/qnx_sdp_pkg for the QNX SDP release asset
       GH_TOKEN: ${{ secrets.SCORE_BOT_QNX_PKG_PAT }}
+      # full_clean: passed on the command line; ~/.bazelrc would persist on self-hosted runners.
+      NOCACHE: ${{ inputs.fresh && '--nocache_test_results' || '' }}
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
-      - name: Checkout repository (Handle all events)
+      - name: Check QNX secrets
+        env:
+          HAS_LICENSE: ${{ secrets.SCORE_QNX_LICENSE != '' }}
+          HAS_USER: ${{ secrets.SCORE_QNX_USER != '' }}
+          HAS_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD != '' }}
+          HAS_PKG_PAT: ${{ secrets.SCORE_BOT_QNX_PKG_PAT != '' }}
+        run: |
+          missing=()
+          [ "$HAS_LICENSE" = true ] || missing+=(SCORE_QNX_LICENSE)
+          [ "$HAS_USER" = true ] || missing+=(SCORE_QNX_USER)
+          [ "$HAS_PASSWORD" = true ] || missing+=(SCORE_QNX_PASSWORD)
+          [ "$HAS_PKG_PAT" = true ] || missing+=(SCORE_BOT_QNX_PKG_PAT)
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "::error::QNX build needs these secrets, which are not available to this run: ${missing[*]}"
+            exit 1
+          fi
+      # Every trigger except the legacy pull_request_target (including calls from
+      # unified_workflow.yml): the run's commit (github.sha), never the PR head.
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # Legacy standalone pull_request_target run: github.sha is the base branch there, so the
+      # PR head is checked out explicitly. Removed in rollout stage D.
+      - name: Checkout repository (pull_request_target)
+        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           allow-unsafe-pr-checkout: true
+      - name: Restore resolved inputs
+        if: inputs.resolved_inputs != ''
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: ${{ inputs.resolved_inputs }}
       - name: Setup Bazel with shared caching
         uses: bazel-contrib/setup-bazel@0.19.1
         with:
-          disk-cache: ${{ github.workflow }}
+          # Literal cache name: inside a called workflow github.workflow is the caller's name.
+          disk-cache: ${{ inputs.fresh && 'false' || 'QNX8 - Build & Integration Test' }}
           repository-cache: true
           bazelisk-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      # full_clean: on a persistent self-hosted runner the output base (and its local action
+      # cache) survives between runs, so disabling the disk cache alone is not a clean build.
+      - name: Remove the Bazel output base
+        if: inputs.fresh
+        run: bazel clean --expunge
       - name: Prepare QNX license
         env:
           SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
@@ -71,18 +126,36 @@ jobs:
       - name: Allow unprivileged user namespaces
         run: |
           sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
+      # The persistent self-hosted runner keeps the output base between runs. Without this, a run
+      # whose build fails (tests skipped) would upload the previous run's test reports.
+      - name: Remove test logs of earlier runs
+        if: ${{ !inputs.fresh }}
+        run: |
+          set -euo pipefail
+          output_path="$(bazel info output_path)"
+          rm -rf "${output_path}"/*/testlogs
       - name: Build with QNX toolchain
+        id: build
         env:
           SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
           bazel build --lockfile_mode=error --config qnx-x86_64 //images/qnx_x86_64:image
       - name: Run integration tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: |
-          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //feature_integration_tests/itf
+          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 ${NOCACHE} //feature_integration_tests/itf
       - name: Run platform integration tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: |
-          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //platform_integration_tests:pit
+          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 ${NOCACHE} //platform_integration_tests:pit
+      - name: Upload test reports
+        # Not for pull_request_target: those runs check out the PR head, which may predate this
+        # local action.
+        if: always() && github.event_name != 'pull_request_target'
+        uses: ./.github/actions/collect-test-reports
+        with:
+          name: test-reports-itf-pit-qnx-x86_64
       - name: Cleanup QNX license
         if: always()
         run: sudo rm -rf /opt/score_qnx

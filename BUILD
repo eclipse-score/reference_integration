@@ -48,6 +48,8 @@ setup_starpls(
 use_format_targets()
 
 exports_files([
+    # Read by //scripts:prepare_pipeline_tests (job lists in sync with the status job).
+    ".github/workflows/unified_workflow.yml",
     "MODULE.bazel",
     "MODULE.bazel.lock",
     "pyproject.toml",

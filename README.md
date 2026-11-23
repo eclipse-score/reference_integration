@@ -295,6 +295,7 @@ For documentation covering repository workflows, testing frameworks, and platfor
 
 - **[Feature Integration Tests](feature_integration_tests/README.md)** — FIT and ITF test framework usage
 - **[CLI Documentation](showcases/cli/README.md)** — CLI tool configuration and usage
+- **[CI pipeline](docs/integration_process/reference.rst#unified-ci-pipeline)** — CI triggers, test levels, artifacts and fork/merge-queue behavior
 - **Platform-Specific Guides:**
    - [Elektrobit corbos Linux (aarch64)](images/ebclfsa_aarch64/README.md)
    - [QNX aarch64 / Raspberry Pi](#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64)

@@ -1,0 +1,775 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# The unified CI pipeline. It has no event triggers of its own: on_repo_change.yml (pull_request,
+# merge_group, push to main, release) and on_schedule.yml (schedule, workflow_dispatch) call it.
+# Inside a called workflow github.event_name is the caller's event, so the `prepare` job derives
+# the test level, the known_good mode, QNX and publishing from it. Only schedule and
+# workflow_dispatch runs honor the inputs; repository events ignore them. (For pull_request and
+# merge_group this file itself comes from the candidate commit, so that is a guard against
+# inputs, not against edits to the pipeline.)
+#
+# Test levels (cumulative): pr < merge < full < full_clean.
+#   pr          pull requests
+#   merge       merge-queue candidate; QNX is mandatory in the upstream repository
+#   full        reserved for future expansion; currently identical to merge
+#   full_clean  full, built and tested from scratch (no disk cache, no cached test results)
+#
+# QNX x86_64 (image, ITF, PIT) runs whenever the QNX secrets are available to the run: PRs from
+# branches of this repository yes, fork and Dependabot PRs no (GitHub gives them no secrets).
+#
+# No concurrency is defined here: inside a call github.workflow is the caller's name, so groups
+# would collide. The callers own concurrency. The build_and_test_*.yml leaves keep a group for
+# their standalone runs, which is unique per run when they are called from here.
+name: Unified CI pipeline
+on:
+  workflow_call:
+    inputs:
+      test_level:
+        description: pr, merge, full or full_clean. Honored for schedule/workflow_dispatch only.
+        type: string
+        required: false
+        default: ''
+      known_good_mode:
+        description: pinned, latest or override. Honored for schedule/workflow_dispatch only.
+        type: string
+        required: false
+        default: ''
+      module_override:
+        description: For known_good_mode=override, <module>@<sha> or <module>@<repo_url>@<sha>.
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+env:
+  UPSTREAM_REPOSITORY: eclipse-score/reference_integration
+  # Rollout switch: while the previous workflows still publish, this pipeline must not (two
+  # deployers would race on gh-pages and on the release assets). Set to 'true' together with
+  # removing their event triggers (rollout stage D).
+  PUBLISHING_ENABLED: 'false'
+jobs:
+  # ---------------------------------------------------------------------------------------------
+  # Phase 1: prepare, fast checks, gate, known_good resolution
+  # ---------------------------------------------------------------------------------------------
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      test_level: ${{ steps.decide.outputs.test_level }}
+      known_good_mode: ${{ steps.decide.outputs.known_good_mode }}
+      module_override: ${{ steps.decide.outputs.module_override }}
+      run_qnx: ${{ steps.decide.outputs.run_qnx }}
+      fresh: ${{ steps.decide.outputs.fresh }}
+      publish_docs: ${{ steps.decide.outputs.publish_docs }}
+      publish_release: ${{ steps.decide.outputs.publish_release }}
+      expected_jobs: ${{ steps.decide.outputs.expected_jobs }}
+      optional_jobs: ${{ steps.decide.outputs.optional_jobs }}
+    steps:
+      - name: Checkout pipeline script and known_good.json
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            known_good.json
+            scripts/prepare_pipeline.py
+          sparse-checkout-cone-mode: false
+      - name: Derive pipeline configuration
+        id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+          PR_HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          IN_LEVEL: ${{ inputs.test_level }}
+          IN_MODE: ${{ inputs.known_good_mode }}
+          IN_OVERRIDE: ${{ inputs.module_override }}
+          # Only presence is exposed, never the values.
+          HAS_QNX_SECRETS: ${{ secrets.SCORE_QNX_LICENSE != '' && secrets.SCORE_QNX_USER != '' && secrets.SCORE_QNX_PASSWORD != '' && secrets.SCORE_BOT_QNX_PKG_PAT != '' }}
+        # See scripts/prepare_pipeline.py for the rules (levels, QNX, publishing, input validation).
+        run: python3 scripts/prepare_pipeline.py
+  format:
+    name: Formatting check
+    needs: prepare
+    permissions:
+      contents: read
+    # Every job checks out github.sha, the candidate: PR merge commit, merge-queue head or
+    # pushed commit.
+    uses: eclipse-score/cicd-workflows/.github/workflows/format.yml@8d80e8df150cae21d53cbc8031d0f970648f7a67 # v0.0.3
+  copyright:
+    name: Copyright check
+    needs: prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python 3
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      # Runs the `copyright` hook from .pre-commit-config.yaml (cr_checker from eclipse-score/tooling).
+      - name: Run cr_checker via pre-commit
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+        with:
+          extra_args: copyright --all-files
+  internal-tests:
+    name: Internal tooling tests
+    needs: prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@beee38c3b4426a7c43fdfeb2495d1af812179c3e # v1
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: false
+          repository-cache: true
+          cache-save: false
+      # Needs bazel on PATH: the action resolves `bazel info install_base`.
+      - name: Allow user namespaces for the linux-sandbox
+        uses: eclipse-score/cicd-actions/unblock-user-namespace-for-linux-sandbox@212bbf86267e9381da9d2daf962d12f6feafbc90
+      - name: Run internal tooling tests
+        run: |
+          bazel test \
+            //scripts/tooling:tooling_tests \
+            //scripts/known_good:known_good_tests \
+            //scripts:module_tests_tests \
+            //scripts:prepare_pipeline_tests \
+            //deploy/platform_info:gen_platform_info_test
+  known-good:
+    name: known_good.json matches Bazel
+    needs: prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check generated files against the committed known_good.json
+        run: |
+          scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
+          if git diff --quiet; then
+            echo "No changes"
+          else
+            echo "::error::The committed bazel_common files do not match known_good.json. Run scripts/known_good/update_module_from_known_good.py and commit the result."
+            git diff
+            exit 1
+          fi
+  bzlmod-lock:
+    name: Bzlmod lockfile check
+    needs: prepare
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: false
+          repository-cache: false
+          cache-save: false
+      - name: Verify MODULE.bazel.lock exists
+        run: |
+          test -f MODULE.bazel || { echo "::error::MODULE.bazel not found"; exit 1; }
+          test -f MODULE.bazel.lock || { echo "::error::MODULE.bazel.lock is missing. Run: bazel mod tidy"; exit 1; }
+      - name: Run bazel mod tidy
+        run: bazel mod tidy
+      - name: Check lock consistency
+        run: git diff --exit-code -- MODULE.bazel MODULE.bazel.lock
+  gate:
+    name: Fast checks passed
+    needs: [format, copyright, internal-tests, known-good, bzlmod-lock]
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: All fast checks succeeded
+        run: echo "All fast checks succeeded."
+  resolve:
+    name: Resolve module graph
+    needs: [prepare, gate]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Bazel
+        if: needs.prepare.outputs.known_good_mode != 'pinned'
+        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: false
+          repository-cache: true
+          cache-save: false
+      - name: Update known_good.json to the latest module commits
+        if: needs.prepare.outputs.known_good_mode == 'latest'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/known_good/update_module_latest.py --known-good known_good.json --output known_good.json
+      - name: Override one module in known_good.json
+        if: needs.prepare.outputs.known_good_mode == 'override'
+        env:
+          MODULE_OVERRIDE: ${{ needs.prepare.outputs.module_override }}
+        run: |
+          python3 scripts/known_good/override_known_good_repo.py \
+            --known known_good.json --output known_good.json --module-override "${MODULE_OVERRIDE}"
+      - name: Regenerate Bazel fragments and lockfile
+        if: needs.prepare.outputs.known_good_mode != 'pinned'
+        run: |
+          python3 scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
+          bazel mod deps --lockfile_mode=update
+          git status --short
+      - name: Upload resolved inputs
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: resolved-inputs
+          # Workspace-relative layout; downstream jobs copy it over their checkout.
+          path: |
+            known_good.json
+            MODULE.bazel.lock
+            bazel_common/
+          include-hidden-files: true
+          if-no-files-found: error
+  # ---------------------------------------------------------------------------------------------
+  # Phase 2: execution leaves and test producers
+  # ---------------------------------------------------------------------------------------------
+  module-tests:
+    name: Module tests
+    needs: [prepare, resolve]
+    permissions:
+      contents: read
+    uses: ./.github/workflows/module_tests.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+    secrets: inherit
+  linux:
+    name: Linux
+    needs: [prepare, resolve]
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build_and_test_linux.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+  linux-target:
+    name: Linux release archives
+    needs: [prepare, resolve]
+    # Ceiling only: the leaf's own release job (skipped when called) requests contents: write
+    # until rollout stage D; its build and run jobs declare contents: read.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build_and_test_linux_target.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+  ebclfsa:
+    name: EB corbos Linux for Safety Applications
+    needs: [prepare, resolve]
+    # Ceiling only, see linux-target.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build_and_test_ebclfsa.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+  autosd:
+    name: AutoSD
+    needs: [prepare, resolve]
+    # Ceiling only, see linux-target.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build_and_test_autosd.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+  qnx:
+    name: QNX8
+    needs: [prepare, resolve]
+    if: needs.prepare.outputs.run_qnx == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build_and_test_qnx.yml
+    with:
+      fresh: ${{ needs.prepare.outputs.fresh == 'true' }}
+      resolved_inputs: resolved-inputs
+    secrets: inherit
+  integration-tests:
+    name: Linux FIT, PIT and module integration tests
+    needs: [prepare, resolve]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      FRESH: ${{ needs.prepare.outputs.fresh }}
+      # full_clean: passed on each `bazel test` call instead of touching ~/.bazelrc.
+      NOCACHE: ${{ needs.prepare.outputs.fresh == 'true' && '--nocache_test_results' || '' }}
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@3fac5780033e636b114cf69e891dc19d640855c2 # v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Restore resolved inputs
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: resolved-inputs
+      - name: Set up Docker Buildx
+        # The platform integration tests run the showcases against a Docker target built from
+        # //images/linux_x86_64:image.
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          bazelisk-cache: true
+          # Same cache as the former test_and_docs.yml job.
+          disk-cache: ${{ needs.prepare.outputs.fresh == 'true' && 'false' || 'Code Quality & Documentation' }}
+          # Feeds the key hash of both the repository cache and the disk cache; the default
+          # (MODULE.bazel + WORKSPACE*) never rotates on a module bump. See test_and_docs.yml.
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Set up Python 3
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      # Each suite runs in its own step with !cancelled(), so one failure does not hide the other
+      # reports; the job still fails if any suite fails.
+      - name: Feature integration tests
+        if: ${{ !cancelled() }}
+        run: bazel test --lockfile_mode=error --config=linux-x86_64 ${NOCACHE} //feature_integration_tests/test_cases:fit
+      - name: Platform integration tests
+        if: ${{ !cancelled() }}
+        run: bazel test --lockfile_mode=error --config=linux-x86_64 ${NOCACHE} //platform_integration_tests:pit
+      - name: Upload platform run DLT trace
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: platform-run-dlt-${{ github.sha }}
+          path: bazel-testlogs/platform_integration_tests/platform_run/platform_run/test.outputs/platform_run.dlt
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Upload drive replay DLT trace
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: drive-replay-dlt-${{ github.sha }}
+          path: bazel-testlogs/platform_integration_tests/drive_replay/drive_replay/test.outputs/drive_replay.dlt
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Module integration tests
+        # Targets and flags come from known_good.json via quality_runners.py.
+        if: ${{ !cancelled() }}
+        run: |
+          trust=--trust-cache
+          [[ "${FRESH}" == true ]] && trust=""
+          python ./scripts/quality_runners.py --integration-tests ${trust}
+      - name: Install uv (required for SBOM license scanning)
+        if: ${{ !cancelled() }}
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
+        with:
+          enable-cache: false
+      - name: Build build tools SBOM
+        if: ${{ !cancelled() }}
+        run: bazel build --lockfile_mode=error //:build_tools_sbom
+      - name: Upload build tools SBOM
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: build-tools-sbom-${{ github.sha }}
+          path: bazel-bin/build_tools_sbom.spdx.json
+          retention-days: 3
+          if-no-files-found: error
+      - name: Upload test reports
+        if: always()
+        uses: ./.github/actions/collect-test-reports
+        with:
+          name: test-reports-integration-linux-x86_64
+  # ---------------------------------------------------------------------------------------------
+  # Phase 3: documentation, publishing, status
+  # ---------------------------------------------------------------------------------------------
+  docs:
+    name: Documentation
+    # Consumes the Linux report producers; runs only when they all succeeded.
+    needs: [prepare, resolve, module-tests, linux, integration-tests]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@3fac5780033e636b114cf69e891dc19d640855c2 # v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Restore resolved inputs
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: resolved-inputs
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ needs.prepare.outputs.fresh == 'true' && 'false' || 'Code Quality & Documentation' }}
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: false
+      - name: Set up Python 3
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@d545215b973c4151236fcb3f75480dffcb914835 # main, 2026-11-20
+        with:
+          packages: graphviz
+          cache: false
+      - name: Download module test reports
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: module-tests-*
+          path: _module_reports
+          merge-multiple: true
+      - name: Download Linux test reports
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: test-reports-*-linux-*
+          path: _producer_reports
+          merge-multiple: true
+      - name: Check that all expected reports are present
+        run: |
+          set -euo pipefail
+          missing=0
+          for module in $(jq -r '.modules.target_sw | keys[]' known_good.json); do
+            [ -d "_module_reports/${module}" ] || { echo "::error::No module test report for ${module}"; missing=1; }
+          done
+          for suite in feature_integration_tests/test_cases feature_integration_tests/itf platform_integration_tests; do
+            find "_producer_reports/${suite}" -name test.xml -print -quit 2>/dev/null | grep -q . \
+              || { echo "::error::No test.xml for ${suite} in the producer reports"; missing=1; }
+          done
+          exit "${missing}"
+      - name: Write unit test and coverage summaries
+        # Also combines the rebased module LCOV into coverage-report/coverage_report.dat, which
+        # docs-as-code reads when //:docs_shim runs below.
+        run: python ./scripts/module_tests.py report _module_reports
+      - name: Collect test reports for the documentation
+        # The source code linker reads tests-report/ instead of bazel-testlogs/ when it exists.
+        # Module unit test results land where ref_int's own would (external/<module>+/...), which
+        # is how the linker maps them to known_good.json.
+        run: |
+          rsync -a --include='*/' --include='test.xml' --exclude='*' --prune-empty-dirs _producer_reports/ tests-report/
+          for report in _module_reports/*; do
+            module="${report##*/}"
+            [ -d "$report/tests" ] || continue
+            mkdir -p "tests-report/external/$module+"
+            cp -r "$report/tests/." "tests-report/external/$module+/"
+          done
+      - name: Create archive of test reports
+        env:
+          ZIP_NAME: ${{ github.event.repository.name }}_test_reports.zip
+        run: |
+          set -euo pipefail
+          # Same layout as before: artifacts/bazel-testlogs/external/... plus artifacts/module-tests.
+          mkdir -p artifacts/bazel-testlogs
+          if [ -d _producer_reports/external ]; then
+            (cd _producer_reports && find external -name 'test.xml' -print0 | xargs -0 -r -I{} cp --parents {} ../artifacts/bazel-testlogs/)
+          fi
+          cp -r _module_reports artifacts/module-tests
+          zip -qr "${ZIP_NAME}" artifacts/
+      - name: Upload test report archive
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: test-reports-zip
+          path: ${{ github.event.repository.name }}_test_reports.zip
+          if-no-files-found: error
+      - name: Build documentation
+        env:
+          GITHUB_USER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+        run: |
+          bazel run --lockfile_mode=error //:docs_shim -- \
+            --github_user="${GITHUB_USER}" \
+            --github_repo="${GITHUB_REPO}"
+
+          bazel run //scripts/tooling -- misc html_report --output "$(realpath .)/_build/status_dashboard.html"
+          # Dependable element docs built by module_tests.yml; they cannot be coupled via Bazel, so
+          # they are published next to the main docs (linked from docs/modules/index.rst).
+          for report in _module_reports/*; do
+            [ -d "$report/dependable_element_docs" ] || continue
+            module="${report##*/}"
+            mkdir -p "_build/modules/$module/dependable_element"
+            cp -r "$report/dependable_element_docs/." "_build/modules/$module/dependable_element/"
+          done
+          tar -cf github-pages.tar _build
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: github-pages-${{ github.sha }}
+          path: github-pages.tar
+          retention-days: 3
+          if-no-files-found: error
+  docs-deploy:
+    name: Deploy documentation to GitHub Pages
+    # Waits for every required job; !failure() also covers jobs skipped because an ancestor failed.
+    # push to main deploys main/, a release its tag folder, a same-repository PR pr-<number>/
+    # (fork PRs have a read-only token: no deployed preview, they download the github-pages-<sha>
+    # artifact of the run instead).
+    needs: [prepare, docs, module-tests, linux, linux-target, ebclfsa, autosd, qnx, integration-tests]
+    if: ${{ !failure() && !cancelled() && needs.prepare.outputs.publish_docs == 'true' }}
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
+    # Per-ref group, as recommended by deploy-versioned-pages: serializes deploys of one target.
+    # Different targets still push to the same gh-pages branch concurrently; the deploy action's
+    # push retries handle that. A repository-wide group would instead cancel pending deploys
+    # (GitHub keeps one pending run per group), failing the required status check.
+    concurrency:
+      group: pages-deploy-${{ github.repository }}-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+      contents: write
+      pull-requests: write # PR preview comment
+    steps:
+      - name: Ensure gh-pages branch exists with initial files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          if ! git ls-remote --exit-code --heads "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" gh-pages; then
+            echo "gh-pages branch does not exist. Creating it..."
+            git clone --depth=1 "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" repo
+            cd repo
+            git fetch origin main --depth=1
+            AUTHOR_NAME=$(git log origin/main -1 --pretty=format:'%an')
+            AUTHOR_EMAIL=$(git log origin/main -1 --pretty=format:'%ae')
+            git config user.name "$AUTHOR_NAME"
+            git config user.email "$AUTHOR_EMAIL"
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+            REPO_NAME=$(basename "${REPO}")
+            OWNER_NAME="${REPO%%/*}"
+            printf '[\n  {\n    "version": "main",\n    "url": "https://%s.github.io/%s/main/"\n  }\n]\n' "${OWNER_NAME}" "${REPO_NAME}" > versions.json
+            cat > index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta http-equiv="refresh" content="0; URL=main/">
+              <title>Redirecting...</title>
+          </head>
+          <body>
+              <p>If you are not redirected, <a href="main/">click here</a>.</p>
+          </body>
+          </html>
+          HTML
+            touch .nojekyll
+            git add versions.json index.html .nojekyll
+            git commit -m "Initialize gh-pages branch with versions.json and index.html"
+            git push origin gh-pages
+            cd ..
+            rm -rf repo
+          else
+            echo "gh-pages branch exists. Skipping creation."
+          fi
+      - name: Checkout repository
+        # Only the deploy action runs here, no code from the checkout. Same-repository PRs, main
+        # and releases of the upstream repository only.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download documentation artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: github-pages-${{ github.sha }}
+      - name: Untar documentation artifact
+        run: mkdir -p extracted_docs && tar -xf github-pages.tar -C extracted_docs
+      - name: Deploy 🚀
+        id: pages-deployment
+        uses: eclipse-score/cicd-workflows/.github/actions/deploy-versioned-pages@335ec0298156144158177c0450320732c9315a98 # main, 2026-11-20
+        with:
+          source_folder: extracted_docs/_build
+          deployment_type: workflow
+  release-publish:
+    name: Publish release assets
+    needs: [prepare, docs, module-tests, linux, linux-target, ebclfsa, autosd, qnx, integration-tests]
+    if: ${{ !failure() && !cancelled() && needs.prepare.outputs.publish_release == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: score-release-*
+          path: release-assets
+          merge-multiple: true
+      - name: Download AutoSD images
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: eclipse-autosd-bootc-qemu-*
+          path: release-assets
+          merge-multiple: true
+      - name: Download test report archive
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: test-reports-zip
+          path: release-assets
+      - name: Download build tools SBOM
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: build-tools-sbom-${{ github.sha }}
+          path: release-assets
+      - name: Check release assets
+        env:
+          ZIP_NAME: ${{ github.event.repository.name }}_test_reports.zip
+        # The download patterns above are broad, so the published set is checked exactly: every
+        # expected asset present, nothing else (a new or renamed artifact must be added here).
+        run: |
+          set -euo pipefail
+          expected=("${ZIP_NAME}" build_tools_sbom.spdx.json)
+          for platform in linux-x86_64 linux-aarch64 eb-aarch64 autosd-x86_64 autosd-aarch64; do
+            expected+=("score-platform-${platform}.tar.gz" "score-showcases-${platform}.tar.gz")
+          done
+          expected+=(eclipse-autosd-bootc-qemu-x86_64.qcow2.xz eclipse-autosd-bootc-qemu-aarch64.qcow2.xz)
+          missing=0
+          for f in "${expected[@]}"; do
+            [ -f "release-assets/${f}" ] || { echo "::error::Missing release asset ${f}"; missing=1; }
+          done
+          for path in release-assets/*; do
+            f="${path#release-assets/}"
+            printf '%s\n' "${expected[@]}" | grep -qxF -- "${f}" \
+              || { echo "::error::Unexpected release asset ${f}"; missing=1; }
+          done
+          ls -l release-assets
+          exit "${missing}"
+      - name: Upload assets to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "${RELEASE_TAG}" release-assets/* --clobber
+  status:
+    name: CI status
+    if: always()
+    needs:
+      - prepare
+      - format
+      - copyright
+      - internal-tests
+      - known-good
+      - bzlmod-lock
+      - gate
+      - resolve
+      - module-tests
+      - linux
+      - linux-target
+      - ebclfsa
+      - autosd
+      - qnx
+      - integration-tests
+      - docs
+      - docs-deploy
+      - release-publish
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: Evaluate job results
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          EXPECTED: ${{ needs.prepare.outputs.expected_jobs }}
+          OPTIONAL: ${{ needs.prepare.outputs.optional_jobs }}
+          PREPARE_RESULT: ${{ needs.prepare.result }}
+          LEVEL: ${{ needs.prepare.outputs.test_level }}
+          MODE: ${{ needs.prepare.outputs.known_good_mode }}
+          SHA: ${{ github.sha }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [[ "${PREPARE_RESULT}" != success || -z "${EXPECTED}" ]]; then
+            echo "::error::prepare finished with '${PREPARE_RESULT}'; the pipeline configuration is unknown."
+            exit 1
+          fi
+          fail=0
+          {
+            echo "## CI status"
+            echo ""
+            echo "Event \`${EVENT}\`, level \`${LEVEL}\`, known_good \`${MODE}\`, SHA \`${SHA}\`"
+            echo ""
+            echo "| Job | Result | Required |"
+            echo "|---|---|---|"
+          } >> "${GITHUB_STEP_SUMMARY}"
+          # prepare is checked above through PREPARE_RESULT; it is in neither job list.
+          for job in $(jq -r 'keys[] | select(. != "prepare")' <<<"${NEEDS}"); do
+            result="$(jq -r --arg j "${job}" '.[$j].result' <<<"${NEEDS}")"
+            if jq -e --arg j "${job}" 'index($j) != null' <<<"${EXPECTED}" >/dev/null; then
+              required=yes
+              if [[ "${result}" != success ]]; then
+                echo "::error::Required job '${job}' finished with '${result}'"
+                fail=1
+              fi
+            elif ! jq -e --arg j "${job}" 'index($j) != null' <<<"${OPTIONAL}" >/dev/null; then
+              required="unknown"
+              echo "::error::Job '${job}' is neither in BASE_JOBS nor in OPTIONAL_JOBS of scripts/prepare_pipeline.py"
+              fail=1
+            else
+              # Intentionally skipped for this event (QNX on PRs, publishers). Anything that ran
+              # anyway must not have failed.
+              required="no (not run for this event)"
+              if [[ "${result}" != skipped && "${result}" != success ]]; then
+                echo "::error::Job '${job}' finished with '${result}'"
+                fail=1
+              fi
+            fi
+            echo "| ${job} | ${result} | ${required} |" >> "${GITHUB_STEP_SUMMARY}"
+          done
+          for job in $(jq -r '.[]' <<<"${EXPECTED}"); do
+            if ! jq -e --arg j "${job}" 'has($j)' <<<"${NEEDS}" >/dev/null; then
+              echo "::error::Expected job '${job}' is not a dependency of the status job"
+              fail=1
+            fi
+          done
+          exit "${fail}"

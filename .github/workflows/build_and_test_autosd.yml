@@ -21,10 +21,28 @@ on:
   push:
     branches:
       - main
-# Do not flood CI with unneeded previous runs in PR
+  # Called by unified_workflow.yml. The event triggers above stay until the unified pipeline is
+  # the required check (rollout stage D); inputs are empty for those standalone runs, and a
+  # non-empty resolved_inputs is what marks a called run.
+  workflow_call:
+    inputs:
+      fresh:
+        description: Build and test from scratch (no disk cache, no cached test results).
+        type: boolean
+        required: false
+        default: false
+      resolved_inputs:
+        description: >-
+          Name of the resolved-inputs artifact to restore. Set by unified_workflow.yml, which also marks the run as called; empty for standalone runs (committed files).
+        type: string
+        required: false
+        default: ''
+# Do not flood CI with unneeded previous runs in PR. Literal prefix and a per-run group when
+# called: inside a call github.workflow is the caller's name, and the leaves of one unified run
+# must not share a group with each other or with the caller.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+  group: build-and-test-autosd-${{ inputs.resolved_inputs != '' && github.run_id || github.event.pull_request.number }}
+  cancel-in-progress: ${{ inputs.resolved_inputs == '' && github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
 jobs:
   build:
     strategy:
@@ -43,6 +61,8 @@ jobs:
             bazel_config: autosd-crossland
     name: autosd-${{ matrix.target }}
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
     env:
       AIB_SCRIPT_URL: https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/1.3.0/auto-image-builder.sh?ref_type=tags
       AIB_CONTAINER_IMAGE: quay.io/centos-sig-automotive/automotive-image-builder:1.3.0
@@ -51,11 +71,19 @@ jobs:
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Restore resolved inputs
+        if: inputs.resolved_inputs != ''
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: ${{ inputs.resolved_inputs }}
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
+          # Literal cache name: inside a called workflow github.workflow is the caller's name.
+          disk-cache: ${{ inputs.fresh && 'false' || 'AutoSD - Build & Integration Test' }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Shows kernel version
@@ -156,7 +184,7 @@ jobs:
       - name: Package platform and showcases
         if: github.event_name == 'release'
         run: |
-          bazel build --lockfile_mode=error --config autosd-${{ matrix.target }} //deploy:platform_tar //showcases:showcases_pkg_tar
+          bazel build --lockfile_mode=error --config ${{ matrix.bazel_config }} //deploy:platform_tar //showcases:showcases_pkg_tar
           gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-autosd-${{ matrix.target }}.tar.gz
           gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-autosd-${{ matrix.target }}.tar.gz
       - name: Store platform and showcases packages
@@ -170,7 +198,9 @@ jobs:
   release:
     name: Publish image to release
     needs: build
-    if: github.event_name == 'release'
+    # Disabled: broken on main (uses matrix.target without a matrix, so the asset names are
+    # empty). The unified pipeline publishes from its release-publish job instead.
+    if: false
     runs-on: ubuntu-24.04
     permissions:
       contents: write

@@ -16,6 +16,18 @@
 name: Module Tests
 on:
   workflow_call:
+    inputs:
+      fresh:
+        description: Test from scratch (no disk cache, no cached test results).
+        type: boolean
+        required: false
+        default: false
+      resolved_inputs:
+        description: >-
+          Name of the resolved-inputs artifact to restore. Set by unified_workflow.yml, which also marks the run as called; empty for standalone runs (committed files).
+        type: string
+        required: false
+        default: ''
     secrets:
       UBUNTU_SNAPSHOT_MIRROR_URL:
         description: Optional StableBuild mirror tag used before snapshot.ubuntu.com (see the Bazel downloader step).
@@ -30,12 +42,25 @@ jobs:
     outputs:
       modules: ${{ steps.modules.outputs.modules }}
     steps:
+      # Called by unified_workflow.yml: the run's commit (github.sha), never the PR head.
       - name: Checkout repository
+        if: inputs.resolved_inputs != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Legacy call from test_and_docs.yml (pull_request_target); removed in rollout stage D.
+      - name: Checkout repository (legacy)
+        if: inputs.resolved_inputs == ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           allow-unsafe-pr-checkout: true
+      - name: Restore resolved inputs
+        if: inputs.resolved_inputs != ''
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: ${{ inputs.resolved_inputs }}
       - name: List modules
         id: modules
         run: echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
@@ -52,17 +77,32 @@ jobs:
         uses: eclipse-score/more-disk-space@v1.1
         with:
           level: 4
+      # Called by unified_workflow.yml: the run's commit (github.sha), never the PR head.
       - name: Checkout repository
+        if: inputs.resolved_inputs != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Legacy call from test_and_docs.yml (pull_request_target); removed in rollout stage D.
+      - name: Checkout repository (legacy)
+        if: inputs.resolved_inputs == ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           allow-unsafe-pr-checkout: true
+      - name: Restore resolved inputs
+        if: inputs.resolved_inputs != ''
+        uses: ./.github/actions/restore-resolved-inputs
+        with:
+          artifact: ${{ inputs.resolved_inputs }}
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}-${{ matrix.module }}
+          # Literal cache name (the former value of github.workflow when called from
+          # test_and_docs.yml): inside a called workflow github.workflow is the caller's name.
+          disk-cache: ${{ inputs.fresh && 'false' || format('Code Quality & Documentation-{0}', matrix.module) }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Configure optional Ubuntu snapshot mirror for Bazel downloader
@@ -84,7 +124,11 @@ jobs:
           } > "${cfg}"
           echo "common --downloader_config=${cfg}" >> "${HOME}/.bazelrc"
       - name: Run module tests
-        run: python3 scripts/module_tests.py run ${{ matrix.module }}
+        env:
+          MODULE: ${{ matrix.module }}
+          # full_clean: passed to the module's bazel call instead of touching ~/.bazelrc.
+          NOCACHE: ${{ inputs.fresh && '--nocache-test-results' || '' }}
+        run: python3 scripts/module_tests.py run "${MODULE}" ${NOCACHE}
       - name: Upload test reports and coverage
         if: always()
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1

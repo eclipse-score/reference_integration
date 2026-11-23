@@ -23,6 +23,20 @@ py_library(
     deps = ["//scripts/known_good"],
 )
 
+py_library(
+    name = "prepare_pipeline",
+    srcs = ["prepare_pipeline.py"],
+    imports = ["."],
+)
+
+score_py_pytest(
+    name = "prepare_pipeline_tests",
+    srcs = ["tests/test_prepare_pipeline.py"],
+    data = ["//:.github/workflows/unified_workflow.yml"],
+    pytest_config = "//:pyproject.toml",
+    deps = [":prepare_pipeline"],
+)
+
 score_py_pytest(
     name = "module_tests_tests",
     srcs = ["tests/test_module_tests.py"],
