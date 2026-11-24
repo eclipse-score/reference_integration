@@ -142,8 +142,16 @@ fn main() -> Result<()> {
         selected
     };
 
+    let mut failed = Vec::new();
     for index in selected {
-        run_score(&configs[index], &root_dir)?;
+        if let Err(err) = run_score(&configs[index], &root_dir) {
+            println!("❌ Example '{}' failed: {:#}", configs[index].name, err);
+            failed.push(configs[index].name.as_str());
+        }
+    }
+
+    if !failed.is_empty() {
+        anyhow::bail!("{} example(s) failed: {}", failed.len(), failed.join(", "));
     }
 
     outro("All done!")?;
@@ -242,17 +250,22 @@ fn run_score(config: &ScoreConfig, root_dir: &str) -> Result<()> {
         children.push((i + 1, resolved_path, child));
     }
 
-    // Wait for all children
+    // Join every app before reporting, so a failing app does not leave the others running.
+    let mut failed = Vec::new();
     for (i, path, mut child) in children {
         let status = child
             .wait()
             .with_context(|| format!("Failed to wait for app {}: {}", i, path))?;
 
-        if !status.success() {
-            // anyhow::bail!("App {}: command `{}` exited with status {}", i, path, status);
-        }
+        println!("App {}: finished {} ({})", i, path, status);
 
-        println!("App {}: finished {}", i, path);
+        if !status.success() {
+            failed.push(format!("app {} `{}` ({})", i, path, status));
+        }
+    }
+
+    if !failed.is_empty() {
+        anyhow::bail!("{}", failed.join(", "));
     }
 
     println!("✅ Example '{}' finished successfully.", config.name);
