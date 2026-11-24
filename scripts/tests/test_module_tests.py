@@ -96,6 +96,27 @@ def test_normalize_sarif_rebases_module_files_into_external_namespace():
     assert absolute["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/b.h"}
 
 
+def test_normalize_sarif_maps_bazel_out_copies_back_to_module_sources(tmp_path):
+    (tmp_path / "score" / "lib").mkdir(parents=True)
+    (tmp_path / "score" / "lib" / "ring.hpp").write_text("")
+
+    def result(uri):
+        return {"locations": [{"physicalLocation": {"artifactLocation": {"uri": uri}}}]}
+
+    uris = [
+        "bazel-out/k8-fastbuild/bin/score/lib/_virtual_includes/ipc/score/mw/lib/ring.hpp",
+        "bazel-out/k8-fastbuild/bin/score/lib/generated.h",
+        "bazel-out/k8-fastbuild/bin/external/dep+/_virtual_includes/x/x.h",
+        "./external/toolchains_llvm++llvm+llvm/redacted_dates.h",
+    ]
+    document = {"runs": [{"results": [result(uri) for uri in uris]}]}
+    run = normalize_sarif(document, "score_mod", tmp_path)["runs"][0]
+    assert [r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] for r in run["results"]] == [
+        "external/score_mod+/score/lib/ring.hpp",
+        "external/score_mod+/score/lib/generated.h",
+    ]
+
+
 def _lint_module(**metadata):
     defaults = {
         "test_args": ["--config=x86_64-linux", "--config=asan_ubsan_lsan", "//score/..."],

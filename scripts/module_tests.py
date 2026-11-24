@@ -486,6 +486,17 @@ def find_coding_standards_config(workspace: Path) -> str | None:
     return found[0] if len(found) == 1 else None
 
 
+def source_path(path: str, workspace: Path) -> str:
+    """The module source a ``_virtual_includes`` header copy comes from, else ``path`` itself."""
+    package, virtual, include = path.partition("/_virtual_includes/")
+    parts = include.split("/")[1:]  # the first part is the library name
+    for start in range(len(parts) if virtual else 0):
+        candidate = "/".join([package, *parts[start:]])
+        if (workspace / candidate).is_file():
+            return candidate
+    return path
+
+
 def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
     """Rebase workspace-relative SARIF locations into ref_int's external module namespace.
 
@@ -504,7 +515,10 @@ def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
                 path = Path(path).relative_to(workspace).as_posix()
             else:
                 return uri
-        return path if path.startswith("external/") else f"{prefix}{path}"
+        path = path.removeprefix("./")
+        if generated := re.match(r"bazel-out/[^/]+/bin/(.*)$", path):
+            path = generated.group(1)
+        return path if path.startswith("external/") else f"{prefix}{source_path(path, workspace)}"
 
     def visit(node) -> None:
         if isinstance(node, dict):
