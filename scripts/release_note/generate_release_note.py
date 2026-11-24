@@ -671,7 +671,12 @@ def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[En
     needs = architecture_diagram.read_needs(args.needs or build_needs())
     components = architecture_diagram.load_components(needs, software)
     maturity = architecture_diagram.assess_maturity(needs, software)
-    print("maturity (DR-003): " + ", ".join(f"{k}={v}" for k, v in maturity.items()), file=sys.stderr)
+    declared = architecture_diagram.declared_maturity(needs, software)
+    print(
+        "maturity (DR-003): "
+        + ", ".join(f"{k}={v} ({'mod' if k in declared else 'derived'})" for k, v in maturity.items()),
+        file=sys.stderr,
+    )
     label = _git("rev-parse", "--short", f"{ref or 'HEAD'}^{{commit}}").strip()
     svg = architecture_diagram.render(
         args.release,

@@ -182,8 +182,12 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
 
 Every software module gets exactly one level of
 [DR-003-Strat](https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md).
-`assess_maturity()` derives it on every run from `needs.json` and the module
-docs.
+`assess_maturity()` determines it on every run from `needs.json`:
+
+1. **Declared:** the `maturity` option (`preview`, `experimental`, `release`)
+   of the module's `mod` need (docs-as-code >= 8.2.0) wins.
+2. **Derived:** without that option, the level follows from the module's
+   current status and docs:
 
 | Level | Rule |
 |---|---|
@@ -191,9 +195,12 @@ docs.
 | Experimental | A verification report exists and shows gaps (untested or uninspected requirements, missing safety analyses or checklists). |
 | Release | Report exists and every component requirement is fully verified (`fully_verifies_back`) and inspected (`valid_inspected`; QM: `valid`). |
 
-- Never set a level by hand. Change the rule in `assess_maturity()` only after
-  agreement, never the result.
-- The local `needs.json` has no test results, so Release cannot be assigned
+- Never set a level by hand in the note or the generator. A module sets its
+  level in its own `mod` need; change the derivation rule in
+  `assess_maturity()` only after agreement, never the result.
+- The generator line `maturity (DR-003): ...` marks every level as `(mod)` or
+  `(derived)`.
+- The local `needs.json` has no test results, so Release cannot be derived
   locally. Before a final note, check the module verification reports of the
   CI docs build of the release branch (`github-pages-<sha>` artifact of "Code
   Quality & Documentation") and report modules that would meet Release and

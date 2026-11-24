@@ -175,10 +175,29 @@ def _inspected(req: dict) -> bool:
     return req.get("status") == "valid_inspected" or (req.get("safety") == "QM" and req.get("status") == "valid")
 
 
+def declared_maturity(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[str, str]:
+    """Module key -> level set in the `maturity` option of the module's `mod` need."""
+    result = {}
+    for need in needs.values():
+        level = (need.get("maturity") or "").capitalize()
+        if need["type"] != "mod" or level not in MATURITY_COLORS:
+            continue
+        docname = need.get("docname") or ""
+        e = next((e for e in entries if grn.module_docname(docname, e.key)), None)
+        e = e or next((e for e in entries if e.name == need["title"]), None)
+        if e:
+            result[e.key] = level
+    return result
+
+
 def assess_maturity(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[str, str]:
-    """DR-003 maturity per module, see the release-note skill for the criteria."""
+    """DR-003 maturity per module: the declared one, else derived, see the release-note skill."""
+    declared = declared_maturity(needs, entries)
     result = {}
     for e in entries:
+        if e.key in declared:
+            result[e.key] = declared[e.key]
+            continue
         own = [n for n in needs.values() if grn.module_docname(n.get("docname") or "", e.key)]
         has_report = any(n["type"] == "mod_ver_report" for n in own) or bool(grn.dependable_elements(e))
         reqs = [n for n in own if n["type"] == "comp_req"]
