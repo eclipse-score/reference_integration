@@ -145,10 +145,12 @@ def test_lint_command_builds_only_the_sarif_reports_with_llvm(tmp_path):
 
 
 def test_lint_config_files_need_a_root_package(tmp_path):
-    (tmp_path / ".clang-tidy").write_text("Checks: '-*'\n")
+    (tmp_path / ".clang-tidy").write_text("HeaderFilterRegex: 'score/'\n")
     (tmp_path / "pyproject.toml").write_text("[tool.ruff]\nline-length = 120\n")
     assert lint_config_files(tmp_path) == (None, None)
     (tmp_path / "BUILD").write_text("")
+    assert lint_config_files(tmp_path) == (None, "pyproject.toml")
+    (tmp_path / ".clang-tidy").write_text("Checks: '-*'\n")
     assert lint_config_files(tmp_path) == (".clang-tidy", "pyproject.toml")
     (tmp_path / "ruff.toml").write_text("")
     assert lint_config_files(tmp_path) == (".clang-tidy", "ruff.toml")

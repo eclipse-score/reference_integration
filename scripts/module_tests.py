@@ -619,7 +619,10 @@ def lint_config_files(workspace: Path) -> tuple[str | None, str | None]:
     """The module's root .clang-tidy and ruff config, if the root is a package."""
     if not any((workspace / name).is_file() for name in ("BUILD", "BUILD.bazel")):
         return None, None
-    clang_tidy = ".clang-tidy" if (workspace / ".clang-tidy").is_file() else None
+    own = workspace / ".clang-tidy"
+    # A config without Checks (logging only sets HeaderFilterRegex) relies on the baseline's.
+    has_checks = own.is_file() and re.search(r"^Checks:", own.read_text(errors="replace"), re.M)
+    clang_tidy = ".clang-tidy" if has_checks else None
     ruff = next((name for name in ("ruff.toml", ".ruff.toml") if (workspace / name).is_file()), None)
     pyproject = workspace / "pyproject.toml"
     if ruff is None and pyproject.is_file() and "[tool.ruff" in pyproject.read_text(errors="replace"):
