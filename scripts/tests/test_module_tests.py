@@ -65,6 +65,8 @@ def test_codeql_build_file_keeps_module_configs_but_traces_with_llvm():
     assert 'bazel_args = ["--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"],' in build
     assert 'coding_standards_config = "quality/coding-standards.yaml",' in build
     assert 'targets = ["//score/...", "-//score/a:b_test"],' in build
+    assert "exclude_testonly = True," in build
+    assert "keep_going = True," in build
     assert "coding_standards_config" not in codeql_build_file(SimpleNamespace(metadata=metadata), None)
 
 

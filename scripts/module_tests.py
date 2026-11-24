@@ -459,6 +459,8 @@ def codeql_build_file(module, coding_standards_config: str | None) -> str:
         f"    bazel_args = {json.dumps([CODEQL_TOOLCHAIN])},\n"
         f"    build_configs = {json.dumps(configs)},\n"
         f"{optional}"
+        "    exclude_testonly = True,\n"
+        "    keep_going = True,\n"
         f"    targets = {json.dumps(targets)},\n"
         ")\n"
     )
