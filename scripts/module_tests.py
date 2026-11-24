@@ -540,6 +540,8 @@ def codeql(args: argparse.Namespace) -> int:
             "--lockfile_mode=update",
             f"//{CODEQL_PACKAGE}:codeql",
             "--",
+            # Bazelisk puts the real bazel first on PATH, so the nested build must use the wrapper explicitly.
+            f"--bazel={work / 'bin' / 'bazel'}",
             f"--output-dir={results}",
             f"--output-prefix={module.name}",
         ],
