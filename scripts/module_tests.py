@@ -725,7 +725,9 @@ def lint(args: argparse.Namespace) -> int:
     if query.returncode:
         sys.exit(f"bazel query for the lint targets of {module.name} failed")
     targets_file = out / "lint_targets.txt"
-    targets_file.write_text(query.stdout, encoding="utf-8")
+    # Internal targets of macros, e.g. the sphinx venvs of docs_as_code's docs(), conflict when built alone.
+    targets = [label for label in query.stdout.split() if ".__internal__." not in label]
+    targets_file.write_text("".join(f"{label}\n" for label in targets), encoding="utf-8")
     exit_code, _ = streamed(lint_command(module, targets_file), workspace, env)
 
     reports = sorted((workspace / "bazel-out").resolve().rglob("*.AspectRulesLint*.report"))
@@ -739,7 +741,7 @@ def lint(args: argparse.Namespace) -> int:
         for _ in sarif_run.get("results", [])
     )
     summary = [f"## {module.name}: lint exit code {exit_code}", ""]
-    summary.append(f"- {len(query.stdout.split())} targets, {len(reports)} reports, {raw} not in SARIF format")
+    summary.append(f"- {len(targets)} targets, {len(reports)} reports, {raw} not in SARIF format")
     clang_tidy = clang_tidy_config or "score_cpp_policies baseline only"
     summary.append(f"- configs: .clang-tidy {clang_tidy}, ruff {ruff_config or 'none'}")
     summary += [
