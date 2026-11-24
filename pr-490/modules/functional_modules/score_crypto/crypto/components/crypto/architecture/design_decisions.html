@@ -543,7 +543,7 @@
 <span id="crypto-design-decisions"></span><h1>Design Decisions<a class="headerlink" href="#design-decisions" title="Link to this heading">#</a></h1>
 <section id="abi-compatibility-for-ipc-layer-deferred-post-stabilisation">
 <h2>ABI Compatibility for IPC Layer (Deferred Post-Stabilisation)<a class="headerlink" href="#abi-compatibility-for-ipc-layer-deferred-post-stabilisation" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-0b3cec86">
+<div class="need_container docutils container" id="SNCB-f131d707">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__no_abi_compatibility_ipc">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -669,7 +669,7 @@ efficiently once the stack stabilises.</p>
 </section>
 <section id="cryptoresourceguard-lifetime-via-daemon-side-reference-counting">
 <h2>CryptoResourceGuard Lifetime via Daemon-Side Reference Counting<a class="headerlink" href="#cryptoresourceguard-lifetime-via-daemon-side-reference-counting" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-ba9a5c23">
+<div class="need_container docutils container" id="SNCB-1f79e07e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__cry_res_grd_lifetime">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -852,7 +852,7 @@ Memory cost is bounded by max concurrent keys (deployment-time constant).</p></l
 </section>
 <section id="shared-connection-anchor-for-persistent-resource-id-stability">
 <h2>Shared-Connection Anchor for Persistent Resource ID Stability<a class="headerlink" href="#shared-connection-anchor-for-persistent-resource-id-stability" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-af1efa74">
+<div class="need_container docutils container" id="SNCB-22772a52">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__conn_anchor_persistent_ids">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -986,7 +986,7 @@ the entire application lifetime even if the IDs are no longer used.</p></li>
 </section>
 <section id="algorithmid-as-fixedcapacitystring-64">
 <h2><code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> as <code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code><a class="headerlink" href="#algorithmid-as-fixedcapacitystring-64" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-2925b878">
+<div class="need_container docutils container" id="SNCB-e7b30261">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__alg_id_fixed_cap_str">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1080,7 +1080,7 @@ from untrusted input.</p></li>
 </section>
 <section id="algorithm-catalog-alongside-algorithmid">
 <h2>Algorithm Catalog Alongside <code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code><a class="headerlink" href="#algorithm-catalog-alongside-algorithmid" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-bb3cfeee">
+<div class="need_container docutils container" id="SNCB-9e402449">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__alg_catalog">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1148,7 +1148,7 @@ the <code class="docutils literal notranslate"><span class="pre">Algorithm</span
 <code class="docutils literal notranslate"><span class="pre">GetAlgorithmDescriptor()</span></code> and <code class="docutils literal notranslate"><span class="pre">GetAlgorithmCategory()</span></code> expose the
 properties of a known algorithm. The catalog is internal to the daemon
 (<code class="docutils literal notranslate"><span class="pre">//score/crypto/src/daemon/common:algorithm_catalog</span></code>; nothing under
-<code class="docutils literal notranslate"><span class="pre">score/crypto/src/api</span></code> depends on it): clients only send names, so adding
+<code class="docutils literal notranslate"><span class="pre">score/crypto</span></code> depends on it): clients only send names, so adding
 a row rebuilds the daemon and its providers, not the applications.</p></li>
 <li><p>Every algorithm the daemon accepts is a catalog row. ECDSA has one row per
 curve (P-256, P-384, P-521) and SHA-2 digest (SHA-224 to SHA-512), twelve in
@@ -1212,7 +1212,7 @@ slot or key unusable until the configuration is migrated.</p></li>
 </section>
 <section id="synchronous-only-ipc-model">
 <h2>Synchronous-Only IPC Model<a class="headerlink" href="#synchronous-only-ipc-model" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-fb64a7a6">
+<div class="need_container docutils container" id="SNCB-af48332b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__synchronous_ipc">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1305,7 +1305,7 @@ key to the context when the async result is consumed.</p></li>
 </section>
 <section id="context-reset-for-streaming-context-reuse">
 <h2>Context <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> for Streaming Context Reuse<a class="headerlink" href="#context-reset-for-streaming-context-reuse" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-b61ef439">
+<div class="need_container docutils container" id="SNCB-376c6b9d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__context_reset_reuse">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1396,7 +1396,7 @@ re-create continue to work unchanged.</p></li>
 </section>
 <section id="per-call-timeout-with-client-side-response-bound">
 <h2>Per-Call Timeout with Client-Side Response Bound<a class="headerlink" href="#per-call-timeout-with-client-side-response-bound" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-9bf39d04">
+<div class="need_container docutils container" id="SNCB-b3da80d9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__two_layer_timeout">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1516,7 +1516,7 @@ the application’s safety case.</p></li>
 </section>
 <section id="keyoperationpermission-as-a-capability-bitmask">
 <h2><code class="docutils literal notranslate"><span class="pre">KeyOperationPermission</span></code> as a Capability Bitmask<a class="headerlink" href="#keyoperationpermission-as-a-capability-bitmask" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-50996a86">
+<div class="need_container docutils container" id="SNCB-b470b045">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__key_op_permission_bitmask">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1609,7 +1609,7 @@ callers can accidentally construct invalid combinations.</p></li>
 </section>
 <section id="unified-cipher-context-no-encrypt-decrypt-or-symmetric-asymmetric-split">
 <h2>Unified Cipher Context (No Encrypt/Decrypt or Symmetric/Asymmetric Split)<a class="headerlink" href="#unified-cipher-context-no-encrypt-decrypt-or-symmetric-asymmetric-split" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-475b18b4">
+<div class="need_container docutils container" id="SNCB-e69d7b87">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__unified_enc_dec_contexts">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1708,7 +1708,7 @@ to non-AEAD operations — <code class="docutils literal notranslate"><span clas
 </section>
 <section id="imemoryallocator-separated-from-icryptostack">
 <h2><code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> Separated from <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code><a class="headerlink" href="#imemoryallocator-separated-from-icryptostack" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-61493031">
+<div class="need_container docutils container" id="SNCB-bd76179e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__memory_allocator_separation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1805,7 +1805,7 @@ where a monolithic interface would require only one.</p></li>
 </section>
 <section id="control-plane-ipc-boundary-copy-with-daemon-internal-zero-copy-references">
 <h2>Control Plane IPC Boundary Copy with Daemon-Internal Zero-Copy References<a class="headerlink" href="#control-plane-ipc-boundary-copy-with-daemon-internal-zero-copy-references" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-3ed7470d">
+<div class="need_container docutils container" id="SNCB-83af3d78">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__ipc_boundary_copy">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1921,7 +1921,7 @@ operations — zero-copy is safe there by design.</p>
 </section>
 <section id="per-operation-parameter-structs-with-dual-overloads">
 <h2>Per-Operation Parameter Structs with Dual Overloads<a class="headerlink" href="#per-operation-parameter-structs-with-dual-overloads" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-207fecf3">
+<div class="need_container docutils container" id="SNCB-f7684a2d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__per_op_params">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2056,7 +2056,7 @@ must outlive the struct. This is documented but not enforced at compile time.</p
 </ul>
 <section id="return-type-of-imemoryallocator-allocate">
 <h4>Return Type of IMemoryAllocator::Allocate()<a class="headerlink" href="#return-type-of-imemoryallocator-allocate" title="Link to this heading">#</a></h4>
-<div class="need_container docutils container" id="SNCB-3bf5b8ef">
+<div class="need_container docutils container" id="SNCB-142e3e45">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__allocate_return_type">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
