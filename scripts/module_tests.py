@@ -626,15 +626,23 @@ def export_root_files(workspace: Path, names: list[str]) -> None:
 
 
 def linters_bzl(clang_tidy_config: str | None, ruff_config: str | None) -> str:
-    """clang-tidy with score_cpp_policies' baseline (plus the module's own config) and ruff."""
-    local = f'[Label("//:{clang_tidy_config}")]' if clang_tidy_config else "[]"
+    """clang-tidy with the module's own config, else score_cpp_policies' baseline, and ruff."""
+    # clang-tidy only finds configs above the linted file, so the baseline is passed explicitly.
+    config = (
+        f'configs = [Label("//:{clang_tidy_config}")]'
+        if clang_tidy_config
+        else 'global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")]'
+    )
     ruff = f'[Label("//:{ruff_config}")]' if ruff_config else "[]"
     return (
-        'load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")\n'
-        'load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect")\n\n'
-        "clang_tidy = make_clang_tidy_aspect(\n"
+        'load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")\n'
+        'load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")\n\n'
+        "# The defaults of score_cpp_policies' make_clang_tidy_aspect.\n"
+        "clang_tidy = lint_clang_tidy_aspect(\n"
         '    binary = Label("@unified_llvm_toolchain//:clang-tidy"),\n'
-        f"    local_configs = {local},\n"
+        f"    {config},\n"
+        "    lint_target_headers = True,\n"
+        "    angle_includes_are_system = True,\n"
         ")\n\n"
         "ruff = lint_ruff_aspect(\n"
         '    binary = Label("@aspect_rules_lint//lint:ruff_bin"),\n'

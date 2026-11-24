@@ -141,11 +141,14 @@ def test_export_root_files_only_adds_missing_exports(tmp_path):
     assert (tmp_path / "BUILD").read_text().count("exports_files") == 2
 
 
-def test_linters_bzl_layers_the_module_config_over_the_baseline():
+def test_linters_bzl_uses_the_module_config_else_the_baseline():
     bzl = linters_bzl(".clang-tidy", None)
-    assert 'load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect")' in bzl
-    assert 'local_configs = [Label("//:.clang-tidy")],' in bzl
+    assert 'configs = [Label("//:.clang-tidy")],' in bzl
+    assert "global_config" not in bzl
     assert "configs = []," in bzl
+    baseline = linters_bzl(None, "ruff.toml")
+    assert 'global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")],' in baseline
+    assert 'configs = [Label("//:ruff.toml")],' in baseline
 
 
 def test_merge_lint_reports_keeps_module_findings_and_one_run_per_tool(tmp_path):
