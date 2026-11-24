@@ -108,6 +108,7 @@ def test_normalize_sarif_maps_bazel_out_copies_back_to_module_sources(tmp_path):
         "bazel-out/k8-fastbuild/bin/score/lib/generated.h",
         "bazel-out/k8-fastbuild/bin/external/dep+/_virtual_includes/x/x.h",
         "./external/toolchains_llvm++llvm+llvm/redacted_dates.h",
+        "../score_baselibs+/score/os/errno.h",
     ]
     document = {"runs": [{"results": [result(uri) for uri in uris]}]}
     run = normalize_sarif(document, "score_mod", tmp_path)["runs"][0]

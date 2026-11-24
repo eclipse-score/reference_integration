@@ -516,6 +516,9 @@ def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
             else:
                 return uri
         path = path.removeprefix("./")
+        if path.startswith("../"):
+            # Other repositories, as seen from the main repository with the sibling layout.
+            path = "external/" + path[3:]
         if generated := re.match(r"bazel-out/[^/]+/bin/(.*)$", path):
             path = generated.group(1)
         return path if path.startswith("external/") else f"{prefix}{source_path(path, workspace)}"
