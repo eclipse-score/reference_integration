@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -23,6 +24,11 @@ from module_tests import (
     coverage_args,
     graph_modules,
     lcov_percentages,
+    lint_command,
+    lint_config_files,
+    lint_query,
+    linters_bzl,
+    merge_lint_reports,
     normalize_lcov,
     normalize_sarif,
     override_rc,
@@ -87,6 +93,79 @@ def test_normalize_sarif_rebases_module_files_into_external_namespace():
     assert len(run["results"]) == 1
     assert location["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/a.cpp"}
     assert absolute["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/b.h"}
+
+
+def _lint_module(**metadata):
+    defaults = {
+        "test_args": ["--config=x86_64-linux", "--config=asan_ubsan_lsan", "//score/..."],
+        "langs": ["cpp", "rust"],
+        "code_root_path": "//score/...",
+        "exclude_test_targets": ["//score/a:b_test"],
+    }
+    return SimpleNamespace(metadata=SimpleNamespace(**(defaults | metadata)))
+
+
+def test_lint_query_selects_production_targets_of_all_languages():
+    query = lint_query(_lint_module())
+    selected = 'kind("^(cc|rust|py)_", //score/... - //score/a:b_test)'
+    assert query == f"{selected} except attr(testonly, 1, {selected})"
+
+
+def test_lint_command_builds_only_the_sarif_reports_with_llvm(tmp_path):
+    command = lint_command(_lint_module(), tmp_path / "targets.txt")
+    assert command[:2] == ["bazel", "build"]
+    configs = [arg for arg in command if arg.startswith("--config=")]
+    assert configs == ["--config=x86_64-linux", "--config=unified-base", "--config=unified-rust"]
+    assert "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux" in command
+    assert "--extra_toolchains=@sarif_parser_toolchains//:all" in command
+    assert "--output_groups=rules_lint_machine" in command
+    assert f"--target_pattern_file={tmp_path / 'targets.txt'}" in command
+
+
+def test_lint_config_files_need_a_root_package(tmp_path):
+    (tmp_path / ".clang-tidy").write_text("Checks: '-*'\n")
+    (tmp_path / "pyproject.toml").write_text("[tool.ruff]\nline-length = 120\n")
+    assert lint_config_files(tmp_path) == (None, None)
+    (tmp_path / "BUILD").write_text("")
+    assert lint_config_files(tmp_path) == (".clang-tidy", "pyproject.toml")
+    (tmp_path / "ruff.toml").write_text("")
+    assert lint_config_files(tmp_path) == (".clang-tidy", "ruff.toml")
+
+
+def test_linters_bzl_layers_the_module_config_over_the_baseline():
+    bzl = linters_bzl(".clang-tidy", None)
+    assert 'load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect")' in bzl
+    assert 'local_configs = [Label("//:.clang-tidy")],' in bzl
+    assert "configs = []," in bzl
+
+
+def test_merge_lint_reports_keeps_module_findings_and_one_run_per_tool(tmp_path):
+    def report(name, tool, uris):
+        results = [{"locations": [{"physicalLocation": {"artifactLocation": {"uri": uri}}}]} for uri in uris]
+        path = tmp_path / f"{name}.AspectRulesLint{tool}.report"
+        path.write_text(json.dumps({"runs": [{"tool": {"driver": {"name": tool}}, "results": results}]}))
+        return path
+
+    sandbox = "/ob/sandbox/linux-sandbox/7/execroot/_main"
+    reports = [
+        report("a", "ClangTidy", ["score/a.cpp", f"{sandbox}/score/a.h", f"{sandbox}/external/dep+/x.h"]),
+        report("b", "ClangTidy", []),
+        report("c", "Ruff", []),
+        report("d", "Ruff", []),
+    ]
+    (tmp_path / "e.AspectRulesLintClangTidy.report").write_text("")
+    (tmp_path / "f.AspectRulesLintRuff.report").write_text("x.py:1:1: F401 unused\n")
+    reports += [tmp_path / "e.AspectRulesLintClangTidy.report", tmp_path / "f.AspectRulesLintRuff.report"]
+
+    document, raw = merge_lint_reports(reports, "score_mod", Path("/w/mod"))
+
+    assert raw == 1
+    assert [run["tool"]["driver"]["name"] for run in document["runs"]] == ["ClangTidy", "Ruff"]
+    uris = [
+        result["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
+        for result in document["runs"][0]["results"]
+    ]
+    assert uris == ["external/score_mod+/score/a.cpp", "external/score_mod+/score/a.h"]
 
 
 def test_coverage_args_put_unified_config_before_target_separator():
