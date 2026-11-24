@@ -613,6 +613,18 @@ def lint_config_files(workspace: Path) -> tuple[str | None, str | None]:
     return clang_tidy, ruff
 
 
+def export_root_files(workspace: Path, names: list[str]) -> None:
+    """Export the config files, the module may disable implicit file exports."""
+    build = next(path for name in ("BUILD.bazel", "BUILD") if (path := workspace / name).is_file())
+    text = build.read_text(encoding="utf-8")
+    exported = " ".join(re.findall(r"exports_files\(([^)]*)\)", text))
+    missing = [name for name in names if f'"{name}"' not in exported]
+    if missing:
+        build.chmod(0o644)
+        with build.open("a", encoding="utf-8") as f:
+            f.write(f"\nexports_files({json.dumps(missing)})\n")
+
+
 def linters_bzl(clang_tidy_config: str | None, ruff_config: str | None) -> str:
     """clang-tidy with score_cpp_policies' baseline (plus the module's own config) and ruff."""
     local = f'[Label("//:{clang_tidy_config}")]' if clang_tidy_config else "[]"
@@ -694,6 +706,7 @@ def lint(args: argparse.Namespace) -> int:
         with module_file.open("a") as f:
             f.write(SARIF_PARSER_EXTENSION)
     clang_tidy_config, ruff_config = lint_config_files(workspace)
+    export_root_files(workspace, [name for name in (clang_tidy_config, ruff_config) if name])
     package = workspace / LINT_PACKAGE
     package.mkdir()
     (package / "BUILD").write_text("", encoding="utf-8")

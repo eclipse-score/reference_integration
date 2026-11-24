@@ -22,6 +22,7 @@ from module_tests import (
     combine_reports,
     count_testcases,
     coverage_args,
+    export_root_files,
     graph_modules,
     lcov_percentages,
     lint_command,
@@ -130,6 +131,14 @@ def test_lint_config_files_need_a_root_package(tmp_path):
     assert lint_config_files(tmp_path) == (".clang-tidy", "pyproject.toml")
     (tmp_path / "ruff.toml").write_text("")
     assert lint_config_files(tmp_path) == (".clang-tidy", "ruff.toml")
+
+
+def test_export_root_files_only_adds_missing_exports(tmp_path):
+    (tmp_path / "BUILD").write_text('exports_files(["pyproject.toml"])\n')
+    export_root_files(tmp_path, [".clang-tidy", "pyproject.toml"])
+    assert (tmp_path / "BUILD").read_text().endswith('\nexports_files([".clang-tidy"])\n')
+    export_root_files(tmp_path, [".clang-tidy"])
+    assert (tmp_path / "BUILD").read_text().count("exports_files") == 2
 
 
 def test_linters_bzl_layers_the_module_config_over_the_baseline():
