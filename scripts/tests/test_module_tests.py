@@ -17,7 +17,7 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
-    codeql_args,
+    codeql_build_file,
     combine_reports,
     count_testcases,
     coverage_args,
@@ -52,32 +52,37 @@ def test_override_rc_appends_extra_test_config_as_build_flags():
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
 
 
-def test_codeql_args_keep_module_configs_but_use_unified_gcc():
+def test_codeql_build_file_keeps_module_configs_but_traces_with_llvm():
     metadata = SimpleNamespace(
         test_args=["--config=x86_64-linux", "--config=asan_ubsan_lsan", "--keep_going", "//score/..."],
         langs=["cpp"],
         code_root_path="//score/...",
         exclude_test_targets=["//score/a:b_test"],
     )
-    args = codeql_args(SimpleNamespace(metadata=metadata), Path("/w/bin/bazel"), Path("/w/out"))
-    assert args[:5] == ["run", "--lockfile_mode=update", "@score_tools//codeql:sca", "--", "--bazel=/w/bin/bazel"]
-    assert args[5:7] == ["--config=x86_64-linux", "--config=unified"]
-    assert args[-2:] == ["//score/...", "-//score/a:b_test"]
+    build = codeql_build_file(SimpleNamespace(metadata=metadata), "quality/coding-standards.yaml")
+    assert 'load("@score_tools//codeql:defs.bzl", "codeql_analysis")' in build
+    assert 'build_configs = ["x86_64-linux", "unified-base"],' in build
+    assert 'bazel_args = ["--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"],' in build
+    assert 'coding_standards_config = "quality/coding-standards.yaml",' in build
+    assert 'targets = ["//score/...", "-//score/a:b_test"],' in build
+    assert "coding_standards_config" not in codeql_build_file(SimpleNamespace(metadata=metadata), None)
 
 
 def test_normalize_sarif_rebases_module_files_into_external_namespace():
     location = {"physicalLocation": {"artifactLocation": {"uri": "score/a.cpp", "uriBaseId": "%SRCROOT%"}}}
     absolute = {"physicalLocation": {"artifactLocation": {"uri": "file:///w/mod/score/b.h"}}}
+    toolchain = {"physicalLocation": {"artifactLocation": {"uri": "file:///ob/external/llvm/include/vector"}}}
     document = {
         "runs": [
             {
                 "originalUriBaseIds": {"%SRCROOT%": {"uri": "file:///w/mod/"}},
-                "results": [{"locations": [location], "relatedLocations": [absolute]}],
+                "results": [{"locations": [location], "relatedLocations": [absolute]}, {"locations": [toolchain]}],
             }
         ]
     }
     run = normalize_sarif(document, "score_mod", Path("/w/mod"))["runs"][0]
     assert "originalUriBaseIds" not in run
+    assert len(run["results"]) == 1
     assert location["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/a.cpp"}
     assert absolute["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/b.h"}
 

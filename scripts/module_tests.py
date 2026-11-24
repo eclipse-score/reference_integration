@@ -13,7 +13,7 @@
 """Run a known_good module's own unit tests against the dependency set ref_int resolves.
 
   run <module>      test <module> at its known_good commit with those versions forced
-  codeql <module>   analyse <module> the same way with score_tools' CodeQL tooling (POC)
+  codeql <module>   analyse <module> the same way with score_tools' codeql_analysis (POC)
   report <dir>      write the verification report's unit test and coverage summaries
 
 Every module in the module's dependency graph that ref_int also resolves is pinned with
@@ -432,40 +432,55 @@ def run(args: argparse.Namespace) -> int:
     return exit_code
 
 
-def codeql_args(module, bazel_wrapper: Path, output_dir: Path) -> list[str]:
-    """score_tools' CodeQL analysis of the module's code root, built with ref_int's unified GCC."""
+CODEQL_PACKAGE = "ref_int_codeql"
+# The statically linked hermetic GCC cannot be traced by CodeQL, ref_int's LLVM toolchain can.
+CODEQL_TOOLCHAIN = "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"
+
+
+def codeql_build_file(module, coding_standards_config: str | None) -> str:
+    """BUILD file with score_tools' codeql_analysis of the module's code root (traced LLVM build)."""
     split = module.metadata.test_args.index("--") if "--" in module.metadata.test_args else None
     configs = [
-        arg
+        arg.removeprefix("--config=")
         for arg in module.metadata.test_args[:split]
         if arg.startswith("--config=") and arg != "--config=asan_ubsan_lsan"
     ]
-    configs.append("--config=unified")
+    configs.append("unified-base")
     if "rust" in module.metadata.langs:
-        configs.append("--config=unified-rust")
-    return [
-        "run",
-        "--lockfile_mode=update",
-        "@score_tools//codeql:sca",
-        "--",
-        f"--bazel={bazel_wrapper}",
-        *configs,
-        "--safety-level=ASIL",
-        f"--output-dir={output_dir}",
-        "--no-fail-sarif-quality",
-        "--no-fail-suppressions",
-        # Report what could be extracted; the extraction summary lists the failed commands.
-        "--max-failed-command-pct=25",
-        "--max-commands-with-issues-pct=100",
-        "--max-missing-commands-pct=25",
-        "--max-unique-parse-errors=1000",
-        module.metadata.code_root_path,
-        *(f"-{target}" for target in module.metadata.exclude_test_targets),
+        configs.append("unified-rust")
+    targets = [module.metadata.code_root_path, *(f"-{target}" for target in module.metadata.exclude_test_targets)]
+    optional = (
+        f"    coding_standards_config = {json.dumps(coding_standards_config)},\n" if coding_standards_config else ""
+    )
+    return (
+        'load("@score_tools//codeql:defs.bzl", "codeql_analysis")\n\n'
+        "codeql_analysis(\n"
+        '    name = "codeql",\n'
+        f"    bazel_args = {json.dumps([CODEQL_TOOLCHAIN])},\n"
+        f"    build_configs = {json.dumps(configs)},\n"
+        f"{optional}"
+        f"    targets = {json.dumps(targets)},\n"
+        ")\n"
+    )
+
+
+def find_coding_standards_config(workspace: Path) -> str | None:
+    """The module's own coding-standards.yml (deviations, recategorizations), if exactly one exists."""
+    found = [
+        path.relative_to(workspace).as_posix()
+        for name in ("coding-standards.yml", "coding-standards.yaml")
+        for path in workspace.rglob(name)
+        if not path.relative_to(workspace).parts[0].startswith("bazel-")
     ]
+    return found[0] if len(found) == 1 else None
 
 
 def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
-    """Rebase workspace-relative SARIF locations into ref_int's external module namespace."""
+    """Rebase workspace-relative SARIF locations into ref_int's external module namespace.
+
+    Results outside the module (dependencies, toolchain headers) are dropped.
+    """
+    prefix = f"external/{module}+/"
 
     def rebase(uri: str) -> str:
         path = uri.removeprefix("file://")
@@ -473,7 +488,7 @@ def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
             if not Path(path).is_relative_to(workspace):
                 return uri
             path = Path(path).relative_to(workspace).as_posix()
-        return path if path.startswith("external/") else f"external/{module}+/{path}"
+        return path if path.startswith("external/") else f"{prefix}{path}"
 
     def visit(node) -> None:
         if isinstance(node, dict):
@@ -486,10 +501,17 @@ def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
             for value in node:
                 visit(value)
 
+    def in_module(result: dict) -> bool:
+        locations = result.get("locations") or [{}]
+        uri = locations[0].get("physicalLocation", {}).get("artifactLocation", {}).get("uri")
+        return uri is None or uri.startswith(prefix)
+
     for sarif_run in document.get("runs", []):
         # The base points into the module workspace of this job only.
         sarif_run.pop("originalUriBaseIds", None)
     visit(document.get("runs", []))
+    for sarif_run in document.get("runs", []):
+        sarif_run["results"] = [result for result in sarif_run.get("results", []) if in_module(result)]
     return document
 
 
@@ -501,32 +523,47 @@ def codeql(args: argparse.Namespace) -> int:
         sys.exit(f"{args.module} is not a target_sw module in known_good.json")
     work = args.work_dir.resolve()
     workspace, out, env, pinned, unpinned = _prepare_module(module, known, work, add_score_tools=True)
-    # The tool's nested bazel calls do not pass a lockfile mode, a module's own .bazelrc may set error.
+    # Nested bazel calls of the analysis do not pass a lockfile mode, a module's own .bazelrc may set error.
     with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
         rc.write("common --lockfile_mode=update\n")
-        # The script bootstrap (e.g. communication's .bazelrc) drops the CodeQL bundle's ext/ runfiles.
-        rc.write("build --@rules_python//python/config_settings:bootstrap_impl=system_python\n")
+    coding_standards = find_coding_standards_config(workspace)
+    package = workspace / CODEQL_PACKAGE
+    package.mkdir()
+    (package / "BUILD").write_text(codeql_build_file(module, coding_standards), encoding="utf-8")
+    shutil.copy(package / "BUILD", out / "codeql.BUILD")
 
     results = out / "codeql"
-    # Query packs from the pinned release assets; the registry fallback of the analysis is flaky.
-    streamed(["bazel", "run", "--lockfile_mode=update", "@score_tools//codeql:fetch_packs"], workspace, env)
-    exit_code, _ = streamed(["bazel", *codeql_args(module, work / "bin" / "bazel", results)], workspace, env)
-    # code-scanning.sarif keeps only findings in the module itself (no dependencies, no toolchain).
-    sarif = results / "results" / "code-scanning.sarif"
+    exit_code, _ = streamed(
+        [
+            "bazel",
+            "run",
+            "--lockfile_mode=update",
+            f"//{CODEQL_PACKAGE}:codeql",
+            "--",
+            f"--output-dir={results}",
+            f"--output-prefix={module.name}",
+        ],
+        workspace,
+        env,
+    )
+    sarif = results / f"{module.name}.sarif"
+    findings = 0
     if sarif.is_file():
         document = normalize_sarif(json.loads(sarif.read_text(encoding="utf-8")), module.name, workspace)
+        findings = sum(len(run.get("results", [])) for run in document.get("runs", []))
         target = out / "static_analysis" / f"{module.name}.sarif"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(document) + "\n", encoding="utf-8")
     else:
         exit_code = exit_code or 1
     summary = [f"## {module.name}: CodeQL exit code {exit_code}", ""]
+    summary.append(f"- {findings} findings in the module (coding standards config: {coding_standards or 'none'})")
     if unpinned:
         summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
     summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
-    tool_summary = results / "results" / "summary.md"
-    if tool_summary.is_file():
-        summary += ["", tool_summary.read_text(encoding="utf-8")]
+    integrity = results / "analysis_reports" / "database_integrity_report.md"
+    if integrity.is_file():
+        summary += ["", integrity.read_text(encoding="utf-8")]
     append_to_step_summary("\n".join(summary) + "\n")
     return exit_code
 
