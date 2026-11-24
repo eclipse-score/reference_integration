@@ -30,8 +30,9 @@ Read it first and follow it exactly.
   the generator (`IMAGES`, `IMAGE_DOWNLOADS`, fixed text) and regenerate.
 - DO NOT change the diagram size in the note by hand; the figure's `:width:`
   comes from `DIAGRAM_WIDTH` of the generator (skill, 5.1).
-- DO NOT set a module's DR-003 maturity by hand; `assess_maturity()` derives it
-  on every run (skill, 5.5). Propose rule changes to the user instead.
+- DO NOT set a module's DR-003 maturity by hand; `assess_maturity()` takes the
+  `maturity` option of the module's `mod` need and derives it only if that is
+  missing (skill, 5.5). Propose rule changes to the user instead.
 - Pass `--final` only when the user explicitly asks for the final note;
   otherwise the note is a draft (skill, 3 "Draft and final").
 - ALWAYS generate the whole note from scratch, also if it already exists
@@ -70,7 +71,8 @@ Read it first and follow it exactly.
    unreleased, even if a tag points at the commit; propose a `version` pin),
    modules shown with "no components
    documented" in the diagram, the DR-003 maturity per module (generator line
-   `maturity (DR-003): ...`) with the borderline cases (skill, 5.5),
+   `maturity (DR-003): ...`, declared in `mod` or derived) with the borderline
+   cases (skill, 5.5),
    the omitted candidates with reason (skill, 8.3 step 4), and anything you
    could not verify.
 
