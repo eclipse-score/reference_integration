@@ -16,6 +16,7 @@ load("@score_itf//:defs.bzl", "py_itf_test")
 # (not failed) when the pit suite runs for QNX.
 py_itf_test(
     name = "diagnostics",
+    size = "large",
     srcs = ["test_diagnostics_showcase.py"],
     args = select({
         "//platform_integration_tests:config_linux_x86_64": [

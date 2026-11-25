@@ -18,6 +18,8 @@ both with the ECU databases of the showcases, so it only passes against a platfo
 working binaries.
 """
 
+import shlex
+
 from showcase_runner import run_showcases
 
 
@@ -26,4 +28,54 @@ def test_diagnostics_stack(target):
 
     output = run_showcases(target, "Diagnostics Stack")
     assert "diagnostics_check: PASSED" in output, f"The diagnostics stack did not start:\n{output}"
+    assert "diagnostics_check: FAILED" not in output, output
+
+
+def test_diagnostics_and_platform_run_coexist(target):
+    """The boot-time diagnostics manager and Platform Run share the same /tmp."""
+    script = r"""
+set -eu
+log=$(mktemp)
+/showcases/data/diagnostics/service.sh >"$log" 2>&1 &
+diagnostics_pid=$!
+cleanup() {
+    status=$?
+    kill -s TERM "$diagnostics_pid" 2>/dev/null || true
+    wait "$diagnostics_pid" 2>/dev/null || true
+    if [ "$status" -ne 0 ]; then cat "$log"; fi
+    rm -f "$log"
+    exit "$status"
+}
+trap cleanup EXIT
+
+# Wait for the existing gateway before invoking check.sh, so the check does
+# not start a second service while this one is still coming up.
+ready=
+for _ in $(seq 1 120); do
+    kill -0 "$diagnostics_pid"
+    if timeout 3 bash -c '
+        exec 3<>/dev/tcp/127.0.0.1/7690
+        printf "GET /sovd/v1/version-info HTTP/1.0\r\nHost: localhost\r\n\r\n" >&3
+        read -r status <&3
+        [[ "$status" == HTTP/* ]]
+    ' 2>/dev/null; then
+        ready=1
+        break
+    fi
+    sleep 1
+done
+[ -n "$ready" ]
+/showcases/data/diagnostics/check.sh
+kill -0 "$diagnostics_pid"
+/showcases/bin/cli --examples='S-CORE Platform Run'
+kill -0 "$diagnostics_pid"
+/showcases/data/diagnostics/check.sh
+kill -0 "$diagnostics_pid"
+"""
+    exit_code, out = target.execute(f"bash -c {shlex.quote(script)}")
+    output = out.decode(errors="replace")
+    assert exit_code == 0, f"Coexistence check failed ({exit_code}):\n{output}"
+    assert "S-CORE platform run: PASSED" in output, output
+    assert "S-CORE platform run: FAILED" not in output, output
+    assert output.count("diagnostics_check: PASSED") == 2, output
     assert "diagnostics_check: FAILED" not in output, output
