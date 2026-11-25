@@ -12,6 +12,7 @@
 # *******************************************************************************
 
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup")
+load("@rules_python//python:defs.bzl", "py_test")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
@@ -28,6 +29,33 @@ launch_manager_config(
     flatbuffer_out_dir = "etc",
 )
 
+# Platform Run and other showcases use instance 1. Keep both ends of the
+# diagnostics control service on instance 2 so the managers can share /tmp.
+# Its application ID must also differ for LoLa's crash recovery bookkeeping.
+genrule(
+    name = "diagnostics_com_config",
+    srcs = ["@score_lifecycle//score/launch_manager:example_com_config"],
+    outs = ["mw_com_config.json"],
+    cmd = " && ".join([
+        "[ \"$$(grep -c '\"instanceId\": 1,' $(SRCS))\" = 2 ]",
+        "[ \"$$(grep -c '\"applicationID\": 1000' $(SRCS))\" = 1 ]",
+        "sed -e 's/\"instanceId\": 1,/\"instanceId\": 2,/g' -e 's/\"applicationID\": 1000/\"applicationID\": 1001/' $(SRCS) > $@",
+    ]),
+)
+
+py_test(
+    name = "diagnostics_com_config_test",
+    srcs = ["diagnostics_com_config_test.py"],
+    args = [
+        "$(location @score_lifecycle//score/launch_manager:example_com_config)",
+        "$(location :diagnostics_com_config)",
+    ],
+    data = [
+        ":diagnostics_com_config",
+        "@score_lifecycle//score/launch_manager:example_com_config",
+    ],
+)
+
 # Showcase for the OpenSOVD gateway and the classic diagnostic adapter (CDA) that the platform
 # deploys in /usr/bin/diagnostics. The ECU databases are test data (the databases of the CDA's ECU
 # simulator), so they are part of the showcases and not of the platform.
@@ -41,7 +69,7 @@ score_pkg_bundle(
         ":opensovd-cda.toml": "opensovd-cda.toml",
         ":diagnostics_lm_config": "etc/",
         # The launch manager offers its control service over mw::com and needs this config to start.
-        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
+        ":diagnostics_com_config": "etc/mw_com_config.json",
     },
     package_dir = "diagnostics",
 )
