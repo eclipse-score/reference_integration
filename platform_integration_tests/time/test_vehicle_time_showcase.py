@@ -75,7 +75,7 @@ def test_steady_time_showcase(target):
     score_time SteadyTimeHandler, demonstrating the platform's steady time API."""
 
     output = run_showcases(target, "Steady Time Example")
-    # Integer pairs avoid misleading float repr: 510.130 s prints as 510.13.
+    # seconds.nanoseconds format: "510.130 s" means 510 s and 130 ns, not a float.
     samples = [(int(s), int(n)) for s, n in re.findall(r"monotonic=(\d+)\.(\d+) s", output)]
     assert len(samples) >= 2, f"Expected at least 2 monotonic= samples:\n{output}"
     assert samples[0][0] > 0, f"Steady time seconds must be positive, got: {samples[0][0]}"
