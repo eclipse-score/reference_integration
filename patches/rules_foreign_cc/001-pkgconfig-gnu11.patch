@@ -1,0 +1,8 @@
+diff --git a/foreign_cc/built_tools/pkgconfig_build.bzl b/foreign_cc/built_tools/pkgconfig_build.bzl
+--- a/foreign_cc/built_tools/pkgconfig_build.bzl
++++ b/foreign_cc/built_tools/pkgconfig_build.bzl
+@@ -36,3 +36,3 @@ def _pkgconfig_tool_impl(ctx):
+     cc_path = tools_info.cc
+-    cflags = flags_info.cc + ["-Wno-int-conversion"]  # Fix building with clang 15+
++    cflags = flags_info.cc + ["-Wno-int-conversion", "-std=gnu11"]  # Bundled glib uses GNU asm.
+     sysroot_cflags = extract_sysroot_flags(cflags)
