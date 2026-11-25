@@ -17,6 +17,7 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
+    _provide_opensovd_stamp,
     combine_reports,
     count_testcases,
     coverage_args,
@@ -61,6 +62,54 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
+
+
+def test_opensovd_stamp_is_copied_into_the_module_root(tmp_path, monkeypatch):
+    output_base = tmp_path / "output_base"
+    stamp = output_base / "external" / "stamp" / "stamp.env"
+    stamp.parent.mkdir(parents=True)
+    stamp.write_text("OPENSOVD_COMMIT_SHA=abc\nSOURCE_DATE_EPOCH=123\n")
+    workspace = tmp_path / "module"
+    workspace.mkdir()
+    calls = []
+
+    def fake_bazel(args):
+        calls.append(args)
+        if args[0] == "cquery":
+            return SimpleNamespace(returncode=0, stdout="external/stamp/stamp.env\n")
+        return SimpleNamespace(returncode=0, stdout=f"{output_base}\n")
+
+    monkeypatch.setattr("module_tests.bazel", fake_bazel)
+    _provide_opensovd_stamp(workspace, {"opensovd_core": Path("/pinned")})
+    package = workspace / "patches" / "diagnostics"
+    assert (package / "opensovd_stamp.env").read_text() == stamp.read_text()
+    assert 'name = "opensovd_stamp_env"' in (package / "BUILD.bazel").read_text()
+    assert calls == [
+        ["cquery", "--lockfile_mode=error", "//patches/diagnostics:opensovd_stamp_env", "--output=files"],
+        ["info", "output_base"],
+    ]
+
+
+def test_opensovd_stamp_is_not_needed_without_the_pinned_module(tmp_path, monkeypatch):
+    monkeypatch.setattr("module_tests.bazel", lambda *_args: pytest.fail("must not invoke Bazel"))
+    _provide_opensovd_stamp(tmp_path, {})
+    assert not (tmp_path / "patches").exists()
+
+
+def test_opensovd_stamp_refuses_to_replace_an_existing_package(tmp_path, monkeypatch):
+    package = tmp_path / "patches" / "diagnostics"
+    package.mkdir(parents=True)
+    (package / "BUILD.bazel").write_text("existing\n")
+    monkeypatch.setattr("module_tests.bazel", lambda _args: SimpleNamespace(returncode=0, stdout="external/stamp\n"))
+    with pytest.raises(SystemExit, match="already exists"):
+        _provide_opensovd_stamp(tmp_path, {"opensovd_core": Path("/pinned")})
+    assert (package / "BUILD.bazel").read_text() == "existing\n"
+
+
+def test_opensovd_stamp_resolution_failure_is_reported(tmp_path, monkeypatch):
+    monkeypatch.setattr("module_tests.bazel", lambda _args: SimpleNamespace(returncode=1, stdout=""))
+    with pytest.raises(SystemExit, match="could not resolve"):
+        _provide_opensovd_stamp(tmp_path, {"opensovd_core": Path("/pinned")})
 
 
 def test_coverage_args_put_unified_config_before_target_separator():
