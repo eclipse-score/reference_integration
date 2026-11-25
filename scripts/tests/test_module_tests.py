@@ -84,13 +84,11 @@ def test_codeql_command_runs_the_module_target_with_ref_int_platform_and_llvm(tm
     assert command[-2:] == [f"--output-dir={tmp_path}", "--output-prefix=score_mod"]
 
 
-def test_lint_command_builds_only_the_sarif_reports_of_the_module_lint_config(tmp_path):
+def test_lint_command_uses_the_module_lint_sarif_config(tmp_path):
     command = lint_command(_lint_module(), tmp_path / "targets.txt")
     assert command[:2] == ["bazel", "build"]
     configs = [arg for arg in command if arg.startswith("--config=")]
-    assert configs == ["--config=x86_64-linux", "--config=lint"]
-    assert command.index("--config=lint") < command.index("--output_groups=rules_lint_machine")
-    assert "--@aspect_rules_lint//lint:fail_on_violation=false" in command
+    assert configs == ["--config=x86_64-linux", "--config=lint_sarif"]
     assert f"--target_pattern_file={tmp_path / 'targets.txt'}" in command
 
 

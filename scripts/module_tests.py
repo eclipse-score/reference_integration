@@ -14,7 +14,7 @@
 
   run <module>      test <module> at its known_good commit with those versions forced
   codeql <module>   run <module>'s //quality/static_analysis:codeql target the same way (POC)
-  lint <module>     build the SARIF reports of <module>'s --config=lint the same way (POC)
+  lint <module>     build the SARIF reports of <module>'s --config=lint_sarif the same way (POC)
   report <dir>      write the verification report's unit test and coverage summaries
 
 Every module in the module's dependency graph that ref_int also resolves is pinned with
@@ -419,7 +419,9 @@ def run(args: argparse.Namespace) -> int:
 # The module side of the static analysis contract, from patches/<module>/*-static-analysis-contract.patch
 # until the modules carry it themselves (like their llvm_cov config for coverage).
 CODEQL_TARGET = "//quality/static_analysis:codeql"
-LINT_CONFIG = "lint"
+# --config=lint plus SARIF output without failing on findings; cicd-workflows' static-analysis.yml
+# could use it for the modules' own SARIF uploads, too.
+LINT_CONFIG = "lint_sarif"
 # The statically linked hermetic GCC cannot be traced by CodeQL, ref_int's LLVM toolchain can.
 LLVM_TOOLCHAIN = "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"
 
@@ -462,7 +464,7 @@ def lint_query(module) -> str:
 
 
 def lint_command(module, targets_file: Path) -> list[str]:
-    """Build only the SARIF reports of the module's lint config."""
+    """Build the SARIF reports of the module's lint config."""
     return [
         "bazel",
         "build",
@@ -471,8 +473,6 @@ def lint_command(module, targets_file: Path) -> list[str]:
         "--skip_incompatible_explicit_targets",
         *(f"--config={config}" for config in test_configs(module)),
         f"--config={LINT_CONFIG}",
-        "--output_groups=rules_lint_machine",
-        "--@aspect_rules_lint//lint:fail_on_violation=false",
         f"--target_pattern_file={targets_file}",
     ]
 

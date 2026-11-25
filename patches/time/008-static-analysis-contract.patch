@@ -1,8 +1,8 @@
 diff --git a/.bazelrc b/.bazelrc
-index 7b09f58..7e3645a 100644
+index 7b09f58..33578ba 100644
 --- a/.bazelrc
 +++ b/.bazelrc
-@@ -150,3 +150,10 @@ build:codeql --nouse_action_cache
+@@ -150,3 +150,15 @@ build:codeql --nouse_action_cache
  build:codeql --noremote_accept_cached
  build:codeql --noremote_upload_local_results
  build:codeql --disk_cache=
@@ -13,6 +13,11 @@ index 7b09f58..7e3645a 100644
 +build:lint --extra_toolchains=@sarif_parser_toolchains//:all
 +build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
 +build:lint --output_groups=+rules_lint_human
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/MODULE.bazel b/MODULE.bazel
 index 571e4a7..f9a239f 100644
 --- a/MODULE.bazel

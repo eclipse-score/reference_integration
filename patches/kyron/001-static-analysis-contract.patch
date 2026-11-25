@@ -1,8 +1,8 @@
 diff --git a/.bazelrc b/.bazelrc
-index 52ef679..9964db0 100644
+index 52ef679..2296aea 100644
 --- a/.bazelrc
 +++ b/.bazelrc
-@@ -65,3 +65,7 @@ import %workspace%/tools/coverage/coverage.bazelrc
+@@ -65,3 +65,12 @@ import %workspace%/tools/coverage/coverage.bazelrc
  
  # to be removed
  build:build_qnx8 --config=arm64-qnx
@@ -10,3 +10,8 @@ index 52ef679..9964db0 100644
 +# Lint with the central S-CORE policies: bazel build --config=lint //...
 +build:lint --aspects=@score_rust_policies//clippy:linters.bzl%clippy_strict
 +build:lint --output_groups=+rules_lint_human
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false

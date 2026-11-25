@@ -41,11 +41,16 @@ index 000000000..5f6c08fc7
 +    keep_going = True,
 +)
 diff --git a/score.bazelrc/score_lint.bazelrc b/score.bazelrc/score_lint.bazelrc
-index ba8c7cb97..87a9bbefa 100644
+index ba8c7cb97..48b8fdeeb 100644
 --- a/score.bazelrc/score_lint.bazelrc
 +++ b/score.bazelrc/score_lint.bazelrc
-@@ -39,3 +39,4 @@ build:ruff --@aspect_rules_lint//lint:fail_on_violation=true
+@@ -39,3 +39,9 @@ build:ruff --@aspect_rules_lint//lint:fail_on_violation=true
  build:lint --config=clang-tidy
  build:lint --config=clippy
  build:lint --config=ruff
 +build:lint --extra_toolchains=@sarif_parser_toolchains//:all
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false

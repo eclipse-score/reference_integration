@@ -50,10 +50,10 @@ index 877e1742e..ffdcad748 100644
 +    keep_going = True,
 +)
 diff --git a/quality/static_analysis/static_analysis.bazelrc b/quality/static_analysis/static_analysis.bazelrc
-index 91aa3cdd4..6b3d135b1 100644
+index 91aa3cdd4..907785e4a 100644
 --- a/quality/static_analysis/static_analysis.bazelrc
 +++ b/quality/static_analysis/static_analysis.bazelrc
-@@ -33,3 +33,10 @@ common:codeql --nouse_action_cache
+@@ -33,3 +33,15 @@ common:codeql --nouse_action_cache
  common:codeql --noremote_accept_cached
  common:codeql --noremote_upload_local_results
  common:codeql --disk_cache=
@@ -64,6 +64,11 @@ index 91aa3cdd4..6b3d135b1 100644
 +build:lint --extra_toolchains=@sarif_parser_toolchains//:all
 +build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
 +build:lint --output_groups=+rules_lint_human
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/tools/lint/BUILD b/tools/lint/BUILD
 new file mode 100644
 index 000000000..ca5de742e

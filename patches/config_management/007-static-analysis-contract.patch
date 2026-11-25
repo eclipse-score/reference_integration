@@ -1,8 +1,8 @@
 diff --git a/.bazelrc b/.bazelrc
-index 158386e..b0c5e21 100644
+index 158386e..162068e 100644
 --- a/.bazelrc
 +++ b/.bazelrc
-@@ -84,3 +84,10 @@ build:arm64-qnx --extra_toolchains=@score_qnx_aarch64_ifs_toolchain//:ifs-aarch6
+@@ -84,3 +84,15 @@ build:arm64-qnx --extra_toolchains=@score_qnx_aarch64_ifs_toolchain//:ifs-aarch6
  test:arm64-qnx --run_under=@score_qnx_unit_tests//src:run_under_qnx
  test:arm64-qnx --test_timeout=300
  test:arm64-qnx --test_lang_filters=cc,rust
@@ -13,6 +13,11 @@ index 158386e..b0c5e21 100644
 +build:lint --extra_toolchains=@sarif_parser_toolchains//:all
 +build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
 +build:lint --output_groups=+rules_lint_human
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/BUILD b/BUILD
 index 432331f..8eaa610 100644
 --- a/BUILD

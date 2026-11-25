@@ -34,13 +34,18 @@ index 627015e4..b7e400d4 100644
 +    keep_going = True,
 +)
 diff --git a/quality/static_analysis/static_analysis.bazelrc b/quality/static_analysis/static_analysis.bazelrc
-index 751ea6ce..965c5b65 100644
+index 751ea6ce..e535e250 100644
 --- a/quality/static_analysis/static_analysis.bazelrc
 +++ b/quality/static_analysis/static_analysis.bazelrc
-@@ -60,3 +60,6 @@ common:codeql --nouse_action_cache
+@@ -60,3 +60,11 @@ common:codeql --nouse_action_cache
  common:codeql --noremote_accept_cached
  common:codeql --noremote_upload_local_results
  common:codeql --disk_cache=
 +
 +# All linters at once: bazel build --config=lint //...
 +build:lint --config=clang-tidy --config=clippy --config=ruff
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false

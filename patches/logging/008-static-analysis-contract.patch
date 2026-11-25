@@ -1,8 +1,8 @@
 diff --git a/.bazelrc b/.bazelrc
-index e9c3f956..8b0e364a 100644
+index e9c3f956..db2e33b9 100644
 --- a/.bazelrc
 +++ b/.bazelrc
-@@ -156,3 +156,11 @@ build:banned-functions --host_copt=-Wno-unused-command-line-argument
+@@ -156,3 +156,16 @@ build:banned-functions --host_copt=-Wno-unused-command-line-argument
  # Unified LLVM source-based coverage (C++ + Rust), see quality/coverage/ and
  # @score_coverage. Use: bazel coverage --config=llvm_cov //score/... --build_tests_only
  import %workspace%/quality/coverage/coverage.bazelrc
@@ -14,6 +14,11 @@ index e9c3f956..8b0e364a 100644
 +build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
 +build:lint --output_groups=+rules_lint_human
 +build:lint --copt=-Wno-unused-command-line-argument --host_copt=-Wno-unused-command-line-argument
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/MODULE.bazel b/MODULE.bazel
 index 07e657b8..d14144b6 100644
 --- a/MODULE.bazel

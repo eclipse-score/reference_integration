@@ -106,7 +106,7 @@ jobs:
           disk-cache: Code Quality & Documentation-${{ matrix.module }}
           repository-cache: true
           cache-save: false
-      - name: Lint (--config=lint of the module)
+      - name: Lint (--config=lint_sarif of the module)
         run: python3 scripts/module_tests.py lint ${{ matrix.module }}
       - name: Upload lint results
         if: always()
