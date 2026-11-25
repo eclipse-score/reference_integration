@@ -477,87 +477,19 @@ def lint_command(module, targets_file: Path) -> list[str]:
     ]
 
 
-def source_path(path: str, workspace: Path) -> str:
-    """The module source a ``_virtual_includes`` header copy comes from, else ``path`` itself."""
-    package, virtual, include = path.partition("/_virtual_includes/")
-    parts = include.split("/")[1:]  # the first part is the library name
-    for start in range(len(parts) if virtual else 0):
-        candidate = "/".join([package, *parts[start:]])
-        if (workspace / candidate).is_file():
-            return candidate
-    return path
-
-
-def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
-    """Rebase workspace-relative SARIF locations into ref_int's external module namespace.
-
-    Results outside the module (dependencies, toolchain headers) are dropped.
-    """
-    prefix = f"external/{module}+/"
-
-    def rebase(uri: str) -> str:
-        path = uri.removeprefix("file://")
-        if path.startswith("/"):
-            # Linters running in a sandbox report paths below its execroot.
-            execroot = re.search(r"/execroot/[^/]+/(.*)$", path)
-            if execroot:
-                path = execroot.group(1)
-            elif Path(path).is_relative_to(workspace):
-                path = Path(path).relative_to(workspace).as_posix()
-            else:
-                return uri
-        path = path.removeprefix("./")
-        if path.startswith("../"):
-            # Other repositories, as seen from the main repository with the sibling layout.
-            path = "external/" + path[3:]
-        if generated := re.match(r"bazel-out/[^/]+/bin/(.*)$", path):
-            path = generated.group(1)
-        return path if path.startswith("external/") else f"{prefix}{source_path(path, workspace)}"
-
-    def visit(node) -> None:
-        if isinstance(node, dict):
-            if isinstance(node.get("uri"), str):
-                node["uri"] = rebase(node["uri"])
-                node.pop("uriBaseId", None)
-            for value in node.values():
-                visit(value)
-        elif isinstance(node, list):
-            for value in node:
-                visit(value)
-
-    def in_module(result: dict) -> bool:
-        locations = result.get("locations") or [{}]
-        uri = locations[0].get("physicalLocation", {}).get("artifactLocation", {}).get("uri")
-        return uri is None or uri.startswith(prefix)
-
-    for sarif_run in document.get("runs", []):
-        # The base points into the module workspace of this job only.
-        sarif_run.pop("originalUriBaseIds", None)
-    visit(document.get("runs", []))
-    for sarif_run in document.get("runs", []):
-        sarif_run["results"] = [result for result in sarif_run.get("results", []) if in_module(result)]
-    return document
-
-
-def merge_lint_reports(reports: list[Path], module: str, workspace: Path) -> tuple[dict, int]:
-    """One SARIF document with every non-empty run (and one run per tool), plus the non-SARIF count."""
-    runs, tools, raw = [], set(), 0
+def copy_lint_reports(bazel_out: Path, dest: Path) -> int:
+    """Copy the per-target rules_lint reports; the docs build reads, merges and de-duplicates them."""
+    reports = sorted(bazel_out.rglob("*.AspectRulesLint*.report"))
     for report in reports:
-        text = report.read_text(encoding="utf-8", errors="replace").strip()
-        if not text:
-            continue
-        try:
-            document = json.loads(text)
-        except json.JSONDecodeError:
-            # Without a SARIF parser toolchain rules_lint keeps the linter's raw output.
-            raw += 1
-            continue
-        for sarif_run in normalize_sarif(document, module, workspace).get("runs", []):
-            tool = sarif_run.get("tool", {}).get("driver", {}).get("name")
-            if sarif_run.get("results") or tool not in tools:
-                tools.add(tool)
-                runs.append(sarif_run)
-    return {"version": "2.1.0", "runs": runs}, raw
+        target = dest / report.relative_to(bazel_out)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(report, target)
+    return len(reports)
+
+
+def static_analysis_dir(out: Path, module) -> Path:
+    """docs-as-code reads SARIF below static-analysis-report/<repository>/ relative to that repository."""
+    return out / "static_analysis" / f"{module.name}+"
 
 
 def _target_module(args: argparse.Namespace):
@@ -587,14 +519,13 @@ def codeql(args: argparse.Namespace) -> int:
     sarif = results / f"{module.name}.sarif"
     findings = 0
     if sarif.is_file():
-        document = normalize_sarif(json.loads(sarif.read_text(encoding="utf-8")), module.name, workspace)
-        findings = sum(len(run.get("results", [])) for run in document.get("runs", []))
-        target = out / "static_analysis" / f"{module.name}.sarif"
+        findings = sum(len(run.get("results", [])) for run in json.loads(sarif.read_text(encoding="utf-8"))["runs"])
+        target = static_analysis_dir(out, module) / "codeql.sarif"
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(json.dumps(document) + "\n", encoding="utf-8")
+        shutil.copy(sarif, target)
     else:
         exit_code = exit_code or 1
-    summary = [f"## {module.name}: CodeQL exit code {exit_code}", "", f"- {findings} findings in the module"]
+    summary = [f"## {module.name}: CodeQL exit code {exit_code}", "", f"- {findings} findings (dependencies included)"]
     summary += _pinning_summary(pinned, unpinned)
     integrity = results / "analysis_reports" / module.name / "database_integrity_report.md"
     if integrity.is_file():
@@ -617,21 +548,8 @@ def lint(args: argparse.Namespace) -> int:
     targets_file.write_text("".join(f"{label}\n" for label in targets), encoding="utf-8")
     exit_code, _ = streamed(lint_command(module, targets_file), workspace, env)
 
-    reports = sorted((workspace / "bazel-out").resolve().rglob("*.AspectRulesLint*.report"))
-    document, raw = merge_lint_reports(reports, module.name, workspace)
-    target = out / "static_analysis" / f"{module.name}.lint.sarif"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(document) + "\n", encoding="utf-8")
-    counts = Counter(
-        sarif_run.get("tool", {}).get("driver", {}).get("name", "unknown")
-        for sarif_run in document["runs"]
-        for _ in sarif_run.get("results", [])
-    )
-    summary = [f"## {module.name}: lint exit code {exit_code}", ""]
-    summary.append(f"- {len(targets)} targets, {len(reports)} reports, {raw} not in SARIF format")
-    summary += [
-        f"- {tool}: {count} findings in the module (before de-duplication)" for tool, count in sorted(counts.items())
-    ]
+    reports = copy_lint_reports((workspace / "bazel-out").resolve(), static_analysis_dir(out, module) / "lint")
+    summary = [f"## {module.name}: lint exit code {exit_code}", "", f"- {len(targets)} targets, {reports} reports"]
     summary += _pinning_summary(pinned, unpinned)
     append_to_step_summary("\n".join(summary) + "\n")
     return exit_code

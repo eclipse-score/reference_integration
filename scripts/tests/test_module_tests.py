@@ -20,15 +20,14 @@ from module_tests import (
     _collect_coverage,
     codeql_command,
     combine_reports,
+    copy_lint_reports,
     count_testcases,
     coverage_args,
     graph_modules,
     lcov_percentages,
     lint_command,
     lint_query,
-    merge_lint_reports,
     normalize_lcov,
-    normalize_sarif,
     override_rc,
     report,
 )
@@ -54,47 +53,6 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
-
-
-def test_normalize_sarif_rebases_module_files_into_external_namespace():
-    location = {"physicalLocation": {"artifactLocation": {"uri": "score/a.cpp", "uriBaseId": "%SRCROOT%"}}}
-    absolute = {"physicalLocation": {"artifactLocation": {"uri": "file:///w/mod/score/b.h"}}}
-    toolchain = {"physicalLocation": {"artifactLocation": {"uri": "file:///ob/external/llvm/include/vector"}}}
-    document = {
-        "runs": [
-            {
-                "originalUriBaseIds": {"%SRCROOT%": {"uri": "file:///w/mod/"}},
-                "results": [{"locations": [location], "relatedLocations": [absolute]}, {"locations": [toolchain]}],
-            }
-        ]
-    }
-    run = normalize_sarif(document, "score_mod", Path("/w/mod"))["runs"][0]
-    assert "originalUriBaseIds" not in run
-    assert len(run["results"]) == 1
-    assert location["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/a.cpp"}
-    assert absolute["physicalLocation"]["artifactLocation"] == {"uri": "external/score_mod+/score/b.h"}
-
-
-def test_normalize_sarif_maps_bazel_out_copies_back_to_module_sources(tmp_path):
-    (tmp_path / "score" / "lib").mkdir(parents=True)
-    (tmp_path / "score" / "lib" / "ring.hpp").write_text("")
-
-    def result(uri):
-        return {"locations": [{"physicalLocation": {"artifactLocation": {"uri": uri}}}]}
-
-    uris = [
-        "bazel-out/k8-fastbuild/bin/score/lib/_virtual_includes/ipc/score/mw/lib/ring.hpp",
-        "bazel-out/k8-fastbuild/bin/score/lib/generated.h",
-        "bazel-out/k8-fastbuild/bin/external/dep+/_virtual_includes/x/x.h",
-        "./external/toolchains_llvm++llvm+llvm/redacted_dates.h",
-        "../score_baselibs+/score/os/errno.h",
-    ]
-    document = {"runs": [{"results": [result(uri) for uri in uris]}]}
-    run = normalize_sarif(document, "score_mod", tmp_path)["runs"][0]
-    assert [r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] for r in run["results"]] == [
-        "external/score_mod+/score/lib/ring.hpp",
-        "external/score_mod+/score/lib/generated.h",
-    ]
 
 
 def _lint_module(**metadata):
@@ -136,33 +94,17 @@ def test_lint_command_builds_only_the_sarif_reports_of_the_module_lint_config(tm
     assert f"--target_pattern_file={tmp_path / 'targets.txt'}" in command
 
 
-def test_merge_lint_reports_keeps_module_findings_and_one_run_per_tool(tmp_path):
-    def report(name, tool, uris):
-        results = [{"locations": [{"physicalLocation": {"artifactLocation": {"uri": uri}}}]} for uri in uris]
-        path = tmp_path / f"{name}.AspectRulesLint{tool}.report"
-        path.write_text(json.dumps({"runs": [{"tool": {"driver": {"name": tool}}, "results": results}]}))
-        return path
+def test_copy_lint_reports_keeps_their_paths_below_bazel_out(tmp_path):
+    reports = tmp_path / "bazel-out" / "k8-fastbuild" / "bin" / "score" / "a"
+    reports.mkdir(parents=True)
+    (reports / "a.AspectRulesLintClangTidy.report").write_text("{}")
+    (reports / "a.AspectRulesLintClangTidy.report.exit_code").write_text("0")
+    (reports / "a.o").write_text("")
 
-    sandbox = "/ob/sandbox/linux-sandbox/7/execroot/_main"
-    reports = [
-        report("a", "ClangTidy", ["score/a.cpp", f"{sandbox}/score/a.h", f"{sandbox}/external/dep+/x.h"]),
-        report("b", "ClangTidy", []),
-        report("c", "Ruff", []),
-        report("d", "Ruff", []),
+    assert copy_lint_reports(tmp_path / "bazel-out", tmp_path / "lint") == 1
+    assert [p.relative_to(tmp_path / "lint").as_posix() for p in (tmp_path / "lint").rglob("*") if p.is_file()] == [
+        "k8-fastbuild/bin/score/a/a.AspectRulesLintClangTidy.report"
     ]
-    (tmp_path / "e.AspectRulesLintClangTidy.report").write_text("")
-    (tmp_path / "f.AspectRulesLintRuff.report").write_text("x.py:1:1: F401 unused\n")
-    reports += [tmp_path / "e.AspectRulesLintClangTidy.report", tmp_path / "f.AspectRulesLintRuff.report"]
-
-    document, raw = merge_lint_reports(reports, "score_mod", Path("/w/mod"))
-
-    assert raw == 1
-    assert [run["tool"]["driver"]["name"] for run in document["runs"]] == ["ClangTidy", "Ruff"]
-    uris = [
-        result["locations"][0]["physicalLocation"]["artifactLocation"]["uri"]
-        for result in document["runs"][0]["results"]
-    ]
-    assert uris == ["external/score_mod+/score/a.cpp", "external/score_mod+/score/a.h"]
 
 
 def test_coverage_args_put_unified_config_before_target_separator():

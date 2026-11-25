@@ -163,10 +163,13 @@ jobs:
           path: _module_lint
           merge-multiple: true
       - name: Hand the module SARIF files to the docs build
+        # One directory per analysed repository (<module>+), with paths relative to it.
         run: |
           mkdir -p static-analysis-report
-          find _module_codeql _module_lint -path '*/static_analysis/*.sarif' -exec cp {} static-analysis-report/ \;
-          ls -la static-analysis-report
+          for dir in _module_codeql/*/static_analysis _module_lint/*/static_analysis; do
+            [ -d "$dir" ] && cp -r "$dir"/. static-analysis-report/
+          done
+          find static-analysis-report -maxdepth 2
       - name: Build documentation
         run: |
           bazel run \
