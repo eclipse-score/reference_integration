@@ -35,3 +35,4 @@ Architecture and Inspection statistics.
 
    Unit Tests Summary <unit_test_summary>
    Coverage Analysis Summary <coverage_summary>
+   Static Analysis Summary <static_analysis_summary>

@@ -142,14 +142,16 @@ jobs:
       - name: Download module test reports
         uses: actions/download-artifact@v4.1.8
         with:
-          pattern: module-tests-*
+          # module-tests-*, module-codeql-* and module-lint-*: one <module>/ folder each, merged.
+          pattern: module-*
           path: _module_reports
           merge-multiple: true
-      - name: Write unit test and coverage summaries
+      - name: Write unit test, coverage and static analysis summaries
         # Module unit tests and their coverage come only from module_tests.yml, which runs each
         # module's own tests against ref_int's resolved dependency versions. The report command
-        # also combines their rebased LCOV into coverage-report/coverage_report.dat, the input
-        # read by docs-as-code when //:docs_shim runs in this workspace below.
+        # also combines their rebased LCOV into coverage-report/coverage_report.dat and copies the
+        # modules' SARIF into static-analysis-report/, the inputs read by docs-as-code when
+        # //:docs_shim runs in this workspace below.
         run: python ./scripts/module_tests.py report _module_reports
       - name: Collect test reports for the documentation
         # The source code linker reads tests-report/ instead of bazel-testlogs/ when it exists, so

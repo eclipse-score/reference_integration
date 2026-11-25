@@ -30,6 +30,9 @@ from module_tests import (
     normalize_lcov,
     override_rc,
     report,
+    sarif_findings,
+    static_analysis_modules,
+    static_analysis_tools,
 )
 
 
@@ -265,7 +268,10 @@ def test_modules_awaiting_coverage_tool_still_run_tests():
 
 def test_documentation_ignores_coverage_from_modules_awaiting_coverage_tool(tmp_path, monkeypatch):
     """Old artifacts must not bring an unsupported module back into the documentation report."""
-    modules = {name: SimpleNamespace(name=name) for name in ("score_persistency", "score_communication")}
+    modules = {
+        name: SimpleNamespace(name=name, metadata=SimpleNamespace(langs=["cpp"]))
+        for name in ("score_persistency", "score_communication")
+    }
     monkeypatch.setattr("module_tests.REF_INT", tmp_path)
     monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
     for name in modules:
@@ -308,3 +314,61 @@ def test_baselibs_uses_shared_floating_point_exclusion_once():
     target = "//score/language/safecpp/safe_math/details:floating_point_environment_test"
     args = coverage_args(["--", "//..."], ["cpp"], [target], module="score_baselibs")
     assert args.count(f"-{target}") == 1
+
+
+def _module(name, langs):
+    return SimpleNamespace(name=name, metadata=SimpleNamespace(langs=langs))
+
+
+def test_static_analysis_runs_codeql_only_for_listed_cpp_modules():
+    assert static_analysis_tools(_module("score_time", ["cpp"])) == ["codeql", "lint"]
+    assert static_analysis_tools(_module("score_kyron", ["rust"])) == ["lint"]
+    assert static_analysis_tools(_module("score_new", ["cpp"])) == []
+
+
+def test_static_analysis_modules_prints_the_job_matrices(monkeypatch, capsys):
+    modules = {
+        m.name: m for m in (_module("score_time", ["cpp"]), _module("score_kyron", ["rust"]), _module("x", ["cpp"]))
+    }
+    monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
+    assert static_analysis_modules(SimpleNamespace()) == 0
+    assert capsys.readouterr().out == 'codeql=["score_time"]\nlint=["score_kyron","score_time"]\n'
+
+
+def test_sarif_findings_counts_results_and_skips_empty_reports(tmp_path):
+    (tmp_path / "a.report").write_text(json.dumps({"runs": [{"results": [{}, {}]}, {"results": [{}]}]}))
+    (tmp_path / "b.report").write_text("")
+    assert sarif_findings(sorted(tmp_path.iterdir())) == 3
+
+
+def test_report_lists_static_analysis_and_hands_the_sarif_to_the_docs(tmp_path, monkeypatch):
+    modules = {
+        m.name: m for m in (_module("score_time", ["cpp"]), _module("score_kyron", ["rust"]), _module("x", ["cpp"]))
+    }
+    monkeypatch.setattr("module_tests.REF_INT", tmp_path)
+    monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
+    reports = tmp_path / "reports"
+    (reports / "score_time").mkdir(parents=True)
+    (reports / "score_time" / "codeql_result.json").write_text('{"exit_code": 0, "findings": 3}')
+    (reports / "score_time" / "lint_result.json").write_text('{"exit_code": 1, "findings": 0}')
+    sarif = reports / "score_time" / "static_analysis" / "score_time+" / "codeql.sarif"
+    sarif.parent.mkdir(parents=True)
+    sarif.write_text("{}")
+    (reports / "x" / "static_analysis" / "x+").mkdir(parents=True)
+    stale = tmp_path / "static-analysis-report" / "old+" / "codeql.sarif"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("{}")
+
+    assert report(SimpleNamespace(reports_dir=reports, out_dir=tmp_path / "summaries")) == 0
+
+    rows = (tmp_path / "summaries" / "static_analysis_summary.md").read_text().splitlines()[4:]
+    assert rows == [
+        "| score_time | ❌ FAILED | ✅ pass | ❌ FAILED |",
+        "| score_kyron | ❌ FAILED |  | ❌ FAILED |",
+        "| x | ⚪ skipped |  |  |",
+    ]
+    collected = tmp_path / "static-analysis-report"
+    assert [p.relative_to(collected).as_posix() for p in collected.rglob("*")] == [
+        "score_time+",
+        "score_time+/codeql.sarif",
+    ]
