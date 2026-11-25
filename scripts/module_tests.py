@@ -596,7 +596,7 @@ def codeql(args: argparse.Namespace) -> int:
     if unpinned:
         summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
     summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
-    integrity = results / "analysis_reports" / "database_integrity_report.md"
+    integrity = results / "analysis_reports" / module.name / "database_integrity_report.md"
     if integrity.is_file():
         summary += ["", integrity.read_text(encoding="utf-8")]
     append_to_step_summary("\n".join(summary) + "\n")
