@@ -21,6 +21,7 @@ ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.baz
 module's ``extra_test_config`` are layered over the module's .bazelrc. The only edits to the module
 are one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
 defined in MODULE files, and a ``bazel_dep`` raising score_devcontainer to its known_good version.
+When OpenSOVD is pinned, its integration build stamp is made available in the module workspace.
 """
 
 import argparse
@@ -272,6 +273,30 @@ def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str
         f.write(line)
 
 
+def _provide_opensovd_stamp(workspace: Path, pinned: dict[str, Path]) -> None:
+    """Provide the root-workspace stamp required by the patched OpenSOVD module."""
+    if "opensovd_core" not in pinned:
+        return
+
+    result = bazel(["cquery", "--lockfile_mode=error", "//patches/diagnostics:opensovd_stamp_env", "--output=files"])
+    files = result.stdout.splitlines()
+    if result.returncode or len(files) != 1 or not files[0].startswith("external/"):
+        sys.exit("could not resolve the integration OpenSOVD build stamp")
+    output_base = bazel(["info", "output_base"])
+    if output_base.returncode:
+        sys.exit("could not find the integration Bazel output base")
+    source = Path(output_base.stdout.strip()) / files[0]
+    package = workspace / "patches" / "diagnostics"
+    if package.exists():
+        sys.exit(f"cannot install the OpenSOVD build stamp: {package} already exists")
+    package.mkdir(parents=True)
+    shutil.copyfile(source, package / "opensovd_stamp.env")
+    (package / "BUILD.bazel").write_text(
+        'exports_files(["opensovd_stamp.env"], visibility = ["//visibility:public"])\n'
+        'alias(name = "opensovd_stamp_env", actual = ":opensovd_stamp.env", visibility = ["//visibility:public"])\n'
+    )
+
+
 def normalize_lcov(text: str, module: str) -> str:
     """Rebase coverage_tool's canonical paths into ref_int's external module namespace."""
     lines = []
@@ -410,6 +435,7 @@ def run(args: argparse.Namespace) -> int:
     shared = (graph_modules(own_graph) & resolved) - {module.name}
     pinned = fetch(shared)
     drop_vanished_pins(pinned, rc, workspace, env, module.metadata.extra_test_config)
+    _provide_opensovd_stamp(workspace, pinned)
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 
