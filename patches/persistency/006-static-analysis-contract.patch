@@ -1,0 +1,55 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 5869c524..a0e020e9 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -234,3 +234,8 @@ git_override(
+     patches = ["//patches:hedron_compile_commands_env_vars.patch"],
+     remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+ )
++
++# SARIF output of the lint aspects (--output_groups=+rules_lint_machine).
++lint_sarif = use_extension("@aspect_rules_lint//lint:extensions.bzl", "toolchains", dev_dependency = True)
++lint_sarif.sarif_parser()
++use_repo(lint_sarif, "sarif_parser_toolchains")
+diff --git a/quality/static_analysis/BUILD b/quality/static_analysis/BUILD
+new file mode 100644
+index 00000000..42d34a77
+--- /dev/null
++++ b/quality/static_analysis/BUILD
+@@ -0,0 +1,22 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
++load("@score_tools//codeql:defs.bzl", "codeql_analysis")
++
++# CodeQL MISRA C++ analysis of a traced build: bazel run //quality/static_analysis:codeql
++codeql_analysis(
++    name = "codeql",
++    targets = ["//score/kvs/..."],
++    coding_standards_config = "coding-standards.yaml",
++    exclude_testonly = True,
++    keep_going = True,
++)
+diff --git a/score.bazelrc/score_lint.bazelrc b/score.bazelrc/score_lint.bazelrc
+index 48387419..4d0c73d7 100644
+--- a/score.bazelrc/score_lint.bazelrc
++++ b/score.bazelrc/score_lint.bazelrc
+@@ -42,3 +42,9 @@ build:lint --config=score-linux-x86_64
+ build:lint --config=clang-tidy
+ build:lint --config=clippy
+ build:lint --config=ruff
++build:lint --extra_toolchains=@sarif_parser_toolchains//:all
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false

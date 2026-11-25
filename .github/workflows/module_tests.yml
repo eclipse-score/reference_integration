@@ -11,7 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 # Runs every target_sw module's own unit tests against the dependency versions ref_int resolves
-# (known_good.json pins + Bazel MVS for everything else), with ref_int's unified bazelrc config.
+# (known_good.json pins + Bazel MVS for everything else), with ref_int's unified bazelrc config, and
+# the CodeQL and lint analyses of the modules in STATIC_ANALYSIS_MODULES the same way.
 # See scripts/module_tests.py. Called by test_and_docs.yml, which feeds the reports into the docs.
 name: Module Tests
 on:
@@ -29,6 +30,8 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       modules: ${{ steps.modules.outputs.modules }}
+      codeql: ${{ steps.modules.outputs.codeql }}
+      lint: ${{ steps.modules.outputs.lint }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -38,7 +41,9 @@ jobs:
           allow-unsafe-pr-checkout: true
       - name: List modules
         id: modules
-        run: echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
+          python3 scripts/module_tests.py static-analysis-modules >> "$GITHUB_OUTPUT"
   test:
     name: Test ${{ matrix.module }}
     needs: modules
@@ -92,4 +97,78 @@ jobs:
           name: module-tests-${{ matrix.module }}
           # The reports/ root keeps the <module>/ folder, so a merged download has one per module.
           path: _module_tests/reports/
+          if-no-files-found: warn
+  codeql:
+    name: CodeQL ${{ matrix.module }}
+    needs: modules
+    if: ${{ needs.modules.outputs.codeql != '[]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.modules.outputs.codeql) }}
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-codeql-${{ matrix.module }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: CodeQL (//quality/static_analysis:codeql of the module)
+        run: python3 scripts/module_tests.py codeql ${{ matrix.module }}
+      - name: Upload CodeQL results
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: module-codeql-${{ matrix.module }}
+          path: _module_codeql/reports/
+          if-no-files-found: warn
+  lint:
+    name: Lint ${{ matrix.module }}
+    needs: modules
+    if: ${{ needs.modules.outputs.lint != '[]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.modules.outputs.lint) }}
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-lint-${{ matrix.module }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Lint (--config=lint_sarif of the module)
+        run: python3 scripts/module_tests.py lint ${{ matrix.module }}
+      - name: Upload lint results
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: module-lint-${{ matrix.module }}
+          path: _module_lint/reports/
           if-no-files-found: warn

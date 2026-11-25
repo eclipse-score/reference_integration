@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -17,14 +18,21 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
+    codeql_command,
     combine_reports,
+    copy_lint_reports,
     count_testcases,
     coverage_args,
     graph_modules,
     lcov_percentages,
+    lint_command,
+    lint_query,
     normalize_lcov,
     override_rc,
     report,
+    sarif_findings,
+    static_analysis_modules,
+    static_analysis_tools,
 )
 
 
@@ -48,6 +56,57 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
+
+
+def _lint_module(**metadata):
+    defaults = {
+        "test_args": ["--config=x86_64-linux", "--config=asan_ubsan_lsan", "//score/..."],
+        "langs": ["cpp", "rust"],
+        "code_root_path": "//score/...",
+        "exclude_test_targets": ["//score/a:b_test"],
+    }
+    return SimpleNamespace(name="score_mod", metadata=SimpleNamespace(**(defaults | metadata)))
+
+
+def test_lint_query_selects_production_targets_of_all_languages_without_manual_ones():
+    query = lint_query(_lint_module())
+    selected = 'kind("^(cc|rust|py)_", //score/... - //score/a:b_test)'
+    manual = f'attr(tags, "[\\[ ]manual[,\\]]", {selected})'
+    assert query == f"{selected} except attr(testonly, 1, {selected}) except {manual}"
+
+
+def test_codeql_command_runs_the_module_target_with_ref_int_platform_and_llvm(tmp_path):
+    command = codeql_command(_lint_module(), Path("/w/bin/bazel"), tmp_path)
+    assert command[:5] == ["bazel", "run", "--lockfile_mode=update", "//quality/static_analysis:codeql", "--"]
+    assert [arg for arg in command if arg.startswith("--build-config=")] == [
+        "--build-config=x86_64-linux",
+        "--build-config=unified-base",
+        "--build-config=unified-rust",
+    ]
+    assert "--bazel=/w/bin/bazel" in command
+    assert "--bazel-arg=--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux" in command
+    assert command[-2:] == [f"--output-dir={tmp_path}", "--output-prefix=score_mod"]
+
+
+def test_lint_command_uses_the_module_lint_sarif_config(tmp_path):
+    command = lint_command(_lint_module(), tmp_path / "targets.txt")
+    assert command[:2] == ["bazel", "build"]
+    configs = [arg for arg in command if arg.startswith("--config=")]
+    assert configs == ["--config=x86_64-linux", "--config=lint_sarif"]
+    assert f"--target_pattern_file={tmp_path / 'targets.txt'}" in command
+
+
+def test_copy_lint_reports_keeps_their_paths_below_bazel_out(tmp_path):
+    reports = tmp_path / "bazel-out" / "k8-fastbuild" / "bin" / "score" / "a"
+    reports.mkdir(parents=True)
+    (reports / "a.AspectRulesLintClangTidy.report").write_text("{}")
+    (reports / "a.AspectRulesLintClangTidy.report.exit_code").write_text("0")
+    (reports / "a.o").write_text("")
+
+    assert copy_lint_reports(tmp_path / "bazel-out", tmp_path / "lint") == 1
+    assert [p.relative_to(tmp_path / "lint").as_posix() for p in (tmp_path / "lint").rglob("*") if p.is_file()] == [
+        "k8-fastbuild/bin/score/a/a.AspectRulesLintClangTidy.report"
+    ]
 
 
 def test_coverage_args_put_unified_config_before_target_separator():
@@ -209,7 +268,10 @@ def test_modules_awaiting_coverage_tool_still_run_tests():
 
 def test_documentation_ignores_coverage_from_modules_awaiting_coverage_tool(tmp_path, monkeypatch):
     """Old artifacts must not bring an unsupported module back into the documentation report."""
-    modules = {name: SimpleNamespace(name=name) for name in ("score_persistency", "score_communication")}
+    modules = {
+        name: SimpleNamespace(name=name, metadata=SimpleNamespace(langs=["cpp"]))
+        for name in ("score_persistency", "score_communication")
+    }
     monkeypatch.setattr("module_tests.REF_INT", tmp_path)
     monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
     for name in modules:
@@ -252,3 +314,61 @@ def test_baselibs_uses_shared_floating_point_exclusion_once():
     target = "//score/language/safecpp/safe_math/details:floating_point_environment_test"
     args = coverage_args(["--", "//..."], ["cpp"], [target], module="score_baselibs")
     assert args.count(f"-{target}") == 1
+
+
+def _module(name, langs):
+    return SimpleNamespace(name=name, metadata=SimpleNamespace(langs=langs))
+
+
+def test_static_analysis_runs_codeql_only_for_listed_cpp_modules():
+    assert static_analysis_tools(_module("score_time", ["cpp"])) == ["codeql", "lint"]
+    assert static_analysis_tools(_module("score_kyron", ["rust"])) == ["lint"]
+    assert static_analysis_tools(_module("score_new", ["cpp"])) == []
+
+
+def test_static_analysis_modules_prints_the_job_matrices(monkeypatch, capsys):
+    modules = {
+        m.name: m for m in (_module("score_time", ["cpp"]), _module("score_kyron", ["rust"]), _module("x", ["cpp"]))
+    }
+    monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
+    assert static_analysis_modules(SimpleNamespace()) == 0
+    assert capsys.readouterr().out == 'codeql=["score_time"]\nlint=["score_kyron","score_time"]\n'
+
+
+def test_sarif_findings_counts_results_and_skips_empty_reports(tmp_path):
+    (tmp_path / "a.report").write_text(json.dumps({"runs": [{"results": [{}, {}]}, {"results": [{}]}]}))
+    (tmp_path / "b.report").write_text("")
+    assert sarif_findings(sorted(tmp_path.iterdir())) == 3
+
+
+def test_report_lists_static_analysis_and_hands_the_sarif_to_the_docs(tmp_path, monkeypatch):
+    modules = {
+        m.name: m for m in (_module("score_time", ["cpp"]), _module("score_kyron", ["rust"]), _module("x", ["cpp"]))
+    }
+    monkeypatch.setattr("module_tests.REF_INT", tmp_path)
+    monkeypatch.setattr("module_tests.load_known_good", lambda _path: SimpleNamespace(modules={"target_sw": modules}))
+    reports = tmp_path / "reports"
+    (reports / "score_time").mkdir(parents=True)
+    (reports / "score_time" / "codeql_result.json").write_text('{"exit_code": 0, "findings": 3}')
+    (reports / "score_time" / "lint_result.json").write_text('{"exit_code": 1, "findings": 0}')
+    sarif = reports / "score_time" / "static_analysis" / "score_time+" / "codeql.sarif"
+    sarif.parent.mkdir(parents=True)
+    sarif.write_text("{}")
+    (reports / "x" / "static_analysis" / "x+").mkdir(parents=True)
+    stale = tmp_path / "static-analysis-report" / "old+" / "codeql.sarif"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("{}")
+
+    assert report(SimpleNamespace(reports_dir=reports, out_dir=tmp_path / "summaries")) == 0
+
+    rows = (tmp_path / "summaries" / "static_analysis_summary.md").read_text().splitlines()[4:]
+    assert rows == [
+        "| score_time | ❌ FAILED | ✅ pass | ❌ FAILED |",
+        "| score_kyron | ❌ FAILED |  | ❌ FAILED |",
+        "| x | ⚪ skipped |  |  |",
+    ]
+    collected = tmp_path / "static-analysis-report"
+    assert [p.relative_to(collected).as_posix() for p in collected.rglob("*")] == [
+        "score_time+",
+        "score_time+/codeql.sarif",
+    ]

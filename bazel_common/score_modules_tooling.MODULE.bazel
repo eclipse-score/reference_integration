@@ -33,9 +33,17 @@ single_version_override(
 )
 
 bazel_dep(name = "score_tools")
-single_version_override(
+git_override(
     module_name = "score_tools",
-    version = "0.0.4",
+    commit = "31427b6d3200fa966212fc9d80db7bb0407ea711",
+    remote = "https://github.com/eclipse-score/tools.git",
+)
+
+bazel_dep(name = "score_cpp_policies")
+git_override(
+    module_name = "score_cpp_policies",
+    commit = "c8fb812e85a971ac083b28219ce86d3f7a1cf9be",
+    remote = "https://github.com/eclipse-score/score_cpp_policies.git",
 )
 
 bazel_dep(name = "score_tooling")
@@ -76,9 +84,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_docs_as_code")
-single_version_override(
+git_override(
     module_name = "score_docs_as_code",
-    version = "9.1.1",
+    commit = "dfbfeebd7f727980540d11f15af67891aad13197",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")

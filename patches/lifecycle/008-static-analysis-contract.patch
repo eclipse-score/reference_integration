@@ -1,0 +1,127 @@
+diff --git a/BUILD b/BUILD
+index c94a3c2a1..20085bc64 100644
+--- a/BUILD
++++ b/BUILD
+@@ -164,3 +164,5 @@ docs(
+     project_url = "https://eclipse-score.github.io/lifecycle/",
+     source_dir = "docs",
+ )
++
++exports_files([".clang-tidy"])
+diff --git a/MODULE.bazel b/MODULE.bazel
+index fecc9dc75..c9a86db59 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -368,3 +368,10 @@ http_archive(
+     strip_prefix = "package",
+     url = "https://registry.npmjs.org/@microsoft/sarif-multitool-linux/-/sarif-multitool-linux-5.6.0.tgz",
+ )
++
++bazel_dep(name = "score_tools", version = "0.0.4", dev_dependency = True)
++
++# SARIF output of the lint aspects (--output_groups=+rules_lint_machine).
++lint_sarif = use_extension("@aspect_rules_lint//lint:extensions.bzl", "toolchains", dev_dependency = True)
++lint_sarif.sarif_parser()
++use_repo(lint_sarif, "sarif_parser_toolchains")
+diff --git a/quality/static_analysis/BUILD b/quality/static_analysis/BUILD
+index 877e1742e..ffdcad748 100644
+--- a/quality/static_analysis/BUILD
++++ b/quality/static_analysis/BUILD
+@@ -10,6 +10,8 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+ # *******************************************************************************
++load("@score_tools//codeql:defs.bzl", "codeql_analysis")
++
+ py_binary(
+     name = "codeql_lint",
+     srcs = ["codeql_lint.py"],
+@@ -42,3 +44,12 @@ filegroup(
+     srcs = ["config.yaml"],
+     visibility = ["//visibility:private"],
+ )
++
++# CodeQL MISRA C++ analysis of a traced build: bazel run //quality/static_analysis:codeql
++codeql_analysis(
++    name = "codeql",
++    targets = ["//score/..."],
++    coding_standards_config = "quality/static_analysis/coding-standards.yaml",
++    exclude_testonly = True,
++    keep_going = True,
++)
+diff --git a/quality/static_analysis/static_analysis.bazelrc b/quality/static_analysis/static_analysis.bazelrc
+index 91aa3cdd4..907785e4a 100644
+--- a/quality/static_analysis/static_analysis.bazelrc
++++ b/quality/static_analysis/static_analysis.bazelrc
+@@ -33,3 +33,15 @@ common:codeql --nouse_action_cache
+ common:codeql --noremote_accept_cached
+ common:codeql --noremote_upload_local_results
+ common:codeql --disk_cache=
++
++# Lint with the central S-CORE policies: bazel build --config=lint //...
++build:lint --aspects=//tools/lint:linters.bzl%clang_tidy_aspect,//tools/lint:linters.bzl%ruff_aspect,@score_rust_policies//clippy:linters.bzl%clippy_strict
++build:lint --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
++build:lint --extra_toolchains=@sarif_parser_toolchains//:all
++build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
++build:lint --output_groups=+rules_lint_human
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
+diff --git a/tools/lint/BUILD b/tools/lint/BUILD
+new file mode 100644
+index 000000000..ca5de742e
+--- /dev/null
++++ b/tools/lint/BUILD
+@@ -0,0 +1,12 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
+diff --git a/tools/lint/linters.bzl b/tools/lint/linters.bzl
+new file mode 100644
+index 000000000..09a7d3025
+--- /dev/null
++++ b/tools/lint/linters.bzl
+@@ -0,0 +1,32 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
++
++"""Lint aspects of the central S-CORE policies."""
++
++load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
++load("@aspect_rules_lint//lint:lint_test.bzl", "lint_test")
++load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
++
++clang_tidy_aspect = lint_clang_tidy_aspect(
++    binary = Label("@llvm_toolchain//:clang-tidy"),
++    configs = [Label("//:.clang-tidy")],
++    lint_target_headers = True,
++    angle_includes_are_system = True,
++)
++
++clang_tidy_test = lint_test(aspect = clang_tidy_aspect)
++
++ruff_aspect = lint_ruff_aspect(
++    binary = Label("@aspect_rules_lint//lint:ruff_bin"),
++    configs = [],
++)

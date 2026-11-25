@@ -13,7 +13,10 @@
 """Run a known_good module's own unit tests against the dependency set ref_int resolves.
 
   run <module>      test <module> at its known_good commit with those versions forced
-  report <dir>      write the verification report's unit test and coverage summaries
+  codeql <module>   run <module>'s //quality/static_analysis:codeql target the same way
+  lint <module>     build the SARIF reports of <module>'s --config=lint_sarif the same way
+  static-analysis-modules  print the codeql and lint job matrices as GitHub Actions outputs
+  report <dir>      write the verification report's unit test, coverage and static analysis summaries
 
 Every module in the module's dependency graph that ref_int also resolves is pinned with
 ``--override_module``, pointing at ref_int's own fetched copy (so ref_int's patches come along);
@@ -36,7 +39,7 @@ from collections import Counter
 from pathlib import Path
 
 from known_good.models.known_good import load_known_good
-from quality_runners import append_to_step_summary, generate_markdown_report, with_status
+from quality_runners import STATUS_LABELS, append_to_step_summary, generate_markdown_report, with_status
 
 REF_INT = Path(__file__).resolve().parents[1]
 UNIFIED_RC = REF_INT / "bazel_common" / "unified.bazelrc"
@@ -335,15 +338,15 @@ def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[s
         shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
 
 
-def run(args: argparse.Namespace) -> int:
-    known = load_known_good(REF_INT / "known_good.json")
-    module = known.modules["target_sw"].get(args.module)
-    if module is None:
-        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+def _prepare_module(module, known, work: Path):
+    """The module as root workspace with ref_int's versions pinned.
+
+    Returns the workspace, its report dir, the environment for the bazel wrapper and the
+    pinned/unpinned modules.
+    """
     # ref_int's committed lock plus --lockfile_mode=error make this the same set in every job.
     resolved = graph_modules(mod_graph(REF_INT, None, "error"))
 
-    work = args.work_dir.resolve()
     workspace, out = _setup_working_dir(work, module.name)
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
@@ -377,6 +380,15 @@ def run(args: argparse.Namespace) -> int:
     rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
+    return workspace, out, env, pinned, unpinned
+
+
+def run(args: argparse.Namespace) -> int:
+    known = load_known_good(REF_INT / "known_good.json")
+    module = known.modules["target_sw"].get(args.module)
+    if module is None:
+        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, args.work_dir.resolve())
 
     coverage_enabled = module.name in COVERAGE_MODULES
     command = coverage_args(
@@ -405,13 +417,222 @@ def run(args: argparse.Namespace) -> int:
     return exit_code
 
 
+# Modules providing //quality/static_analysis:codeql (C++ only) and --config=lint_sarif, for now
+# through patches/<module>/*-static-analysis-contract.patch.
+STATIC_ANALYSIS_MODULES = {
+    "score_baselibs",
+    "score_communication",
+    "score_config_management",
+    "score_kyron",
+    "score_lifecycle",
+    "score_logging",
+    "score_persistency",
+    "score_time",
+}
+CODEQL_TARGET = "//quality/static_analysis:codeql"
+# --config=lint plus SARIF output without failing on findings; cicd-workflows' static-analysis.yml
+# could use it for the modules' own SARIF uploads, too.
+LINT_CONFIG = "lint_sarif"
+# The statically linked hermetic GCC cannot be traced by CodeQL, ref_int's LLVM toolchain can.
+LLVM_TOOLCHAIN = "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"
+
+
+def static_analysis_tools(module) -> list[str]:
+    """The analyses ref_int runs for ``module``; CodeQL needs C++ code."""
+    if module.name not in STATIC_ANALYSIS_MODULES:
+        return []
+    return ["codeql", "lint"] if "cpp" in module.metadata.langs else ["lint"]
+
+
+def sarif_findings(reports: list[Path]) -> int:
+    """Results in the SARIF files; empty reports (nothing linted) count as none."""
+    total = 0
+    for report in reports:
+        try:
+            runs = json.loads(report.read_text(encoding="utf-8")).get("runs", [])
+        except json.JSONDecodeError:
+            continue
+        total += sum(len(run.get("results", [])) for run in runs)
+    return total
+
+
+def test_configs(module) -> list[str]:
+    """The module's own test configs without sanitizers."""
+    split = module.metadata.test_args.index("--") if "--" in module.metadata.test_args else None
+    return [
+        arg.removeprefix("--config=")
+        for arg in module.metadata.test_args[:split]
+        if arg.startswith("--config=") and arg != "--config=asan_ubsan_lsan"
+    ]
+
+
+def codeql_command(module, wrapper: Path, results: Path) -> list[str]:
+    """Run the module's CodeQL target; its traced build gets ref_int's platform and LLVM toolchain."""
+    configs = [*test_configs(module), "unified-base"]
+    if "rust" in module.metadata.langs:
+        configs.append("unified-rust")
+    return [
+        "bazel",
+        "run",
+        "--lockfile_mode=update",
+        CODEQL_TARGET,
+        "--",
+        # Bazelisk puts the real bazel first on PATH, so the nested build must use the wrapper explicitly.
+        f"--bazel={wrapper}",
+        *(f"--build-config={config}" for config in configs),
+        f"--bazel-arg={LLVM_TOOLCHAIN}",
+        f"--output-dir={results}",
+        f"--output-prefix={module.name}",
+    ]
+
+
+def lint_query(module) -> str:
+    """C++, Rust and Python rule targets below the module's code root that a wildcard build builds, without tests."""
+    selected = f'kind("^(cc|rust|py)_", {module.metadata.code_root_path}'
+    selected += "".join(f" - {target}" for target in module.metadata.exclude_test_targets) + ")"
+    manual = rf'attr(tags, "[\[ ]manual[,\]]", {selected})'
+    return f"{selected} except attr(testonly, 1, {selected}) except {manual}"
+
+
+def lint_command(module, targets_file: Path) -> list[str]:
+    """Build the SARIF reports of the module's lint config."""
+    return [
+        "bazel",
+        "build",
+        "--lockfile_mode=update",
+        "--keep_going",
+        "--skip_incompatible_explicit_targets",
+        *(f"--config={config}" for config in test_configs(module)),
+        f"--config={LINT_CONFIG}",
+        f"--target_pattern_file={targets_file}",
+    ]
+
+
+def copy_lint_reports(bazel_out: Path, dest: Path) -> int:
+    """Copy the per-target rules_lint reports; the docs build reads, merges and de-duplicates them."""
+    reports = sorted(bazel_out.rglob("*.AspectRulesLint*.report"))
+    for report in reports:
+        target = dest / report.relative_to(bazel_out)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(report, target)
+    return len(reports)
+
+
+def static_analysis_dir(out: Path, module) -> Path:
+    """docs-as-code reads SARIF below static-analysis-report/<repository>/ relative to that repository."""
+    return out / "static_analysis" / f"{module.name}+"
+
+
+def _target_module(args: argparse.Namespace, tool: str):
+    known = load_known_good(REF_INT / "known_good.json")
+    module = known.modules["target_sw"].get(args.module)
+    if module is None:
+        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+    if tool not in static_analysis_tools(module):
+        sys.exit(f"{args.module} provides no {tool} analysis (see STATIC_ANALYSIS_MODULES)")
+    return known, module
+
+
+def _write_result(out: Path, tool: str, exit_code: int, findings: int) -> None:
+    (out / f"{tool}_result.json").write_text(json.dumps({"exit_code": exit_code, "findings": findings}) + "\n")
+
+
+def _pinning_summary(pinned: dict, unpinned: list[str]) -> list[str]:
+    summary = [f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}"] if unpinned else []
+    return summary + [f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)"]
+
+
+def codeql(args: argparse.Namespace) -> int:
+    """Run the module's CodeQL target as root workspace, like ``run`` with ref_int's versions."""
+    known, module = _target_module(args, "codeql")
+    work = args.work_dir.resolve()
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, work)
+    # Nested bazel calls of the analysis do not pass a lockfile mode, a module's own .bazelrc may set error.
+    with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
+        rc.write("common --lockfile_mode=update\n")
+
+    results = out / "codeql"
+    exit_code, _ = streamed(codeql_command(module, work / "bin" / "bazel", results), workspace, env)
+    sarif = results / f"{module.name}.sarif"
+    findings = 0
+    if sarif.is_file():
+        findings = sarif_findings([sarif])
+        target = static_analysis_dir(out, module) / "codeql.sarif"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(sarif, target)
+    else:
+        exit_code = exit_code or 1
+    _write_result(out, "codeql", exit_code, findings)
+    summary = [f"## {module.name}: CodeQL exit code {exit_code}", "", f"- {findings} findings (dependencies included)"]
+    summary += _pinning_summary(pinned, unpinned)
+    integrity = results / "analysis_reports" / module.name / "database_integrity_report.md"
+    if integrity.is_file():
+        summary += ["", integrity.read_text(encoding="utf-8")]
+    append_to_step_summary("\n".join(summary) + "\n")
+    return exit_code
+
+
+def lint(args: argparse.Namespace) -> int:
+    """Build the SARIF reports of the module's lint config as root workspace, like ``run``."""
+    known, module = _target_module(args, "lint")
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, args.work_dir.resolve())
+
+    query = bazel(["query", "--lockfile_mode=update", lint_query(module), "--output=label"], workspace, env)
+    if query.returncode:
+        sys.exit(f"bazel query for the lint targets of {module.name} failed")
+    targets_file = out / "lint_targets.txt"
+    targets = query.stdout.split()
+    targets_file.write_text("".join(f"{label}\n" for label in targets), encoding="utf-8")
+    exit_code, _ = streamed(lint_command(module, targets_file), workspace, env)
+
+    reports_dir = static_analysis_dir(out, module) / "lint"
+    reports = copy_lint_reports((workspace / "bazel-out").resolve(), reports_dir)
+    findings = sarif_findings(list(reports_dir.rglob("*.report")))
+    _write_result(out, "lint", exit_code, findings)
+    summary = [f"## {module.name}: lint exit code {exit_code}", ""]
+    summary += [f"- {len(targets)} targets, {reports} reports, {findings} findings (dependencies included)"]
+    summary += _pinning_summary(pinned, unpinned)
+    append_to_step_summary("\n".join(summary) + "\n")
+    return exit_code
+
+
+def static_analysis_row(reports: Path, tools: list[str]) -> dict:
+    """One status per analysis; a missing result (the job never got that far) counts as failed."""
+    row, failed = {}, False
+    for tool in tools:
+        result_file = reports / f"{tool}_result.json"
+        result = json.loads(result_file.read_text()) if result_file.is_file() else {"exit_code": 1}
+        failed = failed or result["exit_code"] != 0
+        row[tool] = STATUS_LABELS["FAILED" if result["exit_code"] else "pass"]
+    return row | {"exit_code": int(failed)}
+
+
+def collect_static_analysis(reports: Path, modules: list[str], output: Path) -> None:
+    """Hand the modules' SARIF to the docs build, one ``<module>+/`` folder each."""
+    shutil.rmtree(output, ignore_errors=True)
+    output.mkdir(parents=True)
+    for module in modules:
+        source = reports / module / "static_analysis"
+        if source.is_dir():
+            shutil.copytree(source, output, dirs_exist_ok=True)
+
+
+def static_analysis_modules(_args: argparse.Namespace) -> int:
+    """Print the codeql and lint job matrices as GitHub Actions step outputs."""
+    modules = load_known_good(REF_INT / "known_good.json").modules["target_sw"].values()
+    for tool in ("codeql", "lint"):
+        names = sorted(module.name for module in modules if tool in static_analysis_tools(module))
+        print(f"{tool}={json.dumps(names, separators=(',', ':'))}")
+    return 0
+
+
 def report(args: argparse.Namespace) -> int:
-    """Write the verification report's unit test and coverage summaries from the module reports.
+    """Write the verification report's unit test, coverage and static analysis summaries.
 
     A module without a report (its run never got that far) is listed as failed, not left out.
     """
     known = load_known_good(REF_INT / "known_good.json")
-    unit_tests, coverage = {}, {}
+    unit_tests, coverage, static_analysis = {}, {}, {}
     for module in known.modules["target_sw"].values():
         reports = args.reports_dir / module.name
         result_file = reports / "result.json"
@@ -421,6 +642,8 @@ def report(args: argparse.Namespace) -> int:
         if module.name in COVERAGE_MODULES:
             numbers = lcov_percentages(lcov) if lcov.is_file() else {}
             coverage[module.name] = {**numbers, "exit_code": 0 if numbers.get("lines") else 1}
+        tools = static_analysis_tools(module)
+        static_analysis[module.name] = static_analysis_row(reports, tools) if tools else {"status": "skipped"}
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     unit_tests_md = generate_markdown_report(
@@ -435,11 +658,22 @@ def report(args: argparse.Namespace) -> int:
         columns=["module", "status", "lines", "functions", "branches"],
         output_path=args.out_dir / "coverage_summary.md",
     )
-    append_to_step_summary(unit_tests_md, coverage_md)
+    static_analysis_md = generate_markdown_report(
+        with_status(static_analysis),
+        title="Static Analysis Execution Summary",
+        columns=["module", "status", "codeql", "lint"],
+        output_path=args.out_dir / "static_analysis_summary.md",
+    )
+    append_to_step_summary(unit_tests_md, coverage_md, static_analysis_md)
     combine_reports(
         args.reports_dir,
         sorted(COVERAGE_MODULES & known.modules["target_sw"].keys()),
         REF_INT / "coverage-report" / "coverage_report.dat",
+    )
+    collect_static_analysis(
+        args.reports_dir,
+        sorted(STATIC_ANALYSIS_MODULES & known.modules["target_sw"].keys()),
+        REF_INT / "static-analysis-report",
     )
     return 0
 
@@ -451,6 +685,15 @@ def main() -> int:
     run_parser.add_argument("module")
     run_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_tests")
     run_parser.set_defaults(func=run)
+    codeql_parser = sub.add_parser("codeql")
+    codeql_parser.add_argument("module")
+    codeql_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_codeql")
+    codeql_parser.set_defaults(func=codeql)
+    lint_parser = sub.add_parser("lint")
+    lint_parser.add_argument("module")
+    lint_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_lint")
+    lint_parser.set_defaults(func=lint)
+    sub.add_parser("static-analysis-modules").set_defaults(func=static_analysis_modules)
     report_parser = sub.add_parser("report")
     report_parser.add_argument("reports_dir", type=Path, help="directory with one 'run' report per module")
     report_parser.add_argument("--out-dir", type=Path, default=REF_INT / "docs" / "verification_report")

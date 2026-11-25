@@ -1,0 +1,51 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 3a078644..c6d953b2 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -446,3 +446,5 @@ register_toolchains(
+     "//bazel/toolchains:sphinx_toolchain",
+     dev_dependency = True,
+ )
++
++bazel_dep(name = "score_tools", version = "0.0.4", dev_dependency = True)
+diff --git a/quality/static_analysis/BUILD b/quality/static_analysis/BUILD
+index 627015e4..b7e400d4 100644
+--- a/quality/static_analysis/BUILD
++++ b/quality/static_analysis/BUILD
+@@ -12,6 +12,7 @@
+ # *******************************************************************************
+ 
+ load("@rules_python//python:defs.bzl", "py_binary")
++load("@score_tools//codeql:defs.bzl", "codeql_analysis")
+ 
+ py_binary(
+     name = "codeql_lint",
+@@ -40,3 +41,12 @@ filegroup(
+     name = "config",
+     srcs = ["config.yaml"],
+ )
++
++# CodeQL MISRA C++ analysis of a traced build: bazel run //quality/static_analysis:codeql
++codeql_analysis(
++    name = "codeql",
++    targets = ["//score/mw/com/impl/..."],
++    coding_standards_config = "quality/static_analysis/coding-standards.yaml",
++    exclude_testonly = True,
++    keep_going = True,
++)
+diff --git a/quality/static_analysis/static_analysis.bazelrc b/quality/static_analysis/static_analysis.bazelrc
+index 751ea6ce..e535e250 100644
+--- a/quality/static_analysis/static_analysis.bazelrc
++++ b/quality/static_analysis/static_analysis.bazelrc
+@@ -60,3 +60,11 @@ common:codeql --nouse_action_cache
+ common:codeql --noremote_accept_cached
+ common:codeql --noremote_upload_local_results
+ common:codeql --disk_cache=
++
++# All linters at once: bazel build --config=lint //...
++build:lint --config=clang-tidy --config=clippy --config=ruff
++
++# Lint findings as SARIF without failing on them, e.g. for reports and dashboards.
++build:lint_sarif --config=lint
++build:lint_sarif --output_groups=rules_lint_machine
++build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false

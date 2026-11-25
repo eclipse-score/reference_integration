@@ -1,0 +1,94 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# POC, delete before merge: PR runs of test_and_docs.yml use main's workflows (pull_request_target),
+# so this runs this branch's module_tests.yml and the report/docs steps of test_and_docs.yml on push.
+name: Static Analysis Report Preview (temporary)
+permissions:
+  contents: read
+  actions: read
+on:
+  push:
+    branches:
+      - poc/static-analysis-codeql
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  module_tests:
+    uses: ./.github/workflows/module_tests.yml
+    secrets: inherit
+  docs:
+    needs: module_tests
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          # Reuse (read only) the disk cache of "Code Quality & Documentation" on main.
+          disk-cache: Code Quality & Documentation
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: false
+      - name: Set up Python 3
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: graphviz
+          cache: false
+      - name: Download module test reports
+        uses: actions/download-artifact@v4.1.8
+        with:
+          pattern: module-*
+          path: _module_reports
+          merge-multiple: true
+      - name: Write unit test, coverage and static analysis summaries
+        run: python ./scripts/module_tests.py report _module_reports
+      - name: Collect test reports for the documentation
+        run: |
+          for report in _module_reports/*; do
+            module="${report##*/}"
+            [ -d "$report/tests" ] || continue
+            mkdir -p "tests-report/external/$module+"
+            cp -r "$report/tests/." "tests-report/external/$module+/"
+          done
+      - name: Build documentation
+        run: |
+          bazel run \
+            --lockfile_mode=error \
+              //:docs_shim -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
+          tar -cf docs-preview.tar _build
+      - name: Upload documentation
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: static-analysis-preview-docs
+          path: docs-preview.tar
+          retention-days: 7

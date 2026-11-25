@@ -22,6 +22,7 @@ single_version_override(
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
         "//patches/baselibs:003-export-aou-requirements.patch",
+        "//patches/baselibs:004-static-analysis-contract.patch",
     ],
     version = "0.2.19",
 )
@@ -34,6 +35,7 @@ git_override(
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:002-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+        "//patches/communication:003-static-analysis-contract.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -46,6 +48,7 @@ single_version_override(
         "//patches/persistency:003-undev-deps-for-root-module.patch",
         "//patches/persistency:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/persistency:005-undev-integration-test-deps.patch",
+        "//patches/persistency:006-static-analysis-contract.patch",
     ],
     version = "0.5.0",
 )
@@ -54,6 +57,10 @@ bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
     commit = "85219c4d71e8ec33297534b63143b042f1a41818",
+    patch_strip = 1,
+    patches = [
+        "//patches/kyron:001-static-analysis-contract.patch",
+    ],
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
@@ -68,6 +75,7 @@ git_override(
         "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/lifecycle:006-undev-cpp-policies.patch",
         "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch",
+        "//patches/lifecycle:008-static-analysis-contract.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -82,6 +90,7 @@ git_override(
         "//patches/logging:003-relative-verification-report-links.patch",
         "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/logging:007-docs-drop-generated-dependency-pages.patch",
+        "//patches/logging:008-static-analysis-contract.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -93,6 +102,7 @@ single_version_override(
     patches = [
         "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/time:003-undev-rules-imagefs.patch",
+        "//patches/time:008-static-analysis-contract.patch",
     ],
     version = "0.3.3",
 )
@@ -106,6 +116,7 @@ single_version_override(
         "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/config_management:005-persistency-0.5-shared-kvs.patch",
         "//patches/config_management:006-config-daemon-remote-logging.patch",
+        "//patches/config_management:007-static-analysis-contract.patch",
     ],
     version = "0.3.5",
 )
