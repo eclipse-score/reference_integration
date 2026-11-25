@@ -42,3 +42,15 @@ single_version_override(
     module_name = "score_toolchains_rust",
     version = "0.10.0",
 )
+
+# Workaround: libpfm 4.11.0.bcr.1 (pulled in by google_benchmark 1.9.5) downloads from the defunct
+# netcologne.dl.sourceforge.net mirror; 4.11.0.bcr.2 uses downloads.sourceforge.net.
+bazel_dep(name = "libpfm", version = "4.11.0.bcr.2")
+
+# score_crypto builds soft_hsm with rules_foreign_cc's cmake rule for pkcs11 backend simulation.
+# rules_foreign_cc versions greater than 0.15.1 do not know the QNX target OS (CMAKE_SYSTEM_NAME "QNX").
+# In order to avoid patching version is pinned to 0.15.1.
+single_version_override(
+    module_name = "rules_foreign_cc",
+    version = "0.15.1",
+)

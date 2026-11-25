@@ -44,6 +44,7 @@ UNIFIED_TOOLCHAINS = REF_INT / "bazel_common" / "unified_toolchains.MODULE.bazel
 # Only enable the coverage_tool flow for releases already integrated in known_good.json.
 COVERAGE_MODULES = {
     "score_baselibs",
+    "score_crypto",
     "score_persistency",
     "score_logging",
     "score_kyron",
