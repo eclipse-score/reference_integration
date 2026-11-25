@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=d6826432" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=89f02737" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
@@ -189,7 +189,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -345,7 +345,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/roadmap/roadmap.html">
-    S-Core v1.0
+    S-CORE v1.x
   </a>
 </li>
 
@@ -449,6 +449,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../score_time/index.html">time_daemon Documentation</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../index.html">Module Template Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../module/index.html">Diagnostics Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sovd_gateway/index.html">SOVD Gateway</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../uds_data_bridge/index.html">UDS Data Bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../cda/index.html">Classic Diagnostic Adapter</a></li>
@@ -534,7 +535,7 @@
                   
   <section id="requirements">
 <span id="fault-lib-requirements"></span><h1>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-cda74b48">
+<div class="need_container docutils container" id="SNCB-e1e0b4e7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__fault_lib_requirements">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -580,7 +581,7 @@
 </div>
 <section id="functional-requirements">
 <h2>Functional Requirements<a class="headerlink" href="#functional-requirements" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-00b4795a">
+<div class="need_container docutils container" id="SNCB-04ad27dd">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__catalog">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -609,8 +610,8 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall let a component define its faults in a fault catalog, given as JSON or in code, and
-shall refuse a catalog that defines a fault ID twice.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall provide an API for defining and managing component fault catalogs. Fault catalogs can be
+initialized from a JSON file, a JSON string, or constructed programmatically using the provided API.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__catalog" title="comp_req__fault_lib__catalog">comp_req__fault_lib__catalog</a></span></span></div>
@@ -626,7 +627,52 @@ shall refuse a catalog that defines a fault ID twice.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-3e404e56">
+<div class="need_container docutils container" id="SNCB-27e8a0bf">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__catalog_unique_ids">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Unique Fault IDs in a Catalog</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">invalid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../score_platform/features/diagnostics/requirements/index.html#feat_req__diagnostics__fault_lib_catalog" title="comp_req__fault_lib__catalog_unique_ids">feat_req__diagnostics__fault_lib_catalog</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__fault_lib" title="comp_req__fault_lib__catalog_unique_ids">comp__fault_lib</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall refuse a catalog that defines a fault ID twice.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__catalog_unique_ids" title="comp_req__fault_lib__catalog_unique_ids">comp_req__fault_lib__catalog_unique_ids</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-96f1b794">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__reporting">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -672,7 +718,7 @@ the report and optional environment data, through a reporter bound once to the f
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-78b2606b">
+<div class="need_container docutils container" id="SNCB-6171b37c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__framework_agnostic">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -701,7 +747,8 @@ the report and optional environment data, through a reporter bound once to the f
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall be usable from synchronous code without an async runtime and from several threads.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall be usable from synchronous code without an async runtime and from several threads,
+particularly also at the same point in time.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__framework_agnostic" title="comp_req__fault_lib__framework_agnostic">comp_req__fault_lib__framework_agnostic</a></span></span></div>
@@ -717,7 +764,7 @@ the report and optional environment data, through a reporter bound once to the f
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-29403cc7">
+<div class="need_container docutils container" id="SNCB-3c224bec">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__debounce">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -747,7 +794,7 @@ the report and optional environment data, through a reporter bound once to the f
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall debounce reports per fault before relaying them, with a policy configured in the
-fault catalog: a minimum count within a time window, a hold time, or an edge with a cooldown.</p></td>
+fault catalog: a minimum count within a time window, a hold time, and/or an edge with a cooldown.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__debounce" title="comp_req__fault_lib__debounce">comp_req__fault_lib__debounce</a></span></span></div>
@@ -763,7 +810,7 @@ fault catalog: a minimum count within a time window, a hold time, or an edge wit
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-720850bd">
+<div class="need_container docutils container" id="SNCB-3c1b4738">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__enabling_conditions">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -809,7 +856,7 @@ query it.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ba9b054b">
+<div class="need_container docutils container" id="SNCB-41746645">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__relay">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -838,12 +885,10 @@ query it.</p></td>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall relay report to the diagnostic fault manager over IPC. A report whose send fails
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall relay reports to the diagnostic fault manager over IPC. A report whose send fails
 with a transient error (transport down, timeout, queue full or rate limited) shall be kept in a retry queue of
 512 reports, which drops the oldest report when full. Each report shall be retried up to 10 times, with the
-delay doubling from 100 ms up to 5 s, and shall be dropped after the tenth failed attempt. A report whose send
-fails with any other error shall be dropped at once. A successful send counts as relayed; the fault library
-does not wait for an acknowledgement from the fault manager.</p></td>
+delay doubling from 100 ms up to 5 s, and shall be dropped after the tenth failed attempt.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__relay" title="comp_req__fault_lib__relay">comp_req__fault_lib__relay</a></span></span></div>
@@ -859,7 +904,98 @@ does not wait for an acknowledgement from the fault manager.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b8cb4d47">
+<div class="need_container docutils container" id="SNCB-0907488f">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__relay_permanent_error">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Relay Permanent Errors</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">invalid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../score_platform/features/diagnostics/requirements/index.html#feat_req__diagnostics__fault_lib" title="comp_req__fault_lib__relay_permanent_error">feat_req__diagnostics__fault_lib</a>, <a class="reference internal" href="../../../../score_platform/features/diagnostics/requirements/index.html#feat_req__diagnostics__fault_manager" title="comp_req__fault_lib__relay_permanent_error">feat_req__diagnostics__fault_manager</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__fault_lib" title="comp_req__fault_lib__relay_permanent_error">comp__fault_lib</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall drop a report at once when its send fails with an error that is not transient.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__relay_permanent_error" title="comp_req__fault_lib__relay_permanent_error">comp_req__fault_lib__relay_permanent_error</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-215888c3">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__relay_success">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Relay Acknowledgement</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">invalid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../score_platform/features/diagnostics/requirements/index.html#feat_req__diagnostics__fault_lib" title="comp_req__fault_lib__relay_success">feat_req__diagnostics__fault_lib</a>, <a class="reference internal" href="../../../../score_platform/features/diagnostics/requirements/index.html#feat_req__diagnostics__fault_manager" title="comp_req__fault_lib__relay_success">feat_req__diagnostics__fault_manager</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__fault_lib" title="comp_req__fault_lib__relay_success">comp__fault_lib</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall count a successful send as relayed and shall not wait for an acknowledgement from the
+fault manager.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_req__fault_lib__relay_success" title="comp_req__fault_lib__relay_success">comp_req__fault_lib__relay_success</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-f5acf30f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__fault_lib__report_errors">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -908,7 +1044,7 @@ queued.</p></td>
 </section>
 <section id="assumptions-of-use-aou">
 <h2>Assumptions of Use (AoU)<a class="headerlink" href="#assumptions-of-use-aou" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-f0d5e2fc">
+<div class="need_container docutils container" id="SNCB-3fc7affe">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__fault_lib__fault_ids">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -969,27 +1105,36 @@ not tag its tests with requirement IDs yet, so they are listed here instead of b
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__catalog" title="comp_req__fault_lib__catalog"><em class="xref need">Component Fault Catalog (comp_req__fault_lib__catalog)</em></a></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/common/src/catalog.rs">duplicate_fault_id_returns_error</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_error_paths.rs">catalog_builder_rejects_duplicate_text_fault_id</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_json_catalog.rs">json_string_with_debounce_and_reset</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_json_catalog.rs">json_file_catalog_e2e</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_json_catalog.rs">json_string_with_debounce_and_reset</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__reporting" title="comp_req__fault_lib__reporting"><em class="xref need">Fault Reporting (comp_req__fault_lib__reporting)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__catalog_unique_ids" title="comp_req__fault_lib__catalog_unique_ids"><em class="xref need">Unique Fault IDs in a Catalog (comp_req__fault_lib__catalog_unique_ids)</em></a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/common/src/catalog.rs">duplicate_fault_id_returns_error</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_error_paths.rs">catalog_builder_rejects_duplicate_text_fault_id</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__reporting" title="comp_req__fault_lib__reporting"><em class="xref need">Fault Reporting (comp_req__fault_lib__reporting)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">publish_success</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_report_and_query.rs">report_fault_with_env_data_and_query</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__framework_agnostic" title="comp_req__fault_lib__framework_agnostic"><em class="xref need">Framework Agnostic (comp_req__fault_lib__framework_agnostic)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__framework_agnostic" title="comp_req__fault_lib__framework_agnostic"><em class="xref need">Framework Agnostic (comp_req__fault_lib__framework_agnostic)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">req1_reporter_requires_no_async_runtime</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">req1_reporter_is_send_sync</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_concurrent_access.rs">concurrent_process_and_query_does_not_panic</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__debounce" title="comp_req__fault_lib__debounce"><em class="xref need">Debouncing (comp_req__fault_lib__debounce)</em></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__debounce" title="comp_req__fault_lib__debounce"><em class="xref need">Debouncing (comp_req__fault_lib__debounce)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/common/src/debounce.rs">count_with_window_reports_only_after_min_count_within_window</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/common/src/debounce.rs">holdtime_requires_continuous_duration_before_report</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/common/src/debounce.rs">edge_with_cooldown_reports_first_then_suppresses_during_cooldown</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">req3_descriptor_supports_reporter_side_debounce</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__enabling_conditions" title="comp_req__fault_lib__enabling_conditions"><em class="xref need">Enabling Conditions (comp_req__fault_lib__enabling_conditions)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__enabling_conditions" title="comp_req__fault_lib__enabling_conditions"><em class="xref need">Enabling Conditions (comp_req__fault_lib__enabling_conditions)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_debounce_aging_cycles_ec.rs">enabling_condition_status_transitions</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__relay" title="comp_req__fault_lib__relay"><em class="xref need">Relay to the Fault Manager (comp_req__fault_lib__relay)</em></a></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">cache_for_retry_evicts_oldest_when_full</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">backoff_delay_grows_exponentially</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">handle_send_failure_caches_on_transient_error</a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__relay" title="comp_req__fault_lib__relay"><em class="xref need">Relay to the Fault Manager (comp_req__fault_lib__relay)</em></a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">cache_for_retry_evicts_oldest_when_full</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">backoff_delay_grows_exponentially</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">handle_send_failure_caches_on_transient_error</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">retry_config_defaults_are_sensible</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">process_retries_drops_after_max_retries</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__report_errors" title="comp_req__fault_lib__report_errors"><em class="xref need">Reporting Errors (comp_req__fault_lib__report_errors)</em></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__relay_permanent_error" title="comp_req__fault_lib__relay_permanent_error"><em class="xref need">Relay Permanent Errors (comp_req__fault_lib__relay_permanent_error)</em></a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">handle_send_failure_drops_on_permanent_error</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">permanent_errors_classified_correctly</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#comp_req__fault_lib__relay_success" title="comp_req__fault_lib__relay_success"><em class="xref need">Relay Acknowledgement (comp_req__fault_lib__relay_success)</em></a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/ipc_worker.rs">process_retries_succeeds_on_first_retry</a> (checks removal from the queue on success; no test covers the missing acknowledgement wait)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#comp_req__fault_lib__report_errors" title="comp_req__fault_lib__report_errors"><em class="xref need">Reporting Errors (comp_req__fault_lib__report_errors)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">req2_sink_error_propagates_to_caller</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/src/fault_lib/src/reporter.rs">publish_fail</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#aou_req__fault_lib__fault_ids" title="aou_req__fault_lib__fault_ids"><em class="xref need">Fault IDs (aou_req__fault_lib__fault_ids)</em></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#aou_req__fault_lib__fault_ids" title="aou_req__fault_lib__fault_ids"><em class="xref need">Fault IDs (aou_req__fault_lib__fault_ids)</em></a></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_boundary_values.rs">unicode_in_text_fault_id_rejected</a>, <a class="reference external" href="https://github.com/eclipse-opensovd/fault-lib/blob/12dac502616701734f90a61edca1326ae2ac6506/tests/integration/src/test_boundary_values.rs">unicode_in_env_data_rejected</a></p></td>
 </tr>
 </tbody>
