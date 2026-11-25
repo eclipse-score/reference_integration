@@ -10,11 +10,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# POC, delete before merge: analyses every C++ target_sw module with the Bazel based CodeQL
-# tooling of score_tools (tools#69) - each module as root workspace with ref_int's resolved
-# versions, like module_tests.yml - lints every module with the central clang-tidy, clippy and ruff
-# policies the same way, and builds the docs with these findings in the module verification
-# reports, all in this run.
+# POC, delete before merge: runs every C++ target_sw module's CodeQL target and every module's lint
+# config (both from patches/<module>/*-static-analysis-contract.patch until the modules carry them) -
+# each module as root workspace with ref_int's resolved versions, like module_tests.yml - and builds
+# the docs with these findings in the module verification reports, all in this run.
 name: Static Analysis Report Preview (temporary)
 permissions:
   contents: read
@@ -72,7 +71,7 @@ jobs:
           disk-cache: Code Quality & Documentation-${{ matrix.module }}
           repository-cache: true
           cache-save: false
-      - name: CodeQL analysis (score_tools, ASIL preset)
+      - name: CodeQL (//quality/static_analysis:codeql of the module)
         run: python3 scripts/module_tests.py codeql ${{ matrix.module }}
       - name: Upload CodeQL results
         if: always()
@@ -107,7 +106,7 @@ jobs:
           disk-cache: Code Quality & Documentation-${{ matrix.module }}
           repository-cache: true
           cache-save: false
-      - name: clang-tidy, clippy and ruff (central S-CORE policies)
+      - name: Lint (--config=lint of the module)
         run: python3 scripts/module_tests.py lint ${{ matrix.module }}
       - name: Upload lint results
         if: always()

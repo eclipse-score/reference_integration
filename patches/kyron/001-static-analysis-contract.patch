@@ -1,0 +1,12 @@
+diff --git a/.bazelrc b/.bazelrc
+index 52ef679..9964db0 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -65,3 +65,7 @@ import %workspace%/tools/coverage/coverage.bazelrc
+ 
+ # to be removed
+ build:build_qnx8 --config=arm64-qnx
++
++# Lint with the central S-CORE policies: bazel build --config=lint //...
++build:lint --aspects=@score_rust_policies//clippy:linters.bzl%clippy_strict
++build:lint --output_groups=+rules_lint_human

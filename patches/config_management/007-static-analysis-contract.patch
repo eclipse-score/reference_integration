@@ -1,0 +1,125 @@
+diff --git a/.bazelrc b/.bazelrc
+index 158386e..b0c5e21 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -84,3 +84,10 @@ build:arm64-qnx --extra_toolchains=@score_qnx_aarch64_ifs_toolchain//:ifs-aarch6
+ test:arm64-qnx --run_under=@score_qnx_unit_tests//src:run_under_qnx
+ test:arm64-qnx --test_timeout=300
+ test:arm64-qnx --test_lang_filters=cc,rust
++
++# Lint with the central S-CORE policies: bazel build --config=lint //...
++build:lint --aspects=//tools/lint:linters.bzl%clang_tidy_aspect,//tools/lint:linters.bzl%ruff_aspect
++build:lint --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
++build:lint --extra_toolchains=@sarif_parser_toolchains//:all
++build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
++build:lint --output_groups=+rules_lint_human
+diff --git a/BUILD b/BUILD
+index 432331f..8eaa610 100644
+--- a/BUILD
++++ b/BUILD
+@@ -56,3 +56,5 @@ alias(
+     testonly = True,
+     actual = "//build_docs:runner",
+ )
++
++exports_files(["pyproject.toml"])
+diff --git a/MODULE.bazel b/MODULE.bazel
+index f0f220f..fa5ad85 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -167,3 +167,11 @@ bazel_dep(name = "score_persistency", version = "0.4.1")
+ # TRLC / lobster: versions matching score_tooling 3.0.2
+ bazel_dep(name = "trlc", version = "3.1.1", dev_dependency = True)
+ bazel_dep(name = "lobster", version = "1.0.6", dev_dependency = True)
++
++bazel_dep(name = "score_tools", version = "0.0.4", dev_dependency = True)
++bazel_dep(name = "score_cpp_policies", version = "0.1.2", dev_dependency = True)
++
++# SARIF output of the lint aspects (--output_groups=+rules_lint_machine).
++lint_sarif = use_extension("@aspect_rules_lint//lint:extensions.bzl", "toolchains", dev_dependency = True)
++lint_sarif.sarif_parser()
++use_repo(lint_sarif, "sarif_parser_toolchains")
+diff --git a/quality/static_analysis/BUILD b/quality/static_analysis/BUILD
+new file mode 100644
+index 0000000..cf95f5e
+--- /dev/null
++++ b/quality/static_analysis/BUILD
+@@ -0,0 +1,21 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
++load("@score_tools//codeql:defs.bzl", "codeql_analysis")
++
++# CodeQL MISRA C++ analysis of a traced build: bazel run //quality/static_analysis:codeql
++codeql_analysis(
++    name = "codeql",
++    targets = ["//score/config_management/..."],
++    exclude_testonly = True,
++    keep_going = True,
++)
+diff --git a/tools/lint/BUILD b/tools/lint/BUILD
+new file mode 100644
+index 0000000..ca5de74
+--- /dev/null
++++ b/tools/lint/BUILD
+@@ -0,0 +1,12 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
+diff --git a/tools/lint/linters.bzl b/tools/lint/linters.bzl
+new file mode 100644
+index 0000000..5f90df4
+--- /dev/null
++++ b/tools/lint/linters.bzl
+@@ -0,0 +1,33 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
++
++"""Lint aspects of the central S-CORE policies."""
++
++load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
++load("@aspect_rules_lint//lint:lint_test.bzl", "lint_test")
++load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
++
++# The baseline is passed explicitly: clang-tidy only finds configs above the linted file.
++clang_tidy_aspect = lint_clang_tidy_aspect(
++    binary = Label("@llvm_toolchain//:clang-tidy"),
++    global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")],
++    lint_target_headers = True,
++    angle_includes_are_system = True,
++)
++
++clang_tidy_test = lint_test(aspect = clang_tidy_aspect)
++
++ruff_aspect = lint_ruff_aspect(
++    binary = Label("@aspect_rules_lint//lint:ruff_bin"),
++    configs = [Label("//:pyproject.toml")],
++)

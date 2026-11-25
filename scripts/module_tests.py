@@ -13,8 +13,8 @@
 """Run a known_good module's own unit tests against the dependency set ref_int resolves.
 
   run <module>      test <module> at its known_good commit with those versions forced
-  codeql <module>   analyse <module> the same way with score_tools' codeql_analysis (POC)
-  lint <module>     lint <module> the same way with the central clang-tidy, clippy and ruff policies (POC)
+  codeql <module>   run <module>'s //quality/static_analysis:codeql target the same way (POC)
+  lint <module>     build the SARIF reports of <module>'s --config=lint the same way (POC)
   report <dir>      write the verification report's unit test and coverage summaries
 
 Every module in the module's dependency graph that ref_int also resolves is pinned with
@@ -337,25 +337,7 @@ def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[s
         shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
 
 
-def _add_dependencies(workspace: Path, names: tuple[str, ...]) -> None:
-    """Make ref_int's copies of ``names`` available; existing dependencies are pinned anyway."""
-    module_file = workspace / "MODULE.bazel"
-    text = module_file.read_text()
-    missing = {name for name in names if not re.search(rf'bazel_dep\(\s*name\s*=\s*"{name}"', text)}
-    if not missing:
-        return
-    sources = fetch(missing)
-    if missing - set(sources):
-        sys.exit(f"could not fetch {', '.join(sorted(missing - set(sources)))} in ref_int")
-    with module_file.open("a") as f:
-        for name in sorted(missing):
-            f.write(
-                f'bazel_dep(name = "{name}", dev_dependency = True)\n'
-                f'local_path_override(module_name = "{name}", path = "{sources[name]}")\n'
-            )
-
-
-def _prepare_module(module, known, work: Path, *, extra_deps: tuple[str, ...] = ()):
+def _prepare_module(module, known, work: Path):
     """The module as root workspace with ref_int's versions pinned.
 
     Returns the workspace, its report dir, the environment for the bazel wrapper and the
@@ -368,7 +350,6 @@ def _prepare_module(module, known, work: Path, *, extra_deps: tuple[str, ...] = 
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
     _apply_extra_dependency_overrides(workspace, known.modules["tooling"]["score_devcontainer"].version)
-    _add_dependencies(workspace, extra_deps)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
@@ -435,55 +416,65 @@ def run(args: argparse.Namespace) -> int:
     return exit_code
 
 
-CODEQL_PACKAGE = "ref_int_codeql"
+# The module side of the static analysis contract, from patches/<module>/*-static-analysis-contract.patch
+# until the modules carry it themselves (like their llvm_cov config for coverage).
+CODEQL_TARGET = "//quality/static_analysis:codeql"
+LINT_CONFIG = "lint"
 # The statically linked hermetic GCC cannot be traced by CodeQL, ref_int's LLVM toolchain can.
-# clang-tidy also needs a Clang command line.
 LLVM_TOOLCHAIN = "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"
 
 
-def module_configs(module) -> list[str]:
-    """The module's own test configs without sanitizers, plus ref_int's unified platform."""
+def test_configs(module) -> list[str]:
+    """The module's own test configs without sanitizers."""
     split = module.metadata.test_args.index("--") if "--" in module.metadata.test_args else None
-    configs = [
+    return [
         arg.removeprefix("--config=")
         for arg in module.metadata.test_args[:split]
         if arg.startswith("--config=") and arg != "--config=asan_ubsan_lsan"
     ]
-    configs.append("unified-base")
+
+
+def codeql_command(module, wrapper: Path, results: Path) -> list[str]:
+    """Run the module's CodeQL target; its traced build gets ref_int's platform and LLVM toolchain."""
+    configs = [*test_configs(module), "unified-base"]
     if "rust" in module.metadata.langs:
         configs.append("unified-rust")
-    return configs
-
-
-def codeql_build_file(module, coding_standards_config: str | None) -> str:
-    """BUILD file with score_tools' codeql_analysis of the module's code root (traced LLVM build)."""
-    targets = [module.metadata.code_root_path, *(f"-{target}" for target in module.metadata.exclude_test_targets)]
-    optional = (
-        f"    coding_standards_config = {json.dumps(coding_standards_config)},\n" if coding_standards_config else ""
-    )
-    return (
-        'load("@score_tools//codeql:defs.bzl", "codeql_analysis")\n\n'
-        "codeql_analysis(\n"
-        '    name = "codeql",\n'
-        f"    bazel_args = {json.dumps([LLVM_TOOLCHAIN])},\n"
-        f"    build_configs = {json.dumps(module_configs(module))},\n"
-        f"{optional}"
-        "    exclude_testonly = True,\n"
-        "    keep_going = True,\n"
-        f"    targets = {json.dumps(targets)},\n"
-        ")\n"
-    )
-
-
-def find_coding_standards_config(workspace: Path) -> str | None:
-    """The module's own coding-standards.yml (deviations, recategorizations), if exactly one exists."""
-    found = [
-        path.relative_to(workspace).as_posix()
-        for name in ("coding-standards.yml", "coding-standards.yaml")
-        for path in workspace.rglob(name)
-        if not path.relative_to(workspace).parts[0].startswith("bazel-")
+    return [
+        "bazel",
+        "run",
+        "--lockfile_mode=update",
+        CODEQL_TARGET,
+        "--",
+        # Bazelisk puts the real bazel first on PATH, so the nested build must use the wrapper explicitly.
+        f"--bazel={wrapper}",
+        *(f"--build-config={config}" for config in configs),
+        f"--bazel-arg={LLVM_TOOLCHAIN}",
+        f"--output-dir={results}",
+        f"--output-prefix={module.name}",
     ]
-    return found[0] if len(found) == 1 else None
+
+
+def lint_query(module) -> str:
+    """C++, Rust and Python rule targets below the module's code root that are not testonly."""
+    selected = f'kind("^(cc|rust|py)_", {module.metadata.code_root_path}'
+    selected += "".join(f" - {target}" for target in module.metadata.exclude_test_targets) + ")"
+    return f"{selected} except attr(testonly, 1, {selected})"
+
+
+def lint_command(module, targets_file: Path) -> list[str]:
+    """Build only the SARIF reports of the module's lint config."""
+    return [
+        "bazel",
+        "build",
+        "--lockfile_mode=update",
+        "--keep_going",
+        "--skip_incompatible_explicit_targets",
+        *(f"--config={config}" for config in test_configs(module)),
+        f"--config={LINT_CONFIG}",
+        "--output_groups=rules_lint_machine",
+        "--@aspect_rules_lint//lint:fail_on_violation=false",
+        f"--target_pattern_file={targets_file}",
+    ]
 
 
 def source_path(path: str, workspace: Path) -> str:
@@ -548,158 +539,6 @@ def normalize_sarif(document: dict, module: str, workspace: Path) -> dict:
     return document
 
 
-def codeql(args: argparse.Namespace) -> int:
-    """Analyse a module with CodeQL as root workspace, like ``run`` with ref_int's versions."""
-    known = load_known_good(REF_INT / "known_good.json")
-    module = known.modules["target_sw"].get(args.module)
-    if module is None:
-        sys.exit(f"{args.module} is not a target_sw module in known_good.json")
-    work = args.work_dir.resolve()
-    workspace, out, env, pinned, unpinned = _prepare_module(module, known, work, extra_deps=("score_tools",))
-    # Nested bazel calls of the analysis do not pass a lockfile mode, a module's own .bazelrc may set error.
-    with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
-        rc.write("common --lockfile_mode=update\n")
-    coding_standards = find_coding_standards_config(workspace)
-    package = workspace / CODEQL_PACKAGE
-    package.mkdir()
-    (package / "BUILD").write_text(codeql_build_file(module, coding_standards), encoding="utf-8")
-    shutil.copy(package / "BUILD", out / "codeql.BUILD")
-
-    results = out / "codeql"
-    exit_code, _ = streamed(
-        [
-            "bazel",
-            "run",
-            "--lockfile_mode=update",
-            f"//{CODEQL_PACKAGE}:codeql",
-            "--",
-            # Bazelisk puts the real bazel first on PATH, so the nested build must use the wrapper explicitly.
-            f"--bazel={work / 'bin' / 'bazel'}",
-            f"--output-dir={results}",
-            f"--output-prefix={module.name}",
-        ],
-        workspace,
-        env,
-    )
-    sarif = results / f"{module.name}.sarif"
-    findings = 0
-    if sarif.is_file():
-        document = normalize_sarif(json.loads(sarif.read_text(encoding="utf-8")), module.name, workspace)
-        findings = sum(len(run.get("results", [])) for run in document.get("runs", []))
-        target = out / "static_analysis" / f"{module.name}.sarif"
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(json.dumps(document) + "\n", encoding="utf-8")
-    else:
-        exit_code = exit_code or 1
-    summary = [f"## {module.name}: CodeQL exit code {exit_code}", ""]
-    summary.append(f"- {findings} findings in the module (coding standards config: {coding_standards or 'none'})")
-    if unpinned:
-        summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
-    summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
-    integrity = results / "analysis_reports" / module.name / "database_integrity_report.md"
-    if integrity.is_file():
-        summary += ["", integrity.read_text(encoding="utf-8")]
-    append_to_step_summary("\n".join(summary) + "\n")
-    return exit_code
-
-
-LINT_PACKAGE = "ref_int_lint"
-LINT_DEPS = ("aspect_rules_lint", "score_cpp_policies", "score_rust_policies")
-LINT_ASPECTS = (
-    f"//{LINT_PACKAGE}:linters.bzl%clang_tidy",
-    f"//{LINT_PACKAGE}:linters.bzl%ruff",
-    "@score_rust_policies//clippy:linters.bzl%clippy_strict",
-)
-SARIF_PARSER = "sarif_parser_toolchains"
-SARIF_PARSER_EXTENSION = (
-    'ref_int_lint = use_extension("@aspect_rules_lint//lint:extensions.bzl", "toolchains", dev_dependency = True)\n'
-    "ref_int_lint.sarif_parser()\n"
-    f'use_repo(ref_int_lint, "{SARIF_PARSER}")\n'
-)
-
-
-def lint_config_files(workspace: Path) -> tuple[str | None, str | None]:
-    """The module's root .clang-tidy and ruff config, if the root is a package."""
-    if not any((workspace / name).is_file() for name in ("BUILD", "BUILD.bazel")):
-        return None, None
-    own = workspace / ".clang-tidy"
-    # A config without Checks (logging only sets HeaderFilterRegex) relies on the baseline's.
-    has_checks = own.is_file() and re.search(r"^Checks:", own.read_text(errors="replace"), re.M)
-    clang_tidy = ".clang-tidy" if has_checks else None
-    ruff = next((name for name in ("ruff.toml", ".ruff.toml") if (workspace / name).is_file()), None)
-    pyproject = workspace / "pyproject.toml"
-    if ruff is None and pyproject.is_file() and "[tool.ruff" in pyproject.read_text(errors="replace"):
-        ruff = "pyproject.toml"
-    return clang_tidy, ruff
-
-
-def export_root_files(workspace: Path, names: list[str]) -> None:
-    """Export the config files, the module may disable implicit file exports."""
-    build = next(path for name in ("BUILD.bazel", "BUILD") if (path := workspace / name).is_file())
-    text = build.read_text(encoding="utf-8")
-    exported = " ".join(re.findall(r"exports_files\(([^)]*)\)", text))
-    missing = [name for name in names if f'"{name}"' not in exported]
-    if missing:
-        build.chmod(0o644)
-        with build.open("a", encoding="utf-8") as f:
-            f.write(f"\nexports_files({json.dumps(missing)})\n")
-
-
-def linters_bzl(clang_tidy_config: str | None, ruff_config: str | None) -> str:
-    """clang-tidy with the module's own config, else score_cpp_policies' baseline, and ruff."""
-    # clang-tidy only finds configs above the linted file, so the baseline is passed explicitly.
-    config = (
-        f'configs = [Label("//:{clang_tidy_config}")]'
-        if clang_tidy_config
-        else 'global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")]'
-    )
-    ruff = f'[Label("//:{ruff_config}")]' if ruff_config else "[]"
-    return (
-        'load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")\n'
-        'load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")\n\n'
-        "# The defaults of score_cpp_policies' make_clang_tidy_aspect.\n"
-        "clang_tidy = lint_clang_tidy_aspect(\n"
-        '    binary = Label("@unified_llvm_toolchain//:clang-tidy"),\n'
-        f"    {config},\n"
-        "    lint_target_headers = True,\n"
-        "    angle_includes_are_system = True,\n"
-        ")\n\n"
-        "ruff = lint_ruff_aspect(\n"
-        '    binary = Label("@aspect_rules_lint//lint:ruff_bin"),\n'
-        f"    configs = {ruff},\n"
-        ")\n"
-    )
-
-
-def lint_query(module) -> str:
-    """C++, Rust and Python rule targets below the module's code root that are not testonly."""
-    selected = f'kind("^(cc|rust|py)_", {module.metadata.code_root_path}'
-    selected += "".join(f" - {target}" for target in module.metadata.exclude_test_targets) + ")"
-    return f"{selected} except attr(testonly, 1, {selected})"
-
-
-def lint_command(module, targets_file: Path) -> list[str]:
-    return [
-        "bazel",
-        "build",
-        "--lockfile_mode=update",
-        "--keep_going",
-        "--skip_incompatible_explicit_targets",
-        *(f"--config={config}" for config in module_configs(module)),
-        LLVM_TOOLCHAIN,
-        f"--extra_toolchains=@{SARIF_PARSER}//:all",
-        f"--aspects={','.join(LINT_ASPECTS)}",
-        # Only the SARIF reports, nothing else of the targets is built.
-        "--output_groups=rules_lint_machine",
-        "--@aspect_rules_lint//lint:fail_on_violation=false",
-        # score_cpp_policies' warning flags are GCC only, as in the modules' own clang-tidy configs.
-        "--features=-strict_warnings",
-        "--features=-warnings_as_errors",
-        "--features=-treat_warnings_as_errors",
-        f"--target_pattern_file={targets_file}",
-    ]
-
-
 def merge_lint_reports(reports: list[Path], module: str, workspace: Path) -> tuple[dict, int]:
     """One SARIF document with every non-empty run (and one run per tool), plus the non-SARIF count."""
     runs, tools, raw = [], set(), 0
@@ -721,25 +560,53 @@ def merge_lint_reports(reports: list[Path], module: str, workspace: Path) -> tup
     return {"version": "2.1.0", "runs": runs}, raw
 
 
-def lint(args: argparse.Namespace) -> int:
-    """Lint a module as root workspace with the central policies, like ``run`` with ref_int's versions."""
+def _target_module(args: argparse.Namespace):
     known = load_known_good(REF_INT / "known_good.json")
     module = known.modules["target_sw"].get(args.module)
     if module is None:
         sys.exit(f"{args.module} is not a target_sw module in known_good.json")
+    return known, module
+
+
+def _pinning_summary(pinned: dict, unpinned: list[str]) -> list[str]:
+    summary = [f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}"] if unpinned else []
+    return summary + [f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)"]
+
+
+def codeql(args: argparse.Namespace) -> int:
+    """Run the module's CodeQL target as root workspace, like ``run`` with ref_int's versions."""
+    known, module = _target_module(args)
     work = args.work_dir.resolve()
-    workspace, out, env, pinned, unpinned = _prepare_module(module, known, work, extra_deps=LINT_DEPS)
-    module_file = workspace / "MODULE.bazel"
-    if SARIF_PARSER not in module_file.read_text():
-        with module_file.open("a") as f:
-            f.write(SARIF_PARSER_EXTENSION)
-    clang_tidy_config, ruff_config = lint_config_files(workspace)
-    export_root_files(workspace, [name for name in (clang_tidy_config, ruff_config) if name])
-    package = workspace / LINT_PACKAGE
-    package.mkdir()
-    (package / "BUILD").write_text("", encoding="utf-8")
-    (package / "linters.bzl").write_text(linters_bzl(clang_tidy_config, ruff_config), encoding="utf-8")
-    shutil.copy(package / "linters.bzl", out / "linters.bzl")
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, work)
+    # Nested bazel calls of the analysis do not pass a lockfile mode, a module's own .bazelrc may set error.
+    with (work / f"{module.name}.overrides.bazelrc").open("a") as rc:
+        rc.write("common --lockfile_mode=update\n")
+
+    results = out / "codeql"
+    exit_code, _ = streamed(codeql_command(module, work / "bin" / "bazel", results), workspace, env)
+    sarif = results / f"{module.name}.sarif"
+    findings = 0
+    if sarif.is_file():
+        document = normalize_sarif(json.loads(sarif.read_text(encoding="utf-8")), module.name, workspace)
+        findings = sum(len(run.get("results", [])) for run in document.get("runs", []))
+        target = out / "static_analysis" / f"{module.name}.sarif"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(document) + "\n", encoding="utf-8")
+    else:
+        exit_code = exit_code or 1
+    summary = [f"## {module.name}: CodeQL exit code {exit_code}", "", f"- {findings} findings in the module"]
+    summary += _pinning_summary(pinned, unpinned)
+    integrity = results / "analysis_reports" / module.name / "database_integrity_report.md"
+    if integrity.is_file():
+        summary += ["", integrity.read_text(encoding="utf-8")]
+    append_to_step_summary("\n".join(summary) + "\n")
+    return exit_code
+
+
+def lint(args: argparse.Namespace) -> int:
+    """Build the SARIF reports of the module's lint config as root workspace, like ``run``."""
+    known, module = _target_module(args)
+    workspace, out, env, pinned, unpinned = _prepare_module(module, known, args.work_dir.resolve())
 
     query = bazel(["query", "--lockfile_mode=update", lint_query(module), "--output=label"], workspace, env)
     if query.returncode:
@@ -762,14 +629,10 @@ def lint(args: argparse.Namespace) -> int:
     )
     summary = [f"## {module.name}: lint exit code {exit_code}", ""]
     summary.append(f"- {len(targets)} targets, {len(reports)} reports, {raw} not in SARIF format")
-    clang_tidy = clang_tidy_config or "score_cpp_policies baseline only"
-    summary.append(f"- configs: .clang-tidy {clang_tidy}, ruff {ruff_config or 'none'}")
     summary += [
         f"- {tool}: {count} findings in the module (before de-duplication)" for tool, count in sorted(counts.items())
     ]
-    if unpinned:
-        summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
-    summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
+    summary += _pinning_summary(pinned, unpinned)
     append_to_step_summary("\n".join(summary) + "\n")
     return exit_code
 

@@ -6,7 +6,8 @@
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:003-export-aou-requirements.patch"
+                    "//patches/baselibs:003-export-aou-requirements.patch",
+                    "//patches/baselibs:004-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -43,7 +44,8 @@
                 "hash": "3b42d226c59b91690fb952a737a123ddb48b0a7d",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:002-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                    "//patches/communication:002-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+                    "//patches/communication:003-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -83,7 +85,8 @@
                 "bazel_patches": [
                     "//patches/persistency:003-undev-deps-for-root-module.patch",
                     "//patches/persistency:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/persistency:005-undev-integration-test-deps.patch"
+                    "//patches/persistency:005-undev-integration-test-deps.patch",
+                    "//patches/persistency:006-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
@@ -123,7 +126,10 @@
                         "//src/..."
                     ]
                 },
-                "version": "0.1.6"
+                "version": "0.1.6",
+                "bazel_patches": [
+                    "//patches/kyron:001-static-analysis-contract.patch"
+                ]
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
@@ -132,7 +138,8 @@
                     "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
                     "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/lifecycle:006-undev-cpp-policies.patch",
-                    "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch"
+                    "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch",
+                    "//patches/lifecycle:008-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -168,7 +175,8 @@
                     "//patches/logging:002-undev-component-test-deps.patch",
                     "//patches/logging:003-relative-verification-report-links.patch",
                     "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/logging:007-docs-drop-generated-dependency-pages.patch"
+                    "//patches/logging:007-docs-drop-generated-dependency-pages.patch",
+                    "//patches/logging:008-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -209,7 +217,8 @@
                 "version": "0.3.3",
                 "bazel_patches": [
                     "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/time:003-undev-rules-imagefs.patch"
+                    "//patches/time:003-undev-rules-imagefs.patch",
+                    "//patches/time:008-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -240,7 +249,8 @@
                     "//patches/config_management:001-expose-mw-com-config.patch",
                     "//patches/config_management:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/config_management:005-persistency-0.5-shared-kvs.patch",
-                    "//patches/config_management:006-config-daemon-remote-logging.patch"
+                    "//patches/config_management:006-config-daemon-remote-logging.patch",
+                    "//patches/config_management:007-static-analysis-contract.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",

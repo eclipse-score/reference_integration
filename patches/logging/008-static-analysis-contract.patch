@@ -1,0 +1,96 @@
+diff --git a/.bazelrc b/.bazelrc
+index e9c3f956..8b0e364a 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -156,3 +156,11 @@ build:banned-functions --host_copt=-Wno-unused-command-line-argument
+ # Unified LLVM source-based coverage (C++ + Rust), see quality/coverage/ and
+ # @score_coverage. Use: bazel coverage --config=llvm_cov //score/... --build_tests_only
+ import %workspace%/quality/coverage/coverage.bazelrc
++
++# Lint with the central S-CORE policies: bazel build --config=lint //...
++build:lint --aspects=//tools/lint:linters.bzl%clang_tidy_aspect,//tools/lint:linters.bzl%ruff_aspect,@score_rust_policies//clippy:linters.bzl%clippy_strict
++build:lint --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
++build:lint --extra_toolchains=@sarif_parser_toolchains//:all
++build:lint --features=-strict_warnings --features=-warnings_as_errors --features=-treat_warnings_as_errors
++build:lint --output_groups=+rules_lint_human
++build:lint --copt=-Wno-unused-command-line-argument --host_copt=-Wno-unused-command-line-argument
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 07e657b8..d14144b6 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -267,3 +267,10 @@ single_version_override(
+     module_name = "grpc-java",
+     version = "1.70.0",
+ )
++
++bazel_dep(name = "score_tools", version = "0.0.4", dev_dependency = True)
++
++# SARIF output of the lint aspects (--output_groups=+rules_lint_machine).
++lint_sarif = use_extension("@aspect_rules_lint//lint:extensions.bzl", "toolchains", dev_dependency = True)
++lint_sarif.sarif_parser()
++use_repo(lint_sarif, "sarif_parser_toolchains")
+diff --git a/quality/static_analysis/BUILD b/quality/static_analysis/BUILD
+new file mode 100644
+index 00000000..22f68436
+--- /dev/null
++++ b/quality/static_analysis/BUILD
+@@ -0,0 +1,21 @@
++# *******************************************************************************
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++# *******************************************************************************
++load("@score_tools//codeql:defs.bzl", "codeql_analysis")
++
++# CodeQL MISRA C++ analysis of a traced build: bazel run //quality/static_analysis:codeql
++codeql_analysis(
++    name = "codeql",
++    targets = ["//score/mw/log/..."],
++    exclude_testonly = True,
++    keep_going = True,
++)
+diff --git a/tools/lint/linters.bzl b/tools/lint/linters.bzl
+index f1290fce..593b09af 100644
+--- a/tools/lint/linters.bzl
++++ b/tools/lint/linters.bzl
+@@ -11,19 +11,26 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # *******************************************************************************
+ 
+-"""Clang-tidy linter configuration for score_logging."""
++"""Lint aspects of the central S-CORE policies."""
+ 
+ load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
+-load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect", "make_clang_tidy_test")
++load("@aspect_rules_lint//lint:lint_test.bzl", "lint_test")
++load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
+ 
+-clang_tidy_aspect = make_clang_tidy_aspect(
++# The baseline is passed explicitly: clang-tidy only finds configs above the linted file.
++clang_tidy_aspect = lint_clang_tidy_aspect(
+     binary = Label("@llvm_toolchain//:clang-tidy"),
+-    # Local .clang-tidy adds score_logging-specific tightenings on top of
+-    # the S-CORE baseline that make_clang_tidy_aspect pre-wires automatically.
+-    local_configs = [Label("//:.clang-tidy")],
++    global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")],
++    lint_target_headers = True,
++    angle_includes_are_system = True,
+ )
+ 
+-clang_tidy_test = make_clang_tidy_test(aspect = clang_tidy_aspect)
++clang_tidy_test = lint_test(aspect = clang_tidy_aspect)
++
++ruff_aspect = lint_ruff_aspect(
++    binary = Label("@aspect_rules_lint//lint:ruff_bin"),
++    configs = [],
++)
+ 
+ banned_functions_aspect = lint_clang_tidy_aspect(
+     binary = Label("@llvm_toolchain_coverage//:clang-tidy"),

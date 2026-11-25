@@ -18,17 +18,14 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
-    codeql_build_file,
+    codeql_command,
     combine_reports,
     count_testcases,
     coverage_args,
-    export_root_files,
     graph_modules,
     lcov_percentages,
     lint_command,
-    lint_config_files,
     lint_query,
-    linters_bzl,
     merge_lint_reports,
     normalize_lcov,
     normalize_sarif,
@@ -57,24 +54,6 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
-
-
-def test_codeql_build_file_keeps_module_configs_but_traces_with_llvm():
-    metadata = SimpleNamespace(
-        test_args=["--config=x86_64-linux", "--config=asan_ubsan_lsan", "--keep_going", "//score/..."],
-        langs=["cpp"],
-        code_root_path="//score/...",
-        exclude_test_targets=["//score/a:b_test"],
-    )
-    build = codeql_build_file(SimpleNamespace(metadata=metadata), "quality/coding-standards.yaml")
-    assert 'load("@score_tools//codeql:defs.bzl", "codeql_analysis")' in build
-    assert 'build_configs = ["x86_64-linux", "unified-base"],' in build
-    assert 'bazel_args = ["--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux"],' in build
-    assert 'coding_standards_config = "quality/coding-standards.yaml",' in build
-    assert 'targets = ["//score/...", "-//score/a:b_test"],' in build
-    assert "exclude_testonly = True," in build
-    assert "keep_going = True," in build
-    assert "coding_standards_config" not in codeql_build_file(SimpleNamespace(metadata=metadata), None)
 
 
 def test_normalize_sarif_rebases_module_files_into_external_namespace():
@@ -125,7 +104,7 @@ def _lint_module(**metadata):
         "code_root_path": "//score/...",
         "exclude_test_targets": ["//score/a:b_test"],
     }
-    return SimpleNamespace(metadata=SimpleNamespace(**(defaults | metadata)))
+    return SimpleNamespace(name="score_mod", metadata=SimpleNamespace(**(defaults | metadata)))
 
 
 def test_lint_query_selects_production_targets_of_all_languages():
@@ -134,45 +113,27 @@ def test_lint_query_selects_production_targets_of_all_languages():
     assert query == f"{selected} except attr(testonly, 1, {selected})"
 
 
-def test_lint_command_builds_only_the_sarif_reports_with_llvm(tmp_path):
+def test_codeql_command_runs_the_module_target_with_ref_int_platform_and_llvm(tmp_path):
+    command = codeql_command(_lint_module(), Path("/w/bin/bazel"), tmp_path)
+    assert command[:5] == ["bazel", "run", "--lockfile_mode=update", "//quality/static_analysis:codeql", "--"]
+    assert [arg for arg in command if arg.startswith("--build-config=")] == [
+        "--build-config=x86_64-linux",
+        "--build-config=unified-base",
+        "--build-config=unified-rust",
+    ]
+    assert "--bazel=/w/bin/bazel" in command
+    assert "--bazel-arg=--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux" in command
+    assert command[-2:] == [f"--output-dir={tmp_path}", "--output-prefix=score_mod"]
+
+
+def test_lint_command_builds_only_the_sarif_reports_of_the_module_lint_config(tmp_path):
     command = lint_command(_lint_module(), tmp_path / "targets.txt")
     assert command[:2] == ["bazel", "build"]
     configs = [arg for arg in command if arg.startswith("--config=")]
-    assert configs == ["--config=x86_64-linux", "--config=unified-base", "--config=unified-rust"]
-    assert "--extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux" in command
-    assert "--extra_toolchains=@sarif_parser_toolchains//:all" in command
-    assert "--output_groups=rules_lint_machine" in command
+    assert configs == ["--config=x86_64-linux", "--config=lint"]
+    assert command.index("--config=lint") < command.index("--output_groups=rules_lint_machine")
+    assert "--@aspect_rules_lint//lint:fail_on_violation=false" in command
     assert f"--target_pattern_file={tmp_path / 'targets.txt'}" in command
-
-
-def test_lint_config_files_need_a_root_package(tmp_path):
-    (tmp_path / ".clang-tidy").write_text("HeaderFilterRegex: 'score/'\n")
-    (tmp_path / "pyproject.toml").write_text("[tool.ruff]\nline-length = 120\n")
-    assert lint_config_files(tmp_path) == (None, None)
-    (tmp_path / "BUILD").write_text("")
-    assert lint_config_files(tmp_path) == (None, "pyproject.toml")
-    (tmp_path / ".clang-tidy").write_text("Checks: '-*'\n")
-    assert lint_config_files(tmp_path) == (".clang-tidy", "pyproject.toml")
-    (tmp_path / "ruff.toml").write_text("")
-    assert lint_config_files(tmp_path) == (".clang-tidy", "ruff.toml")
-
-
-def test_export_root_files_only_adds_missing_exports(tmp_path):
-    (tmp_path / "BUILD").write_text('exports_files(["pyproject.toml"])\n')
-    export_root_files(tmp_path, [".clang-tidy", "pyproject.toml"])
-    assert (tmp_path / "BUILD").read_text().endswith('\nexports_files([".clang-tidy"])\n')
-    export_root_files(tmp_path, [".clang-tidy"])
-    assert (tmp_path / "BUILD").read_text().count("exports_files") == 2
-
-
-def test_linters_bzl_uses_the_module_config_else_the_baseline():
-    bzl = linters_bzl(".clang-tidy", None)
-    assert 'configs = [Label("//:.clang-tidy")],' in bzl
-    assert "global_config" not in bzl
-    assert "configs = []," in bzl
-    baseline = linters_bzl(None, "ruff.toml")
-    assert 'global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")],' in baseline
-    assert 'configs = [Label("//:ruff.toml")],' in baseline
 
 
 def test_merge_lint_reports_keeps_module_findings_and_one_run_per_tool(tmp_path):
