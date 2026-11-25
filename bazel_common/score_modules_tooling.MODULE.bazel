@@ -39,6 +39,13 @@ git_override(
     remote = "https://github.com/eclipse-score/tools.git",
 )
 
+bazel_dep(name = "score_cpp_policies")
+git_override(
+    module_name = "score_cpp_policies",
+    commit = "c8fb812e85a971ac083b28219ce86d3f7a1cf9be",
+    remote = "https://github.com/eclipse-score/score_cpp_policies.git",
+)
+
 bazel_dep(name = "score_tooling")
 single_version_override(
     module_name = "score_tooling",

@@ -20,18 +20,9 @@ index e9c3f956..db2e33b9 100644
 +build:lint_sarif --output_groups=rules_lint_machine
 +build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 07e657b8..7981ad81 100644
+index 07e657b8..d14144b6 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -28,7 +28,7 @@ bazel_dep(name = "aspect_rules_lint", version = "2.5.0", dev_dependency = True)
- bazel_dep(name = "score_cpp_policies", version = "0.0.0", dev_dependency = True)
- git_override(
-     module_name = "score_cpp_policies",
--    commit = "b6551c217fbb0daf948b493c4ba69eb7fe8359a5",
-+    commit = "c8fb812e85a971ac083b28219ce86d3f7a1cf9be",
-     remote = "https://github.com/eclipse-score/score_cpp_policies.git",
- )
- 
 @@ -267,3 +267,10 @@ single_version_override(
      module_name = "grpc-java",
      version = "1.70.0",
