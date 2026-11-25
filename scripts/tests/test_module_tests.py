@@ -65,10 +65,11 @@ def _lint_module(**metadata):
     return SimpleNamespace(name="score_mod", metadata=SimpleNamespace(**(defaults | metadata)))
 
 
-def test_lint_query_selects_production_targets_of_all_languages():
+def test_lint_query_selects_production_targets_of_all_languages_without_manual_ones():
     query = lint_query(_lint_module())
     selected = 'kind("^(cc|rust|py)_", //score/... - //score/a:b_test)'
-    assert query == f"{selected} except attr(testonly, 1, {selected})"
+    manual = f'attr(tags, "[\\[ ]manual[,\\]]", {selected})'
+    assert query == f"{selected} except attr(testonly, 1, {selected}) except {manual}"
 
 
 def test_codeql_command_runs_the_module_target_with_ref_int_platform_and_llvm(tmp_path):

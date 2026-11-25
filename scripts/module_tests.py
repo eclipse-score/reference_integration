@@ -457,10 +457,11 @@ def codeql_command(module, wrapper: Path, results: Path) -> list[str]:
 
 
 def lint_query(module) -> str:
-    """C++, Rust and Python rule targets below the module's code root that are not testonly."""
+    """C++, Rust and Python rule targets below the module's code root that a wildcard build builds, without tests."""
     selected = f'kind("^(cc|rust|py)_", {module.metadata.code_root_path}'
     selected += "".join(f" - {target}" for target in module.metadata.exclude_test_targets) + ")"
-    return f"{selected} except attr(testonly, 1, {selected})"
+    manual = rf'attr(tags, "[\[ ]manual[,\]]", {selected})'
+    return f"{selected} except attr(testonly, 1, {selected}) except {manual}"
 
 
 def lint_command(module, targets_file: Path) -> list[str]:
@@ -543,8 +544,7 @@ def lint(args: argparse.Namespace) -> int:
     if query.returncode:
         sys.exit(f"bazel query for the lint targets of {module.name} failed")
     targets_file = out / "lint_targets.txt"
-    # Internal targets of macros, e.g. the sphinx venvs of docs_as_code's docs(), conflict when built alone.
-    targets = [label for label in query.stdout.split() if ".__internal__." not in label]
+    targets = query.stdout.split()
     targets_file.write_text("".join(f"{label}\n" for label in targets), encoding="utf-8")
     exit_code, _ = streamed(lint_command(module, targets_file), workspace, env)
 
