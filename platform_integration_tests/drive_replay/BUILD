@@ -40,6 +40,8 @@ py_itf_test(
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
     tags = [
+        # Record only this showcase's DLT traffic, not that of parallel tests.
+        "exclusive",
         "manual",
     ],
     target_compatible_with = select({

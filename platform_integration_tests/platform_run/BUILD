@@ -41,6 +41,9 @@ py_itf_test(
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
     tags = [
+        # DLT multicast is shared with other Docker targets on the host. A parallel
+        # showcase can otherwise contribute launch-manager messages to this test.
+        "exclusive",
         "manual",
     ],
     target_compatible_with = select({
