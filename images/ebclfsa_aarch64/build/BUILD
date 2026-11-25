@@ -10,20 +10,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
-genrule(
-    name = "extract-fastdev-image",
-    srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
-    outs = [
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-    ],
-    cmd = "tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic && ls -lah $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic > /tmp/foo",
-    visibility = [
-        "//visibility:public",
-    ],
-)
+load("@rules_pkg//pkg:deb.bzl", "pkg_deb")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("@score_os_images//ebclfsa_aarch64_prebuild:defs.bzl", "ebclfsa_aarch64_prebuild")
 
 pkg_tar(
     name = "crinit_config_tar",
@@ -43,31 +33,53 @@ pkg_tar(
     package_dir = "/usr/bin",
 )
 
-genrule(
-    name = "fastdev-image",
-    srcs = [
-        "//deploy:platform_tar",
-        "//showcases:showcases_pkg_tar",
-        ":extract-fastdev-image",
-        ":crinit_config_tar",
-        ":scripts_tar",
-        "build_image.sh",
-    ],
-    outs = [
-        "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-    ],
-    cmd = " \
-        $(location build_image.sh) \
-            $(RULEDIR) \
-            $(RULEDIR)/ebcl-qemuarm64 \
-            $(RULEDIR)/ebcl-qemuarm64-deployed \
-            $(location //deploy:platform_tar) \
-            $(location //showcases:showcases_pkg_tar) \
-            $(location :crinit_config_tar) \
-            $(location :scripts_tar) \
-    ",
-    visibility = [
-        "//visibility:public",
+pkg_deb(
+    name = "platform_deb",
+    architecture = "arm64",
+    data = "//deploy:platform_tar",
+    description = "S-CORE platform files for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-platform",
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "showcases_deb",
+    architecture = "arm64",
+    data = "//showcases:showcases_pkg_tar",
+    description = "S-CORE showcases for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-showcases",
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "crinit_config_deb",
+    architecture = "all",
+    data = ":crinit_config_tar",
+    description = "Crinit configuration for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-crinit-config",
+    replaces = ["ebclfsa-fastdev-crinit-getty"],
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "scripts_deb",
+    architecture = "all",
+    data = ":scripts_tar",
+    description = "Scripts for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-scripts",
+    version = "1.0.0",
+)
+
+ebclfsa_aarch64_prebuild(
+    base_image = "@ebclfsa_qemu_release_archive//file",
+    packages = [
+        ":crinit_config_deb",
+        ":platform_deb",
+        ":scripts_deb",
+        ":showcases_deb",
     ],
 )

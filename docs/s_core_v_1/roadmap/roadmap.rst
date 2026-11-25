@@ -14,10 +14,10 @@
 
 .. _v1_0_release_plan:
 
-S-CORE v1.0 Roadmap
-====================
+S-CORE v1.x Target
+==================
 
-This document describes the release planning for **S-CORE v1.0**, organized around the
+This document describes the scope of the release **S-CORE v1.x**, organized around the
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
 and covers **two overarching project goals**:
 
@@ -26,10 +26,14 @@ Feature Completeness
 
 Selected modules are fully implemented and tested.
 
-.. image:: ../../_assets/sw_arch_v_1.drawio.svg
-   :alt: S-CORE v1.0 Software Architecture
+.. figure:: ../../_assets/sw_arch_v_1.drawio.svg
+   :alt: S-CORE v1.x Software Architecture
    :align: center
-   :width: 100%
+   :width: 75%
+
+   S-CORE v1.x Software Architecture
+
+The following modules are in scope for S-CORE v1.x:
 
 .. list-table::
    :widths: 30 70
@@ -38,9 +42,7 @@ Selected modules are fully implemented and tested.
    * - Module
      - Notes
    * - `Baselibs <https://github.com/eclipse-score/baselibs>`__
-     - Base libraries (C++)
-   * - `Baselibs Rust <https://github.com/eclipse-score/baselibs>`__
-     - Base libraries (Rust)
+     - Base libraries (C++ and Rust)
    * - `Communication <https://github.com/eclipse-score/communication>`__
      - IPC / service-oriented communication
    * - `Logging <https://github.com/eclipse-score/logging>`__
@@ -77,7 +79,7 @@ Management
 ^^^^^^^^^^
 
 .. grid:: 2 4 4 4
-   :class-container: score-grid score-grid-compact
+   :class-container: score-grid
    :gutter: 4
 
    .. grid-item-card:: `Platform Management <https://eclipse-score.github.io/process_description/main/process_areas/platform_management/index.html>`__
@@ -181,26 +183,6 @@ Support
 
 .. note::
 
-   We will also work on the other process areas, but they are not in the main focus for S-CORE v1.0
+   We will also work on the other process areas, but they are not in the main focus for S-CORE v1.x
    (shown grayed out above).
-
-Status & Next Steps
--------------------
-
-.. raw:: html
-   :file: ../../_assets/pi_timeline_2026.drawio.svg
-
-.. raw:: html
-
-   <div style="margin-top: 2rem;"></div>
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   Planning Approach <planning_approach>
-   Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
-   Release Gate v0.9 — Implementation <pi2>
-   Release Gate v0.10 — Verification <pi3>
-   Release Gate v1.0 — Hardening & Release <pi4>
 

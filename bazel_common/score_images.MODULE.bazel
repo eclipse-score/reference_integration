@@ -49,12 +49,11 @@ use_repo(
 http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 http_file(
-    name = "eb_corbos_toolkit_fastdev_archive",
-    sha256 = "d84ffd33210a71a2fdd478fa25df3775f873a83d2fe158b56c5ed37da4265823",
-    url = "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta3/fastdev-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
+    name = "ebclfsa_qemu_release_archive",
+    downloaded_file_path = "score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
+    sha256 = "f9f0b775ea0a5ad05d72337068d9d2877bb5b9b135118c9760c0e55498293942",
+    urls = ["https://github.com/eclipse-score/os_images/releases/download/v0.0.4/score-image-trixie-ebclfsa-ebcl-qemuarm64.tar.gz"],
 )
-
-bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
 
 imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
 imagefs.toolchain(

@@ -23,9 +23,9 @@ def run_showcases(target, *names: str) -> str:
     """Run the named showcases via the showcase entrypoint and assert success.
 
     ``run_score`` in the showcase CLI prints a per-example completion banner
-    and exits 0 once every app of an example has been spawned and joined, so
-    both the exit code and the banner are checked to confirm the showcase ran
-    end-to-end on the platform. The CLI ignores the apps' exit codes, so the
+    once every app of an example has been spawned and exited with code 0; the
+    CLI exits non-zero if any app failed. Both the exit code and the banner are
+    checked to confirm the showcase ran end-to-end on the platform. The
     combined output is returned for app-specific checks.
     """
     selection = ",".join(names)
