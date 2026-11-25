@@ -25,7 +25,7 @@ launch_manager=
 stop() {
     [[ -n "$launch_manager" ]] || return 0
     kill -s TERM "$launch_manager" 2>/dev/null
-    wait 2>/dev/null
+    wait "$launch_manager" 2>/dev/null
 }
 trap stop EXIT
 
@@ -75,7 +75,7 @@ lists_both_apps() {
 if [[ -n "$(request 7690 /sovd/v1/version-info | head -1)" ]]; then
     echo "diagnostics_check: the diagnostics service is running"
 else
-    "$DATA/service.sh" >"$LOG_DIR/service.log" 2>&1 &
+    "$DATA/service.sh" --if-not-running >"$LOG_DIR/service.log" 2>&1 &
     launch_manager=$!
 fi
 
@@ -93,7 +93,14 @@ for _ in $(seq 1 120); do
     fi
     [[ -z "$token" ]] || answer="$(request 7690 /sovd/v1/apps GET "$token")"
     lists_both_apps "$answer" && break
-    [[ -z "$launch_manager" ]] || kill -0 "$launch_manager" 2>/dev/null || fail "the launch manager exited"
+    if [[ -n "$launch_manager" ]] && ! kill -0 "$launch_manager" 2>/dev/null; then
+        # Exit 75 means the boot service (or another check) already holds the lock.
+        wait "$launch_manager"
+        status=$?
+        launch_manager=
+        [[ "$status" == 75 ]] || fail "the launch manager exited (status $status)"
+        echo "diagnostics_check: waiting for the existing diagnostics service"
+    fi
     sleep 1
 done
 [[ -n "$answer" ]] || fail "the gateway does not answer on port 7690"

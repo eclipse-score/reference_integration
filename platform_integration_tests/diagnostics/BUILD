@@ -10,7 +10,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_python//python:defs.bzl", "py_test")
 load("@score_itf//:defs.bzl", "py_itf_test")
+
+py_test(
+    name = "diagnostics_orchestration_test",
+    size = "small",
+    srcs = [
+        "diagnostics_orchestration_test.py",
+        "test_diagnostics_showcase.py",
+    ],
+    imports = ["."],
+    main = "diagnostics_orchestration_test.py",
+    deps = ["//platform_integration_tests:showcase_runner"],
+)
 
 # Linux only: the OpenSOVD gateway and the CDA are not supported on QNX, so the test is skipped
 # (not failed) when the pit suite runs for QNX.

@@ -18,9 +18,66 @@ both with the ECU databases of the showcases, so it only passes against a platfo
 working binaries.
 """
 
-import shlex
+import http.client
+import json
+import logging
+import time
 
 from showcase_runner import run_showcases
+
+_LOGGER = logging.getLogger(__name__)
+_GATEWAY_PORT = 7690
+_SERVICE = "/showcases/data/diagnostics/service.sh"
+
+
+def _request(host: str, method: str, path: str, body: bytes | None = None, token: str = "") -> tuple[int, bytes]:
+    headers = {}
+    if body is not None:
+        headers["Content-Type"] = "application/json"
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    connection = http.client.HTTPConnection(host, _GATEWAY_PORT, timeout=5)
+    try:
+        connection.request(method, f"/sovd/v1/{path}", body=body, headers=headers)
+        response = connection.getresponse()
+        return response.status, response.read()
+    finally:
+        connection.close()
+
+
+def _check_gateway(host: str) -> None:
+    """Check authentication and forwarding to the CDA over the target network."""
+    status, body = _request(
+        host,
+        "POST",
+        "authorize",
+        b'{"client_id":"diagnostics-check","client_secret":"test"}',
+    )
+    if status != 200:
+        raise ValueError(f"authorization returned HTTP {status}")
+    authorization = json.loads(body)
+    token = authorization.get("access_token") if isinstance(authorization, dict) else None
+    if not isinstance(token, str) or not token:
+        raise ValueError("authorization returned no access token")
+    status, body = _request(host, "GET", "apps", token=token)
+    if status != 200 or b'"sovd2uds"' not in body or b'"score-diagnostics"' not in body:
+        raise ValueError(f"gateway apps returned HTTP {status}: {body!r}")
+
+
+def _wait_for_gateway(host, process, timeout=120):
+    deadline = time.monotonic() + timeout
+    error = "no response"
+    while True:
+        assert process.is_running(), f"Diagnostics service exited:\n{process.get_output()}"
+        try:
+            _check_gateway(host)
+            assert process.is_running(), f"Diagnostics service exited:\n{process.get_output()}"
+            return
+        except (OSError, http.client.HTTPException, ValueError) as exc:
+            error = str(exc)
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"Diagnostics gateway at {host}:{_GATEWAY_PORT} was not ready: {error}")
+        time.sleep(1)
 
 
 def _platform_run_passed(output: str) -> bool:
@@ -50,48 +107,17 @@ def test_diagnostics_stack(target):
 
 def test_diagnostics_and_platform_run_coexist(target):
     """The boot-time diagnostics manager and Platform Run share the same /tmp."""
-    script = r"""
-set -eu
-log=$(mktemp)
-/showcases/data/diagnostics/service.sh >"$log" 2>&1 &
-diagnostics_pid=$!
-cleanup() {
-    status=$?
-    kill -s TERM "$diagnostics_pid" 2>/dev/null || true
-    wait "$diagnostics_pid" 2>/dev/null || true
-    if [ "$status" -ne 0 ]; then cat "$log"; fi
-    rm -f "$log"
-    exit "$status"
-}
-trap cleanup EXIT
-
-# Wait for the existing gateway before invoking check.sh, so the check does
-# not start a second service while this one is still coming up.
-ready=
-for _ in $(seq 1 120); do
-    kill -0 "$diagnostics_pid"
-    if timeout 3 bash -c '
-        exec 3<>/dev/tcp/127.0.0.1/7690
-        printf "GET /sovd/v1/version-info HTTP/1.0\r\nHost: localhost\r\n\r\n" >&3
-        read -r status <&3
-        [[ "$status" == HTTP/* ]]
-    ' 2>/dev/null; then
-        ready=1
-        break
-    fi
-    sleep 1
-done
-[ -n "$ready" ]
-/showcases/data/diagnostics/check.sh
-kill -0 "$diagnostics_pid"
-/showcases/bin/cli --examples='S-CORE Platform Run'
-kill -0 "$diagnostics_pid"
-/showcases/data/diagnostics/check.sh
-kill -0 "$diagnostics_pid"
-"""
-    exit_code, out = target.execute(f"bash -c {shlex.quote(script)}")
-    output = out.decode(errors="replace")
-    assert exit_code == 0, f"Coexistence check failed ({exit_code}):\n{output}"
-    assert _platform_run_passed(output), output
-    assert output.count("diagnostics_check: PASSED") == 2, output
-    assert "diagnostics_check: FAILED" not in output, output
+    host = target.get_ip()
+    process = target.execute_async(_SERVICE, args=["--if-not-running"])
+    failed = True
+    try:
+        _wait_for_gateway(host, process)
+        output = run_showcases(target, "S-CORE Platform Run")
+        assert _platform_run_passed(output), output
+        _wait_for_gateway(host, process)
+        failed = False
+    finally:
+        if process.is_running():
+            process.stop()
+        if failed:
+            _LOGGER.error("Diagnostics service output:\n%s", process.get_output())

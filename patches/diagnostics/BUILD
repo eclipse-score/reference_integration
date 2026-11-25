@@ -10,3 +10,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
+load(":opensovd_build_stamp_test.bzl", "opensovd_build_stamp_test")
+
+alias(
+    name = "opensovd_stamp_env",
+    actual = "@opensovd_build_stamp//:stamp.env",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "opensovd_commit_date",
+    actual = "@opensovd_build_stamp//:commit_date.txt",
+    visibility = ["//visibility:public"],
+)
+
+opensovd_build_stamp_test(name = "opensovd_build_stamp_test")

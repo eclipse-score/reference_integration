@@ -19,6 +19,7 @@ from types import SimpleNamespace
 
 import pytest
 
+# Outside Bazel, add the directory containing prepare.py before importing it.
 sys.path.insert(0, str(Path(__file__).resolve().parent / "build"))
 import prepare  # noqa: E402
 

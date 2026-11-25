@@ -70,7 +70,7 @@ the platform was built from; the showcase `Platform Version Check` fails
 unless the platform provides it and reports the version the showcases were
 built for.
 
-The OpenSOVD gateway (the one of `inc_diagnostics`, which forwards to the CDA when `SOVD_UPSTREAM_URL` is set) and the classic diagnostic adapter (CDA) of `inc_diagnostics`
+The OpenSOVD gateway (the one of `diagnostics`, which forwards to the CDA when `SOVD_UPSTREAM_URL` is set) and the classic diagnostic adapter (CDA) of `diagnostics`
 (`//deploy/diagnostics`) are deployed as binaries only. Their configuration and the ECU
 databases are test data of the CDA's ECU simulator, so they belong to the showcase
 `Diagnostics Stack` (`//showcases/diagnostics`, installed in `/showcases/data/diagnostics`), which
