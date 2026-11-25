@@ -77,9 +77,6 @@ jobs:
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
           bazel build --lockfile_mode=error --config qnx-x86_64 //images/qnx_x86_64:image
-      - name: Run integration tests
-        run: |
-          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //feature_integration_tests/itf
       - name: Run platform integration tests
         run: |
           bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //platform_integration_tests:pit

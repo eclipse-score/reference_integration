@@ -2,6 +2,8 @@
 
 This directory contains Feature Integration Tests for the S-CORE project. It includes Python test cases that orchestrate test scenarios implemented in Rust and C++ to validate that features work together correctly.
 
+Feature Integration Tests (FIT) answer **"does the feature behave correctly?"**: white-box tests against the module APIs, currently on the Linux host only. They check specific behaviour in depth and verify feature requirements. Whether the integrated platform runs on the real images is checked by the Platform Integration Tests in [`platform_integration_tests/`](../platform_integration_tests); see [Step 6 of the integration process](../docs/integration_process/step_6_integration_tests.rst).
+
 ## Structure
 
 - `test_cases/` — Python-based integration test cases
@@ -13,11 +15,7 @@ This directory contains Feature Integration Tests for the S-CORE project. It inc
 - `test_scenarios/` — Test scenario implementations
   - `rust/` — Rust-based test scenarios
   - `cpp/` — C++-based test scenarios
-- `itf/` — Integration Test Framework tests (run on QEMU targets)
-  - `test_showcases.py` — Showcase validation tests
-  - `test_remote_logging.py` — Remote logging tests
-  - `test_ssh.py` — SSH connectivity tests
-- `configs/` — Configuration files for ITF execution (DLT, QEMU bridge, etc.)
+- `configs/` — Configuration files for ITF execution (DLT, QEMU bridge, etc.), used by the platform integration tests
 
 ## Running Tests
 
@@ -46,14 +44,6 @@ bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios --
 
 # Run all FIT tests (streaming output)
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
-```
-
-### ITF Tests (QEMU-based)
-
-ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
-
-```sh
-bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf
 ```
 
 ### Test Scenarios

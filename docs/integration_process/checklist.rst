@@ -41,7 +41,9 @@ Use this as a final review before opening your pull request:
    * - 5 · Component tests
      - *not available yet — to be introduced.*
    * - 6 · Integration tests
-     - tests added under ``feature_integration_tests/itf``.
+     - platform integration test for the showcase under
+       ``platform_integration_tests/<module>`` (in the ``pit`` suite); feature
+       integration tests under ``feature_integration_tests`` where needed.
    * - 7 · Reporting
      - Rust coverage generated; verification/status tables updated.
    * - 8 · Code quality

@@ -61,3 +61,54 @@ py_itf_test(
         "//platform_integration_tests:showcase_runner",
     ],
 )
+
+# Separate target (own container or VM): the datarouter it starts would clash
+# with the one the logging showcase starts.
+py_itf_test(
+    name = "remote_logging",
+    srcs = ["test_remote_logging.py"],
+    args = select(
+        {
+            "//platform_integration_tests:config_linux_x86_64": [
+                "--dlt-config=$(location //feature_integration_tests/configs:dlt_config_x86_64.json)",
+                "--docker-image-bootstrap=$(location //images/linux_x86_64:image_load)",
+                "--docker-image=score_showcases:latest",
+            ],
+            "//platform_integration_tests:config_qnx_x86_64": [
+                "--dlt-config=$(location //feature_integration_tests/configs:dlt_config_qnx_x86_64.json)",
+                "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
+                "--qemu-image=$(location //images/qnx_x86_64:image)",
+            ],
+        },
+        no_match_error = "Unsupported platform",
+    ),
+    data = select({
+        "//platform_integration_tests:config_linux_x86_64": [
+            "//feature_integration_tests/configs:dlt_config_x86_64.json",
+            "//images/linux_x86_64:image_load",
+        ],
+        "//platform_integration_tests:config_qnx_x86_64": [
+            "//feature_integration_tests/configs:dlt_config_qnx_x86_64.json",
+            "//feature_integration_tests/configs:qemu_bridge_config.json",
+            "//images/qnx_x86_64:image",
+        ],
+    }) + ["conftest.py"],
+    plugins = select(
+        {
+            "//platform_integration_tests:config_linux_x86_64": [
+                "@score_itf//score/itf/plugins:dlt_plugin",
+                "@score_itf//score/itf/plugins:docker_plugin",
+            ],
+            "//platform_integration_tests:config_qnx_x86_64": [
+                "@score_itf//score/itf/plugins:dlt_plugin",
+                "@score_itf//score/itf/plugins:qemu_plugin",
+            ],
+        },
+        no_match_error = "Unsupported platform",
+    ) + [
+        "@score_itf//score/itf/plugins:attribute_plugin",
+    ],
+    tags = [
+        "manual",
+    ],
+)
