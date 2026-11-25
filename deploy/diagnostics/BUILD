@@ -34,9 +34,11 @@ sh_test(
     args = [
         "$(location @score_diagnostics//score/opensovd-core:opensovd-gateway)",
         "$(location //:MODULE.bazel)",
+        "$(location //patches/diagnostics:opensovd_commit_date)",
     ],
     data = [
         "//:MODULE.bazel",
+        "//patches/diagnostics:opensovd_commit_date",
         "@score_diagnostics//score/opensovd-core:opensovd-gateway",
     ],
 )

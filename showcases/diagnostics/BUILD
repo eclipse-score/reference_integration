@@ -56,6 +56,19 @@ py_test(
     ],
 )
 
+py_test(
+    name = "diagnostics_service_test",
+    srcs = ["diagnostics_service_test.py"],
+    args = [
+        "$(location :check.sh)",
+        "$(location :service.sh)",
+    ],
+    data = [
+        ":check.sh",
+        ":service.sh",
+    ],
+)
+
 # Showcase for the OpenSOVD gateway and the classic diagnostic adapter (CDA) that the platform
 # deploys in /usr/bin/diagnostics. The ECU databases are test data (the databases of the CDA's ECU
 # simulator), so they are part of the showcases and not of the platform.

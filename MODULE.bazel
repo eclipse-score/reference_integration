@@ -114,9 +114,19 @@ git_override(
 )
 
 bazel_dep(name = "opensovd_core", version = "0.0.0")
+
+opensovd_commit = "f61eeeb4133e5c5a7c3541861489f12e306e4ee4"
+
+opensovd_build_stamp = use_repo_rule("//patches/diagnostics:opensovd_build_stamp.bzl", "opensovd_build_stamp")
+
+opensovd_build_stamp(
+    name = "opensovd_build_stamp",
+    commit = opensovd_commit,
+)
+
 git_override(
     module_name = "opensovd_core",
-    commit = "f61eeeb4133e5c5a7c3541861489f12e306e4ee4",
+    commit = opensovd_commit,
     patch_strip = 1,
     patches = ["//patches/diagnostics:opensovd-core-build-stamp.patch"],
     remote = "https://github.com/eclipse-opensovd/opensovd-core.git",
