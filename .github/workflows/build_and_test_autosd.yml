@@ -132,6 +132,12 @@ jobs:
           # Workaround: config_daemon runs forever, so run all showcases except it
           # (CLI reads *.score.json from SCORE_CLI_INIT_DIR). Drop once the daemon exits on its own.
           sshcmd 'cp -a /showcases /tmp/showcases && grep -rl --include="*.score.json" config_daemon /tmp/showcases | xargs rm -f'
+          # Cross-arch guests run under TCG emulation, too slow for the 50 ms health-monitoring deadlines of simple_lifecycle.
+          if [[ "${{ matrix.target }}" != "$(uname -m)" ]]; then
+            sshcmd 'find /tmp/showcases -name simple_lifecycle.score.json -delete'
+          fi
+          # /data (deploy contract: writable storage) is read-only in the bootc image; QNX maps it to a RAM disk as well.
+          sshcmd 'mount -t tmpfs tmpfs /data'
           sshcmd 'SCORE_CLI_INIT_DIR=/tmp/showcases timeout 900 /tmp/showcases/bin/cli --examples all'
           sshcmd 'rm -f /tmp/score_showcases_autosd_latest.oci'
         working-directory: ./images/autosd

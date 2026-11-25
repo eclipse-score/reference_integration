@@ -51,9 +51,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_kyron")
-single_version_override(
+git_override(
     module_name = "score_kyron",
-    version = "0.1.6",
+    commit = "85219c4d71e8ec33297534b63143b042f1a41818",
+    remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle")
