@@ -1,0 +1,556 @@
+..
+   # *******************************************************************************
+   # Copyright (c) 2026 Contributors to the Eclipse Foundation
+   #
+   # See the NOTICE file(s) distributed with this work for additional
+   # information regarding copyright ownership.
+   #
+   # This program and the accompanying materials are made available under the
+   # terms of the Apache License Version 2.0 which is available at
+   # https://www.apache.org/licenses/LICENSE-2.0
+   #
+   # SPDX-License-Identifier: Apache-2.0
+   # *******************************************************************************
+
+message_passing_safety_analysis
+===============================
+
+Overview
+--------
+
+.. list-table::
+   :header-rows: 1
+
+   * - Failure Mode
+     - Guidewords
+     - ASIL
+     - Interface
+   * - :ref:`IpcChannelUnavailable <safety-analysis-messagepassing-ipcchannelunavailable>`
+     - ``LossOfFunction``, ``PartialFunction``, ``Corrupted``, ``UnintendedFunction``, ``TooEarly``, ``TooLate``
+     - B
+     - 
+   * - :ref:`MessageNotDeliveredCorrectly <safety-analysis-messagepassing-messagenotdeliveredcorrectly>`
+     - ``LossOfFunction``, ``PartialFunction``, ``Corrupted``
+     - B
+     - 
+   * - :ref:`NotificationNotDelivered <safety-analysis-messagepassing-notificationnotdelivered>`
+     - ``LossOfFunction``, ``PartialFunction``, ``Corrupted``, ``TooLate``, ``UnintendedFunction``
+     - B
+     - 
+   * - :ref:`ServerMessageHandlingFailure <safety-analysis-messagepassing-servermessagehandlingfailure>`
+     - ``LossOfFunction``, ``UnintendedFunction``, ``TooLate``
+     - B
+     - 
+   * - :ref:`MessageTimingViolated <safety-analysis-messagepassing-messagetimingviolated>`
+     - ``TooLate``
+     - B
+     - 
+   * - :ref:`IpcApiMisuseOrLifecycleViolation <safety-analysis-messagepassing-ipcapimisuseorlifecycleviolation>`
+     - ``TooEarly``, ``UnintendedFunction``
+     - B
+     - 
+   * - :ref:`ConnectionContextDataWrong <safety-analysis-messagepassing-connectioncontextdatawrong>`
+     - ``Corrupted``, ``LossOfFunction``, ``PartialFunction``
+     - B
+     - 
+   * - :ref:`StateMachineError <safety-analysis-messagepassing-statemachineerror>`
+     - ``Wrong``, ``LossOfFunction``
+     - B
+     - 
+
+
+Failure Modes
+-------------
+
+.. dropdown:: MessagePassing.IpcChannelUnavailable
+   :name: safety-analysis-messagepassing-ipcchannelunavailable
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`LossOfFunction` :bdg-info:`PartialFunction` :bdg-info:`Corrupted` :bdg-info:`UnintendedFunction` :bdg-info:`TooEarly` :bdg-info:`TooLate`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         Clients cannot send or receive messages.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         The IPC channel between client and server cannot be established or maintained
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: Server factory queue size configured below the required minimum
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 26
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Unintended RequestDisconnect drops a live channel
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 30
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Client cannot connect to server at runtime
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 29
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Server not accepting connections at runtime
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 28
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Startup arguments missing or incorrect
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Duplicate Server Name
+
+         Source: :ref:`fta_ipc_channel_unavailable.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml>`, line 25
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.MessageNotDeliveredCorrectly
+   :name: safety-analysis-messagepassing-messagenotdeliveredcorrectly
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`LossOfFunction` :bdg-info:`PartialFunction` :bdg-info:`Corrupted`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         The receiver processes no data, incomplete data, or incorrect data; messages may also be routed to an unintended server instance. Application behavior may be incorrect or a safety goal may be violated.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         A message sent via the IPC channel is not, only partially with corrupted content delivered.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: Message exceeds configured max\_send\_size or max\_reply\_size
+
+         Source: :ref:`fta_message_not_delivered_correctly.puml <safety-analysis-message-passing-fta-diagram-fta-message-not-delivered-correctly-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Send queue capacity exhausted or configured as zero
+
+         Source: :ref:`fta_message_not_delivered_correctly.puml <safety-analysis-message-passing-fta-diagram-fta-message-not-delivered-correctly-puml>`, line 25
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: OS IPC transport failure not detected or handled
+
+         Source: :ref:`fta_message_not_delivered_correctly.puml <safety-analysis-message-passing-fta-diagram-fta-message-not-delivered-correctly-puml>`, line 22
+
+         **DummyAssessment** :bdg-warning:`ASIL B` :bdg-secondary:`Not applicable`
+
+         Dummy placeholder. No assessment performed.
+
+      .. grid-item-card:: Invalid buffer or size argument passed to SendWaitReply
+
+         Source: :ref:`fta_message_not_delivered_correctly.puml <safety-analysis-message-passing-fta-diagram-fta-message-not-delivered-correctly-puml>`, line 23
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.NotificationNotDelivered
+   :name: safety-analysis-messagepassing-notificationnotdelivered
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`LossOfFunction` :bdg-info:`PartialFunction` :bdg-info:`Corrupted` :bdg-info:`TooLate` :bdg-info:`UnintendedFunction`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         The client misses an asynchronous server event or acts on incomplete, corrupted, stale, or spurious notification data; application behavior may be incorrect or a safety goal may be violated.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         A server-initiated notification is not, only partially, delayed, with corrupted content or when not intended delivered.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: Client notification callback not registered via Start
+
+         Source: :ref:`fta_notification_not_delivered.puml <safety-analysis-message-passing-fta-diagram-fta-notification-not-delivered-puml>`, line 25
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Notification dropped because max\_queued\_notifies is zero or exhausted
+
+         Source: :ref:`fta_notification_not_delivered.puml <safety-analysis-message-passing-fta-diagram-fta-notification-not-delivered-puml>`, line 22
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Notification exceeds configured max\_notify\_size and is rejected
+
+         Source: :ref:`fta_notification_not_delivered.puml <safety-analysis-message-passing-fta-diagram-fta-notification-not-delivered-puml>`, line 23
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: OS IPC transport failure on the notification path
+
+         Source: :ref:`fta_notification_not_delivered.puml <safety-analysis-message-passing-fta-diagram-fta-notification-not-delivered-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.ServerMessageHandlingFailure
+   :name: safety-analysis-messagepassing-servermessagehandlingfailure
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`LossOfFunction` :bdg-info:`UnintendedFunction` :bdg-info:`TooLate`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         Request message is silently dropped or never answered; the client's SendWaitReply call blocks or times out, stalling potential safety-relevant communication.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         Server-side message or connection handler fails to process a received message or to produce a required reply.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: Message handler returns an error that is not propagated to the client
+
+         Source: :ref:`fta_server_message_handling_failure.puml <safety-analysis-message-passing-fta-diagram-fta-server-message-handling-failure-puml>`, line 23
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Message handler does not call Reply within OnMessageSentWithReply
+
+         Source: :ref:`fta_server_message_handling_failure.puml <safety-analysis-message-passing-fta-diagram-fta-server-message-handling-failure-puml>`, line 22
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Message callback or connection handler not registered at StartListening
+
+         Source: :ref:`fta_server_message_handling_failure.puml <safety-analysis-message-passing-fta-diagram-fta-server-message-handling-failure-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.MessageTimingViolated
+   :name: safety-analysis-messagepassing-messagetimingviolated
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`TooLate`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         FTTI violations may occur on safety-relevant communication paths.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         A message or reply is delivered outside of the specified timing bounds required by the application.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: sync\_first\_connect connection established from within a callback causes deadlock
+
+         Source: :ref:`fta_message_timing_violated.puml <safety-analysis-message-passing-fta-diagram-fta-message-timing-violated-puml>`, line 23
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: OS scheduling or IPC queue delay not bounded by timing supervision
+
+         Source: :ref:`fta_message_timing_violated.puml <safety-analysis-message-passing-fta-diagram-fta-message-timing-violated-puml>`, line 22
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.IpcApiMisuseOrLifecycleViolation
+   :name: safety-analysis-messagepassing-ipcapimisuseorlifecycleviolation
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`TooEarly` :bdg-info:`UnintendedFunction`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         Undefined behavior, silent message drop, or application crash; unexpected messages may corrupt application-level protocol state.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         An IPC operation is invoked at the wrong lifecycle stage or outside its valid call context.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: RequestDisconnect invoked outside a valid call context
+
+         Source: :ref:`fta_ipc_api_misuse_or_lifecycle_violation.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-api-misuse-or-lifecycle-violation-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Send or reply triggered outside intended call flow
+
+         Source: :ref:`fta_ipc_api_misuse_or_lifecycle_violation.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-api-misuse-or-lifecycle-violation-puml>`, line 23
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: API invoked before lifecycle initialization completes
+
+         Source: :ref:`fta_ipc_api_misuse_or_lifecycle_violation.puml <safety-analysis-message-passing-fta-diagram-fta-ipc-api-misuse-or-lifecycle-violation-puml>`, line 22
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.ConnectionContextDataWrong
+   :name: safety-analysis-messagepassing-connectioncontextdatawrong
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`Corrupted` :bdg-info:`LossOfFunction` :bdg-info:`PartialFunction`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         The server makes access control or application logic decisions based on wrong context data; the client may be incorrectly granted or denied access, or receive incorrect responses, potentially violating safety goals.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         Identity or cached context data associated with a server connection is absent, incomplete, or incorrect.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: Client Identity wrong or swapped
+
+         Source: :ref:`fta_connection_context_data_wrong.puml <safety-analysis-message-passing-fta-diagram-fta-connection-context-data-wrong-puml>`, line 24
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Client Identitiy incomplete or empty
+
+         Source: :ref:`fta_connection_context_data_wrong.puml <safety-analysis-message-passing-fta-diagram-fta-connection-context-data-wrong-puml>`, line 25
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Connect callback returns wrong data
+
+         Source: :ref:`fta_connection_context_data_wrong.puml <safety-analysis-message-passing-fta-diagram-fta-connection-context-data-wrong-puml>`, line 29
+
+         :bdg-danger:`Not assessed`
+
+      .. grid-item-card:: Connect callback returns null or incomplete data
+
+         Source: :ref:`fta_connection_context_data_wrong.puml <safety-analysis-message-passing-fta-diagram-fta-connection-context-data-wrong-puml>`, line 30
+
+         :bdg-danger:`Not assessed`
+
+.. dropdown:: MessagePassing.StateMachineError
+   :name: safety-analysis-messagepassing-statemachineerror
+
+   .. grid:: 2
+      :gutter: 3
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-info:`Wrong` :bdg-info:`LossOfFunction`
+
+      .. grid-item::
+         :class: sd-text-center
+
+         :bdg-warning:`ASIL B`
+
+      .. grid-item-card:: Failure Effect
+
+         Application logic based on connection state makes incorrect decisions; error recovery paths may be triggered incorrectly or missed entirely.
+
+   .. grid:: 1
+
+      .. grid-item-card:: Description
+
+         GetState or GetStopReason returns an incorrect lifecycle state that does not match the actual connection state.
+
+   .. rubric:: Root Causes
+
+   .. grid:: 1
+
+      .. grid-item-card:: State machine transitions not covered by verification
+
+         Source: :ref:`fta_state_machine_error.puml <safety-analysis-message-passing-fta-diagram-fta-state-machine-error-puml>`, line 22
+
+         :bdg-danger:`Not assessed`
+
+Fault Trees
+-----------
+
+.. _safety-analysis-message-passing-fta-diagram-fta-connection-context-data-wrong-puml:
+
+fta_connection_context_data_wrong.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_connection_context_data_wrong.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-ipc-api-misuse-or-lifecycle-violation-puml:
+
+fta_ipc_api_misuse_or_lifecycle_violation.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_ipc_api_misuse_or_lifecycle_violation.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-ipc-channel-unavailable-puml:
+
+fta_ipc_channel_unavailable.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_ipc_channel_unavailable.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-message-not-delivered-correctly-puml:
+
+fta_message_not_delivered_correctly.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_message_not_delivered_correctly.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-message-timing-violated-puml:
+
+fta_message_timing_violated.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_message_timing_violated.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-notification-not-delivered-puml:
+
+fta_notification_not_delivered.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_notification_not_delivered.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-server-message-handling-failure-puml:
+
+fta_server_message_handling_failure.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_server_message_handling_failure.puml
+
+.. _safety-analysis-message-passing-fta-diagram-fta-state-machine-error-puml:
+
+fta_state_machine_error.puml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml:: fta_state_machine_error.puml
+
+Safety Measures
+---------------
+
+.. grid:: 1
+
+   .. grid-item-card::
+
+      **OsIpcFaultHandling** :bdg-success:`Control Measure` :bdg-warning:`ASIL B` :bdg-light:`v1` :bdg-warning:`Not in an assessment`
+
+      The component shall detect OS IPC transport failures by checking the return value of every OS call.
+
+   .. grid-item-card::
+
+      **SendBufferArgumentValidation** :bdg-success:`Control Measure` :bdg-warning:`ASIL B` :bdg-light:`v1` :bdg-warning:`Not in an assessment`
+
+      The component shall validate all arguments of Send, SendWaitReply, and SendWithCallback before any IPC operation is initiated.
+
+   .. grid-item-card::
+
+      **BE_MessageTooBig** :bdg-success:`Control Measure` :bdg-warning:`ASIL B` :bdg-light:`v1` :bdg-warning:`Not in an assessment`
+
+      The component shall enforce the configured max_send_size, max_reply_size, and max_notify_size limits on every client send path and every server Reply and Notify path.
+
+   .. grid-item-card::
+
+      **BE_SendQueueExhausted** :bdg-success:`Control Measure` :bdg-warning:`ASIL B` :bdg-light:`v1` :bdg-warning:`Not in an assessment`
+
+      The component shall use a pre-allocated, bounded pool for asynchronous client send messages and return an error when the pool is exhausted without blocking or silently dropping the message.
+

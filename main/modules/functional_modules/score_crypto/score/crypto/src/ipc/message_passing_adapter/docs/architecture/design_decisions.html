@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Design Decisions &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/score.css?v=5737673c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/score_needs.css?v=6a6a7ab0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/score_design.css?v=f381fa98" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css?v=89f02737" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../../../../../../../../../_static/design-tabs.js?v=fcb327ea"></script>
+    <script src="../../../../../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/functional_modules/score_crypto/score/crypto/src/ipc/message_passing_adapter/docs/architecture/design_decisions';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="Message-Passing Adapter Architecture" href="message_passing_adapter.html" />
+    <link rel="prev" title="IPC Message Passing Adapter Component Architecture Documentation" href="component_architecture.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../../../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../../../../../../_static/language_data.js"></script>
+    <script src="../../../../../../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../../../../_static/Eclipse-S-CORE-colour-horizontal.png" class="logo__image only-light" alt="Eclipse S-CORE documentation - Home"/>
+    <img src="../../../../../../../../../../_static/Eclipse-S-CORE-dark.png" class="logo__image only-dark pst-js-only" alt="Eclipse S-CORE documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../../../../../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../s_core_v_1/roadmap/roadmap.html">
+    S-CORE v1.x
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../../../../../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../s_core_v_1/roadmap/roadmap.html">
+    S-CORE v1.x
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../../../../../../index.html">Functional Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_persistency/index.html">Persistency Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_kyron/index.html">Kyron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_time/index.html">time_daemon Documentation</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../../../../../index.html">Crypto Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../docs/features/index.html">Crypto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../docs/module/index.html">Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../docs/verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../../../../../../../docs/components/index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4 current active"><a class="reference internal" href="../../../../../../../crypto/components/crypto/index.html">Crypto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../crypto/components/cryptoki/index.html">Cryptoki</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../crypto/components/pqc_provider/index.html">PQC Provider Component</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../score_platform/index.html">S-CORE Platform Documentation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../process_methods_tools/index.html">Process, Methods, and Tools</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../../../index.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../../index.html" class="nav-link">Functional Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../index.html" class="nav-link">Crypto Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../docs/components/index.html" class="nav-link">Components</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../crypto/components/crypto/index.html" class="nav-link">Crypto</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../../../crypto/components/crypto/architecture/index.html" class="nav-link">Component Architecture</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../docs/index.html" class="nav-link">Crypto IPC Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">IPC Message Passing Adapter</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">IPC Message Passing Adapter Architecture</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Design Decisions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="design-decisions">
+<h1>Design Decisions<a class="headerlink" href="#design-decisions" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-b2bd30ff">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__send_notify_ipc_interaction">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Send and Notify Completion</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Use Send for non-blocking request submission and Notify for the operation result or a negative server-side submission result.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">affects: <span class="affects"><span><a class="reference internal" href="component_architecture.html#comp__ipc_message_passing_adapter" title="dec_rec__crypto__send_notify_ipc_interaction">comp__ipc_message_passing_adapter</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__send_notify_ipc_interaction" title="dec_rec__crypto__send_notify_ipc_interaction">dec_rec__crypto__send_notify_ipc_interaction</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The message-passing adapter uses a non-blocking <code class="docutils literal notranslate"><span class="pre">Send</span></code> request followed by a
+point-to-point <code class="docutils literal notranslate"><span class="pre">Notify</span></code> message containing either the operation result or a
+negative result when server-side validation or work-queue submission fails.</p>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading">#</a></h2>
+<p>Using LoLa Message Passing, the selected <code class="docutils literal notranslate"><span class="pre">Send</span></code> path avoids the per-connection
+REQUEST/REPLY serialization window. A client process may have many threads
+issuing independent operations, and the server must be able to process those
+operations concurrently.</p>
+<p>Using a single long-running request callback would keep the shared connection
+occupied for the duration of the cryptographic operation. The selected
+communication model returns from the <code class="docutils literal notranslate"><span class="pre">Send</span></code> callback after validation and
+work-queue submission, then performs the operation in a worker and sends the
+terminal result with <code class="docutils literal notranslate"><span class="pre">Notify</span></code>. The client uses an application-level timeout;
+it does not wait indefinitely inside the IPC library.</p>
+</section>
+<section id="decision">
+<h2>Decision<a class="headerlink" href="#decision" title="Link to this heading">#</a></h2>
+<p>The message-passing interaction is defined as follows:</p>
+<ol class="arabic simple">
+<li><p>The client assigns a unique non-zero <code class="docutils literal notranslate"><span class="pre">request_id</span></code>, inserts a pending-call
+record, and calls <code class="docutils literal notranslate"><span class="pre">Send</span></code> with the FlatBuffer <code class="docutils literal notranslate"><span class="pre">ControlRequest</span></code>.</p></li>
+<li><p>The server validates the request and copies the complete request into the
+application work queue. If validation or queue submission fails, the server
+sends a negative <code class="docutils literal notranslate"><span class="pre">Notify</span></code> result carrying the request ID when it can be
+recovered from the request.</p></li>
+<li><p>A server worker performs the operation and calls <code class="docutils literal notranslate"><span class="pre">Notify</span></code> on the same
+<code class="docutils literal notranslate"><span class="pre">IServerConnection</span></code> with a <code class="docutils literal notranslate"><span class="pre">ControlResponse</span></code> carrying the original
+<code class="docutils literal notranslate"><span class="pre">request_id</span></code> and the result payload.</p></li>
+<li><p>The client <code class="docutils literal notranslate"><span class="pre">NotifyCallback</span></code> routes the response by <code class="docutils literal notranslate"><span class="pre">request_id</span></code> and
+signals the waiting application thread. The application waits with a
+bounded timeout and retires the pending-call record after completion, error,
+or timeout.</p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">Send</span></code> call confirms only that the request was accepted by the client-side
+send path; it is not an immediate admission acknowledgement. The transport
+does not automatically retry requests. If a result or negative <code class="docutils literal notranslate"><span class="pre">Notify</span></code> is
+not observed because of a timeout or delivery failure, the outcome is unknown
+to the caller. The application may explicitly retry when the operation
+semantics allow it. A malformed request for which the server cannot recover a
+request ID cannot be correlated to a pending call and must be handled through
+the connection-error or timeout path.</p>
+</section>
+<section id="consequences">
+<h2>Consequences<a class="headerlink" href="#consequences" title="Link to this heading">#</a></h2>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Send</span></code> avoids the per-connection REQUEST/REPLY serialization window before
+the potentially slow operation. Subsequent requests can be accepted while
+earlier requests execute in the worker pool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Send</span></code> returns without holding the caller inside the IPC operation. A
+production wrapper can use a mandatory application-level <code class="docutils literal notranslate"><span class="pre">wait_for</span></code> to
+provide a bounded wait for the final response and report a typed timeout.</p></li>
+<li><p>One connection can be shared by all threads in a client process. The
+application-level <code class="docutils literal notranslate"><span class="pre">request_id</span></code> protocol provides deterministic response
+demultiplexing without requiring one connection per thread.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Notify</span></code> is point-to-point, so a response is delivered only to the client
+connection that issued the request. This avoids the cross-client response
+leakage risk of a broadcast event model.</p></li>
+<li><p>The server can use a fixed worker pool and must protect connection lifetime
+while workers complete delayed notifications.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>The protocol and implementation are more complex than a single synchronous
+call. Pending-call state, request identifiers, response parsing, timeout
+cleanup, and late-notification handling are required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Send</span></code> does not provide an immediate admission acknowledgement; callers
+must handle negative <code class="docutils literal notranslate"><span class="pre">Notify</span></code> results and final-notification timeouts.</p></li>
+<li><p>Queue capacities must cover the configured concurrency. The client send queue
+and server notify queue must still be sized consistently. An undersized queue
+can reject a send or drop a notification.</p></li>
+<li><p>A worker may finish after the client has timed out. The server must detect a
+disconnected connection or safely skip the notification, and the client
+must discard late notifications for retired request identifiers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Notify</span></code> has backend-dependent blocking behaviour. The QNX backend used by
+the safety target provides bounded preallocated notification capacity and
+reports exhaustion as <code class="docutils literal notranslate"><span class="pre">ENOBUFS</span></code>; queue sizing and the resulting failure
+handling remain part of the QNX production configuration. The Linux backend
+may block in the socket layer, which is an accepted limitation for
+development, testing, and non-safety or QM deployments and must not be used
+as evidence for a Linux safety deployment.</p></li>
+</ul>
+</section>
+<section id="alternatives-considered">
+<h2>Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Link to this heading">#</a></h2>
+<section id="single-sendwaitreply-call">
+<h3>Single SendWaitReply Call<a class="headerlink" href="#single-sendwaitreply-call" title="Link to this heading">#</a></h3>
+<p>The client sends a request and waits for the server to return the final result
+through the REQUEST/REPLY exchange. This is simpler and naturally matches one
+request to one response, but it blocks the caller inside the IPC library for
+the whole operation and provides no application-level timeout. With a shared
+connection, the server callback also serializes all requests until work is
+complete.</p>
+</section>
+<section id="long-running-sendwithcallback-reply">
+<h3>Long-Running SendWithCallback Reply<a class="headerlink" href="#long-running-sendwithcallback-reply" title="Link to this heading">#</a></h3>
+<p>The server could defer <code class="docutils literal notranslate"><span class="pre">Reply</span></code> until the worker has finished and return the
+final response through <code class="docutils literal notranslate"><span class="pre">ReplyCallback</span></code>. This preserves a single response
+channel, but retains the per-connection serialization window for the entire
+operation. It prevents the shared-connection design from accepting concurrent
+requests at the intended rate and makes the server callback lifetime depend on
+operation duration.</p>
+</section>
+<section id="lola-method-plus-broadcast-event">
+<h3>LoLa Method plus Broadcast Event<a class="headerlink" href="#lola-method-plus-broadcast-event" title="Link to this heading">#</a></h3>
+<p>The LoLa asynchronous method plus event uses a short method call followed by an
+event, which has similar separation of acceptance and completion. Its event is
+broadcast, however, so the design needs one skeleton instance per client and
+additional routing to prevent clients from observing one another’s responses.
+The <code class="docutils literal notranslate"><span class="pre">Notify</span></code> primitive provides the same asynchronous completion model as a
+point-to-point message on the existing client connection.</p>
+</section>
+</section>
+<section id="justification-for-the-decision">
+<h2>Justification for the Decision<a class="headerlink" href="#justification-for-the-decision" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Send</span></code> plus <code class="docutils literal notranslate"><span class="pre">Notify</span></code> is selected because it avoids the request/reply
+serialization window and the client-side acknowledgement queue while allowing
+the server to dispatch work independently. The <code class="docutils literal notranslate"><span class="pre">Notify</span></code> completion keeps the
+client thread out of the IPC library’s blocking path, enables an explicit
+application timeout, and preserves one connection per client process. A
+negative <code class="docutils literal notranslate"><span class="pre">Notify</span></code> communicates server-side submission failure when the
+request ID is available.</p>
+<div class="need_container docutils container" id="SNCB-8543b9ad">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__ipc_request_work_admission">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Request Work Is Not Queued</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Do not queue request operations in the daemon. Return kProviderBusy when no worker is idle, and let the Crypto API handle it.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">affects: <span class="affects"><span><a class="reference internal" href="component_architecture.html#comp__ipc_message_passing_adapter" title="dec_rec__crypto__ipc_request_work_admission">comp__ipc_message_passing_adapter</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__ipc_request_work_admission" title="dec_rec__crypto__ipc_request_work_admission">dec_rec__crypto__ipc_request_work_admission</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="request-work-admission-and-api-retry">
+<h2>Request Work Admission and API Retry<a class="headerlink" href="#request-work-admission-and-api-retry" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>Context<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>The asynchronous request path admits work before execution. Queueing a request
+in the daemon when all workers are busy would retain pending request state,
+delay overload feedback, and require a queue capacity and adjustments to the timeout policy.
+Returning <code class="docutils literal notranslate"><span class="pre">kProviderBusy</span></code> immediately keeps daemon-side request work bounded.</p>
+</section>
+<section id="id2">
+<h3>Decision<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">TrySubmitWorkItem</span></code> assigns a request only to an idle worker. When all workers
+are busy, it returns <code class="docutils literal notranslate"><span class="pre">kProviderBusy</span></code> and the dispatcher sends that result to
+the client; request operations are never queued in the daemon.</p>
+<p>The Crypto API can then implement a retry strategy for <code class="docutils literal notranslate"><span class="pre">kProviderBusy</span></code> responses.</p>
+</section>
+<section id="id3">
+<h3>Consequences<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>The daemon retains no request backlog, and executing or assigned request work
+remains bounded by the worker count.</p>
+<p>Implementation of a retry mechanism needs to be handled separately e.g. in the API.</p>
+</section>
+<section id="id4">
+<h3>Alternatives Considered<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<section id="daemon-side-queue-or-retry">
+<h4>Daemon-side queue or retry<a class="headerlink" href="#daemon-side-queue-or-retry" title="Link to this heading">#</a></h4>
+<p>Queueing or retrying inside the daemon would retain requests and require
+decisions about queue size, whether it is provider-specific or daemon-wide,
+whether capacity is configurable, and what happens when the queue fills. It
+would also complicate the ASIL operation-timeout behavior and require a policy
+for the delay between retries. A queue cannot eliminate overload rejection:
+once full, the daemon still needs to return <code class="docutils literal notranslate"><span class="pre">kProviderBusy</span></code>.</p>
+<div class="need_container docutils container" id="SNCB-33df500c">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__ipc_fixed_worker_executor">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Purpose-built Worker Executor</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Use a purpose-built FixedWorkerWorkItemExecutor to implement the adapter's admission, worker initialization, startup reporting, and restart requirements without an additional scheduler around a generic thread pool.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">affects: <span class="affects"><span><a class="reference internal" href="component_architecture.html#comp__ipc_message_passing_adapter" title="dec_rec__crypto__ipc_fixed_worker_executor">comp__ipc_message_passing_adapter</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__ipc_fixed_worker_executor" title="dec_rec__crypto__ipc_fixed_worker_executor">dec_rec__crypto__ipc_fixed_worker_executor</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="custom-worker-executor-instead-of-baselibs-threadpool">
+<h2>Custom Worker Executor Instead of Baselibs ThreadPool<a class="headerlink" href="#custom-worker-executor-instead-of-baselibs-threadpool" title="Link to this heading">#</a></h2>
+<section id="id5">
+<h3>Context<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>The executor must satisfy several independent requirements:</p>
+<ul class="simple">
+<li><p>Request admission follows <a class="reference internal" href="#dec_rec__crypto__ipc_request_work_admission" title="dec_rec__crypto__ipc_request_work_admission"><em class="xref need">Request Work Is Not Queued (dec_rec__crypto__ipc_request_work_admission)</em></a>;
+request operations are rejected at saturation instead of queued.</p></li>
+<li><p>Cleanup work has its own admission policy and bounded queue.</p></li>
+<li><p>Each worker has a preconstructed request-handler chain that it reuses.</p></li>
+<li><p>Startup reports thread or handler initialization failures before the server
+starts listening.</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>Decision<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>Use a purpose-built worker executor to accept work into a thread pool instead of adapting an
+existing generic thread pool. Owning the executor lets the adapter implement its request and
+cleanup admission policies directly, construct and retain one handler chain per
+worker and report worker initialization failures before listening starts.
+Reusing a generic pool would require additional coordination around these policies
+and lifecycle requirements.</p>
+</section>
+<section id="id7">
+<h3>Consequences<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>A custom worker executor will be implemented satisfying the requirements outlined above.</p>
+</section>
+<section id="id8">
+<h3>Alternatives Considered<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="baselibs-score-concurrency-threadpool">
+<h4>Baselibs <code class="docutils literal notranslate"><span class="pre">score::concurrency::ThreadPool</span></code><a class="headerlink" href="#baselibs-score-concurrency-threadpool" title="Link to this heading">#</a></h4>
+<p>The Baselibs thread pool queues submitted tasks when workers are busy and does
+not provide the admission control required by
+<a class="reference internal" href="#dec_rec__crypto__ipc_request_work_admission" title="dec_rec__crypto__ipc_request_work_admission"><em class="xref need">Request Work Is Not Queued (dec_rec__crypto__ipc_request_work_admission)</em></a>. Using it would require an
+additional scheduler to reject request work at saturation and to give cleanup
+work its separate bounded queue. Coordinating preconstructed per-worker handler
+chains, reporting initialization failures before listening starts, and
+supporting a stopped-to-started lifecycle would also require additional
+orchestration. The custom executor keeps these admission and lifecycle policies
+together, at the cost of owning their synchronization.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="component_architecture.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">IPC Message Passing Adapter Component Architecture Documentation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="message_passing_adapter.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Message-Passing Adapter Architecture</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#context">Context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decision">Decision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#consequences">Consequences</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives-considered">Alternatives Considered</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-sendwaitreply-call">Single SendWaitReply Call</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#long-running-sendwithcallback-reply">Long-Running SendWithCallback Reply</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lola-method-plus-broadcast-event">LoLa Method plus Broadcast Event</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#justification-for-the-decision">Justification for the Decision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#request-work-admission-and-api-retry">Request Work Admission and API Retry</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Consequences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Alternatives Considered</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#daemon-side-queue-or-retry">Daemon-side queue or retry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-worker-executor-instead-of-baselibs-threadpool">Custom Worker Executor Instead of Baselibs ThreadPool</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Consequences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Alternatives Considered</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-score-concurrency-threadpool">Baselibs <code class="docutils literal notranslate"><span class="pre">score::concurrency::ThreadPool</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
