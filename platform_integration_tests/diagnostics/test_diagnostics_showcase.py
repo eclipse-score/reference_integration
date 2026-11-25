@@ -23,6 +23,23 @@ import shlex
 from showcase_runner import run_showcases
 
 
+def _platform_run_passed(output: str) -> bool:
+    # The CLI echoes the wrapper command, which contains a FAILED message.
+    lines = output.splitlines()
+    return "S-CORE platform run: PASSED" in lines and not any(
+        line.startswith("S-CORE platform run: FAILED") for line in lines
+    )
+
+
+def test_platform_run_verdict():
+    echoed_command = "App 1: spawned command echo 'S-CORE platform run: FAILED (timeout)'\n"
+    assert _platform_run_passed(echoed_command + "S-CORE platform run: PASSED\n")
+    assert not _platform_run_passed(echoed_command)
+    assert not _platform_run_passed(echoed_command + "S-CORE platform run: FAILED (timeout)\n")
+    assert not _platform_run_passed("S-CORE platform run: PASSED\nS-CORE platform run: FAILED\n")
+    assert not _platform_run_passed("echo 'S-CORE platform run: PASSED'\n")
+
+
 def test_diagnostics_stack(target):
     """The gateway listens on 127.0.0.1:7690, the CDA loads the ECU databases and reports ready."""
 
@@ -75,7 +92,6 @@ kill -0 "$diagnostics_pid"
     exit_code, out = target.execute(f"bash -c {shlex.quote(script)}")
     output = out.decode(errors="replace")
     assert exit_code == 0, f"Coexistence check failed ({exit_code}):\n{output}"
-    assert "S-CORE platform run: PASSED" in output, output
-    assert "S-CORE platform run: FAILED" not in output, output
+    assert _platform_run_passed(output), output
     assert output.count("diagnostics_check: PASSED") == 2, output
     assert "diagnostics_check: FAILED" not in output, output
