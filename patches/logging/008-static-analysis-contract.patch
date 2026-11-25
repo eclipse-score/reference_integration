@@ -20,9 +20,18 @@ index e9c3f956..db2e33b9 100644
 +build:lint_sarif --output_groups=rules_lint_machine
 +build:lint_sarif --@aspect_rules_lint//lint:fail_on_violation=false
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 07e657b8..d14144b6 100644
+index 07e657b8..7981ad81 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
+@@ -28,7 +28,7 @@ bazel_dep(name = "aspect_rules_lint", version = "2.5.0", dev_dependency = True)
+ bazel_dep(name = "score_cpp_policies", version = "0.0.0", dev_dependency = True)
+ git_override(
+     module_name = "score_cpp_policies",
+-    commit = "b6551c217fbb0daf948b493c4ba69eb7fe8359a5",
++    commit = "c8fb812e85a971ac083b28219ce86d3f7a1cf9be",
+     remote = "https://github.com/eclipse-score/score_cpp_policies.git",
+ )
+ 
 @@ -267,3 +267,10 @@ single_version_override(
      module_name = "grpc-java",
      version = "1.70.0",
@@ -62,40 +71,30 @@ index 00000000..22f68436
 +    keep_going = True,
 +)
 diff --git a/tools/lint/linters.bzl b/tools/lint/linters.bzl
-index f1290fce..593b09af 100644
+index f1290fce..6b697bf7 100644
 --- a/tools/lint/linters.bzl
 +++ b/tools/lint/linters.bzl
-@@ -11,19 +11,26 @@
- # SPDX-License-Identifier: Apache-2.0
- # *******************************************************************************
- 
--"""Clang-tidy linter configuration for score_logging."""
-+"""Lint aspects of the central S-CORE policies."""
+@@ -14,13 +14,11 @@
+ """Clang-tidy linter configuration for score_logging."""
  
  load("@aspect_rules_lint//lint:clang_tidy.bzl", "lint_clang_tidy_aspect")
--load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect", "make_clang_tidy_test")
-+load("@aspect_rules_lint//lint:lint_test.bzl", "lint_test")
 +load("@aspect_rules_lint//lint:ruff.bzl", "lint_ruff_aspect")
+ load("@score_cpp_policies//clang_tidy:defs.bzl", "make_clang_tidy_aspect", "make_clang_tidy_test")
  
--clang_tidy_aspect = make_clang_tidy_aspect(
-+# The baseline is passed explicitly: clang-tidy only finds configs above the linted file.
-+clang_tidy_aspect = lint_clang_tidy_aspect(
+ clang_tidy_aspect = make_clang_tidy_aspect(
      binary = Label("@llvm_toolchain//:clang-tidy"),
 -    # Local .clang-tidy adds score_logging-specific tightenings on top of
 -    # the S-CORE baseline that make_clang_tidy_aspect pre-wires automatically.
 -    local_configs = [Label("//:.clang-tidy")],
-+    global_config = [Label("@score_cpp_policies//clang_tidy:.clang-tidy")],
-+    lint_target_headers = True,
-+    angle_includes_are_system = True,
  )
  
--clang_tidy_test = make_clang_tidy_test(aspect = clang_tidy_aspect)
-+clang_tidy_test = lint_test(aspect = clang_tidy_aspect)
+ clang_tidy_test = make_clang_tidy_test(aspect = clang_tidy_aspect)
+@@ -31,3 +29,8 @@ banned_functions_aspect = lint_clang_tidy_aspect(
+     lint_target_headers = True,
+     angle_includes_are_system = True,
+ )
 +
 +ruff_aspect = lint_ruff_aspect(
 +    binary = Label("@aspect_rules_lint//lint:ruff_bin"),
 +    configs = [],
 +)
- 
- banned_functions_aspect = lint_clang_tidy_aspect(
-     binary = Label("@llvm_toolchain_coverage//:clang-tidy"),
