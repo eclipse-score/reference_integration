@@ -1,0 +1,110 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# Rationale: The crates of opensovd-core that the gateway uses (the core crates and shared crates
+# such as tokio, tracing, http, hyper-util and tower) are visible to its own workspace only. This
+# patch adds public aliases for them, so that another module can build the gateway of score_diagnostics.
+#
+diff --git a/BUILD.bazel b/BUILD.bazel
+index 754407e..69b50c9 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -28,3 +28,88 @@ alias(
+     name = "opensovd-mdns",
+     actual = "//opensovd-extra:opensovd_extra_mdns",
+ )
++
++alias(
++    name = "opensovd-core",
++    actual = "//opensovd-core:opensovd_core",
++)
++
++alias(
++    name = "opensovd-models",
++    actual = "//opensovd-models:opensovd_models",
++)
++
++alias(
++    name = "opensovd-providers",
++    actual = "//opensovd-providers:opensovd_providers",
++)
++
++alias(
++    name = "opensovd-server",
++    actual = "//opensovd-server:opensovd_server",
++)
++
++alias(
++    name = "opensovd-client",
++    actual = "//opensovd-client:opensovd_client",
++)
++
++alias(
++    name = "tokio",
++    actual = "@crate_index//:tokio",
++)
++
++alias(
++    name = "tracing",
++    actual = "@crate_index//:tracing",
++)
++
++alias(
++    name = "tracing-subscriber",
++    actual = "@crate_index//:tracing-subscriber",
++)
++
++alias(
++    name = "async-trait",
++    actual = "@crate_index//:async-trait",
++)
++
++alias(
++    name = "serde_json",
++    actual = "@crate_index//:serde_json",
++)
++
++alias(
++    name = "axum",
++    actual = "@crate_index//:axum",
++)
++
++alias(
++    name = "opensovd-extra",
++    actual = "//opensovd-extra:opensovd_extra",
++)
++
++alias(
++    name = "bytes",
++    actual = "@crate_index//:bytes",
++)
++
++alias(
++    name = "http",
++    actual = "@crate_index//:http",
++)
++
++alias(
++    name = "http-body-util",
++    actual = "@crate_index//:http-body-util",
++)
++
++alias(
++    name = "hyper-util",
++    actual = "@crate_index//:hyper-util",
++)
++
++alias(
++    name = "tower",
++    actual = "@crate_index//:tower",
++)

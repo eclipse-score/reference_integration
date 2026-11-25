@@ -113,6 +113,40 @@ def fetch(names: set[str]) -> dict[str, Path]:
     return found
 
 
+def vanished_overrides(stderr: str) -> set[str]:
+    """Modules that Bazel reports as ``overrides on nonexistent module(s)``, if any.
+
+    A module that the unpinned graph reaches only through a dependency that the pins replace by
+    another version (for example ``score_tooling`` -> ``google_benchmark`` -> ``libpfm`` ->
+    ``rules_foreign_cc``) leaves the graph once the pins apply, and Bazel rejects its override.
+    """
+    match = re.search(r"overrides on nonexistent module\(s\): ([^\n]+)", stderr)
+    return {name.strip() for name in match.group(1).split(",")} if match else set()
+
+
+def drop_vanished_pins(pinned: dict[str, Path], rc: Path, workspace: Path, env: dict, extra: list[str]) -> None:
+    """Remove the pins whose module is not in the module's graph once all pins apply.
+
+    Dropping one can remove another from the graph, so this repeats until Bazel accepts the set.
+    """
+    while True:
+        rc.write_text(override_rc(pinned, extra))
+        result = subprocess.run(
+            ["bazel", "mod", "graph", "--output=json", "--lockfile_mode=update"],
+            cwd=workspace,
+            env=env,
+            text=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+        gone = vanished_overrides(result.stderr) & pinned.keys()
+        if not gone:
+            return
+        print(f"+ not in the graph once pinned, dropping the pins of: {', '.join(sorted(gone))}", file=sys.stderr)
+        for name in gone:
+            del pinned[name]
+
+
 def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> str:
     """Pin each module to its path; the module's ``extra_test_config`` flags follow as build flags."""
     rc = "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
@@ -374,7 +408,7 @@ def run(args: argparse.Namespace) -> int:
     own_graph = mod_graph(workspace, {**env, "BZLMOD_ALLOW_YANKED_VERSIONS": "all"})
     shared = (graph_modules(own_graph) & resolved) - {module.name}
     pinned = fetch(shared)
-    rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
+    drop_vanished_pins(pinned, rc, workspace, env, module.metadata.extra_test_config)
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 

@@ -94,7 +94,15 @@ def _relax_path_check(_app, config) -> None:
             mount["path_check"] = "off"
 
 
+def _link_cda_needs_to_cda_docs(_app, config) -> None:
+    for source in getattr(config, "needs_external_needs", None) or []:
+        if isinstance(source, dict) and "/score/opensovd-cda/needs_json/" in str(source.get("json_path", "")):
+            source["base_url"] = "https://eclipse-opensovd.github.io/classic-diagnostic-adapter"
+
+
 # Defined here, not as a docs/*.py extension: the sandboxed needs_json build only ships conf.py.
 def setup(app):
     # After score_mounts (300) has filled config.mounts, before sphinx_mounts (400) reads it.
     app.connect("config-inited", _relax_path_check, priority=350)
+    # After score_metamodel registers external Needs.
+    app.connect("config-inited", _link_cda_needs_to_cda_docs, priority=500)

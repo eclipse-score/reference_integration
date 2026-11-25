@@ -34,6 +34,8 @@ alias(
 # regenerate with scripts/known_good/update_module_from_known_good.py.
 docs(
     bundles = DOCS_BUNDLES,
+    # The mounted diagnostics bundle references requirements exported by the CDA.
+    external_needs = ["@score_diagnostics//score/opensovd-cda:needs_json"],
     known_good = "known_good.json",
     source_dir = "docs",
 )
