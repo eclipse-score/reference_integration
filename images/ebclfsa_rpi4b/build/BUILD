@@ -35,6 +35,17 @@ genrule(
     cmd = "mkdir -p $(RULEDIR)/ebcl-rpi4b && tar xzf $(location @eb_corbos_toolkit_fastdev_rpi4b_archive//file) -C $(RULEDIR)/ebcl-rpi4b && chmod +w $(RULEDIR)/ebcl-rpi4b/fastdev-trixie-ebclfsa-rpi4b.wic",
 )
 
+# The image payload must use the ABI of the EB corbos base image.
+config_setting(
+    name = "eb_aarch64",
+    constraint_values = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+        "@score_bazel_platforms//runtime_es:ebclfsa",
+        "@score_bazel_platforms//version:sdk_2.0.0-beta3",
+    ],
+)
+
 # Only the init task of the diagnostics: the console of the Raspberry Pi image is the serial one.
 pkg_tar(
     name = "crinit_config_tar",
@@ -76,6 +87,10 @@ genrule(
         "$(location :network_config_tar)",
         "$(location //images/network:diagnostics_config_tar)",
     ]),
+    target_compatible_with = select({
+        ":eb_aarch64": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
     visibility = [
         "//visibility:public",
     ],

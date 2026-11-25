@@ -28,6 +28,16 @@ score_py_pytest(
     deps = [":prepare_lib"],
 )
 
+config_setting(
+    name = "linux_aarch64",
+    constraint_values = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+        "@score_bazel_platforms//runtime_es:posix",
+        "@score_bazel_platforms//version:gcc_12.2.0",
+    ],
+)
+
 # Raspberry Pi OS Lite (64-bit, Trixie) for the Raspberry Pi 4B with the S-CORE platform, the
 # showcases and the diagnostics deployed in it, for integration testing. The release image of
 # Raspberry Pi OS is downloaded and checked by its sha256 (bazel_common/score_images.MODULE.bazel).
@@ -94,5 +104,9 @@ genrule(
         "$(location :network_config_tar)",
         "$(location //images/network:diagnostics_config_tar)",
     ]),
+    target_compatible_with = select({
+        ":linux_aarch64": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
     visibility = ["//visibility:public"],
 )
