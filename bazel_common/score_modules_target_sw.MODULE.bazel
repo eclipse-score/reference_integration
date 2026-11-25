@@ -118,3 +118,14 @@ single_version_override(
     ],
     version = "0.3.5",
 )
+
+bazel_dep(name = "score_diagnostics")
+git_override(
+    module_name = "score_diagnostics",
+    commit = "be063fe706ace766c7eee882e3888497b8b728ae",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:score-diagnostics-docs-api.patch",
+    ],
+    remote = "https://github.com/eclipse-score/diagnostics.git",
+)

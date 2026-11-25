@@ -49,6 +49,9 @@ pkg_tar(
     srcs = [
         ":data_dir",
         ":platform_bundle",
+        # Not part of platform_bundle: that one is also consumed by the QNX images,
+        # and the OpenSOVD gateway and CDA are not supported on QNX.
+        "//deploy/diagnostics:diagnostics_bin",
     ],
     visibility = ["//visibility:public"],
 )

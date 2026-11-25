@@ -36,6 +36,10 @@ score_pkg_bundle(
         "//showcases/combined/kyron_logging:kyron_logging_showcase_pkg_files",
         "//showcases/combined/lifecycle_time_comm:lifecycle_time_comm_pkg_files",
         "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm_pkg_files",
+        # Linux only: the OpenSOVD components that it runs are not supported on QNX, so it is not
+        # part of :showcases_bundle below.
+        "//showcases/diagnostics:diagnostics_pkg_files",
+        "//showcases/diagnostics:diagnostics_databases",
     ],
     package_dir = "showcases",
 )
