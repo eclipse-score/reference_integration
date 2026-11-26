@@ -63,11 +63,12 @@ EXPECTED_DLT = [
     ("PINC", "PINF", r"platform_info_consumer: S-CORE version check passed"),
     ("LM", "LM", r"Completed the request for Run Target\s+PlatformRun"),
 ]
-# The launch manager logs these at debug level, which showcases/platform_run/logging.json enables for DLT.
+# The launch manager logs these at debug level, which showcases/platform_run/logging.json enables for DLT,
+# prefixed with "Name: <component>, PID: <pid>".
 for _app in TEST_APPS:
     EXPECTED_DLT += [
-        ("LM", "LM", rf"Starting process\s*\(\s*{_app}\s*\)"),
-        ("LM", "LM", rf"Process\s+{_app}\s+\(\s*pid\s+\d+\s*\)\s+terminated with status\s+0\b"),
+        ("LM", "LM", rf"Name:\s*{_app}\s*,\s*PID:\s*\d+\s+Starting process from executable"),
+        ("LM", "LM", rf"Name:\s*{_app}\s*,\s*PID:\s*\d+\s+Process terminated with status\s+0\b"),
     ]
 
 # (app id, context id, payload pattern) that no run may put on DLT: launch manager warnings.
