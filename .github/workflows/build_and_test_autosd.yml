@@ -133,8 +133,11 @@ jobs:
           # (CLI reads *.score.json from SCORE_CLI_INIT_DIR). Drop once the daemon exits on its own.
           sshcmd 'cp -a /showcases /tmp/showcases && grep -rl --include="*.score.json" config_daemon /tmp/showcases | xargs rm -f'
           # Cross-arch guests run under TCG emulation, too slow for the 50 ms health-monitoring deadlines of simple_lifecycle.
+          # In the drive replay, warn_app misses its alive supervision there and is restarted while the showcase signals it.
+          # The drive replay runs natively in the Linux PIT and the aarch64 release archives.
           if [[ "${{ matrix.target }}" != "$(uname -m)" ]]; then
             sshcmd 'find /tmp/showcases -name simple_lifecycle.score.json -delete'
+            sshcmd 'find /tmp/showcases -name drive_replay.score.json -delete'
           fi
           # /data (deploy contract: writable storage) is read-only in the bootc image; QNX maps it to a RAM disk as well.
           sshcmd 'mount -t tmpfs tmpfs /data'
