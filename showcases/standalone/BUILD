@@ -141,7 +141,6 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
-
 launch_manager_config(
     name = "lifecycle_run_target_recovery_configs",
     config = "//showcases/standalone/configs:lifecycle_run_target_recovery_lm_config.json",
