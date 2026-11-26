@@ -24,7 +24,7 @@ py_library(
 score_py_pytest(
     name = "diagnostics_orchestration_test",
     size = "small",
-    srcs = ["diagnostics_orchestration_test.py"],
+    srcs = ["test_diagnostics_orchestration.py"],
     pytest_config = "//:pyproject.toml",
     deps = [":diagnostics_showcase"],
 )
