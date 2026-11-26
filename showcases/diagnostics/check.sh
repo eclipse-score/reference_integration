@@ -23,35 +23,35 @@ LOG_DIR="$(mktemp -d)"
 
 launch_manager=
 stop() {
-    [[ -n "$launch_manager" ]] || return 0
-    kill -s TERM "$launch_manager" 2>/dev/null
-    wait "$launch_manager" 2>/dev/null
+  [[ -n "$launch_manager" ]] || return 0
+  kill -s TERM "$launch_manager" 2>/dev/null
+  wait "$launch_manager" 2>/dev/null
 }
 trap stop EXIT
 
 fail() {
-    echo "diagnostics_check: FAILED: $1"
-    for log in "$LOG_DIR"/*.log; do
-        echo "--- $log"
-        tail -n 20 "$log"
-    done
-    exit 1
+  echo "diagnostics_check: FAILED: $1"
+  for log in "$LOG_DIR"/*.log; do
+    echo "--- $log"
+    tail -n 20 "$log"
+  done
+  exit 1
 }
 
 # The addresses of this host to try, the loopback address first: the gateway listens on all
-# addresses, or on the Raspberry Pi images on the address of the image only.
+# addresses, or on the address of the image only, depending on the network configuration of the image.
 hosts() {
-    echo 127.0.0.1
-    ip -4 -o addr show 2>/dev/null | awk '$2 != "lo" { sub("/.*", "", $4); print $4 }'
+  echo 127.0.0.1
+  ip -4 -o addr show 2>/dev/null | awk '$2 != "lo" { sub("/.*", "", $4); print $4 }'
 }
 
 # request <port> <path> [method] [token]: prints the status line and body from the first address
 # that answers. A POST sends the development credentials to the gateway's authorize endpoint.
 # Prints nothing if nothing listens or the whole answer does not arrive within 5 seconds.
 request() {
-    local host
-    for host in $(hosts); do
-        timeout 5 bash -c '
+  local host
+  for host in $(hosts); do
+    timeout 5 bash -c '
             exec 3<>"/dev/tcp/$1/$2" || exit 1
             body=""
             [[ "$4" != POST ]] || body='\''{"client_id":"diagnostics-check","client_secret":"test"}'\''
@@ -63,20 +63,20 @@ request() {
             body="$(cat <&3 | tr -d "\r" | sed "1,/^\$/d")"
             echo "$status"
             echo "$body"' request "$host" "$1" "$2" "${3:-GET}" "${4:-}" 2>/dev/null && return 0
-    done
+  done
 }
 
 # The CDA offers the app sovd2uds, the gateway its own app score-diagnostics: both are listed only
 # if the gateway forwards to the CDA.
 lists_both_apps() {
-    [[ "$(head -1 <<<"$1")" == *" 200"* && "$1" == *'"sovd2uds"'* && "$1" == *'"score-diagnostics"'* ]]
+  [[ "$(head -1 <<<"$1")" == *" 200"* && "$1" == *'"sovd2uds"'* && "$1" == *'"score-diagnostics"'* ]]
 }
 
 if [[ -n "$(request 7690 /sovd/v1/version-info | head -1)" ]]; then
-    echo "diagnostics_check: the diagnostics service is running"
+  echo "diagnostics_check: the diagnostics service is running"
 else
-    "$DATA/service.sh" --if-not-running >"$LOG_DIR/service.log" 2>&1 &
-    launch_manager=$!
+  "$DATA/service.sh" --if-not-running >"$LOG_DIR/service.log" 2>&1 &
+  launch_manager=$!
 fi
 
 # The gateway starts after the CDA, and it can answer with its own app only while the CDA still
@@ -85,23 +85,23 @@ answer=
 token=
 token_pattern='"access_token"[[:space:]]*:[[:space:]]*"([^"]+)"'
 for _ in $(seq 1 120); do
-    if [[ -z "$token" ]]; then
-        authorization="$(request 7690 /sovd/v1/authorize POST)"
-        if [[ "$(head -1 <<<"$authorization")" == *" 200"* && "$authorization" =~ $token_pattern ]]; then
-            token="${BASH_REMATCH[1]}"
-        fi
+  if [[ -z "$token" ]]; then
+    authorization="$(request 7690 /sovd/v1/authorize POST)"
+    if [[ "$(head -1 <<<"$authorization")" == *" 200"* && "$authorization" =~ $token_pattern ]]; then
+      token="${BASH_REMATCH[1]}"
     fi
-    [[ -z "$token" ]] || answer="$(request 7690 /sovd/v1/apps GET "$token")"
-    lists_both_apps "$answer" && break
-    if [[ -n "$launch_manager" ]] && ! kill -0 "$launch_manager" 2>/dev/null; then
-        # Exit 75 means the boot service (or another check) already holds the lock.
-        wait "$launch_manager"
-        status=$?
-        launch_manager=
-        [[ "$status" == 75 ]] || fail "the launch manager exited (status $status)"
-        echo "diagnostics_check: waiting for the existing diagnostics service"
-    fi
-    sleep 1
+  fi
+  [[ -z "$token" ]] || answer="$(request 7690 /sovd/v1/apps GET "$token")"
+  lists_both_apps "$answer" && break
+  if [[ -n "$launch_manager" ]] && ! kill -0 "$launch_manager" 2>/dev/null; then
+    # Exit 75 means the boot service (or another check) already holds the lock.
+    wait "$launch_manager"
+    status=$?
+    launch_manager=
+    [[ "$status" == 75 ]] || fail "the launch manager exited (status $status)"
+    echo "diagnostics_check: waiting for the existing diagnostics service"
+  fi
+  sleep 1
 done
 [[ -n "$answer" ]] || fail "the gateway does not answer on port 7690"
 echo "diagnostics_check: the gateway answers on port 7690"
