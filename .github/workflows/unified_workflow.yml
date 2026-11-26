@@ -100,65 +100,27 @@ jobs:
           HAS_QNX_SECRETS: ${{ secrets.SCORE_QNX_LICENSE != '' && secrets.SCORE_QNX_USER != '' && secrets.SCORE_QNX_PASSWORD != '' && secrets.SCORE_BOT_QNX_PKG_PAT != '' }}
         # See scripts/prepare_pipeline.py for the rules (levels, QNX, publishing, input validation).
         run: python3 scripts/prepare_pipeline.py
-  format:
-    name: Formatting check
+  # Formatting (//:format.check), copyright (the pre-commit hook) and the Bzlmod lockfile checks
+  # (bazel mod tidy, bazel mod deps --lockfile_mode=error), as one job of the shared PR checks.
+  # Like every job of this pipeline it checks out github.sha, the candidate: PR merge commit,
+  # merge-queue head or pushed commit.
+  common-checks:
+    name: Common checks (format, copyright, lockfile)
     needs: prepare
     permissions:
       contents: read
-    # Every job checks out github.sha, the candidate: PR merge commit, merge-queue head or
-    # pushed commit.
-    uses: eclipse-score/cicd-workflows/.github/workflows/format.yml@8d80e8df150cae21d53cbc8031d0f970648f7a67 # v0.0.3
-  copyright:
-    name: Copyright check
-    needs: prepare
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Set up Python 3
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.12'
-      # Runs the `copyright` hook from .pre-commit-config.yaml (cr_checker from eclipse-score/tooling).
-      - name: Run cr_checker via pre-commit
-        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
-        with:
-          extra_args: copyright --all-files
+    uses: eclipse-score/cicd-workflows/.github/workflows/on-pr.yml@200f97be787848974e55d1f4ef5615efbaa97ff8 # on-pr/v0.0.1
+    with:
+      require-bzlmod-lock: true
   internal-tests:
     name: Internal tooling tests
     needs: prepare
-    runs-on: ubuntu-24.04
     permissions:
       contents: read
-    steps:
-      - name: Clean disk space
-        uses: eclipse-score/more-disk-space@beee38c3b4426a7c43fdfeb2495d1af812179c3e # v1
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
-        with:
-          bazelisk-cache: true
-          disk-cache: false
-          repository-cache: true
-          cache-save: false
-      # Needs bazel on PATH: the action resolves `bazel info install_base`.
-      - name: Allow user namespaces for the linux-sandbox
-        uses: eclipse-score/cicd-actions/unblock-user-namespace-for-linux-sandbox@212bbf86267e9381da9d2daf962d12f6feafbc90
-      - name: Run internal tooling tests
-        run: |
-          bazel test \
-            //scripts/tooling:tooling_tests \
-            //scripts/known_good:known_good_tests \
-            //scripts:module_tests_tests \
-            //scripts:prepare_pipeline_tests \
-            //deploy/platform_info:gen_platform_info_test
+    uses: eclipse-score/cicd-workflows/.github/workflows/bazel.yml@200f97be787848974e55d1f4ef5615efbaa97ff8 # bazel/v0.0.0
+    with:
+      test-targets: //:internal_tests
+      cache-key: internal-tests
   known-good:
     name: known_good.json matches Bazel
     needs: prepare
@@ -180,35 +142,9 @@ jobs:
             git diff
             exit 1
           fi
-  bzlmod-lock:
-    name: Bzlmod lockfile check
-    needs: prepare
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
-        with:
-          bazelisk-cache: true
-          disk-cache: false
-          repository-cache: false
-          cache-save: false
-      - name: Verify MODULE.bazel.lock exists
-        run: |
-          test -f MODULE.bazel || { echo "::error::MODULE.bazel not found"; exit 1; }
-          test -f MODULE.bazel.lock || { echo "::error::MODULE.bazel.lock is missing. Run: bazel mod tidy"; exit 1; }
-      - name: Run bazel mod tidy
-        run: bazel mod tidy
-      - name: Check lock consistency
-        run: git diff --exit-code -- MODULE.bazel MODULE.bazel.lock
   gate:
     name: Fast checks passed
-    needs: [format, copyright, internal-tests, known-good, bzlmod-lock]
+    needs: [common-checks, internal-tests, known-good]
     runs-on: ubuntu-24.04
     permissions: {}
     steps:
@@ -562,13 +498,13 @@ jobs:
     needs: [prepare, docs, module-tests, linux, linux-target, ebclfsa, autosd, qnx, integration-tests]
     if: ${{ !failure() && !cancelled() && needs.prepare.outputs.publish_docs == 'true' }}
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
-    # Per-ref group, as recommended by deploy-versioned-pages: serializes deploys of one target.
-    # Different targets still push to the same gh-pages branch concurrently; the deploy action's
-    # push retries handle that. A repository-wide group would instead cancel pending deploys
-    # (GitHub keeps one pending run per group), failing the required status check.
+    # Same group as daily.yml and the docs-deploy job in test_and_docs.yml: all of them push to
+    # gh-pages, so they must not run concurrently. queue: max keeps every waiting deploy pending
+    # instead of cancelling it, which would fail the required status check.
     concurrency:
-      group: pages-deploy-${{ github.repository }}-${{ github.ref }}
+      group: docs-publish
       cancel-in-progress: false
+      queue: max
     permissions:
       pages: write
       id-token: write
@@ -697,11 +633,9 @@ jobs:
     if: always()
     needs:
       - prepare
-      - format
-      - copyright
+      - common-checks
       - internal-tests
       - known-good
-      - bzlmod-lock
       - gate
       - resolve
       - module-tests

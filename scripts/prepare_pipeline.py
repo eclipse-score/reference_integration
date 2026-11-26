@@ -54,11 +54,9 @@ OVERRIDE_RE = re.compile(r"([A-Za-z0-9_]+)@(https://[A-Za-z0-9.-]+/[A-Za-z0-9._/
 # Jobs of unified_workflow.yml that every run requires. The status job's `needs` must be exactly
 # prepare + BASE_JOBS + OPTIONAL_JOBS; tests/test_prepare_pipeline.py enforces that.
 BASE_JOBS = (
-    "format",
-    "copyright",
+    "common-checks",
     "internal-tests",
     "known-good",
-    "bzlmod-lock",
     "gate",
     "resolve",
     "module-tests",

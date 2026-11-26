@@ -56,6 +56,20 @@ exports_files([
     "known_good.json",
 ])
 
+# Unit tests of the integration tooling. CI runs this suite (internal_tests.yml and the
+# internal-tests job of unified_workflow.yml); add new tooling tests here, not in the workflows.
+test_suite(
+    name = "internal_tests",
+    tests = [
+        "//deploy/platform_info:gen_platform_info_test",
+        "//scripts:module_tests_tests",
+        "//scripts:prepare_pipeline_tests",
+        "//scripts/known_good:known_good_tests",
+        "//scripts/tooling:tooling_tests",
+        "//showcases/drive_replay/viz:foxglove_bridge_test",
+    ],
+)
+
 sbom(
     name = "sbom",
     auto_cdxgen = False,

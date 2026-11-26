@@ -198,32 +198,30 @@ jobs:
   release:
     name: Publish image to release
     needs: build
-    # Disabled: broken on main (uses matrix.target without a matrix, so the asset names are
-    # empty). The unified pipeline publishes from its release-publish job instead.
-    if: false
+    # Standalone runs only; the unified pipeline publishes from its release-publish job.
+    if: github.event_name == 'release' && inputs.resolved_inputs == ''
     runs-on: ubuntu-24.04
     permissions:
       contents: write
-    env:
-      RELEASE_NAME: ${{ github.event.release.tag_name }}
     steps:
-      - name: Download archived image artifact
+      # This job has no matrix: the patterns collect the artifacts of every build target.
+      - name: Download archived image artifacts
         uses: actions/download-artifact@v4
         with:
-          name: eclipse-autosd-bootc-qemu-${{ matrix.target}}.qcow2.xz
+          pattern: eclipse-autosd-bootc-qemu-*
           path: ./release-assets
+          merge-multiple: true
       - name: Download platform and showcases packages
         uses: actions/download-artifact@v4
         with:
-          name: score-release-autosd-x86_64
+          pattern: score-release-autosd-*
           path: ./release-assets
-      - name: Upload image to release
+          merge-multiple: true
+      - name: Upload images and packages to release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
-          gh release upload "$RELEASE_NAME" \
-            ./release-assets/eclipse-autosd-bootc-qemu-${{ matrix.target }}.qcow2.xz \
-            ./release-assets/score-platform-autosd-${{ matrix.target }}.tar.gz \
-            ./release-assets/score-showcases-autosd-${{ matrix.target }}.tar.gz \
-            --clobber
+          ls -l ./release-assets
+          gh release upload "$RELEASE_TAG" ./release-assets/*.qcow2.xz ./release-assets/*.tar.gz --clobber

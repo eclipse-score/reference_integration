@@ -92,7 +92,7 @@ declared in the workflows.
      - no
      - none (graph-wide)
    * - `internal_tests.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/internal_tests.yml>`_
-     - Runs the integration tooling tests (``//scripts/tooling:tooling_tests``).
+     - Runs the integration tooling tests (``//:internal_tests``).
      - no
      - only if you change scripts
    * - `docs_cleanup.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/docs_cleanup.yml>`_
@@ -166,8 +166,8 @@ Test levels
 
 The levels are cumulative: ``pr`` < ``merge`` < ``full`` < ``full_clean``.
 
-- **pr**: fast checks (format, copyright, internal tooling tests, known_good
-  consistency, Bzlmod lockfile), module unit/coverage tests, Linux FIT/ITF/PIT and
+- **pr**: fast checks (common checks for format, copyright and the Bzlmod lockfile,
+  internal tooling tests, known_good consistency), module unit/coverage tests, Linux FIT/ITF/PIT and
   module integration tests, Linux image and SBOM, Linux release archives on stock
   distributions, EB corbos Linux and AutoSD, documentation build.
 - **merge**: ``pr`` on the merge-queue candidate, where QNX is mandatory. Test results
@@ -210,11 +210,9 @@ Pipeline stages
 
        subgraph Fast["Fast checks (parallel)"]
            direction LR
-           Format["Formatting"]
-           Copyright["Copyright"]
+           Common["Common checks<br/>(format, copyright,<br/>Bzlmod lockfile)"]
            Internal["Internal tooling tests"]
            KnownGood["known_good consistency"]
-           Lock["Bzlmod lockfile"]
        end
 
        Prepare --> Fast
@@ -242,7 +240,11 @@ Pipeline stages
    job builds ``github.sha``: the PR merge commit, the merge-queue head or the pushed
    commit.
 #. Fast checks run in parallel on the committed candidate. The ``gate`` job requires
-   all of them.
+   all of them. The common checks and the internal tooling tests call the shared
+   ``on-pr.yml`` and ``bazel.yml`` workflows of
+   `eclipse-score/cicd-workflows <https://github.com/eclipse-score/cicd-workflows>`_;
+   the common checks run formatting, copyright and the Bzlmod lockfile checks one
+   after another in a single job.
 #. ``resolve`` resolves the module graph once: ``pinned`` uses the committed files,
    ``latest`` the module ``main`` branches (``scripts/known_good/update_module_latest.py``),
    ``override`` one module (``scripts/known_good/override_known_good_repo.py``). It
@@ -318,7 +320,10 @@ the maximum permissions (``contents: write``, ``pages: write``, ``id-token: writ
 ``pull-requests: write``). Every job in the pipeline declares its own minimum, and jobs
 that run candidate code get ``contents: read``. Concurrency of a pipeline run is
 defined in the callers. The ``build_and_test_*.yml`` leaves keep a concurrency group
-for their standalone runs; when called, their group is unique per run.
+for their standalone runs; when called, their group is unique per run. ``docs-deploy``
+shares the ``docs-publish`` group with the daily maintenance workflow (``daily.yml``),
+which cleans up old documentation versions: both push to ``gh-pages``, so they run one
+at a time, and waiting deploys are queued instead of cancelled.
 
 Forks and the merge queue
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -326,10 +331,14 @@ Forks and the merge queue
 - Fork pull requests run at the ``pr`` level with a read-only token and no secrets.
   They skip QNX, and module tests use the public Ubuntu snapshots instead of the
   ``UBUNTU_SNAPSHOT_MIRROR_URL`` mirror.
-- No workflow in the pipeline uses ``pull_request_target``, so fork code never runs
-  with secrets. Pull requests from branches of this repository get the secrets, as
+- The unified pipeline never runs under ``pull_request_target``, so it never runs fork
+  code with secrets. Pull requests from branches of this repository get the secrets, as
   their authors already have write access. For fork pull requests, the merge queue
   is the first run with QNX, after review.
+- The previous workflows ``build_and_test_qnx.yml`` and ``test_and_docs.yml`` still
+  have their own ``pull_request_target`` trigger for standalone runs. It is removed
+  together with their other event triggers once the unified pipeline is the required
+  check (see `Migration status`_).
 - Forks of this repository never publish, and GitHub disables scheduled workflows in
   forks.
 
