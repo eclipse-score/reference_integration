@@ -127,3 +127,15 @@ score_pkg_bundle(
     },
     package_dir = "standalone",
 )
+
+# Build-only bundle: it is part of the showcases solely to make sure the crypto
+# daemon and cryptoki get built for QNX, which would otherwise not be verified
+# in the integration. Running them is a follow-up activity.
+score_pkg_bundle(
+    name = "crypto",
+    bins = [
+        "@score_crypto//score/crypto/src/daemon:crypto_daemon",
+        "@score_crypto//score/cryptoki:cryptoki_cdylib",
+    ],
+    package_dir = "standalone",
+)

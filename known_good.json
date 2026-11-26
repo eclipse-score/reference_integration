@@ -131,9 +131,7 @@
                 "bazel_patches": [
                     "//patches/lifecycle:002-undev-integration-test-deps.patch",
                     "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
-                    "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/lifecycle:006-undev-cpp-policies.patch",
-                    "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch"
+                    "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -161,7 +159,7 @@
                         "//..."
                     ]
                 },
-                "hash": "cc65b0b12596ea6dcb4da8ef438e7a3617486ab5"
+                "hash": "0fa14b47563fb29a632c588b90b5b83c6375876c"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
@@ -233,6 +231,28 @@
                     ]
                 }
             },
+            "score_crypto": {
+                "repo": "https://github.com/eclipse-score/crypto.git",
+                "hash": "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
+                "bazel_patches": [
+                    "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//score/..."
+                    ]
+                },
+                "pin_version": true
+            },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
@@ -276,7 +296,12 @@
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
                 "docs": false,
-                "version": "0.0.15"
+                "version": "0.0.16"
+            },
+            "score_openssl": {
+                "repo": "https://github.com/eclipse-score/openssl.git",
+                "docs": false,
+                "version": "0.2.2"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
@@ -363,5 +388,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-21T16:52:15Z"
+    "timestamp": "2026-11-25T13:53:19Z"
 }

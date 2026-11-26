@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-21T16:52:15Z
+# Generated from known_good.json at 2026-11-25T13:53:19Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
@@ -60,14 +60,12 @@ git_override(
 bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
-    commit = "cc65b0b12596ea6dcb4da8ef438e7a3617486ab5",
+    commit = "0fa14b47563fb29a632c588b90b5b83c6375876c",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
         "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
         "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-        "//patches/lifecycle:006-undev-cpp-policies.patch",
-        "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -95,6 +93,17 @@ single_version_override(
         "//patches/time:003-undev-rules-imagefs.patch",
     ],
     version = "0.3.3",
+)
+
+bazel_dep(name = "score_crypto")
+git_override(
+    module_name = "score_crypto",
+    commit = "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
+    patch_strip = 1,
+    patches = [
+        "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+    ],
+    remote = "https://github.com/eclipse-score/crypto.git",
 )
 
 bazel_dep(name = "score_config_management")
