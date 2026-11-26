@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6. Step 6 — Add feature integration tests &#8212; REF_INT  documentation</title>
+    <title>6. Step 6 — Add integration tests &#8212; REF_INT  documentation</title>
   
   
   
@@ -446,7 +446,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step_3_unit_tests.html">3. Step 3 — Get compiled and unit-tested on the default platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_4_platforms.html">4. Step 4 — Get built and tested on the target platforms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_5_component_tests.html">5. Step 5 — Add component tests</a></li>
-<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">6. Step 6 — Add feature integration tests</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">6. Step 6 — Add integration tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_7_reporting.html">7. Step 7 — Add coverage and verification reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_8_code_quality.html">8. Step 8 — Code quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checklist.html">9. Checklist</a></li>
@@ -494,7 +494,7 @@
     
     <li class="breadcrumb-item"><a href="integration_process.html" class="nav-link">Integration Process</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">6. </span>Step 6 — Add feature integration tests</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><span class="section-number">6. </span>Step 6 — Add integration tests</span></li>
   </ul>
 </nav>
 </div>
@@ -511,66 +511,115 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="step-6-add-feature-integration-tests">
-<h1><span class="section-number">6. </span>Step 6 — Add feature integration tests<a class="headerlink" href="#step-6-add-feature-integration-tests" title="Link to this heading">#</a></h1>
+  <section id="step-6-add-integration-tests">
+<h1><span class="section-number">6. </span>Step 6 — Add integration tests<a class="headerlink" href="#step-6-add-integration-tests" title="Link to this heading">#</a></h1>
 <div class="tip admonition">
 <p class="admonition-title">What it unlocks</p>
-<p><strong>Runtime feature tests</strong> — Your showcase is <strong>exercised at runtime</strong> on the
-deployed images, not just built. This is the difference between “it ships”
-and “it provably works on the target”.</p>
+<p><strong>Runtime verification</strong> — Your module is <strong>exercised at runtime</strong>: on the
+deployed images and against its public API, not just built. This is the
+difference between “it ships” and “it provably works on the target”.</p>
 </div>
-<section id="two-test-frameworks">
-<h2><span class="section-number">6.1. </span>Two test frameworks<a class="headerlink" href="#two-test-frameworks" title="Link to this heading">#</a></h2>
-<p>The integration currently uses <strong>two</strong> separate frameworks for integration
-tests, each driven by its own Bazel target and run in a different CI workflow:</p>
-<ul>
-<li><p><strong>FIT — scenario-based feature integration tests</strong>
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/test_cases">feature_integration_tests/test_cases</a>,
-target <code class="docutils literal notranslate"><span class="pre">//feature_integration_tests/test_cases:fit</span></code>). Python/Pytest test
-cases that orchestrate Rust and C++ scenarios. They are executed as part of the
-<code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow on the default Linux platform:</p>
+<section id="two-levels-of-integration-tests">
+<h2><span class="section-number">6.1. </span>Two levels of integration tests<a class="headerlink" href="#two-levels-of-integration-tests" title="Link to this heading">#</a></h2>
+<p>The integration has two complementary kinds of integration tests:</p>
+<ul class="simple">
+<li><p><strong>Platform integration tests (PIT) — does it run on the platform?</strong>
+Black-box tests on the real images. They show that the integrated platform
+starts and runs end to end, and verify stakeholder requirements.</p></li>
+<li><p><strong>Feature integration tests (FIT) — does the feature behave correctly?</strong>
+White-box tests against the module APIs. They check specific behaviour in
+depth and verify feature requirements.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Platform integration tests (PIT)</p></th>
+<th class="head"><p>Feature integration tests (FIT)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>What runs</p></td>
+<td><p>The module’s showcase (Step 4) on a booted image, started through the
+showcase CLI; optional extra checks on console output, files or DLT</p></td>
+<td><p>Scenario binaries written in Rust/C++ against the module’s public API,
+driven by pytest</p></td>
+</tr>
+<tr class="row-odd"><td><p>Where</p></td>
+<td><p>Linux x86_64 image (Docker) and QNX x86_64 image (QEMU), via ITF</p></td>
+<td><p>Linux host</p></td>
+</tr>
+<tr class="row-even"><td><p>Verifies</p></td>
+<td><p>Stakeholder requirements (<code class="docutils literal notranslate"><span class="pre">stkh_req__…</span></code>)</p></td>
+<td><p>Feature requirements (<code class="docutils literal notranslate"><span class="pre">feat_req__…</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Location</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/platform_integration_tests">platform_integration_tests/</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests">feature_integration_tests/</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Bazel target</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">//platform_integration_tests:pit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">//feature_integration_tests/test_cases:fit</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id1">
+<h2><span class="section-number">6.2. </span>Platform integration tests<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Add a package <code class="docutils literal notranslate"><span class="pre">platform_integration_tests/&lt;module&gt;</span></code> with a <code class="docutils literal notranslate"><span class="pre">py_itf_test</span></code>
+(copy an existing one, e.g. <code class="docutils literal notranslate"><span class="pre">platform_integration_tests/time</span></code>) and list it in
+the <code class="docutils literal notranslate"><span class="pre">pit</span></code> test suite in <code class="docutils literal notranslate"><span class="pre">platform_integration_tests/BUILD</span></code>. The test runs your
+showcase by its name from the <code class="docutils literal notranslate"><span class="pre">*.score.json</span></code> file and links the stakeholder
+requirement it verifies:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">attribute_plugin</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_test_properties</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">showcase_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_showcases</span>
+
+<span class="nd">@add_test_properties</span><span class="p">(</span>
+    <span class="n">partially_verifies</span><span class="o">=</span><span class="p">[</span><span class="s2">"stkh_req__my_area__my_requirement"</span><span class="p">],</span>
+    <span class="n">test_type</span><span class="o">=</span><span class="s2">"interface-test"</span><span class="p">,</span>
+    <span class="n">derivation_technique</span><span class="o">=</span><span class="s2">"requirements-analysis"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_my_module_showcase</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">run_showcases</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"My Module Example"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">"expected result"</span> <span class="ow">in</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">run_showcases</span></code> fails the test if any app of the showcase exits non-zero or is
+killed by a signal. Add your own checks on top where the exit code is not enough:
+console output (<code class="docutils literal notranslate"><span class="pre">platform_integration_tests/platform_info</span></code>), files on the target
+(<code class="docutils literal notranslate"><span class="pre">platform_integration_tests/persistency</span></code>) or recorded DLT traffic
+(<code class="docutils literal notranslate"><span class="pre">platform_integration_tests/platform_run</span></code>).</p>
+<p>The PITs run for the Linux image in
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml">test_and_docs.yml</a>
+and for the QNX image in
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Linux x86_64 image (Docker)</span>
+bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>linux-x86_64<span class="w"> </span>//platform_integration_tests:pit
+<span class="c1"># QNX image, booted under QEMU</span>
+bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>itf-qnx-x86_64<span class="w"> </span>//platform_integration_tests:pit
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">6.3. </span>Feature integration tests<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Implement scenarios for your feature in Rust or C++ under
+<code class="docutils literal notranslate"><span class="pre">feature_integration_tests/test_scenarios</span></code> and the pytest cases that run them
+under <code class="docutils literal notranslate"><span class="pre">feature_integration_tests/test_cases/tests/&lt;feature&gt;</span></code>. Each test links
+the feature requirement it verifies with <code class="docutils literal notranslate"><span class="pre">add_test_properties</span></code>. The FITs run in
+<code class="docutils literal notranslate"><span class="pre">test_and_docs.yml</span></code> on the Linux host:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>linux-x86_64<span class="w"> </span>//feature_integration_tests/test_cases:fit
 </pre></div>
 </div>
-</li>
-<li><p><strong>ITF — Integration Test Framework</strong>
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf">feature_integration_tests/itf</a>,
-target <code class="docutils literal notranslate"><span class="pre">//feature_integration_tests/itf</span></code>). Black-box tests that run against a
-booted image. They are executed for <strong>two</strong> images only — QNX (on QEMU) by
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a> and
-Linux x86_64 by
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># QNX image, booted under QEMU</span>
-bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>itf-qnx-x86_64<span class="w"> </span>//feature_integration_tests/itf
-<span class="c1"># Linux x86_64 image</span>
-bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>linux-x86_64<span class="w">  </span>//feature_integration_tests/itf
-</pre></div>
-</div>
-</li>
-</ul>
-<p>Add black-box tests that exercise your showcase on a running target under
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf">feature_integration_tests/itf</a>. They run
-against the deployed image and assert that the binary is present and behaves as
-expected:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_my_example_is_deployed</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
-    <span class="n">exit_code</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"test -f /showcases/bin/my_example"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">0</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_my_example_runs</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
-    <span class="n">exit_code</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"/showcases/bin/my_example"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">0</span>
-</pre></div>
-</div>
-<p>The existing <code class="docutils literal notranslate"><span class="pre">test_run_all_showcases</span></code> test invokes <code class="docutils literal notranslate"><span class="pre">cli</span> <span class="pre">--examples=all</span></code>, so
-any showcase you registered in Step 4 is already covered by the end-to-end run.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>Planned consolidation.</strong> Having two integration-test frameworks (FIT and
-ITF) executed by different workflows on different platforms is a known gap.
-The execution should be consolidated so that <strong>all integration tests — both
-FIT and ITF — run against all four target images</strong> (Linux x86_64, QNX, AutoSD,
-EBcLfSA aarch64), instead of FIT running only in <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> on Linux
-and ITF running only for the QNX and Linux images.</p>
+<p><strong>Planned consolidation.</strong> The FITs run only on the Linux host and the PITs
+only on the Linux x86_64 and QNX x86_64 images. Both should run against <strong>all
+four target images</strong> (Linux x86_64, QNX, AutoSD, EBcLfSA aarch64).</p>
 </div>
 </section>
 </section>
@@ -622,7 +671,9 @@ and ITF running only for the QNX and Linux images.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-test-frameworks">6.1. Two test frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-levels-of-integration-tests">6.1. Two levels of integration tests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">6.2. Platform integration tests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.3. Feature integration tests</a></li>
 </ul>
   </nav></div>
 
