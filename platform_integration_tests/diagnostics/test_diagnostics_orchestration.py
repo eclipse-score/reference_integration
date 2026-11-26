@@ -21,8 +21,8 @@ import threading
 from types import SimpleNamespace
 from unittest import mock
 
+import diagnostics_orchestration as diagnostics
 import pytest
-import test_diagnostics_showcase as diagnostics
 
 
 class _Process:
@@ -100,7 +100,7 @@ def gateway(monkeypatch):
 
 def test_coexistence_uses_network_before_and_after_platform_run(gateway):
     target = _Target()
-    diagnostics.test_diagnostics_and_platform_run_coexist(target)
+    diagnostics.check_diagnostics_and_platform_run_coexist(target)
 
     assert target.commands[0] == (diagnostics._SERVICE, ["--if-not-running"])
     assert "S-CORE Platform Run" in target.commands[1]
@@ -118,7 +118,7 @@ def test_bad_platform_verdict_still_stops_service(caplog):
     target = _Target()
     target.platform_output = b"Example 'S-CORE Platform Run' finished successfully\nS-CORE platform run: FAILED\n"
     with pytest.raises(AssertionError), caplog.at_level("ERROR", logger=diagnostics._LOGGER.name):
-        diagnostics.test_diagnostics_and_platform_run_coexist(target)
+        diagnostics.check_diagnostics_and_platform_run_coexist(target)
     assert target.process.stopped
     assert "service log" in caplog.text
 
@@ -164,7 +164,16 @@ def test_service_exiting_during_platform_run_fails(gateway, caplog):
 
     target.execute = execute
     with pytest.raises(AssertionError, match="service log"), caplog.at_level("ERROR", logger=diagnostics._LOGGER.name):
-        diagnostics.test_diagnostics_and_platform_run_coexist(target)
+        diagnostics.check_diagnostics_and_platform_run_coexist(target)
     assert not target.process.stopped
     assert "service log" in caplog.text
     assert len(gateway.requests) == 2
+
+
+def test_platform_run_verdict():
+    echoed_command = "App 1: spawned command echo 'S-CORE platform run: FAILED (timeout)'\n"
+    assert diagnostics._platform_run_passed(echoed_command + "S-CORE platform run: PASSED\n")
+    assert not diagnostics._platform_run_passed(echoed_command)
+    assert not diagnostics._platform_run_passed(echoed_command + "S-CORE platform run: FAILED (timeout)\n")
+    assert not diagnostics._platform_run_passed("S-CORE platform run: PASSED\nS-CORE platform run: FAILED\n")
+    assert not diagnostics._platform_run_passed("echo 'S-CORE platform run: PASSED'\n")

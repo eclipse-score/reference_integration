@@ -15,8 +15,8 @@ load("@score_itf//:defs.bzl", "py_itf_test")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 py_library(
-    name = "diagnostics_showcase",
-    srcs = ["test_diagnostics_showcase.py"],
+    name = "diagnostics_orchestration",
+    srcs = ["diagnostics_orchestration.py"],
     imports = ["."],
     deps = ["//platform_integration_tests:showcase_runner"],
 )
@@ -26,7 +26,7 @@ score_py_pytest(
     size = "small",
     srcs = ["test_diagnostics_orchestration.py"],
     pytest_config = "//:pyproject.toml",
-    deps = [":diagnostics_showcase"],
+    deps = [":diagnostics_orchestration"],
 )
 
 # Linux only: the OpenSOVD gateway and the CDA are not supported on QNX, so the test is skipped
@@ -64,6 +64,7 @@ py_itf_test(
         "//conditions:default": ["@platforms//:incompatible"],
     }),
     deps = [
+        ":diagnostics_orchestration",
         "//platform_integration_tests:showcase_runner",
     ],
 )
