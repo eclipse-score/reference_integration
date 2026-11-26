@@ -394,6 +394,29 @@
                 },
                 "pin_version": true
             }
+        },
+        "diagnostics_deps": {
+            "classic-diagnostic-adapter": {
+                "repo": "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
+                "hash": "f613cde67473d6746725edc9cbf8f64179a74f6a",
+                "docs": false,
+                "bazel_patches": [
+                    "//patches/diagnostics:classic-diagnostic-adapter-export-requirements.patch"
+                ]
+            },
+            "mbedtls-rs": {
+                "repo": "https://github.com/eclipse-opensovd/mbedtls-rs.git",
+                "hash": "1dac0d8c6a80feb3864e86aac80b35cf34b10f87",
+                "docs": false
+            },
+            "opensovd_core": {
+                "repo": "https://github.com/eclipse-opensovd/opensovd-core.git",
+                "hash": "f61eeeb4133e5c5a7c3541861489f12e306e4ee4",
+                "docs": false,
+                "bazel_patches": [
+                    "//patches/diagnostics:opensovd-core-build-stamp.patch"
+                ]
+            }
         }
     },
     "sbom": {
