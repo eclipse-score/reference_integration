@@ -23,6 +23,8 @@ common --repo_env=ANDROID_HOME=
 build:unified-base --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:unified-base --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:unified-base --extra_toolchains=@unified_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
+# The host pkg-config bootstrap's bundled GLib uses GNU C assembly.
+build:unified-base --host_conlyopt=-std=gnu11
 # Module coverage_tool configurations select their own instrumented toolchain on top of
 # unified-base. Keep the generic Clang fallback in unified for other coverage callers.
 build:unified --config=unified-base

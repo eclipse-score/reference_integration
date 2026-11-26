@@ -49,10 +49,8 @@ bazel_dep(name = "libpfm", version = "4.11.0.bcr.2")
 
 # score_crypto builds soft_hsm with rules_foreign_cc's cmake rule for pkcs11 backend simulation.
 # rules_foreign_cc versions greater than 0.15.1 do not know the QNX target OS (CMAKE_SYSTEM_NAME "QNX").
-# Pin 0.15.1 for QNX; its pkg-config bootstrap needs GNU C for bundled glib.
+# Pin 0.15.1 for QNX.
 single_version_override(
     module_name = "rules_foreign_cc",
-    patch_strip = 1,
-    patches = ["//patches/rules_foreign_cc:001-pkgconfig-gnu11.patch"],
     version = "0.15.1",
 )
