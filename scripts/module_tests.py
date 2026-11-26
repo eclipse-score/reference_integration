@@ -152,6 +152,8 @@ def drop_vanished_pins(pinned: dict[str, Path], rc: Path, workspace: Path, env: 
 def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> str:
     """Pin each module to its path; the module's ``extra_test_config`` flags follow as build flags."""
     rc = "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
+    if "opensovd_core" in paths:
+        rc += "build --@opensovd_core//opensovd-cli/gateway:build_stamp=//patches/diagnostics:opensovd_stamp_env\n"
     return rc + "".join(f"build --{flag}\n" for flag in extra_test_config)
 
 
@@ -274,7 +276,7 @@ def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str
 
 
 def _provide_opensovd_stamp(workspace: Path, pinned: dict[str, Path]) -> None:
-    """Provide the root-workspace stamp required by the patched OpenSOVD module."""
+    """Provide the stamp selected by OpenSOVD's upstream build setting."""
     if "opensovd_core" not in pinned:
         return
 

@@ -64,6 +64,15 @@ def test_override_rc_appends_extra_test_config_as_build_flags():
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
 
 
+def test_override_rc_selects_the_stamp_when_opensovd_is_pinned():
+    rc = override_rc({"opensovd_core": Path("/o/opensovd_core+")})
+    assert rc == (
+        "common --override_module=opensovd_core=/o/opensovd_core+\n"
+        "build --@opensovd_core//opensovd-cli/gateway:build_stamp="
+        "//patches/diagnostics:opensovd_stamp_env\n"
+    )
+
+
 def test_opensovd_stamp_is_copied_into_the_module_root(tmp_path, monkeypatch):
     output_base = tmp_path / "output_base"
     stamp = output_base / "external" / "stamp" / "stamp.env"
