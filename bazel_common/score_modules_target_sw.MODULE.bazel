@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-21T16:52:15Z
+# Generated from known_good.json at 2026-11-25T13:53:19Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
@@ -29,7 +29,7 @@ single_version_override(
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "3b42d226c59b91690fb952a737a123ddb48b0a7d",
+    commit = "2b964fd93436b59839c017822fefbc9138083298",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
@@ -95,6 +95,17 @@ single_version_override(
         "//patches/time:003-undev-rules-imagefs.patch",
     ],
     version = "0.3.3",
+)
+
+bazel_dep(name = "score_crypto")
+git_override(
+    module_name = "score_crypto",
+    commit = "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
+    patch_strip = 1,
+    patches = [
+        "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+    ],
+    remote = "https://github.com/eclipse-score/crypto.git",
 )
 
 bazel_dep(name = "score_config_management")
