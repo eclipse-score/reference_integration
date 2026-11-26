@@ -5307,6 +5307,476 @@
   },
   {
     "repo": {
+      "name": "score_crypto",
+      "hash": "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
+      "url": "https://github.com/eclipse-score/crypto"
+    },
+    "needs": [
+      {
+        "need": "comp_req__crypto_cert_mgmt__parser_authority",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "CertManagementModuleTest__UsesConfiguredParserProvider",
+              "file": "score/crypto/src/daemon/cert_management/slot/slot_handler_factory_test.cpp",
+              "line": 278,
+              "need": "comp_req__crypto_cert_mgmt__parser_authority",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_management__parse",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "CertificateVariants/BuildCertObjectResponseTest__MatchesEveryExpectedParameter/CertificateWithoutCrl",
+              "file": "score/crypto/src/daemon/cert_management/query/cert_object_response_builder_test.cpp",
+              "line": 229,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateVariants/BuildCertObjectResponseTest__MatchesEveryExpectedParameter/NonCaWithCrlMetadata",
+              "file": "score/crypto/src/daemon/cert_management/query/cert_object_response_builder_test.cpp",
+              "line": 229,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateVariants/BuildCertObjectResponseTest__MatchesEveryExpectedParameter/EmptyKeyIdentifiers",
+              "file": "score/crypto/src/daemon/cert_management/query/cert_object_response_builder_test.cpp",
+              "line": 229,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "FileBackedSlotHandlerRealParserTest__LoadCertificate_MetadataMatchesTestVector",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 74,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "FileBackedSlotHandlerRealParserTest__StoreThenLoad_SubjectAndIsCAMatch",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 94,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/certificate",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/rsa_3072",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/rsa_4096",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ec_p256",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ec_p384",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ec_p521",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ed25519",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ed448",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ml_dsa_44",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ml_dsa_65",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "AlgorithmVariety/FileBackedSlotHandlerAlgorithmVarietyTest__LoadCertificate_MetadataIsCorrect/ml_dsa_87",
+              "file": "score/crypto/src/daemon/cert_management/tests/slot/file_backed_slot_handler_test.cpp",
+              "line": 160,
+              "need": "comp_req__crypto_cert_management__parse",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_mgmt__access_control",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "SlotWriteAuthorization/SlotWriteAuthorizationTest__ChecksWriteAgainstAllowlist/0",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 49,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "SlotWriteAuthorization/SlotWriteAuthorizationTest__ChecksWriteAgainstAllowlist/1",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 49,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "SlotWriteAuthorization/SlotWriteAuthorizationTest__ChecksWriteAgainstAllowlist/2",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 49,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreWriteAuthorization/TrustStoreWriteAuthorizationTest__ChecksWriteAgainstAllowlist/0",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 83,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreWriteAuthorization/TrustStoreWriteAuthorizationTest__ChecksWriteAgainstAllowlist/1",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 83,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreWriteAuthorization/TrustStoreWriteAuthorizationTest__ChecksWriteAgainstAllowlist/2",
+              "file": "score/crypto/src/daemon/cert_management/policy/access_policy_enforcer_test.cpp",
+              "line": 83,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__WritesDeniedWhenAllowedWriteUidsIsEmpty",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 404,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__TrustStoreMutation_DeniedForUnauthorizedUid",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 442,
+              "need": "comp_req__crypto_cert_mgmt__access_control",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_management__persistence",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "FileBackedSlotHandlerTest__StoresLoadsAndClearsCrl",
+              "file": "score/crypto/src/daemon/cert_management/slot/file_backed_slot_handler_test.cpp",
+              "line": 332,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__LoadsPersistsUpdatesAndInvalidatesTrustStoreAnchor",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 196,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__StoreCrl_GrantedForAuthorizedUid_StoresCrl",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 318,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__AddMember_ToExclusiveSlot_AddsAnchorAndPersistsToDisk",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1087,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__PersistState_DisabledMemberSurvivesReload",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1837,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__PersistState_EmptyDeploymentPath_DisabledMemberIsEnabledAfterReload",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1895,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__ConditionalExternal_EmptyDeploymentPath_UnacknowledgedChangeIsAcceptedAfterReload",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1939,
+              "need": "comp_req__crypto_cert_management__persistence",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_management__slots",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "CertificateManagementIntegrationTest__LoadsPersistsUpdatesAndInvalidatesTrustStoreAnchor",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 196,
+              "need": "comp_req__crypto_cert_management__slots",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__LoadCertificate_IsUnrestrictedForAnyUid",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 262,
+              "need": "comp_req__crypto_cert_management__slots",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertificateManagementIntegrationTest__StoreCertificate_GrantedForAuthorizedUid",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 277,
+              "need": "comp_req__crypto_cert_management__slots",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_mgmt__trust_stores",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "CertificateManagementIntegrationTest__LoadsPersistsUpdatesAndInvalidatesTrustStoreAnchor",
+              "file": "score/crypto/src/daemon/cert_management/tests/integration/test_certificate_management_integration.cpp",
+              "line": 196,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__LoadsAnchorsLazilyAndBuildsSlotMembershipIndex",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 255,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__AddMember_ToExclusiveSlot_AddsAnchorAndPersistsToDisk",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1087,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__NotifySlotChanged_ReloadsOnlyTheChangedMember",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 2017,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__NotifySlotChanged_ConditionalMember_DisabledOnlyWhenItsOwnSlotChanges",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 2082,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__NotifySlotChanged_ConditionalMember_IdenticalRewriteKeepsMemberEnabled",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 2148,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__NotifySlotChanged_BeforeFirstLoad_NextReadSeesNewContent",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 2195,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "CertManagementServiceTest__UpdateSlot_Certificate_NotifiesTrustStoreAnchorCache",
+              "file": "score/crypto/src/daemon/cert_management/tests/service/test_cert_management_service.cpp",
+              "line": 410,
+              "need": "comp_req__crypto_cert_mgmt__trust_stores",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__crypto_cert_mgmt__tstr_cnsstncy",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TrustStoreManagerTest__ExclusiveMemberCrlWrites_AreVisibleThroughSlotManagerCache",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 1599,
+              "need": "comp_req__crypto_cert_mgmt__tstr_cnsstncy",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TrustStoreManagerTest__ConcurrentReads_DuringSlotUpdates_ObserveCompleteAnchorSet_LastWriteWins",
+              "file": "score/crypto/src/daemon/cert_management/tests/truststore/test_trust_store_manager.cpp",
+              "line": 2246,
+              "need": "comp_req__crypto_cert_mgmt__tstr_cnsstncy",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "repo": {
       "name": "score_baselibs",
       "hash": "0.2.19",
       "url": "https://github.com/eclipse-score/baselibs"
