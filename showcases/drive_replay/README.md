@@ -49,7 +49,7 @@ S-CORE interfaces, dotted arrows are lifecycle reports and the optional visualiz
 | # | From → to | S-CORE module / API | Transport | Content |
 |---|---|---|---|---|
 | ① | `replay_app` → `warn_app` | score_communication, `mw::com` skeleton / proxy, service `score/showcases/drive_replay/DriveData` ([drive_data.h](drive_data.h)) | shared memory (LoLa) | event `frame`: sequence number, simulation time, position and speed of ego and lead vehicle, scenario phase |
-| ② | `warn_app` → `launch_manager` | score_lifecycle, health monitor (heartbeat monitor 10–300 ms) and alive supervision | shared memory | alive notifications every 50 ms; none after the injected hang → `Alive Supervision (warn_app) switched to FAILED` |
+| ② | `warn_app` → `launch_manager` | score_lifecycle, health monitor (heartbeat monitor 10–2000 ms) and alive supervision | shared memory | alive notifications every 50 ms; none after the injected hang → `Alive Supervision (warn_app) switched to FAILED` |
 | ③ | `launch_manager` → all processes | score_lifecycle, launch manager ([configs/launch_manager_config.json](configs/launch_manager_config.json)) | process start / `SIGTERM` | Run Target `Drive` (all processes) or `fallback_run_target` (without `warn_app`) |
 | ④ | apps → `launch_manager` | score_lifecycle, lifecycle client `report_running()` | file descriptor from the launch manager | "process is up", completes the Run Target transition |
 | ⑤ | `drive_state_manager` ↔ `launch_manager` | score_lifecycle, `ILmControl` over score_communication ([configs/mw_com_config.json](configs/mw_com_config.json)) | shared memory (LoLa) | event `ActivationResult` (Run Target reached, source: initial / request / recovery), method `ActivateRunTarget("Drive")` |

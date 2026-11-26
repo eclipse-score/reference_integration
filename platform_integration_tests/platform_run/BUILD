@@ -40,7 +40,9 @@ py_itf_test(
     }) + [
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
+    # DLT multicast is shared with the other showcase containers.
     tags = [
+        "exclusive",
         "manual",
     ],
     target_compatible_with = select({
