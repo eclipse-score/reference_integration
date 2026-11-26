@@ -60,7 +60,7 @@ no `FAILED` line, and in the DLT trace:
 | `LGGG` / `LOGG`  | `DLT generator finished`                                                    |
 | `PINC` / `PINF`  | `platform_info_consumer: S-CORE version check passed`                       |
 | `LM` / `LM`      | `Completed the request for Run Target PlatformRun`                          |
-| `LM` / `LM`      | per test application: `Starting process ( <app> )` and `Process <app> ( pid <n> ) terminated with status 0` |
+| `LM` / `LM`      | per test application: `Name: <app>, PID: <n> Starting process from executable` and `Name: <app>, PID: <n> Process terminated with status 0` |
 
 It fails on any launch manager warning in the trace (`unexpected termination of
 process`, `Problem discovered`, `did not meet its ready condition`).

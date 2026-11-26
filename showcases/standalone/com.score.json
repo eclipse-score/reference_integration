@@ -1,14 +1,13 @@
 {
     "name": "Communication Sender Receiver Example",
-    "description": "Example for running communication sender and receiver",
+    "description": "Runs the producer and consumer as separate processes to demonstrate inter-process communication",
     "apps":[
         {
             "path": "/showcases/bin/producer_app",
             "args": [
                 "-s", "/showcases/data/comm/etc/mw_com_config.json"
             ],
-            "env": {
-            },
+            "env": {},
             "dir": "/showcases/data/comm"
         },
         {
@@ -16,8 +15,7 @@
             "args": [
                 "-s", "/showcases/data/comm/etc/mw_com_config.json"
             ],
-            "env": {
-            },
+            "env": {},
             "dir": "/showcases/data/comm",
             "delay": 1
         }

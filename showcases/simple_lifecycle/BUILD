@@ -30,7 +30,7 @@ launch_manager_config(
 score_pkg_bundle(
     name = "simple_lifecycle",
     bins = [
-        "@score_lifecycle//examples/cpp_supervised_app",
+        "@score_lifecycle//examples/cpp_health_monitor_supervised_app",
         "@score_lifecycle//examples/rust_supervised_app",
         "@score_lifecycle//examples/control_application:control_daemon",
         ":lifecycle_signal.sh",

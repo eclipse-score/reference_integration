@@ -60,14 +60,12 @@ git_override(
 bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
-    commit = "cc65b0b12596ea6dcb4da8ef438e7a3617486ab5",
+    commit = "d8decb3b898c5e2221e3c6bfdc9fcfd097570a6c",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
         "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
         "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-        "//patches/lifecycle:006-undev-cpp-policies.patch",
-        "//patches/lifecycle:007-integration-image-without-sanitizer-runtimes.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
