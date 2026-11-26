@@ -27,6 +27,6 @@ Step 5 — Add component tests
    **Currently missing — needs to be introduced.** There is no component-test
    stage in the Reference Integration yet. Component tests (testing a single
    module's components/interfaces in isolation, between unit tests in Step 3 and
-   the runtime feature integration tests in Step 6) still need to be designed and
+   the runtime integration tests in Step 6) still need to be designed and
    wired into the integration and its CI. This step is a placeholder so the
    intended test pyramid is documented; update it once the mechanism exists.

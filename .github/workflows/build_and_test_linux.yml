@@ -54,9 +54,6 @@ jobs:
       - name: Unit tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //deploy/platform_info:platform_info_test
-      - name: Integration tests
-        run: |
-          bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
       - name: Upload product SBOM
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
         with:

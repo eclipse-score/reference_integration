@@ -47,7 +47,7 @@ declared in the workflows.
      - Gating
      - Your action
    * - `build_and_test_qnx.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml>`_
-     - Builds the QNX IFS and runs integration tests on QEMU.
+     - Builds the QNX IFS and runs the platform integration tests on QEMU.
      - **yes**
      - none (graph-wide)
    * - `build_and_test_autosd.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_autosd.yml>`_
@@ -75,7 +75,8 @@ declared in the workflows.
      - **yes**
      - none
    * - `test_and_docs.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml>`_
-     - Code-quality checks, builds the docs and reports, publishes to Pages.
+     - Code-quality checks and the feature and Linux platform integration tests;
+       builds the docs and reports, publishes to Pages.
      - **yes**
      - wire docs in Step 2, reports in Step 7
    * - `check_release_approvals.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/check_release_approvals.yml>`_
@@ -83,7 +84,8 @@ declared in the workflows.
      - release branches only
      - none
    * - `build_and_test_linux.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml>`_
-     - Builds the Linux x86_64 image and runs feature integration tests on Docker.
+     - Builds the Linux x86_64 image and product SBOM and runs the unit tests of
+       ``deploy/``; the Linux platform integration tests run in ``test_and_docs.yml``.
      - no
      - none (graph-wide)
    * - `build_and_test_linux_target.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux_target.yml>`_

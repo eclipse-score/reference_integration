@@ -19,7 +19,7 @@ import pytest
 def dlt_config(dlt_config, target):
     """Point host_ip/target_ip at the Docker target's per-container bridge.
 
-    Same override as feature_integration_tests/itf/conftest.py: the ITF Docker
+    Same override as platform_integration_tests/logging/conftest.py: the ITF Docker
     plugin puts each container on its own bridge, so the gateway in the static
     DLT config does not reach the host-side dlt-receive.
     """

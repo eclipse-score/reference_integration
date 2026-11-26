@@ -16,6 +16,7 @@ import time
 
 import pytest
 
+from attribute_plugin import add_test_properties
 from score.itf.plugins.dlt.dlt_receive import Protocol
 from score.itf.plugins.dlt.dlt_window import DltWindow
 
@@ -90,6 +91,11 @@ def datarouter_running(target):
     yield
 
 
+@add_test_properties(
+    partially_verifies=["stkh_req__dev_experience__logging_support"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
 def test_remote_logging(datarouter_running, dlt_config):
     """Verifies remote logging of Dataraouter
 
@@ -118,6 +124,11 @@ def test_remote_logging(datarouter_running, dlt_config):
     )
 
 
+@add_test_properties(
+    partially_verifies=["stkh_req__dev_experience__logging_support"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
 def test_logging_app_logs_forwarded_to_dlt(datarouter_running, target, dlt_config):
     """Verifies that Logging App logs are forwarded to DLT."""
 

@@ -12,70 +12,109 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Step 6 — Add feature integration tests
-======================================
+Step 6 — Add integration tests
+==============================
 
 .. admonition:: What it unlocks
    :class: tip
 
-   **Runtime feature tests** — Your showcase is **exercised at runtime** on the
-   deployed images, not just built. This is the difference between "it ships"
-   and "it provably works on the target".
+   **Runtime verification** — Your module is **exercised at runtime**: on the
+   deployed images and against its public API, not just built. This is the
+   difference between "it ships" and "it provably works on the target".
 
-Two test frameworks
--------------------
+Two levels of integration tests
+-------------------------------
 
-The integration currently uses **two** separate frameworks for integration
-tests, each driven by its own Bazel target and run in a different CI workflow:
+The integration has two complementary kinds of integration tests:
 
-* **FIT — scenario-based feature integration tests**
-  (`feature_integration_tests/test_cases <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/test_cases>`_,
-  target ``//feature_integration_tests/test_cases:fit``). Python/Pytest test
-  cases that orchestrate Rust and C++ scenarios. They are executed as part of the
-  ``test_and_docs`` workflow on the default Linux platform:
+* **Platform integration tests (PIT) — does it run on the platform?**
+  Black-box tests on the real images. They show that the integrated platform
+  starts and runs end to end, and verify stakeholder requirements.
+* **Feature integration tests (FIT) — does the feature behave correctly?**
+  White-box tests against the module APIs. They check specific behaviour in
+  depth and verify feature requirements.
 
-  .. code-block:: bash
+.. list-table::
+   :header-rows: 1
+   :widths: 20 40 40
 
-     bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+   * -
+     - Platform integration tests (PIT)
+     - Feature integration tests (FIT)
+   * - What runs
+     - The module's showcase (Step 4) on a booted image, started through the
+       showcase CLI; optional extra checks on console output, files or DLT
+     - Scenario binaries written in Rust/C++ against the module's public API,
+       driven by pytest
+   * - Where
+     - Linux x86_64 image (Docker) and QNX x86_64 image (QEMU), via ITF
+     - Linux host
+   * - Verifies
+     - Stakeholder requirements (``stkh_req__…``)
+     - Feature requirements (``feat_req__…``)
+   * - Location
+     - `platform_integration_tests/ <https://github.com/eclipse-score/reference_integration/tree/main/platform_integration_tests>`_
+     - `feature_integration_tests/ <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests>`_
+   * - Bazel target
+     - ``//platform_integration_tests:pit``
+     - ``//feature_integration_tests/test_cases:fit``
 
-* **ITF — Integration Test Framework**
-  (`feature_integration_tests/itf <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf>`_,
-  target ``//feature_integration_tests/itf``). Black-box tests that run against a
-  booted image. They are executed for **two** images only — QNX (on QEMU) by
-  `build_and_test_qnx.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml>`_ and
-  Linux x86_64 by
-  `build_and_test_linux.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml>`_:
+Platform integration tests
+--------------------------
 
-  .. code-block:: bash
-
-     # QNX image, booted under QEMU
-     bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf
-     # Linux x86_64 image
-     bazel test --config=linux-x86_64  //feature_integration_tests/itf
-
-Add black-box tests that exercise your showcase on a running target under
-`feature_integration_tests/itf <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf>`_. They run
-against the deployed image and assert that the binary is present and behaves as
-expected:
+Add a package ``platform_integration_tests/<module>`` with a ``py_itf_test``
+(copy an existing one, e.g. ``platform_integration_tests/time``) and list it in
+the ``pit`` test suite in ``platform_integration_tests/BUILD``. The test runs your
+showcase by its name from the ``*.score.json`` file and links the stakeholder
+requirement it verifies:
 
 .. code-block:: python
 
-   def test_my_example_is_deployed(target):
-       exit_code, _ = target.execute("test -f /showcases/bin/my_example")
-       assert exit_code == 0
+   from attribute_plugin import add_test_properties
+   from showcase_runner import run_showcases
 
-   def test_my_example_runs(target):
-       exit_code, out = target.execute("/showcases/bin/my_example")
-       assert exit_code == 0
+   @add_test_properties(
+       partially_verifies=["stkh_req__my_area__my_requirement"],
+       test_type="interface-test",
+       derivation_technique="requirements-analysis",
+   )
+   def test_my_module_showcase(target):
+       output = run_showcases(target, "My Module Example")
+       assert "expected result" in output
 
-The existing ``test_run_all_showcases`` test invokes ``cli --examples=all``, so
-any showcase you registered in Step 4 is already covered by the end-to-end run.
+``run_showcases`` fails the test if any app of the showcase exits non-zero or is
+killed by a signal. Add your own checks on top where the exit code is not enough:
+console output (``platform_integration_tests/platform_info``), files on the target
+(``platform_integration_tests/persistency``) or recorded DLT traffic
+(``platform_integration_tests/platform_run``).
+
+The PITs run for the Linux image in
+`test_and_docs.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml>`_
+and for the QNX image in
+`build_and_test_qnx.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml>`_:
+
+.. code-block:: bash
+
+   # Linux x86_64 image (Docker)
+   bazel test --config=linux-x86_64 //platform_integration_tests:pit
+   # QNX image, booted under QEMU
+   bazel test --config=itf-qnx-x86_64 //platform_integration_tests:pit
+
+Feature integration tests
+-------------------------
+
+Implement scenarios for your feature in Rust or C++ under
+``feature_integration_tests/test_scenarios`` and the pytest cases that run them
+under ``feature_integration_tests/test_cases/tests/<feature>``. Each test links
+the feature requirement it verifies with ``add_test_properties``. The FITs run in
+``test_and_docs.yml`` on the Linux host:
+
+.. code-block:: bash
+
+   bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 
 .. note::
 
-   **Planned consolidation.** Having two integration-test frameworks (FIT and
-   ITF) executed by different workflows on different platforms is a known gap.
-   The execution should be consolidated so that **all integration tests — both
-   FIT and ITF — run against all four target images** (Linux x86_64, QNX, AutoSD,
-   EBcLfSA aarch64), instead of FIT running only in ``test_and_docs`` on Linux
-   and ITF running only for the QNX and Linux images.
+   **Planned consolidation.** The FITs run only on the Linux host and the PITs
+   only on the Linux x86_64 and QNX x86_64 images. Both should run against **all
+   four target images** (Linux x86_64, QNX, AutoSD, EBcLfSA aarch64).

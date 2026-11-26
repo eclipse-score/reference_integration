@@ -8,7 +8,7 @@ The reference integration workspace serves as a unified Bazel build environment 
 
 - Validating cross-module dependency graphs and boundary issues
 - Testing toolchain and platform support (Linux x86_64, QNX x86_64, Elektrobit corbos Linux aarch64, Red Hat AutoSD)
-- Running Feature Integration Tests (FIT) and Integration Test Framework (ITF) tests
+- Running Platform Integration Tests (PIT) and Feature Integration Tests (FIT)
 - Preparing for release validation and integration workflows
 
 For additional documentation covering repository workflows and platform-specific details, see the `docs/` directory.
@@ -226,20 +226,25 @@ Once QNX is running on the RPi:
 
 ## Run tests
 
-Run Feature Integration Tests (FIT) and Integration Test Framework (ITF) with Bazel. Common examples:
+Two kinds of integration tests run with Bazel:
+
+- **Platform Integration Tests (PIT) — does it run on the platform?** Black-box tests on the real images (Linux, QNX). They show that the integrated platform starts and runs end to end, and verify stakeholder requirements.
+- **Feature Integration Tests (FIT) — does the feature behave correctly?** White-box tests against the module APIs, currently on the Linux host only. They check specific behaviour in depth and verify feature requirements.
+
+See [Step 6 of the integration process](docs/integration_process/step_6_integration_tests.rst) for details. Common examples:
 
 ```bash
+# Run all PIT on the Linux image (Docker)
+bazel test --config=linux-x86_64 //platform_integration_tests:pit --test_output=streamed
+
+# Run all PIT on the QNX image (QEMU)
+bazel test --config=itf-qnx-x86_64 //platform_integration_tests:pit --test_output=streamed
+
 # Run all FIT tests (Rust + C++)
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
 
 # Run only Rust scenarios listing
 bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
-
-# Run ITF tests on Docker (Linux)
-bazel test --config=linux-x86_64 //feature_integration_tests/itf --test_output=streamed
-
-# Run ITF tests on QNX (uses the itf-qnx-x86_64 test config)
-bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf --test_output=streamed
 ```
 
 Notes:
@@ -262,8 +267,11 @@ Common Bazel configurations and macros used across the workspace:
 Feature Integration Tests and test scenarios:
 - **`test_cases/`**: Python test orchestration and fixtures
 - **`test_scenarios/`**: Rust and C++ scenario implementations
-- **`itf/`**: Integration Test Framework (QEMU/Docker-based platform tests)
-- **`configs/`**: DLT, QEMU, and target-specific configurations
+- **`configs/`**: DLT, QEMU, and target-specific configurations (also used by the platform integration tests)
+
+### `platform_integration_tests/`
+
+Platform Integration Tests: ITF tests on the Linux (Docker) and QNX (QEMU) images, mostly one per showcase, collected in the `pit` test suite.
 
 ### `showcases/`
 
@@ -293,7 +301,8 @@ Thin abstraction layers for Docker and QEMU execution:
 
 For documentation covering repository workflows, testing frameworks, and platform-specific details, see the `docs/` directory and these entry points:
 
-- **[Feature Integration Tests](feature_integration_tests/README.md)** — FIT and ITF test framework usage
+- **[Feature Integration Tests](feature_integration_tests/README.md)** — FIT test framework usage
+- **[Integration tests (PIT and FIT)](docs/integration_process/step_6_integration_tests.rst)** — difference between the two and how to add tests
 - **[CLI Documentation](showcases/cli/README.md)** — CLI tool configuration and usage
 - **Platform-Specific Guides:**
    - [Elektrobit corbos Linux (aarch64)](images/ebclfsa_aarch64/README.md)
