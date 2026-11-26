@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Design Decisions &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/score.css?v=5737673c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/score_needs.css?v=6a6a7ab0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/score_design.css?v=f381fa98" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css?v=89f02737" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../../../../../../_static/design-tabs.js?v=fcb327ea"></script>
+    <script src="../../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/functional_modules/score_crypto/crypto/components/crypto/architecture/design_decisions';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+    <link rel="next" title="Data Plane Architecture" href="data_plane_architecture.html" />
+    <link rel="prev" title="Architecture Inspection Checklist" href="chklst_arc_inspection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../../../_static/language_data.js"></script>
+    <script src="../../../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/Eclipse-S-CORE-colour-horizontal.png" class="logo__image only-light" alt="Eclipse S-CORE documentation - Home"/>
+    <img src="../../../../../../../_static/Eclipse-S-CORE-dark.png" class="logo__image only-dark pst-js-only" alt="Eclipse S-CORE documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../s_core_v_1/roadmap/roadmap.html">
+    S-CORE v1.x
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../s_core_v_1/roadmap/roadmap.html">
+    S-CORE v1.x
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../../../index.html">Functional Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_persistency/index.html">Persistency Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_kyron/index.html">Kyron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_time/index.html">time_daemon Documentation</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../../index.html">Crypto Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/features/index.html">Crypto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/module/index.html">Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../../../../docs/components/index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4 current active"><a class="reference internal" href="../index.html">Crypto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cryptoki/index.html">Cryptoki</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../pqc_provider/index.html">PQC Provider Component</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../score_platform/index.html">S-CORE Platform Documentation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../process_methods_tools/index.html">Process, Methods, and Tools</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../../../index.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../../index.html" class="nav-link">Functional Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Crypto Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../../../docs/components/index.html" class="nav-link">Components</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Crypto</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Component Architecture</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Design Decisions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="design-decisions">
+<span id="crypto-design-decisions"></span><h1>Design Decisions<a class="headerlink" href="#design-decisions" title="Link to this heading">#</a></h1>
+<section id="abi-compatibility-for-ipc-layer-deferred-post-stabilisation">
+<h2>ABI Compatibility for IPC Layer (Deferred Post-Stabilisation)<a class="headerlink" href="#abi-compatibility-for-ipc-layer-deferred-post-stabilisation" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-0678e8da">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__no_abi_compatibility_ipc">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">ABI Compatibility for IPC Layer (Deferred Post-Stabilisation)</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">proposed</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">ABI compatibility for the IPC layer between the crypto library and daemon is deferred until the API and wire format are stable. Once stable, a versioned wire format (FlatBuffers is the primary candidate) will be introduced to allow independent deployment of library and daemon versions.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__no_abi_compatibility_ipc" title="dec_rec__crypto__no_abi_compatibility_ipc">dec_rec__crypto__no_abi_compatibility_ipc</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>ABI compatibility for the IPC layer between the crypto library and daemon is
+deferred until the API and wire format are stable. Once stable, a versioned wire
+format (FlatBuffers is the primary candidate) will be introduced to allow
+independent deployment of library and daemon versions.</p>
+<section id="context">
+<h3>Context<a class="headerlink" href="#context" title="Link to this heading">#</a></h3>
+<p>The crypto module uses an IPC layer to communicate between the client library and
+the daemon process. During initial development, maintaining strict ABI compatibility
+would impose versioning overhead (protocol negotiation, backward/forward compatibility
+handling) before the interfaces are settled. The decision is therefore to defer ABI
+compatibility until the stack is stable, at which point the investment is justified.</p>
+<p>Once the API and wire format are frozen, the following will be required:</p>
+<ul class="simple">
+<li><p>A versioned wire format with forward/backward compatibility guarantees</p></li>
+<li><p>Protocol negotiation mechanisms during connection establishment</p></li>
+<li><p>Support for a defined compatibility window (e.g., N−1 daemon with N library)</p></li>
+<li><p>Regression testing across supported version combinations</p></li>
+</ul>
+</section>
+<section id="decision">
+<h3>Decision<a class="headerlink" href="#decision" title="Link to this heading">#</a></h3>
+<p>ABI compatibility for the IPC layer is intentionally deferred for the initial
+pre-stable phase. Per machine, only one valid library-daemon combination is
+supported until the API stabilises. After stabilisation, a versioned wire format
+will be introduced — this decision will be revisited and finalised at that point.</p>
+</section>
+<section id="consequences">
+<h3>Consequences<a class="headerlink" href="#consequences" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Simplified implementation during pre-stable phase — no protocol versioning overhead</p></li>
+<li><p>Reduced testing surface — only matching version pairs need validation</p></li>
+<li><p>Faster initial development cycle — breaking changes can be made freely</p></li>
+<li><p>Clearer deployment model for early adopters — single version per machine</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Library and daemon must currently be updated together as a single unit</p></li>
+<li><p>Cannot have multiple applications using different library versions on the same machine</p></li>
+<li><p>No graceful degradation when versions mismatch during the deferred phase</p></li>
+</ul>
+</section>
+<section id="alternatives-considered">
+<h3>Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Link to this heading">#</a></h3>
+<section id="flatbuffers">
+<h4>FlatBuffers<a class="headerlink" href="#flatbuffers" title="Link to this heading">#</a></h4>
+<p>FlatBuffers is the primary candidate for the versioned wire format once
+stabilisation is reached.</p>
+<section id="advantages">
+<h5>Advantages<a class="headerlink" href="#advantages" title="Link to this heading">#</a></h5>
+<ul class="simple">
+<li><p><strong>Schema evolution</strong> — fields can be added with default values without breaking
+existing serialised data; removed fields leave a gap that is safely skipped.</p></li>
+<li><p><strong>Zero-copy access</strong> — FlatBuffers tables are accessed in-place from the
+shared-memory buffer, aligning with the <code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> zero-copy design.</p></li>
+<li><p><strong>Deterministic layout</strong> — table format is fully specified; no hidden heap
+allocation during access.</p></li>
+<li><p><strong>Compact code generation</strong> — generated C++ headers are <code class="docutils literal notranslate"><span class="pre">noexcept</span></code>-friendly
+and free of <code class="docutils literal notranslate"><span class="pre">std::function</span></code> or <code class="docutils literal notranslate"><span class="pre">std::string</span></code> members.</p></li>
+</ul>
+</section>
+<section id="disadvantages">
+<h5>Disadvantages<a class="headerlink" href="#disadvantages" title="Link to this heading">#</a></h5>
+<ul class="simple">
+<li><p>Final choice is deferred; other candidates (Protocol Buffers, Cap’n Proto,
+hand-rolled length-prefixed structs) are not excluded.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="justification-for-the-decision">
+<h3>Justification for the Decision<a class="headerlink" href="#justification-for-the-decision" title="Link to this heading">#</a></h3>
+<p>The decision to defer ABI compatibility is justified by the current pre-stable phase
+of development. Introducing versioning infrastructure before the interfaces are settled
+would add maintenance burden without benefit. The FlatBuffers candidate and this
+record preserve the intent and analysis so that the versioning work can proceed
+efficiently once the stack stabilises.</p>
+<p>—</p>
+</section>
+</section>
+<section id="cryptoresourceguard-lifetime-via-daemon-side-reference-counting">
+<h2>CryptoResourceGuard Lifetime via Daemon-Side Reference Counting<a class="headerlink" href="#cryptoresourceguard-lifetime-via-daemon-side-reference-counting" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-8dba9f8e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__cry_res_grd_lifetime">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">CryptoResourceGuard Lifetime via Daemon-Side Reference Counting</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Transient key lifetime is managed exclusively in the daemon via reference counting. The guard holds a type-erased IPC release handle; Create*Context() increments the daemon ref-count atomically. The guard may be destroyed after Create*Context() returns. On client disconnect, the daemon bulk-frees all resources for that client.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__cry_res_grd_lifetime" title="dec_rec__crypto__cry_res_grd_lifetime">dec_rec__crypto__cry_res_grd_lifetime</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Transient key lifetime is managed exclusively in the daemon. The daemon ref-counts
+every ephemeral key; the client communicates changes via two IPC calls:
+<code class="docutils literal notranslate"><span class="pre">Release(id)</span></code> (guard destructor) and <code class="docutils literal notranslate"><span class="pre">Create*Context(config</span> <span class="pre">with</span> <span class="pre">key_id)</span></code>
+(context creation).</p>
+<section id="id1">
+<h3>Context<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Transient crypto resources (keys, certificates) produced within an
+<code class="docutils literal notranslate"><span class="pre">IKeyManagementContext</span></code> or <code class="docutils literal notranslate"><span class="pre">ICertificateManagementContext</span></code> session are represented by a
+<code class="docutils literal notranslate"><span class="pre">CryptoResourceGuard</span></code>. Key lifetime must survive all contexts actively using the
+key and be freed deterministically when neither a guard nor a context holds a
+reference.</p>
+</section>
+<section id="id2">
+<h3>Decision<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Key lifetime is managed in the daemon via a per-key reference count:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 55.0%" />
+<col style="width: 45.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Event</p></th>
+<th class="head"><p>Daemon action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GenerateKey</span></code> / <code class="docutils literal notranslate"><span class="pre">DeriveKey</span></code> / <code class="docutils literal notranslate"><span class="pre">LoadKey</span></code> / etc.</p></td>
+<td><p>Creates key; ref = 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Create*Context(config</span> <span class="pre">with</span> <span class="pre">key_id)</span></code></p></td>
+<td><p>Validates key alive; ref++</p></td>
+</tr>
+<tr class="row-even"><td><p>Guard destroyed (<code class="docutils literal notranslate"><span class="pre">Release(id)</span></code> IPC)</p></td>
+<td><p>ref–; free key if ref == 0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Context destroyed</p></td>
+<td><p>ref– for each bound key</p></td>
+</tr>
+<tr class="row-even"><td><p>Client disconnect (crash or normal exit)</p></td>
+<td><p>Daemon bulk-frees all resources for that client</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This means:</p>
+<ul class="simple">
+<li><p>The guard carries only the <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code>
+and a type-erased IPC release handle (<code class="docutils literal notranslate"><span class="pre">shared_ptr&lt;void&gt;</span></code> internally).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Create*Context()</span></code> sends a single IPC call that validates the key and atomically
+records context ownership. If the guard was released before this call, the daemon
+returns <code class="docutils literal notranslate"><span class="pre">kResourceNotFound</span></code> — fail-fast, diagnosable behaviour.</p></li>
+<li><p><strong>Crash safety</strong>: on hard process termination (SIGKILL, power loss), no
+destructors run. The daemon detects the client disconnect and bulk-frees all
+resources. Daemon-side ref-counting is crash-safe by design.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseContextConfig</span></code> carries only a <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code> for the key.</p></li>
+</ul>
+<p><strong>Application contract</strong>: The guard must remain alive (<code class="docutils literal notranslate"><span class="pre">IsActive()</span></code> returns true)
+at the moment <code class="docutils literal notranslate"><span class="pre">Create*Context()</span></code> is called. After that call returns successfully,
+the guard may be destroyed in any order relative to the context.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key_mgmt</span><span class="o">-&gt;</span><span class="n">GenerateKey</span><span class="p">(</span><span class="s">"AES-256"</span><span class="p">).</span><span class="n">value</span><span class="p">();</span>
+<span class="n">CipherContextConfig</span><span class="w"> </span><span class="n">config</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">SetAlgorithm</span><span class="p">(</span><span class="s">"AES-256-GCM"</span><span class="p">).</span><span class="n">SetKey</span><span class="p">(</span><span class="n">key</span><span class="p">).</span><span class="n">SetDirection</span><span class="p">(</span><span class="n">CipherDirection</span><span class="o">::</span><span class="n">kEncrypt</span><span class="p">);</span>
+<span class="c1">// guard must be alive here:</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">cipher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CreateCipherContext</span><span class="p">(</span><span class="n">config</span><span class="p">).</span><span class="n">value</span><span class="p">();</span>
+<span class="c1">// Daemon has incremented the key ref-count. Guard may now be destroyed.</span>
+<span class="c1">// ... use cipher ...</span>
+</pre></div>
+</div>
+<section id="explicit-release-and-guard-synchronisation">
+<h4>Explicit Release and Guard Synchronisation<a class="headerlink" href="#explicit-release-and-guard-synchronisation" title="Link to this heading">#</a></h4>
+<p>The daemon is the sole source of truth for resource validity.
+The guard’s <code class="docutils literal notranslate"><span class="pre">active_</span></code> flag is a client-side hint, not a daemon query.</p>
+<p><strong>Normal path — destructor</strong> (no application code needed):</p>
+<p>The guard destructor sends <code class="docutils literal notranslate"><span class="pre">Release(id)</span></code> IPC when active, silently
+swallowing the result (destructors cannot propagate errors).</p>
+<p><strong>Explicit path — synchronous error handling</strong>:</p>
+<p>When the application needs to explicitly confirm release before destruction, call
+<code class="docutils literal notranslate"><span class="pre">guard.Release()</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">guard</span><span class="p">.</span><span class="n">Release</span><span class="p">();</span><span class="w">  </span><span class="c1">// explicit, returns Result&lt;std::monostate&gt;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// no-op destructor</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Persist path — copy semantics</strong>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">IKeyManagementContext::PersistKey(const</span> <span class="pre">CryptoResourceId&amp;,</span> <span class="pre">slot)</span></code> takes the
+ephemeral key by ID (copy semantics). The guard that produced the ID remains
+active after <code class="docutils literal notranslate"><span class="pre">PersistKey</span></code> returns. The ephemeral copy continues to exist until
+the guard is released or goes out of scope; the persisted slot copy is
+independent:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key_mgmt</span><span class="o">-&gt;</span><span class="n">GenerateKey</span><span class="p">((</span><span class="n">GenerateKeyParams</span><span class="p">{}.</span><span class="n">SetAlgorithm</span><span class="p">(</span><span class="s">"AES-256"</span><span class="p">))).</span><span class="n">value</span><span class="p">();</span>
+<span class="n">key_mgmt</span><span class="o">-&gt;</span><span class="n">PersistKey</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">).</span><span class="n">value</span><span class="p">();</span><span class="w">  </span><span class="c1">// key (guard) remains active</span>
+<span class="c1">// 'key' still holds the ephemeral copy — explicit Release() or destructor frees it</span>
+<span class="c1">// 'slot' is the persistent copy — use slot handle for all future durable operations</span>
+</pre></div>
+</div>
+</section>
+<section id="setkey-and-implicit-guard-conversion">
+<h4><code class="docutils literal notranslate"><span class="pre">SetKey</span></code> and Implicit Guard Conversion<a class="headerlink" href="#setkey-and-implicit-guard-conversion" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">CryptoResourceGuard</span></code> provides an implicit conversion operator to
+<code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">CryptoResourceId&amp;</span></code>. All key-accepting config structs expose a single
+<code class="docutils literal notranslate"><span class="pre">SetKey(const</span> <span class="pre">CryptoResourceId&amp;</span> <span class="pre">k)</span></code> overload. Passing a guard works directly
+via this conversion — no extra overload is needed:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key_mgmt</span><span class="o">-&gt;</span><span class="n">GenerateKey</span><span class="p">((</span><span class="n">GenerateKeyParams</span><span class="p">{}.</span><span class="n">SetAlgorithm</span><span class="p">(</span><span class="s">"AES-256"</span><span class="p">))).</span><span class="n">value</span><span class="p">();</span>
+<span class="c1">// guard must be alive when CreateCipherContext is called:</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">cipher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">CreateCipherContext</span><span class="p">(</span>
+<span class="w">    </span><span class="n">CipherContextConfig</span><span class="p">{}.</span><span class="n">SetAlgorithm</span><span class="p">(</span><span class="s">"AES-256-GCM"</span><span class="p">).</span><span class="n">SetKey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="w">                          </span><span class="p">.</span><span class="n">SetDirection</span><span class="p">(</span><span class="n">CipherDirection</span><span class="o">::</span><span class="n">kEncrypt</span><span class="p">)).</span><span class="n">value</span><span class="p">();</span>
+<span class="c1">// Daemon incremented key ref-count. Guard may now be independently destroyed.</span>
+
+<span class="n">cipher</span><span class="o">-&gt;</span><span class="n">Init</span><span class="p">(</span><span class="n">iv</span><span class="p">);</span>
+<span class="n">cipher</span><span class="o">-&gt;</span><span class="n">Finalize</span><span class="p">(</span><span class="n">out_span</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h3>Consequences<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Single source of truth for key lifetime: the daemon. No client-side
+<code class="docutils literal notranslate"><span class="pre">shared_ptr</span></code> propagation across API boundaries.</p></li>
+<li><p>Crash-safe: daemon bulk-frees on disconnect regardless of client destructor state.</p></li>
+<li><p>Fail-fast: releasing a guard before <code class="docutils literal notranslate"><span class="pre">Create*Context</span></code> is called returns
+<code class="docutils literal notranslate"><span class="pre">kResourceNotFound</span></code> — diagnosable, deterministic behaviour.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseContextConfig</span></code> carries only <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code> — minimal and flat.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Guards must remain alive until <code class="docutils literal notranslate"><span class="pre">Create*Context()</span></code> returns — an intuitive
+but explicit application contract.</p></li>
+<li><p>Daemon must maintain per-key ref-counts for all active ephemeral keys.
+Memory cost is bounded by max concurrent keys (deployment-time constant).</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="shared-connection-anchor-for-persistent-resource-id-stability">
+<h2>Shared-Connection Anchor for Persistent Resource ID Stability<a class="headerlink" href="#shared-connection-anchor-for-persistent-resource-id-stability" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-a799ba90">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__conn_anchor_persistent_ids">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Shared-Connection Anchor for Persistent Resource ID Stability</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">The IPC connection to the crypto daemon is the anchor for kPersistent resource IDs. All ICryptoStack instances within the same application share a single connection, ensuring that the same resource name always resolves to the same numeric CryptoResourceId regardless of which stack or context resolves it. ID assignment is on-demand per connection, and each application gets its own isolated connection with an independent ID namespace.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__conn_anchor_persistent_ids" title="dec_rec__crypto__conn_anchor_persistent_ids">dec_rec__crypto__conn_anchor_persistent_ids</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The application-level daemon connection is a shared anchor across all
+<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> instances within the same application. Persistent resource IDs
+(<code class="docutils literal notranslate"><span class="pre">kPersistent</span></code>) are assigned on-demand per connection and remain stable for the
+connection’s lifetime, independent of any individual <code class="docutils literal notranslate"><span class="pre">ICryptoContext</span></code>.</p>
+<section id="id4">
+<h3>Context<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Persistent resources (key slots, stored certificates, CRLs) outlive any
+individual context or session. Tying the validity of their <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code>
+handle to the lifetime of a specific <code class="docutils literal notranslate"><span class="pre">ICryptoContext</span></code> would couple context
+lifetime management to resource identifier validity unnecessarily. The desired
+property is that a resolved persistent ID remains usable as long as the
+application is connected to the daemon — independent of which context or stack
+resolved it.</p>
+</section>
+<section id="id5">
+<h3>Decision<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>The <strong>connection</strong> (the underlying transport connection to the crypto daemon)
+is the anchor for <code class="docutils literal notranslate"><span class="pre">kPersistent</span></code> resource IDs:</p>
+<ul class="simple">
+<li><p>All <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> instances within the same application share a single
+connection. Multiple stacks always resolve the same resource name to the
+same numeric <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code>.</p></li>
+<li><p>ID assignment is <strong>on-demand</strong>: a numeric <code class="docutils literal notranslate"><span class="pre">id</span></code> is assigned when a resource
+is first resolved by any stack on the connection. Subsequent resolutions of
+the same name by any stack return the identical <code class="docutils literal notranslate"><span class="pre">id</span></code>.</p></li>
+<li><p>Each application gets its own isolated connection with an independent ID
+namespace — IDs are not globally stable across application restarts or
+across different applications. This preserves the security property:
+IDs are per-application-unique and not externally predictable.</p></li>
+<li><p>The IPC-assigned <a class="reference internal" href="../../../../score/crypto/src/ipc/docs/architecture/client_id_design.html#term-ClientId"><span class="xref std std-term">ClientId</span></a> scopes the connection; its construction and
+lifecycle are defined in <a class="reference internal" href="../../../../score/crypto/src/ipc/docs/architecture/client_id_design.html#ipc-client-id-assignment"><span class="std std-ref">Client ID Assignment and Scope</span></a>.</p></li>
+</ul>
+<section id="lifetime-strategy-deployment-choice">
+<h4>Lifetime Strategy (Deployment Choice)<a class="headerlink" href="#lifetime-strategy-deployment-choice" title="Link to this heading">#</a></h4>
+<p>The connection lifetime is a deployment-level choice between two strategies:</p>
+<ol class="arabic simple">
+<li><p><strong>Reference-counted (early cleanup):</strong> Connection is destroyed when the last
+<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> referencing it is destroyed. Daemon-side resources are
+freed immediately. Suitable when stacks are short-lived and memory
+footprint must be minimised.</p></li>
+<li><p><strong>Fixed (application lifetime):</strong> Connection is created once at application
+startup and destroyed when the application terminates. Daemon resources
+are held in daemon memory for the application lifetime. Simpler to reason
+about; preferred when stacks are frequently created and destroyed.</p></li>
+</ol>
+<p>Both strategies are implementation details of the transport layer — the
+public <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> and <code class="docutils literal notranslate"><span class="pre">ICryptoContext</span></code> API is identical in either case.
+Cross-application connection sharing is <strong>not allowed</strong>;
+<code class="docutils literal notranslate"><span class="pre">IConnectionAnchor</span></code> remains a private implementation type.</p>
+</section>
+<section id="scope">
+<h4>Scope<a class="headerlink" href="#scope" title="Link to this heading">#</a></h4>
+<p>Applies to <code class="docutils literal notranslate"><span class="pre">kPersistent</span></code> resources only: <code class="docutils literal notranslate"><span class="pre">kKeySlot</span></code>, <code class="docutils literal notranslate"><span class="pre">kCertificate</span></code>,
+<code class="docutils literal notranslate"><span class="pre">kCertSlot</span></code>, <code class="docutils literal notranslate"><span class="pre">kCertificateTrustStore</span></code>. Ephemeral (<code class="docutils literal notranslate"><span class="pre">kKey</span></code>) IDs remain session-scoped
+(valid only within the <code class="docutils literal notranslate"><span class="pre">IKeyManagementContext</span></code> session that produced them).</p>
+</section>
+<section id="ipc-schema">
+<h4>IPC Schema<a class="headerlink" href="#ipc-schema" title="Link to this heading">#</a></h4>
+<p>Whether per-connection ID assignment and the registry require new proto
+messages or can reuse the existing <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code> wire format is an
+open implementation item for the daemon development to resolve before the
+daemon is built.</p>
+</section>
+</section>
+<section id="id6">
+<h3>Consequences<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Independent context lifetime for persistent resources — <code class="docutils literal notranslate"><span class="pre">ICryptoContext</span></code>
+can be destroyed after resolution without invalidating the <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code>.</p></li>
+<li><p>Stable, deterministic IDs within an application — same name always resolves
+to the same <code class="docutils literal notranslate"><span class="pre">id</span></code> regardless of which stack or context resolves it.</p></li>
+<li><p>No security leakage — IDs are per-application-unique, on-demand assigned,
+not globally stable or predictable from outside the application.</p></li>
+<li><p>Applications can share resolved <code class="docutils literal notranslate"><span class="pre">CryptoResourceId</span></code> values between stacks
+without re-resolving.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Daemon must maintain a per-connection ID registry (map from resource name
+to numeric <code class="docutils literal notranslate"><span class="pre">id</span></code>). Memory cost is bounded by the number of distinct
+persistent resources accessed per application.</p></li>
+<li><p>With fixed-lifetime strategy: daemon memory for resolved IDs is held for
+the entire application lifetime even if the IDs are no longer used.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="algorithmid-as-fixedcapacitystring-64">
+<h2><code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> as <code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code><a class="headerlink" href="#algorithmid-as-fixedcapacitystring-64" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-d2a60835">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__alg_id_fixed_cap_str">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">AlgorithmId Represented as FixedCapacityString&lt;64&gt;</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">``AlgorithmId`` is defined as ``FixedCapacityString&lt;64&gt;`` rather than a compile-time enum or std::string, providing open-set extensibility with deterministic stack allocation. 64 bytes covers the longest currently-known PQC identifier (e.g., &quot;SLH-DSA-SHA2-128s&quot;) with comfortable headroom. All constructors and assignments are noexcept.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__alg_id_fixed_cap_str" title="dec_rec__crypto__alg_id_fixed_cap_str">dec_rec__crypto__alg_id_fixed_cap_str</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> is defined as <code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code> rather than a
+compile-time enum or <code class="docutils literal notranslate"><span class="pre">std::string</span></code>, providing open-set extensibility with
+deterministic stack allocation.</p>
+<section id="id7">
+<h3>Context<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>Algorithm identifiers must accommodate current algorithms (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;AES-256-GCM&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;SHA256&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;SLH-DSA-SHA2-128s&quot;</span></code>), future PQC schemes, and provider-specific
+extensions — an open set that cannot be enumerated at compile time.</p>
+</section>
+<section id="id8">
+<h3>Decision<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>Three candidate representations were evaluated:</p>
+<ol class="arabic simple">
+<li><p><strong>``enum class AlgorithmId``</strong> — type-safe, zero overhead, but a <em>closed</em> set.
+Adding a new PQC algorithm requires recompiling the library and all callers.
+Incompatible with the extensibility goal and with runtime-configured providers.</p></li>
+<li><p><strong>``std::string``</strong> — open set, but heap-allocating. Every <code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> value
+creates at least one heap allocation. Violates MISRA A18-5-1, incompatible with
+ASIL <code class="docutils literal notranslate"><span class="pre">noexcept</span></code> destructors, and introduces non-deterministic WCET.</p></li>
+<li><p><strong>``FixedCapacityString&lt;64&gt;``</strong> — open set, stack-allocated, exception-free
+(oversized input silently truncated, <code class="docutils literal notranslate"><span class="pre">truncated()</span></code> flag set). 64 bytes covers
+the longest currently-known PQC identifier (<code class="docutils literal notranslate"><span class="pre">&quot;SLH-DSA-SHA2-128s&quot;</span></code> = 18 chars)
+with comfortable headroom. All constructors and assignments are <code class="docutils literal notranslate"><span class="pre">noexcept</span></code>.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code> (option 3) was selected. The same rationale applies to
+<code class="docutils literal notranslate"><span class="pre">ResourceId</span></code> (<code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;128&gt;</span></code>) and <code class="docutils literal notranslate"><span class="pre">ProviderInfo::name</span></code>
+(<code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;32&gt;</span></code>).</p>
+</section>
+<section id="id9">
+<h3>Consequences<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Zero heap allocation for any algorithm or resource identifier.</p></li>
+<li><p>Open set — new PQC algorithms deploy at daemon level; no library recompile needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">noexcept</span></code> constructors and assignments — compatible with ASIL containers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetAlgorithm()</span></code>, <code class="docutils literal notranslate"><span class="pre">GetAllowedAlgorithm()</span></code>, <code class="docutils literal notranslate"><span class="pre">GetPublicKeyAlgorithm()</span></code> are
+now <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">noexcept</span></code>, enabling use in safety-annotated code.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>64-byte fixed storage regardless of actual string length (minor waste for short names).</p></li>
+<li><p>Silent truncation on overflow — callers must check <code class="docutils literal notranslate"><span class="pre">truncated()</span></code> when constructing
+from untrusted input.</p></li>
+<li><p>No compile-time algorithm validation — typos become runtime errors.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="algorithm-catalog-alongside-algorithmid">
+<h2>Algorithm Catalog Alongside <code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code><a class="headerlink" href="#algorithm-catalog-alongside-algorithmid" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-52ee140f">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__alg_catalog">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Structured Algorithm Catalog Alongside String AlgorithmId</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">proposed</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">``AlgorithmId`` stays the string on the wire, in the configs and in stored key metadata. A constexpr catalog (``score/crypto/src/daemon/common/algorithm_catalog.hpp``) maps every known name, by exact match, to an ``Algorithm`` enumerator and an ``AlgorithmDescriptor`` holding category, key type, key length, hash, curve, mode and fixed output size. The daemon resolves each name to its catalog row once, where the request enters it, and refuses a name the catalog does not know; providers receive the row, never the name, and decide support from its typed fields.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__alg_catalog" title="dec_rec__crypto__alg_catalog">dec_rec__crypto__alg_catalog</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="id10">
+<h3>Context<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>The daemon derived algorithm properties by searching identifiers for
+fragments: <code class="docutils literal notranslate"><span class="pre">&quot;P256&quot;</span></code> anywhere in a name selected the P-256 curve, <code class="docutils literal notranslate"><span class="pre">&quot;SHA256&quot;</span></code>
+anywhere selected SHA-256, and <code class="docutils literal notranslate"><span class="pre">&quot;ECDSA&quot;</span></code> plus a curve anywhere made a name an
+ECDSA algorithm, so <code class="docutils literal notranslate"><span class="pre">&quot;XECDSA-P256&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;ECDSA-P2561-SHA256&quot;</span></code> were accepted.
+RSA-PSS names were parsed by prefix and their digest found by searching for a
+hash name, so <code class="docutils literal notranslate"><span class="pre">&quot;RSA-PSS-20481-SHA256&quot;</span></code> resolved to a 2048-bit key.
+The PKCS#11 provider took the key type and length from the first entry of its
+table found anywhere in the name (<code class="docutils literal notranslate"><span class="pre">&quot;AES-128&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;HMAC-SHA256&quot;</span></code>, …). Each
+table repeated its own list of names, none recorded the key type an operation
+algorithm needs, and nothing compared a key’s algorithm with the operation’s
+before binding them, so a P-256 key could be bound to an ECDSA-P384 context.</p>
+</section>
+<section id="id11">
+<h3>Decision<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> remains <code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code> (see the previous record)
+and the IPC protocol is unchanged. On top of it:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FromAlgorithmName()</span></code> / <code class="docutils literal notranslate"><span class="pre">ToAlgorithmName()</span></code> convert between the string and
+the <code class="docutils literal notranslate"><span class="pre">Algorithm</span></code> enumerator by exact, case-sensitive match;
+<code class="docutils literal notranslate"><span class="pre">GetAlgorithmDescriptor()</span></code> and <code class="docutils literal notranslate"><span class="pre">GetAlgorithmCategory()</span></code> expose the
+properties of a known algorithm. The catalog is internal to the daemon
+(<code class="docutils literal notranslate"><span class="pre">//score/crypto/src/daemon/common:algorithm_catalog</span></code>; nothing under
+<code class="docutils literal notranslate"><span class="pre">score/crypto</span></code> depends on it): clients only send names, so adding
+a row rebuilds the daemon and its providers, not the applications.</p></li>
+<li><p>Every algorithm the daemon accepts is a catalog row. ECDSA has one row per
+curve (P-256, P-384, P-521) and SHA-2 digest (SHA-224 to SHA-512), twelve in
+all, whose key length, digest and IEEE P1363 signature size (64, 96, 132
+bytes) follow from the curve and hash; there is no ECDSA row for MD5 or
+SHA-1. The bare key rows <code class="docutils literal notranslate"><span class="pre">&quot;ECDSA-P256&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;ECDSA-P384&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;ECDSA-P521&quot;</span></code> name keys only. Ed25519 has no parameters, so <code class="docutils literal notranslate"><span class="pre">&quot;Ed25519&quot;</span></code>
+is a single row of category signature with key type <code class="docutils literal notranslate"><span class="pre">kEd25519</span></code> and names
+both the key and the scheme. Nothing in the daemon parses a name.</p></li>
+<li><p>The mediator resolves the algorithm of <code class="docutils literal notranslate"><span class="pre">CTX_CREATE</span></code> once, before any
+provider is asked; a name without a row is refused with
+<code class="docutils literal notranslate"><span class="pre">kUnsupportedAlgorithm</span></code>. A <code class="docutils literal notranslate"><span class="pre">RANDOM</span></code> context without an algorithm selects
+the <code class="docutils literal notranslate"><span class="pre">&quot;CTR-DRBG&quot;</span></code> row. A <code class="docutils literal notranslate"><span class="pre">KEY:MANAGEMENT</span></code> context is bound to no
+algorithm and is created through the separate factory entry point
+<code class="docutils literal notranslate"><span class="pre">ICryptoHandlerFactory::CreateKeyManagementHandler()</span></code>; all other contexts
+go through <code class="docutils literal notranslate"><span class="pre">CreateHandler(handler_id,</span> <span class="pre">const</span> <span class="pre">AlgorithmDescriptor&amp;)</span></code>.</p></li>
+<li><p>Every handler’s <code class="docutils literal notranslate"><span class="pre">IsAlgorithmSupported()</span></code> takes the descriptor and every
+handler stores it. Providers decide support in <code class="docutils literal notranslate"><span class="pre">switch</span></code> statements over the
+typed fields (hash, curve, key type, cipher mode) without a default case, so
+a value added to a catalog enumeration does not compile until each provider
+decides whether it serves it. The OpenSSL provider maps hash to <code class="docutils literal notranslate"><span class="pre">EVP_MD</span></code>
+(SHA-2 only), curve to its group name, cipher mode and key length to an
+<code class="docutils literal notranslate"><span class="pre">EVP_CIPHER</span></code> (AES-CBC) and signatures by key type (ECDSA on every row,
+RSA-PSS on 2048/3072/4096-bit keys, Ed25519). The PKCS#11 provider maps hash
+rows to <code class="docutils literal notranslate"><span class="pre">CKM_SHA*</span></code>, HMAC rows to <code class="docutils literal notranslate"><span class="pre">CKM_SHA*_HMAC</span></code> and keys by key type and
+length. MD5 and SHA-1 have catalog rows and are refused by both.</p></li>
+<li><p>Key management works on descriptors as well: key generation and import
+requests carry the resolved row, the request parser refuses an unknown name
+with <code class="docutils literal notranslate"><span class="pre">kUnsupportedAlgorithm</span></code>, and the key factories switch on its key type.
+Slot configuration and stored key metadata keep the algorithm name; it is
+resolved when loaded. A configured slot whose name the catalog does not know
+is not registered (an error is logged), and a key whose stored name is
+unknown is refused with <code class="docutils literal notranslate"><span class="pre">kUnsupportedAlgorithm</span></code> when loaded or peeked.
+<code class="docutils literal notranslate"><span class="pre">LookupKeySize()</span></code> in <code class="docutils literal notranslate"><span class="pre">daemon/common/algorithm_info.hpp</span></code> keeps answering
+which rows can label a key and the key length, now from the descriptor.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h3>Consequences<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>One table in the daemon holds the properties of every known algorithm; the
+daemon alone decides which names it knows.</p></li>
+<li><p>No identifier is accepted because it contains another identifier, and an
+unknown identifier fails at context creation rather than inside a provider.</p></li>
+<li><p>Providers keep no lists of names; a new value of a catalog enumeration forces
+an explicit support decision in every provider.</p></li>
+<li><p>Key and operation algorithms can be compared on key type, length and curve.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>A new algorithm needs a catalog row before any provider can serve it, and
+a new enumerator value needs a case in every provider switch.</p></li>
+<li><p>A client learns that a name is unknown only from the daemon, after one
+request.</p></li>
+<li><p>A configured or stored name that a later catalog no longer knows makes the
+slot or key unusable until the configuration is migrated.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="synchronous-only-ipc-model">
+<h2>Synchronous-Only IPC Model<a class="headerlink" href="#synchronous-only-ipc-model" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-5bf38469">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__synchronous_ipc">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Synchronous-Only IPC Model</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">All IPC calls between the client library and the crypto daemon are synchronous (blocking). No callback, future, or async-notify pattern is exposed in the V1 public API.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__synchronous_ipc" title="dec_rec__crypto__synchronous_ipc">dec_rec__crypto__synchronous_ipc</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>All IPC calls between the client library and the crypto daemon are synchronous
+(blocking). No callback, future, or async-notify pattern is exposed in the V1
+public API.</p>
+<section id="id13">
+<h3>Context<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p>A synchronous model blocks the calling thread for the full IPC round-trip plus
+provider execution. The alternatives introduce heap usage, threading complexity,
+or event-loop coupling that are incompatible with MISRA and automotive middleware
+requirements.</p>
+</section>
+<section id="id14">
+<h3>Decision<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<p>All IPC calls are synchronous (blocking). Asynchronous alternatives were evaluated
+and rejected:</p>
+<ul class="simple">
+<li><p><strong>Future/Promise API</strong> — <code class="docutils literal notranslate"><span class="pre">Result&lt;std::future&lt;T&gt;&gt;</span></code> return types, daemon uses a
+worker-thread pool. This would result in higher code complexity.</p></li>
+<li><p><strong>Callback model</strong> — caller provides a <code class="docutils literal notranslate"><span class="pre">std::function&lt;void(Result&lt;T&gt;)&gt;</span></code> invoked
+on completion. <code class="docutils literal notranslate"><span class="pre">std::function</span></code> violates MISRA A18-5-1 (heap). Custom fixed-size
+delegate types possible but add significant complexity.</p></li>
+<li><p><strong>Polling / event-loop</strong> — caller polls a completion token. Couples the crypto API
+to the application event loop; not idiomatic for automotive middleware.</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Consequences<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Simple, predictable call semantics — no threading model imposed on callers.</p></li>
+<li><p>Full <code class="docutils literal notranslate"><span class="pre">Result&lt;T&gt;</span></code> error propagation on every call.</p></li>
+<li><p>MISRA-compliant — no <code class="docutils literal notranslate"><span class="pre">std::function</span></code>, no heap, no thread creation in library.</p></li>
+<li><p>Operation timeouts (<code class="docutils literal notranslate"><span class="pre">dec_rec__crypto__two_layer_timeout</span></code>) provide bounded
+blocking behaviour — the calling thread never blocks indefinitely.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Thread blocks for full operation duration including IPC + provider execution.</p></li>
+<li><p>Potential priority inversion in RTOS environments with high-priority callers.</p></li>
+<li><p>Cannot pipeline or batch multiple crypto operations.</p></li>
+<li><p>Future async API (<code class="docutils literal notranslate"><span class="pre">GenerateKeyAsync</span></code>) must be added as an extension;
+The daemon-side ref-count model (see <code class="docutils literal notranslate"><span class="pre">dec_rec__crypto__cry_res_grd_lifetime</span></code>)
+naturally accommodates async key generation: the daemon can atomically bind the
+key to the context when the async result is consumed.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="context-reset-for-streaming-context-reuse">
+<h2>Context <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> for Streaming Context Reuse<a class="headerlink" href="#context-reset-for-streaming-context-reuse" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-7f9626b6">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__context_reset_reuse">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Context Reset() for Streaming Context Reuse</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">``IStreamingContext`` exposes a ``Reset()`` method returning the context to</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__context_reset_reuse" title="dec_rec__crypto__context_reset_reuse">dec_rec__crypto__context_reset_reuse</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">IStreamingContext</span></code> exposes a <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> method returning the context to
+post-construction state after <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>, preserving key, algorithm, and config
+bindings. This avoids repeated factory + IPC overhead for same-configuration
+repeated operations.</p>
+<section id="id16">
+<h3>Context<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<p>Streaming contexts (hash, sign, verify, encrypt, decrypt, MAC, AEAD) follow the
+<code class="docutils literal notranslate"><span class="pre">Init()</span></code> → <code class="docutils literal notranslate"><span class="pre">Update()</span></code> * → <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code> state machine. Without reuse, each
+new operation requires: (1) <code class="docutils literal notranslate"><span class="pre">ICryptoContext::Create*Context()</span></code> IPC call,
+(2) <code class="docutils literal notranslate"><span class="pre">Init()</span></code> IPC call. For high-frequency operations (e.g., per-frame hashing,
+per-message MAC), this doubles the IPC overhead.</p>
+</section>
+<section id="id17">
+<h3>Decision<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Reset()</span></code> is added to <code class="docutils literal notranslate"><span class="pre">IStreamingContext</span></code>. Alternatives evaluated:</p>
+<ul class="simple">
+<li><p><strong>Destroy and re-create</strong> — simplest, but doubles IPC cost per operation.</p></li>
+<li><p><strong>``Reset()`` on ``IStreamingContext``</strong> — single IPC call to the daemon to clear
+provider-side state; key, algorithm, config, and session handle remain valid.
+State machine transitions: <code class="docutils literal notranslate"><span class="pre">kFinalized</span></code> → <code class="docutils literal notranslate"><span class="pre">kCreated</span></code> on success.
+<code class="docutils literal notranslate"><span class="pre">kContextResetFailed</span></code> (<code class="docutils literal notranslate"><span class="pre">0x01070003</span></code>) reported on daemon-side failure.</p></li>
+<li><p><strong>Context pooling in the library</strong> — a pool of pre-created contexts returned to
+callers. Adds ~200 LOC of pool management, thread-safety concerns, and a fixed
+pool bound that may be too large or too small for different deployments.</p></li>
+</ul>
+</section>
+<section id="id18">
+<h3>Consequences<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Halves IPC round-trips for high-frequency same-configuration operations.</p></li>
+<li><p>No API surface change — <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> is additive; callers that destroy and
+re-create continue to work unchanged.</p></li>
+<li><p>Key, algorithm, and config bindings preserved — no re-configuration needed.</p></li>
+<li><p>Single additional error code (<code class="docutils literal notranslate"><span class="pre">kContextResetFailed</span></code>) for daemon failure path.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Daemon must track context state and clear provider-side buffers on <code class="docutils literal notranslate"><span class="pre">Reset()</span></code>.</p></li>
+<li><p>Callers must ensure <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code> is called before <code class="docutils literal notranslate"><span class="pre">Reset()</span></code>; calling
+<code class="docutils literal notranslate"><span class="pre">Reset()</span></code> in <code class="docutils literal notranslate"><span class="pre">kUpdating</span></code> state returns <code class="docutils literal notranslate"><span class="pre">kInvalidOperation</span></code>.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="per-call-timeout-with-client-side-response-bound">
+<h2>Per-Call Timeout with Client-Side Response Bound<a class="headerlink" href="#per-call-timeout-with-client-side-response-bound" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-b4aba09e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__two_layer_timeout">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Per-Call Timeout with Client-Side Response Bound</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Two-layer timeout model selected for bounded behaviour at both layers.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__two_layer_timeout" title="dec_rec__crypto__two_layer_timeout">dec_rec__crypto__two_layer_timeout</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Operation timeouts have two parts: the requested per-call deadline is forwarded
+to the daemon/provider, which is expected to honor it, and the library independently
+bounds its response wait. The requested duration comes from a stack-wide default
+in <code class="docutils literal notranslate"><span class="pre">CryptoStackConfig</span></code> or a per-context override in <code class="docutils literal notranslate"><span class="pre">BaseContextConfig</span></code>.
+<code class="docutils literal notranslate"><span class="pre">DisableTimeout()</span></code> selects the maximum request duration. The active
+message-passing transport caps that duration at <code class="docutils literal notranslate"><span class="pre">kMaximumRequestTimeout</span></code> minutes and gives
+the daemon a additional response grace period (<code class="docutils literal notranslate"><span class="pre">kTimeoutGracePeriod</span></code>) before the library
+unblocks. The grace is a transport compile-time setting, not a public runtime option. Other IPC
+adapters must provide their own bounded client-side wait; their grace behavior
+may differ.</p>
+<section id="id19">
+<h3>Context<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>Without a library-side bound, a hung HSM or stalled IPC channel could block the
+calling thread indefinitely — a safety violation for ISO 26262 ASIL functions.
+A single global timeout is insufficient because some legitimate operations
+(e.g., RSA-4096 key generation on software providers) require more time than
+typical operations. In an ASIL-B library / QM-only daemon deployment, the library
+must unblock even if the daemon/provider does not honor the requested timeout.
+That client-side bound cannot by itself prove that daemon-held resources were
+released.</p>
+</section>
+<section id="id20">
+<h3>Decision<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
+<p>Three timeout models were evaluated:</p>
+<ol class="arabic simple">
+<li><p><strong>Client-side only (``std::future::wait_for``)</strong> — client unblocks after
+deadline, but the daemon continues executing the stalled operation, holding
+the resource. Does not provide bounded daemon resource usage.</p></li>
+<li><p><strong>Daemon/provider-side only</strong> — daemon/provider observes the requested
+timeout and reports the result. This relies on every daemon/provider
+implementation honoring the request and cannot bound the library’s wait if
+the response is lost or the implementation is QM-only/non-compliant.</p></li>
+<li><p><strong>Propagated request timeout + library response bound</strong> — the library sends
+the requested timeout to the daemon, and the daemon/provider are advised to
+respect it. The library allows a configured response grace after the
+requested timeout so a terminal operation status can arrive. If a terminal
+response arrives, the library returns that status (including
+<code class="docutils literal notranslate"><span class="pre">kOperationTimedOut</span></code>). If none arrives by timeout plus grace, the library
+unblocks with <code class="docutils literal notranslate"><span class="pre">kOperationResponseTimedOut</span></code>; daemon operation status is unknown.
+<code class="docutils literal notranslate"><span class="pre">DisableTimeout()</span></code> requests the maximum supported
+duration for legitimately long operations.</p></li>
+</ol>
+<p>Model 3 was selected to combine daemon/provider cooperation with a guaranteed
+library-side response bound, without assuming the daemon has the same safety
+integrity level as the library.</p>
+</section>
+<section id="id21">
+<h3>Consequences<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>The library’s response wait is bounded by the requested timeout plus grace,
+with the request duration capped at at a compile-time constant (<code class="docutils literal notranslate"><span class="pre">kMaximumRequestTimeout</span></code>).</p></li>
+<li><p>A daemon/provider that respects the requested timeout can stop work and report
+status by the deadline, allowing timely resource cleanup and an informative result.</p></li>
+<li><p>Per-context override allows fine-grained tuning without changing global config.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DisableTimeout()</span></code> supports legitimate long-running operations by selecting
+the maximum request duration without changing the stack-wide default.</p></li>
+<li><p>Satisfies ISO 26262 Part 6 Table 1 (bounded execution time for safety functions).</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Daemon/provider deadline handling is cooperative: the requested timeout is
+forwarded and they are advised to honor it, but the library-side bound does
+not guarantee remote cancellation or cleanup.</p></li>
+<li><p>If the daemon/provider ignores the requested timeout, the library still unblocks
+but cannot guarantee the remote operation stopped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DisableTimeout()</span></code> selects a long 10-minute request duration plus the
+message-passing grace; its use (e.g., in Safety paths) must be justified in
+the application’s safety case.</p></li>
+<li><p>Two-layer design adds complexity compared to a single global timeout.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="keyoperationpermission-as-a-capability-bitmask">
+<h2><code class="docutils literal notranslate"><span class="pre">KeyOperationPermission</span></code> as a Capability Bitmask<a class="headerlink" href="#keyoperationpermission-as-a-capability-bitmask" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-8b765761">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__key_op_permission_bitmask">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">KeyOperationPermission as a Capability Bitmask</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Per-key usage restrictions are encoded as a ``KeyOperationPermission`` bitmask (named bit-flag capabilities: ``kEncrypt``, ``kDecrypt``, ``kSign``, ``kVerify``, ``kDerive``, ``kWrap``, ``kExport``, ``kGenerate``). The daemon enforces the bitmask at context creation time; operations not permitted by the key's bitmask return ``kKeyOperationNotPermitted``.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__key_op_permission_bitmask" title="dec_rec__crypto__key_op_permission_bitmask">dec_rec__crypto__key_op_permission_bitmask</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Per-key usage restrictions are encoded as a <code class="docutils literal notranslate"><span class="pre">KeyOperationPermission</span></code> bitmask
+(named bit-flag capabilities: <code class="docutils literal notranslate"><span class="pre">kEncrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">kDecrypt</span></code>, <code class="docutils literal notranslate"><span class="pre">kSign</span></code>, <code class="docutils literal notranslate"><span class="pre">kVerify</span></code>,
+<code class="docutils literal notranslate"><span class="pre">kDerive</span></code>, <code class="docutils literal notranslate"><span class="pre">kWrap</span></code>, <code class="docutils literal notranslate"><span class="pre">kExport</span></code>, <code class="docutils literal notranslate"><span class="pre">kGenerate</span></code>). The daemon enforces the bitmask
+at context creation time; operations not permitted by the key’s bitmask return
+<code class="docutils literal notranslate"><span class="pre">kKeyOperationNotPermitted</span></code>.</p>
+<section id="id22">
+<h3>Context<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
+<p>A key provisioned for signing must not be usable for encryption or export.
+Enforcing usage restrictions at the API level prevents misuse even if the caller
+has a valid resource handle. The representation must be heap-free and extensible
+to support future operations without breaking existing code.</p>
+</section>
+<section id="id23">
+<h3>Decision<a class="headerlink" href="#id23" title="Link to this heading">#</a></h3>
+<p>Three designs were evaluated:</p>
+<ol class="arabic simple">
+<li><p><strong>``std::unordered_set&lt;KeyOperation&gt;``</strong> — flexible but heap-allocating.
+Violates MISRA A18-5-1, incompatible with ASIL <code class="docutils literal notranslate"><span class="pre">noexcept</span></code> requirements.</p></li>
+<li><p><strong>``KeyPermissions`` struct with boolean flags</strong> — type-safe, stack-allocated,
+but verbose (one field per operation). Extending to a new operation requires
+a breaking ABI change.</p></li>
+<li><p><strong>Bitmask (``uint32_t`` or ``enum class`` with ``operator|``)</strong> — compact,
+heap-free, trivially copyable, extensible (new bits added without breaking
+existing code). Standard pattern in OS capability models (POSIX, seL4).</p></li>
+</ol>
+<p>The bitmask (option 3) was selected for compactness and extensibility.</p>
+</section>
+<section id="id24">
+<h3>Consequences<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Compact representation — one <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code> field in key metadata.</p></li>
+<li><p>Extensible — new operations add a new named bit; existing bitmasks remain valid.</p></li>
+<li><p>Daemon enforces at context creation — enforcement point is in the trusted boundary.</p></li>
+<li><p>Two-layer access control: <em>who</em> (<code class="docutils literal notranslate"><span class="pre">ResolveResource()</span></code> ACL, uid) and
+<em>what</em> (<code class="docutils literal notranslate"><span class="pre">KeyOperationPermission</span></code> bitmask per key).</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Bitmask operations (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">~</span></code>) are less type-safe than a method API;
+callers can accidentally construct invalid combinations.</p></li>
+<li><p>No runtime check that a bitmask value is a valid combination of named bits
+(mitigated by providing named constants and <code class="docutils literal notranslate"><span class="pre">operator|</span></code> overloads).</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="unified-cipher-context-no-encrypt-decrypt-or-symmetric-asymmetric-split">
+<h2>Unified Cipher Context (No Encrypt/Decrypt or Symmetric/Asymmetric Split)<a class="headerlink" href="#unified-cipher-context-no-encrypt-decrypt-or-symmetric-asymmetric-split" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-13616733">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__unified_enc_dec_contexts">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Unified Cipher Context Rather Than Separate Encrypt/Decrypt Plus Symmetric/Asymmetric Split</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">A single ``ICipherContext`` type is used for both encryption and decryption, with direction configured via ``CipherContextConfig``. Sign, verify, MAC, and AEAD are each separate context types under the ``IStreamingContext`` hierarchy. The algorithm identifier and key type determine whether the operation is symmetric or asymmetric at runtime. Separate ``SymmetricEncryptContext`` / ``AsymmetricEncryptContext`` types were rejected for increased complexity without benefit.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__unified_enc_dec_contexts" title="dec_rec__crypto__unified_enc_dec_contexts">dec_rec__crypto__unified_enc_dec_contexts</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Encrypt and decrypt share a single <code class="docutils literal notranslate"><span class="pre">ICipherContext</span></code> (direction set via
+<code class="docutils literal notranslate"><span class="pre">CipherContextConfig</span></code>). Sign, verify, MAC, and AEAD are each a separate context
+type under the <code class="docutils literal notranslate"><span class="pre">IStreamingContext</span></code> hierarchy. The algorithm identifier and key
+type determine whether the operation is symmetric or asymmetric at runtime.
+Separate <code class="docutils literal notranslate"><span class="pre">SymmetricEncryptContext</span></code> / <code class="docutils literal notranslate"><span class="pre">AsymmetricEncryptContext</span></code> types were
+rejected.</p>
+<section id="id25">
+<h3>Context<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
+<p>A split design creates a separate class per algorithm family. Adding PQC KEM
+support requires a new class even if the streaming interface is identical. This
+increases include weight and virtual dispatch hierarchy depth without benefit,
+and makes the API surface grow with the algorithm set.</p>
+</section>
+<section id="id26">
+<h3>Decision<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
+<p>Three designs were evaluated:</p>
+<ol class="arabic simple">
+<li><p><strong>Symmetric/Asymmetric split</strong> — mirrors algorithm families at the type level.
+Callers must select the correct context type; runtime algorithm selection within
+a family is still possible. Adds N context types per new algorithm family.
+Increases include weight and virtual dispatch hierarchy depth.</p></li>
+<li><p><strong>Unified context per operation</strong> — <code class="docutils literal notranslate"><span class="pre">ICipherContext</span></code> (encrypt + decrypt unified),
+<code class="docutils literal notranslate"><span class="pre">ISignContext</span></code>, <code class="docutils literal notranslate"><span class="pre">IVerifySignatureContext</span></code>, <code class="docutils literal notranslate"><span class="pre">IMacContext</span></code>, <code class="docutils literal notranslate"><span class="pre">IAeadContext</span></code>.
+Algorithm and key type determine behaviour. Adding ML-KEM or ML-DSA requires
+no new context type — only a new algorithm name string and provider support.</p></li>
+<li><p><strong>Single universal context</strong> — one <code class="docutils literal notranslate"><span class="pre">ICryptoOperationContext</span></code> with a mode
+parameter. Rejects the SRP; makes misuse easier (e.g., calling <code class="docutils literal notranslate"><span class="pre">Sign()</span></code> on a
+context configured for encryption). Rejected for API clarity reasons.</p></li>
+</ol>
+<p>Design 2 was selected for the balance of clarity and extensibility.</p>
+</section>
+<section id="id27">
+<h3>Consequences<a class="headerlink" href="#id27" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Flat, stable hierarchy — five concrete context types regardless of algorithm count.</p></li>
+<li><p>PQC extensibility — ML-KEM, ML-DSA, SLH-DSA require no new context types.</p></li>
+<li><p>Each context enforces its own state machine; misuse (e.g., <code class="docutils literal notranslate"><span class="pre">Update()</span></code> before
+<code class="docutils literal notranslate"><span class="pre">Init()</span></code>) returns a typed error regardless of algorithm.</p></li>
+<li><p>Consistent <code class="docutils literal notranslate"><span class="pre">Init()</span></code> / <code class="docutils literal notranslate"><span class="pre">Update()</span></code> / <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code> / <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> pattern
+across all operations simplifies caller code.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Algorithm-specific overloads (e.g., <code class="docutils literal notranslate"><span class="pre">ICipherContext::Init(iv)</span></code> vs.
+<code class="docutils literal notranslate"><span class="pre">IStreamingContext::Init()</span></code>) require <code class="docutils literal notranslate"><span class="pre">using</span></code> declarations to suppress
+name-hiding warnings (see §3.5 in the evaluation report).</p></li>
+<li><p>AEAD tag handling (<code class="docutils literal notranslate"><span class="pre">SetTag()</span></code> / <code class="docutils literal notranslate"><span class="pre">GetTag()</span></code>) cannot be expressed identically
+to non-AEAD operations — <code class="docutils literal notranslate"><span class="pre">IAeadContext</span></code> requires additional methods.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="imemoryallocator-separated-from-icryptostack">
+<h2><code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> Separated from <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code><a class="headerlink" href="#imemoryallocator-separated-from-icryptostack" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-c13ba3cd">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__memory_allocator_separation">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">IMemoryAllocator Separated from ICryptoStack</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">``IMemoryAllocator`` is a standalone interface independent of ``ICryptoStack``. It represents the data plane, can be injected into components that need only memory management, and enables isolated unit testing — none of which are possible if it is coupled to the control-plane ``ICryptoStack``.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__memory_allocator_separation" title="dec_rec__crypto__memory_allocator_separation">dec_rec__crypto__memory_allocator_separation</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> is a standalone interface independent of <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>.
+It represents the data plane, can be injected into components that need only
+memory management, and enables isolated unit testing — none of which are possible
+if it is coupled to the control-plane <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>.</p>
+<section id="id28">
+<h3>Context<a class="headerlink" href="#id28" title="Link to this heading">#</a></h3>
+<p>The crypto module uses shared memory as the zero-copy data plane between the
+application and the crypto daemon. A naive design would expose memory allocation
+directly through <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>, coupling the data plane to the control-plane
+IPC object. Three reasons motivated a separate interface:</p>
+<ol class="arabic simple">
+<li><p><strong>Architectural independence of data plane and control plane</strong> — the memory
+subsystem operates independently of IPC: buffers can be allocated, written,
+and passed to providers without any IPC call. Coupling allocation to
+<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> would obscure this separation.</p></li>
+<li><p><strong>Independent injection</strong> — components that need only memory management
+(e.g., a buffer pool, a serialiser) can receive an <code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code>
+without depending on the full <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> interface. This is consistent
+with the Interface Segregation Principle and reduces unnecessary coupling
+in the component graph.</p></li>
+<li><p><strong>Isolated unit testing</strong> — by taking <code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> as a dependency,
+individual components can be tested with a mock or stub allocator without
+standing up an <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> or a daemon connection.</p></li>
+</ol>
+</section>
+<section id="id29">
+<h3>Decision<a class="headerlink" href="#id29" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> is defined as a standalone interface independent of
+<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>. Applications obtain both objects separately; the memory allocator
+is the data plane and the crypto stack is the control plane. Cross-application
+connection sharing is not supported; each application has its own allocator instance.</p>
+</section>
+<section id="id30">
+<h3>Consequences<a class="headerlink" href="#id30" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Data-plane and control-plane concerns are visibly separated in the API.</p></li>
+<li><p>Components that allocate buffers do not depend on <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>.</p></li>
+<li><p>Unit tests for memory-dependent components are cheaper and hermetic.</p></li>
+<li><p>The zero-copy path (<code class="docutils literal notranslate"><span class="pre">Allocate(size,</span> <span class="pre">providerResourceId)</span></code>) is a data-plane
+concern and sits cleanly on <code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> without polluting
+<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code>.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Applications must obtain and manage two objects (<code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code> + <code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code>)
+where a monolithic interface would require only one.</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="control-plane-ipc-boundary-copy-with-daemon-internal-zero-copy-references">
+<h2>Control Plane IPC Boundary Copy with Daemon-Internal Zero-Copy References<a class="headerlink" href="#control-plane-ipc-boundary-copy-with-daemon-internal-zero-copy-references" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-3a596b96">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__ipc_boundary_copy">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Control Plane IPC Boundary Copy with Daemon-Internal Zero-Copy References</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">The control plane IPC layer on the daemon side shall create exactly one owning copy of all incoming request data at the deserialization boundary. All subsequent daemon-internal processing shall operate on non-owning references into that single owned copy. This prevents time-of-check-time-of-use (TOCTOU) attacks on control information while minimising memory copies within the daemon. The data plane is explicitly excluded — it carries only opaque data payloads and may use zero-copy transfer.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__ipc_boundary_copy" title="dec_rec__crypto__ipc_boundary_copy">dec_rec__crypto__ipc_boundary_copy</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The control plane IPC layer on the daemon side shall create exactly one owning
+copy of all incoming request data at the deserialization boundary. All subsequent
+daemon-internal processing shall operate on non-owning references into that single
+owned copy. This prevents time-of-check-time-of-use (TOCTOU) attacks on control
+information while minimising memory copies within the daemon. The data plane is
+explicitly excluded — it carries only opaque data payloads and may use zero-copy transfer.</p>
+<section id="id31">
+<h3>Context<a class="headerlink" href="#id31" title="Link to this heading">#</a></h3>
+<p>This decision applies to the <strong>control plane</strong> only — the channel carrying
+operation requests, responses, and their parameters (key identifiers, algorithm
+names, operation codes, session IDs, in-band data).</p>
+<p>The <strong>data plane</strong> is <strong>out of scope</strong> and may use zero-copy (e.g., shared
+memory). The data plane carries only opaque payloads (plaintext, ciphertext) —
+not control information that the daemon validates or routes upon — so TOCTOU
+modification cannot cause the daemon to mis-route an operation, use the wrong
+key, or bypass access control. At worst the provider processes corrupted input,
+equivalent to the client submitting bad data in the first place.</p>
+<p>Control plane requests carry parameters from an untrusted client. The daemon
+must decide whether to work directly from the transport buffer or copy first.</p>
+</section>
+<section id="id32">
+<h3>Consequences<a class="headerlink" href="#id32" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Eliminates TOCTOU on control information.</p></li>
+<li><p>One copy at ingress, zero through the handler chain, one at egress.</p></li>
+<li><p>Clear ownership — the request structure owns; all handlers borrow.</p></li>
+<li><p>Data plane stays zero-copy for bulk payloads.</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Mandatory copy per control plane request, even when the transport buffer is
+safe (deliberate performance-for-security trade-off; overhead is small since
+the control plane carries only metadata and small in-band buffers).</p></li>
+<li><p>Two representations needed in the protocol types: owning types at the IPC
+boundary, non-owning views internally.</p></li>
+</ul>
+</section>
+<section id="id33">
+<h3>Alternatives Considered<a class="headerlink" href="#id33" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Zero-copy end-to-end</strong> — read directly from the transport buffer. Vulnerable
+to TOCTOU: a client could swap a key ID or algorithm name between validation
+and use.</p></li>
+<li><p><strong>Copy at every layer boundary</strong> — excessive allocation; e.g., three copies of
+the same hash input across IPC adapter, mediator, and provider.</p></li>
+<li><p><strong>Single copy at the control plane IPC boundary, references thereafter</strong> — the
+deserialization layer copies all mutable parameters into daemon-owned memory.
+Downstream layers receive const references and use non-owning views.</p></li>
+</ol>
+<p>Strategy 3 was selected.</p>
+</section>
+<section id="id34">
+<h3>Justification for the Decision<a class="headerlink" href="#id34" title="Link to this heading">#</a></h3>
+<p>Control information determines <em>which</em> operation runs, <em>with which key</em>, <em>using
+which algorithm</em>. If the daemon reads this from a buffer still writable by the
+client, the client can mutate it between validation and use (TOCTOU). A single
+owning copy at the IPC boundary makes the request immutable from the client’s
+perspective.</p>
+<p>Non-owning references within the daemon are safe because:</p>
+<ul class="simple">
+<li><p>The owned request data outlives the entire synchronous processing chain.</p></li>
+<li><p>All downstream handlers receive it as const.</p></li>
+<li><p>Processing is single-threaded per request.</p></li>
+</ul>
+<p>The data plane does not carry control information, so TOCTOU cannot redirect
+operations — zero-copy is safe there by design.</p>
+<p>—</p>
+</section>
+</section>
+<section id="per-operation-parameter-structs-with-dual-overloads">
+<h2>Per-Operation Parameter Structs with Dual Overloads<a class="headerlink" href="#per-operation-parameter-structs-with-dual-overloads" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-c915552e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__per_op_params">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Per-Operation Parameter Structs with Dual Overloads</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">proposed</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">Key management operations (``GenerateKey``, ``DeriveKey``, ``AgreeKey``, ``UnwrapKey``, ``ImportKey``, ``WrapKey``) are encapsulated in dedicated fluent-builder parameter structs. Dual overloads support both ephemeral keys (returning ``CryptoResourceGuard``) and direct-to-slot writes (returning ``bool``). KDF configuration is represented as a structured ``KdfParameters`` type rather than opaque byte spans, providing type safety and extensibility.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__per_op_params" title="dec_rec__crypto__per_op_params">dec_rec__crypto__per_op_params</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Each key management operation accepts parameters via a dedicated fluent-builder
+struct (<code class="docutils literal notranslate"><span class="pre">GenerateKeyParams</span></code>, <code class="docutils literal notranslate"><span class="pre">DeriveKeyParams</span></code>, <code class="docutils literal notranslate"><span class="pre">AgreeKeyParams</span></code>,
+<code class="docutils literal notranslate"><span class="pre">WrapKeyParams</span></code>, <code class="docutils literal notranslate"><span class="pre">UnwrapKeyParams</span></code>, <code class="docutils literal notranslate"><span class="pre">ImportKeyParams</span></code>). Dual overloads
+support both ephemeral and persistent slot targets. KDF configuration is
+expressed as a structured <code class="docutils literal notranslate"><span class="pre">KdfParameters</span></code> type containing typed fields for
+all supported KDFs.</p>
+<section id="id35">
+<h3>Context<a class="headerlink" href="#id35" title="Link to this heading">#</a></h3>
+<p>Key operations have complex parameter needs: algorithm selection, permission
+bitmasks, exportability flags, KDF configuration, IV, AAD, wrapping algorithm,
+peer public key data, and format specifiers. These parameters must be passed
+safely and extensibly to support both ephemeral keys (returned to the caller)
+and direct-to-slot writes (persisted in the daemon).</p>
+</section>
+<section id="id36">
+<h3>Decision<a class="headerlink" href="#id36" title="Link to this heading">#</a></h3>
+<p>Six dedicated parameter structs are provided:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GenerateKeyParams</span></code> — algorithm, permissions, slot size</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DeriveKeyParams</span></code> — algorithm, permissions, KDF config, salt, label</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AgreeKeyParams</span></code> — peer public key, algorithm, permissions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WrapKeyParams</span></code> — wrapping algorithm, IV, AAD</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UnwrapKeyParams</span></code> — format specifier, permissions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ImportKeyParams</span></code> — algorithm, permissions, format specifier</p></li>
+</ul>
+<p>Each struct is a fluent builder with named setters (<code class="docutils literal notranslate"><span class="pre">SetAlgorithm()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SetPermissions()</span></code>, etc.), enabling readable call sites.</p>
+<p>Dual overloads are provided for all key-producing operations:</p>
+<ul class="simple">
+<li><p><strong>Ephemeral overload</strong>: <code class="docutils literal notranslate"><span class="pre">Result&lt;CryptoResourceGuard&gt;</span> <span class="pre">XxxKey(const</span> <span class="pre">XxxxKeyParams&amp;)</span></code></p></li>
+<li><p><strong>Persistent overload</strong>: <code class="docutils literal notranslate"><span class="pre">Result&lt;std::monostate&gt;</span> <span class="pre">XxxKey(const</span> <span class="pre">CryptoResourceId&amp;</span> <span class="pre">target_slot,</span> <span class="pre">const</span> <span class="pre">XxxxKeyParams&amp;)</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">target_slot</span></code> parameter is always first in slot-targeting overloads,
+consistent with <code class="docutils literal notranslate"><span class="pre">PersistKey(target_slot,</span> <span class="pre">ephemeral_key)</span></code>.</p>
+<p>KDF configuration is replaced with a structured <code class="docutils literal notranslate"><span class="pre">KdfParameters</span></code> struct
+containing typed fields (salt, label, iteration count, output length) for
+all supported KDFs: HKDF, TLS 1.2 PRF, TLS 1.3 HKDF, PBKDF2, SP800-108.
+Opaque byte spans are no longer used for KDF parameters.</p>
+</section>
+<section id="id37">
+<h3>Alternatives Considered<a class="headerlink" href="#id37" title="Link to this heading">#</a></h3>
+<section id="single-fat-config-struct">
+<h4>Single Fat Config Struct<a class="headerlink" href="#single-fat-config-struct" title="Link to this heading">#</a></h4>
+<p>One <code class="docutils literal notranslate"><span class="pre">KeyOperationConfig</span></code> for all operations, with optional fields for each
+mode. This is rejected: most fields are unused for any given operation, creating
+confusion and enabling invalid parameter combinations at compile time. A per-operation
+struct enforces that only valid parameters are set.</p>
+</section>
+<section id="separate-named-methods">
+<h4>Separate Named Methods<a class="headerlink" href="#separate-named-methods" title="Link to this heading">#</a></h4>
+<p>Methods like <code class="docutils literal notranslate"><span class="pre">GenerateKeyToSlot()</span></code> instead of overloads. This is rejected:
+it doubles the API surface without adding clarity. Overloads are distinguished
+by return type (<code class="docutils literal notranslate"><span class="pre">CryptoResourceGuard</span></code> vs <code class="docutils literal notranslate"><span class="pre">bool</span></code>) and by the presence of
+<code class="docutils literal notranslate"><span class="pre">target_slot</span></code> as the first parameter, providing clear intent.</p>
+</section>
+<section id="builder-pattern-on-context">
+<h4>Builder Pattern on Context<a class="headerlink" href="#builder-pattern-on-context" title="Link to this heading">#</a></h4>
+<p>A fluent chain on the context object (e.g., <code class="docutils literal notranslate"><span class="pre">key_mgmt-&gt;Generate().Algorithm(&quot;AES-256&quot;).Execute()</span></code>).
+This is rejected: it requires runtime validation of missing required fields.
+A params-struct approach catches missing required fields at compile time via
+member initialization (the daemon performs final validation).</p>
+</section>
+</section>
+<section id="id38">
+<h3>Consequences<a class="headerlink" href="#id38" title="Link to this heading">#</a></h3>
+<p><strong>Positive:</strong></p>
+<ul class="simple">
+<li><p>Named fields and fluent builders eliminate parameter-order confusion and
+enable readable call sites with self-documenting intent.</p></li>
+<li><p>Adding new optional fields to a params struct is non-breaking; existing
+callers continue to compile unchanged.</p></li>
+<li><p>Structured <code class="docutils literal notranslate"><span class="pre">KdfParameters</span></code> provides compile-time type safety for KDF
+configuration (salt, label, iteration count) where opaque byte spans did not.</p></li>
+<li><p>Dual overloads cleanly separate ephemeral key creation (RAII guard return)
+from persistent slot writes (boolean return), with consistent calling convention.</p></li>
+<li><p>Span fields (peer public key, wrapped data, import key data, IV, AAD)
+reference caller-owned memory — zero-copy for large buffers (PQC public keys
+can reach 1–2 KB).</p></li>
+</ul>
+<p><strong>Negative:</strong></p>
+<ul class="simple">
+<li><p>Six additional parameter struct types increase compilation includes if not
+forward-declared.</p></li>
+<li><p>Callers must construct a params struct even for simple operations:
+<code class="docutils literal notranslate"><span class="pre">GenerateKeyParams{}.SetAlgorithm(&quot;AES-256&quot;)</span></code> is more verbose than a
+single factory call with a string argument.</p></li>
+<li><p>Span fields in params structs have lifetime constraints — referenced data
+must outlive the struct. This is documented but not enforced at compile time.</p></li>
+</ul>
+<section id="return-type-of-imemoryallocator-allocate">
+<h4>Return Type of IMemoryAllocator::Allocate()<a class="headerlink" href="#return-type-of-imemoryallocator-allocate" title="Link to this heading">#</a></h4>
+<div class="need_container docutils container" id="SNCB-bfb429b7">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_dec_rec table" id="dec_rec__crypto__allocate_return_type">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Return Type of IMemoryAllocator::Allocate()</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">accepted</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_context"><span class="needs_label">context: </span><span class="needs_data">doc__crypto_crypto_architecture</span></span></div>
+<div class="line"><span class="needs_decision"><span class="needs_label">decision: </span><span class="needs_data">All overloads of ``IMemoryAllocator::Allocate()`` return ``score::mw::crypto::IReadWriteMemory`` rather than a score::baselibs memory type.</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#dec_rec__crypto__allocate_return_type" title="dec_rec__crypto__allocate_return_type">dec_rec__crypto__allocate_return_type</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Decision Record</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Rationale</strong></p>
+<p>Bulk-allocated memory is intended for large inputs and/or outputs of cryptographic operations.
+The data does not require type interpretation — it is treated as a raw byte sequence,
+accessible via <code class="docutils literal notranslate"><span class="pre">IReadWriteMemory::AsWritableSpan()</span></code> or <code class="docutils literal notranslate"><span class="pre">IReadWriteMemory::data()</span></code>.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chklst_arc_inspection.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Architecture Inspection Checklist</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="data_plane_architecture.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Plane Architecture</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abi-compatibility-for-ipc-layer-deferred-post-stabilisation">ABI Compatibility for IPC Layer (Deferred Post-Stabilisation)</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#consequences">Consequences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives-considered">Alternatives Considered</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#flatbuffers">FlatBuffers</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">Advantages</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#disadvantages">Disadvantages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#justification-for-the-decision">Justification for the Decision</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cryptoresourceguard-lifetime-via-daemon-side-reference-counting">CryptoResourceGuard Lifetime via Daemon-Side Reference Counting</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Decision</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explicit-release-and-guard-synchronisation">Explicit Release and Guard Synchronisation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#setkey-and-implicit-guard-conversion"><code class="docutils literal notranslate"><span class="pre">SetKey</span></code> and Implicit Guard Conversion</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-connection-anchor-for-persistent-resource-id-stability">Shared-Connection Anchor for Persistent Resource ID Stability</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Decision</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifetime-strategy-deployment-choice">Lifetime Strategy (Deployment Choice)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scope">Scope</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipc-schema">IPC Schema</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithmid-as-fixedcapacitystring-64"><code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code> as <code class="docutils literal notranslate"><span class="pre">FixedCapacityString&lt;64&gt;</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-catalog-alongside-algorithmid">Algorithm Catalog Alongside <code class="docutils literal notranslate"><span class="pre">AlgorithmId</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-only-ipc-model">Synchronous-Only IPC Model</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#context-reset-for-streaming-context-reuse">Context <code class="docutils literal notranslate"><span class="pre">Reset()</span></code> for Streaming Context Reuse</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-call-timeout-with-client-side-response-bound">Per-Call Timeout with Client-Side Response Bound</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keyoperationpermission-as-a-capability-bitmask"><code class="docutils literal notranslate"><span class="pre">KeyOperationPermission</span></code> as a Capability Bitmask</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unified-cipher-context-no-encrypt-decrypt-or-symmetric-asymmetric-split">Unified Cipher Context (No Encrypt/Decrypt or Symmetric/Asymmetric Split)</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imemoryallocator-separated-from-icryptostack"><code class="docutils literal notranslate"><span class="pre">IMemoryAllocator</span></code> Separated from <code class="docutils literal notranslate"><span class="pre">ICryptoStack</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Consequences</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-plane-ipc-boundary-copy-with-daemon-internal-zero-copy-references">Control Plane IPC Boundary Copy with Daemon-Internal Zero-Copy References</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Consequences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">Alternatives Considered</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">Justification for the Decision</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-operation-parameter-structs-with-dual-overloads">Per-Operation Parameter Structs with Dual Overloads</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">Decision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">Alternatives Considered</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#single-fat-config-struct">Single Fat Config Struct</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#separate-named-methods">Separate Named Methods</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#builder-pattern-on-context">Builder Pattern on Context</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">Consequences</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#return-type-of-imemoryallocator-allocate">Return Type of IMemoryAllocator::Allocate()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
