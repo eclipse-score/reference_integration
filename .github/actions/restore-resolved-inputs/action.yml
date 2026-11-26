@@ -1,0 +1,42 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Overlays the workspace with the module graph resolved once per run by the `resolve` job of
+# unified_workflow.yml (known_good.json with the module commits under test, the generated
+# bazel_common fragments and MODULE.bazel.lock). Must run after checkout and before Bazel setup,
+# because setup-bazel hashes these files into its cache keys.
+name: Restore resolved inputs
+description: Download the resolved-inputs artifact and copy it over the checked-out workspace.
+inputs:
+  artifact:
+    description: Name of the resolved-inputs artifact of this workflow run.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Download resolved inputs
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      with:
+        name: ${{ inputs.artifact }}
+        path: ${{ runner.temp }}/resolved-inputs
+    - name: Overlay resolved inputs onto the workspace
+      shell: bash
+      env:
+        SRC: ${{ runner.temp }}/resolved-inputs
+      run: |
+        set -euo pipefail
+        test -f "${SRC}/known_good.json" || { echo "::error::resolved-inputs artifact has no known_good.json"; exit 1; }
+        test -d "${SRC}/bazel_common" || { echo "::error::resolved-inputs artifact has no bazel_common/"; exit 1; }
+        # The artifact holds all of bazel_common/, so replace the directory instead of copying over
+        # it: files the resolved module graph no longer generates must not survive.
+        rm -rf "${GITHUB_WORKSPACE}/bazel_common"
+        cp -a "${SRC}/." "${GITHUB_WORKSPACE}/"

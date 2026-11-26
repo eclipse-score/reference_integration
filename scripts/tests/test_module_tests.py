@@ -64,6 +64,14 @@ def test_coverage_args_put_unified_config_before_target_separator():
     ]
 
 
+@pytest.mark.parametrize("enabled", [True, False])
+def test_coverage_args_nocache_test_results_goes_before_target_separator(enabled):
+    args = coverage_args(["--", "//score/..."], ["cpp"], enabled=enabled, nocache_test_results=True)
+    assert args.count("--nocache_test_results") == 1
+    assert args.index("--nocache_test_results") < args.index("--")
+    assert "--nocache_test_results" not in coverage_args(["--", "//score/..."], ["cpp"], enabled=enabled)
+
+
 def test_coverage_args_register_ferrocene_only_for_rust():
     args = coverage_args(["//src/..."], ["rust"])
     assert args[-2:] == ["--config=llvm_cov", "--config=unified-rust"]

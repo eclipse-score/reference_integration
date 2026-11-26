@@ -121,12 +121,19 @@ def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> st
 
 
 def coverage_args(
-    test_args: list[str], langs: list[str], excludes: list[str] = (), *, enabled: bool = True, module: str = ""
+    test_args: list[str],
+    langs: list[str],
+    excludes: list[str] = (),
+    *,
+    enabled: bool = True,
+    module: str = "",
+    nocache_test_results: bool = False,
 ) -> list[str]:
     """The module's own test args with ref_int's unified config added before any ``--``.
 
     Modules awaiting coverage_tool integration run their unit tests without coverage.
     ``excludes`` (the module's ``exclude_test_targets``) become negative patterns after ``--``.
+    ``nocache_test_results`` re-runs every test instead of reusing cached results (full_clean).
     """
     # Coverage modules provide their own instrumented toolchain (Kyron keeps GCC for C++).
     # Share the integration platform and fallback toolchain without forcing unified Clang.
@@ -162,6 +169,7 @@ def coverage_args(
     return [
         "coverage" if enabled else "test",
         "--lockfile_mode=update",
+        *(["--nocache_test_results"] if nocache_test_results else []),
         *flags,
         *ours,
         *separator,
@@ -386,6 +394,7 @@ def run(args: argparse.Namespace) -> int:
         module.metadata.exclude_test_targets,
         enabled=coverage_enabled,
         module=module.name,
+        nocache_test_results=args.nocache_test_results,
     )
     exit_code, log = streamed(["bazel", *command], workspace, env)
 
@@ -451,6 +460,11 @@ def main() -> int:
     run_parser = sub.add_parser("run")
     run_parser.add_argument("module")
     run_parser.add_argument("--work-dir", type=Path, default=REF_INT / "_module_tests")
+    run_parser.add_argument(
+        "--nocache-test-results",
+        action="store_true",
+        help="re-run every test instead of reusing cached results (full_clean pipeline level)",
+    )
     run_parser.set_defaults(func=run)
     report_parser = sub.add_parser("report")
     report_parser.add_argument("reports_dir", type=Path, help="directory with one 'run' report per module")

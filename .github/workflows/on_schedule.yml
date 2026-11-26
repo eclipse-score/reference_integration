@@ -1,0 +1,62 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Thin caller of unified_workflow.yml for manual runs and (once re-enabled) the nightly run against
+# the latest module mains. Nothing is published from here.
+name: Latest module integration
+on:
+  # Nightly schedule deactivated for now; re-enable once the unified pipeline is stable.
+  # schedule:
+  #   - cron: '30 2 * * *' # Every night at 02:30 UTC
+  workflow_dispatch:
+    inputs:
+      test_level:
+        description: Test level (cumulative pr < merge < full < full_clean)
+        type: choice
+        options: [pr, merge, full, full_clean]
+        default: full
+      known_good_mode:
+        description: Module graph (pinned = known_good.json, latest = module mains, override = one module)
+        type: choice
+        options: [pinned, latest, override]
+        default: latest
+      module_override:
+        description: For override only, <module>@<sha> or <module>@<repo_url>@<sha> (40-hex sha)
+        type: string
+        default: ''
+# GitHub validates the permissions a called workflow's jobs request against the caller's grant
+# statically, even for jobs that are skipped, so this grant equals on_repo_change.yml. Publishing is
+# disabled for schedule/workflow_dispatch in unified_workflow.yml's prepare job.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+# One run at a time. GitHub keeps only one pending run per group: a third dispatch while one
+# runs and one waits cancels the waiting one.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/unified_workflow.yml
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      pull-requests: write
+    with:
+      test_level: ${{ inputs.test_level || 'full' }}
+      known_good_mode: ${{ inputs.known_good_mode || 'latest' }}
+      module_override: ${{ inputs.module_override || '' }}
+    secrets: inherit

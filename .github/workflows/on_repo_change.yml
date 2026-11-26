@@ -1,0 +1,51 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Thin caller of unified_workflow.yml for pull requests, the merge queue, main and releases.
+# It passes no level or mode inputs: unified_workflow.yml derives them from the event
+# (pull_request=pr, merge_group=merge, push main=full, release=full_clean, always pinned).
+# PR and merge-queue runs share this job ID, so the required check is "CI / CI status" for both.
+name: Repository change CI
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  merge_group:
+    types: [checks_requested]
+  push:
+    branches:
+      - main
+  release:
+    types: [created]
+# Maximum for the whole graph; every job in unified_workflow.yml declares its own minimum.
+# Fork pull requests get a read-only token regardless.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+# Only pull request runs are cancelled by newer pushes. Every other run gets its own group: with a
+# shared group GitHub keeps only one pending run and cancels the one it replaces, even with
+# cancel-in-progress: false, so quick successive pushes to main would skip commits.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/unified_workflow.yml
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      pull-requests: write
+    # Fork and Dependabot PRs receive no secrets; the pipeline then skips QNX.
+    secrets: inherit
