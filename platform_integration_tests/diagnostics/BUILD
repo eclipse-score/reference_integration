@@ -10,19 +10,23 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_test")
+load("@rules_python//python:defs.bzl", "py_library")
 load("@score_itf//:defs.bzl", "py_itf_test")
+load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
-py_test(
+py_library(
+    name = "diagnostics_showcase",
+    srcs = ["test_diagnostics_showcase.py"],
+    imports = ["."],
+    deps = ["//platform_integration_tests:showcase_runner"],
+)
+
+score_py_pytest(
     name = "diagnostics_orchestration_test",
     size = "small",
-    srcs = [
-        "diagnostics_orchestration_test.py",
-        "test_diagnostics_showcase.py",
-    ],
-    imports = ["."],
-    main = "diagnostics_orchestration_test.py",
-    deps = ["//platform_integration_tests:showcase_runner"],
+    srcs = ["diagnostics_orchestration_test.py"],
+    pytest_config = "//:pyproject.toml",
+    deps = [":diagnostics_showcase"],
 )
 
 # Linux only: the OpenSOVD gateway and the CDA are not supported on QNX, so the test is skipped
