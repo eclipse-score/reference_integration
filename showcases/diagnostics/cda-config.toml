@@ -26,7 +26,8 @@ storage_dir = "/var/lib/opensovd-cda/storage"
 # host picks the interface and the source address from its routes, so this configuration needs no
 # address of the host. It does need a route for the broadcast, for example a default route: without
 # one the CDA stops at startup with "Failed to send VIR: ... Network is unreachable". The subnet mask
-# 0.0.0.0 accepts vehicle announcements from any address.
+# 0.0.0.0 accepts vehicle announcements from any address. The Raspberry Pi images replace both with
+# the address and the subnet of the image, see images/network.
 [doip]
 tester_address = "0.0.0.0"
 tester_subnet = "0.0.0.0"
