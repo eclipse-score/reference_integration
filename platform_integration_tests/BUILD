@@ -48,8 +48,7 @@ test_suite(
         "manual",
     ],
     tests = [
-        # TODO: re-enable with the baselibs showcase (showcases/standalone/BUILD).
-        # "//platform_integration_tests/baselibs",
+        "//platform_integration_tests/baselibs",
         "//platform_integration_tests/combined",
         "//platform_integration_tests/communication",
         "//platform_integration_tests/config_management",
