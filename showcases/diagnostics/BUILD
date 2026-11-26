@@ -17,12 +17,6 @@ load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 # The launch manager starts the CDA and the gateway, like it starts the daemons of the platform run.
-# The Raspberry Pi images set the address of the gateway in it, see images/network.
-exports_files(
-    ["launch_manager_config.json"],
-    visibility = ["//images/network:__pkg__"],
-)
-
 launch_manager_config(
     name = "diagnostics_lm_config",
     config = "launch_manager_config.json",
@@ -98,8 +92,6 @@ genrule(
     ],
     outs = ["opensovd-cda.toml"],
     cmd = "cat $(SRCS) > $@",
-    # The Raspberry Pi images set the DoIP tester address in it, see images/network.
-    visibility = ["//images/network:__pkg__"],
 )
 
 pkg_filegroup(

@@ -281,9 +281,6 @@ Platform-specific target images bundling S-CORE artifacts and showcases:
 - **`qnx_x86_64/`**: QNX x86_64 QEMU image
 - **`qnx_aarch64/`**: QNX 8.0 aarch64 image — QEMU or Raspberry Pi 4/5 (see [Build and deploy showcases on Raspberry Pi](#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64))
 - **`ebclfsa_aarch64/`**: Elektrobit corbos Linux for Safety Applications (aarch64) (see [images/ebclfsa_aarch64/README.md](images/ebclfsa_aarch64/README.md))
-- **`ebclfsa_rpi4b/`**: Elektrobit corbos Linux for Safety Applications, Raspberry Pi 4B SD card image (see [images/ebclfsa_rpi4b/README.md](images/ebclfsa_rpi4b/README.md))
-- **`rpios_rpi4b/`**: Raspberry Pi OS Lite, Raspberry Pi 4B SD card image (see [images/rpios_rpi4b/README.md](images/rpios_rpi4b/README.md))
-- **`network/`**: the build time network configuration of the Raspberry Pi 4B images (see [images/network/README.md](images/network/README.md))
 - **`autosd/`**: Red Hat AutoSD x86_64
 
 ### `runners/`
