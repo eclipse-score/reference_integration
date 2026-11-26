@@ -40,7 +40,7 @@ py_itf_test(
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
     tags = [
-        # Record only this showcase's DLT traffic, not that of parallel tests.
+        # Records DLT multicast on the host: other PITs running at the same time would leak into the recording.
         "exclusive",
         "manual",
     ],

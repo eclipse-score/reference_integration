@@ -41,8 +41,7 @@ py_itf_test(
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
     tags = [
-        # DLT multicast is shared with other Docker targets on the host. A parallel
-        # showcase can otherwise contribute launch-manager messages to this test.
+        # Records DLT multicast on the host: other PITs running at the same time would leak into the recording.
         "exclusive",
         "manual",
     ],
