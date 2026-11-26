@@ -96,25 +96,10 @@ include("//bazel_common:score_sbom.MODULE.bazel")
 
 # ── score_diagnostics: the overrides of its dependencies ──
 # Overrides are only honoured in the root module, so the ones of score_diagnostics are repeated
-# here. Keep them at the commits and patches of the pinned score_diagnostics.
-bazel_dep(name = "classic-diagnostic-adapter", version = "0.1.0")
-git_override(
-    module_name = "classic-diagnostic-adapter",
-    commit = "f613cde67473d6746725edc9cbf8f64179a74f6a",
-    patch_strip = 1,
-    patches = ["//patches/diagnostics:classic-diagnostic-adapter-export-requirements.patch"],
-    remote = "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
-)
+# here. They are generated from known_good.json (group diagnostics_deps).
+include("//bazel_common:score_modules_diagnostics_deps.MODULE.bazel")
 
-bazel_dep(name = "mbedtls-rs", version = "0.1.0")
-git_override(
-    module_name = "mbedtls-rs",
-    commit = "1dac0d8c6a80feb3864e86aac80b35cf34b10f87",
-    remote = "https://github.com/eclipse-opensovd/mbedtls-rs.git",
-)
-
-bazel_dep(name = "opensovd_core", version = "0.0.0")
-
+# Must match the opensovd_core hash of the diagnostics_deps group in known_good.json.
 opensovd_commit = "f61eeeb4133e5c5a7c3541861489f12e306e4ee4"
 
 opensovd_build_stamp = use_repo_rule("//patches/diagnostics:opensovd_build_stamp.bzl", "opensovd_build_stamp")
@@ -122,12 +107,4 @@ opensovd_build_stamp = use_repo_rule("//patches/diagnostics:opensovd_build_stamp
 opensovd_build_stamp(
     name = "opensovd_build_stamp",
     commit = opensovd_commit,
-)
-
-git_override(
-    module_name = "opensovd_core",
-    commit = opensovd_commit,
-    patch_strip = 1,
-    patches = ["//patches/diagnostics:opensovd-core-build-stamp.patch"],
-    remote = "https://github.com/eclipse-opensovd/opensovd-core.git",
 )
