@@ -18,10 +18,16 @@ both with the ECU databases of the showcases, so it only passes against a platfo
 working binaries.
 """
 
+from attribute_plugin import add_test_properties
 from diagnostics_orchestration import check_diagnostics_and_platform_run_coexist
 from showcase_runner import run_showcases
 
 
+@add_test_properties(
+    partially_verifies=["stkh_req__diagnostics__via_sovd"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
 def test_diagnostics_stack(target):
     """The gateway listens on 127.0.0.1:7690, the CDA loads the ECU databases and reports ready."""
 
@@ -30,6 +36,14 @@ def test_diagnostics_stack(target):
     assert "diagnostics_check: FAILED" not in output, output
 
 
+@add_test_properties(
+    partially_verifies=[
+        "stkh_req__diagnostics__via_sovd",
+        "stkh_req__execution_model__processes",
+    ],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
 def test_diagnostics_and_platform_run_coexist(target):
     """The boot-time diagnostics manager and Platform Run share the same /tmp."""
     check_diagnostics_and_platform_run_coexist(target)
