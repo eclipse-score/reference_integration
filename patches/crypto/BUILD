@@ -13,6 +13,7 @@
 exports_files(
     [
         "001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+        "002-unique-quick-start-label.patch",
     ],
     visibility = ["//visibility:public"],
 )
