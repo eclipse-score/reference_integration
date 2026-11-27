@@ -445,7 +445,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step_3_unit_tests.html">3. Step 3 — Get compiled and unit-tested on the default platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_4_platforms.html">4. Step 4 — Get built and tested on the target platforms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_5_component_tests.html">5. Step 5 — Add component tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="step_6_integration_tests.html">6. Step 6 — Add feature integration tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_6_integration_tests.html">6. Step 6 — Add integration tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_7_reporting.html">7. Step 7 — Add coverage and verification reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_8_code_quality.html">8. Step 8 — Code quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checklist.html">9. Checklist</a></li>
@@ -545,7 +545,7 @@ declared in the workflows.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a></p></td>
-<td><p>Builds the QNX IFS and runs integration tests on QEMU.</p></td>
+<td><p>Builds the QNX IFS and runs the platform integration tests on QEMU.</p></td>
 <td><p><strong>yes</strong></p></td>
 <td><p>none (graph-wide)</p></td>
 </tr>
@@ -580,7 +580,8 @@ declared in the workflows.</p>
 <td><p>none</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml">test_and_docs.yml</a></p></td>
-<td><p>Code-quality checks, builds the docs and reports, publishes to Pages.</p></td>
+<td><p>Code-quality checks and the feature and Linux platform integration tests;
+builds the docs and reports, publishes to Pages.</p></td>
 <td><p><strong>yes</strong></p></td>
 <td><p>wire docs in Step 2, reports in Step 7</p></td>
 </tr>
@@ -590,7 +591,8 @@ declared in the workflows.</p>
 <td><p>none</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a></p></td>
-<td><p>Builds the Linux x86_64 image and runs feature integration tests on Docker.</p></td>
+<td><p>Builds the Linux x86_64 image and product SBOM and runs the unit tests of
+<code class="docutils literal notranslate"><span class="pre">deploy/</span></code>; the Linux platform integration tests run in <code class="docutils literal notranslate"><span class="pre">test_and_docs.yml</span></code>.</p></td>
 <td><p>no</p></td>
 <td><p>none (graph-wide)</p></td>
 </tr>
