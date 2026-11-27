@@ -1,0 +1,658 @@
+# SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
+# SPDX-License-Identifier: Apache-2.0
+#
+# Resolve QNX SDK paths from compiler launchers instead of the caller working directory.
+# Upstream: https://github.com/eclipse-score/bazel_cpp_toolchains/pull/206
+diff --git a/docs/consumers/features.md b/docs/consumers/features.md
+index bc9b0c2..0718a0a 100644
+--- a/docs/consumers/features.md
++++ b/docs/consumers/features.md
+@@ -140,8 +140,8 @@ See the `score_cpp_policies` documentation for the authoritative list and usage.
+   compile and `-lgcov` / `--coverage` at link.
+
+ ## QNX environment
+-- **`sdp_env`** (QNX) — Injects QNX SDP environment variables (`QNX_HOST`,
+-  `QNX_TARGET`, license path, ...) into compile/link actions.
++- **`sdp_env`** (QNX) - Injects license settings into compile/link actions.
++  Compiler wrappers set `QNX_HOST` and `QNX_TARGET` at runtime.
+ - **`gcc_version_flags`** (QNX) — Selects the QNX compiler version and CPU.
+ - **`io_pkt_ddk`** (QNX, opt-in) — Adds C compilation flags and headers for
+   QNX io-pkt drivers and modules.
+\ No newline at end of file
+diff --git a/docs/consumers/qnx_integration.md b/docs/consumers/qnx_integration.md
+index e12f84d..54fab7b 100644
+--- a/docs/consumers/qnx_integration.md
++++ b/docs/consumers/qnx_integration.md
+@@ -215,6 +215,8 @@ and the CPU-suffixed targets `ar_CPU`, `gcov_CPU`, `strip_CPU`, and
+ `cxx_builtin_include_directories_CPU`, where `CPU` is `x86_64` or `aarch64`.
+ The package must also contain the expected host tools and target headers and
+ libraries.
++The compiler wrappers execute the artifacts selected by `cc` and `cxx`, including
++vendor launchers or compiler files with nonstandard names.
+
+ ## Select an SDP version
+
+@@ -237,9 +239,11 @@ each configuration instead of registering both for that configuration.
+
+ ## Configure licensing
+
+-The QNX `sdp_env` feature sets `QNX_HOST`, `QNX_TARGET`,
+-`QNX_CONFIGURATION_EXCLUSIVE`, and `QNX_SHARED_LICENSE_FILE` for compile and
+-link actions. The last value comes from the `license_path` attribute.
++The QNX compiler wrappers resolve `QNX_HOST` and `QNX_TARGET` relative to their
++invoked location, so compilation also works when Cargo or CMake changes the
++working directory. The `sdp_env` feature sets `QNX_CONFIGURATION_EXCLUSIVE`
++and `QNX_SHARED_LICENSE_FILE` for compile and link actions. The latter comes
++from the `license_path` attribute.
+ `license_info_variable` and `license_info_url` can specify an additional
+ license environment entry; see the [extension reference](extension_api.md).
+
+diff --git a/docs/contributors/maintenance.md b/docs/contributors/maintenance.md
+index e36f12f..b4ece2d 100644
+--- a/docs/contributors/maintenance.md
++++ b/docs/contributors/maintenance.md
+@@ -50,8 +50,8 @@ feature, though; some behavior is provided by other toolchain wiring:
+   `sysroot` compile feature.
+ - **Sysroot / system includes (QNX)** — The package's `sysroot_dir` is passed
+   as `builtin_sysroot`. System include roots come from
+-  `cxx_builtin_include_directories` (SDP paths), and the SDP environment is
+-  injected by the `sdp_env` feature.
++  `cxx_builtin_include_directories` (SDP paths). Compiler wrappers resolve the
++  SDP environment at runtime; the `sdp_env` feature injects license settings.
+
+ When adding or auditing a feature, classify how each required behavior is
+ provided: an **explicit feature** in the `features` list, **tool/sysroot wiring**
+diff --git a/features/custom/qnx/sdp_env/feature.bzl b/features/custom/qnx/sdp_env/feature.bzl
+index dcdd34b..2635d87 100644
+--- a/features/custom/qnx/sdp_env/feature.bzl
++++ b/features/custom/qnx/sdp_env/feature.bzl
+@@ -20,16 +20,12 @@ _ACTIONS = [
+ ]
+
+ def make_sdp_env_feature(
+-        host_dir,
+-        target_dir,
+         license_path,
+         license_info_variable,
+         license_info_value):
+     """Creates a feature for the sdp_env toolchain.
+
+     Args:
+-        host_dir: str, resolved path to the SDP host directory.
+-        target_dir: str, resolved path to the SDP target directory.
+         license_path: str, path to the license file.
+         license_info_variable: str, name of an extra license env var, "" if none.
+         license_info_value: str, value of that extra license env var, "" if none.
+@@ -38,12 +34,9 @@ def make_sdp_env_feature(
+         A feature definition for the sdp_env toolchain.
+     """
+
+-    # cc_args' `env` has no mechanism to resolve labels/format custom
+-    # placeholders (see validate_env_variables in rules_cc) -- host_dir/
+-    # target_dir must already be plain resolved path strings.
++    # The compiler wrappers set QNX_HOST/QNX_TARGET at execution time because
++    # consumers such as Cargo build scripts and CMake change working directory.
+     env = {
+-        "QNX_HOST": host_dir,
+-        "QNX_TARGET": target_dir,
+         "QNX_CONFIGURATION_EXCLUSIVE": "/var/tmp/.qnx",
+         "QNX_SHARED_LICENSE_FILE": license_path,
+     }
+diff --git a/rules/gcc.bzl b/rules/gcc.bzl
+index 942f7ab..a4c0b93 100644
+--- a/rules/gcc.bzl
++++ b/rules/gcc.bzl
+@@ -51,20 +51,22 @@ def _get_cc_config(rctx):
+     Returns:
+         str: BUILD file content defining filegroup and cc_toolchain_config.
+     """
++    qnx = rctx.attr.tc_os == _OS_QNX
+     return """
+ filegroup(
+     name = "all_files",
+     srcs = [
+         "@{tc_pkg_repo}//:all_files",
+         "gcov_wrapper",
++        {compiler_wrappers}
+     ]
+ )
+
+ cc_toolchain_config(
+     name = "cc_toolchain_config",
+     ar_binary = "@{tc_pkg_repo}//:ar{tc_tool_suffix}",
+-    cc_binary = "@{tc_pkg_repo}//:cc",
+-    cxx_binary = "@{tc_pkg_repo}//:cxx",
++    cc_binary = "{cc_binary}",
++    cxx_binary = "{cxx_binary}",
+     gcov_binary = "@{tc_pkg_repo}//:gcov{tc_tool_suffix}",
+     strip_binary = "@{tc_pkg_repo}//:strip{tc_tool_suffix}",
+     sysroot = "@{tc_pkg_repo}//:sysroot_dir",
+@@ -84,42 +86,52 @@ cc_toolchain_config(
+         tc_extra_known_features = label_list_to_string(rctx.attr.extra_known_features),
+         tc_extra_enabled_features = label_list_to_string(rctx.attr.extra_enabled_features),
+         tc_tool_suffix = rctx.attr.tc_tool_suffix,
++        cc_binary = ":qcc" if qnx else "@{}//:cc".format(rctx.attr.tc_pkg_repo),
++        cxx_binary = ":q++" if qnx else "@{}//:cxx".format(rctx.attr.tc_pkg_repo),
++        compiler_wrappers = '":compiler_wrapper_files",' if qnx else "",
+     )
+
+-def get_custom_cc_features_qnx(rctx, canonical_pkg_name):
++def get_custom_cc_features_qnx(rctx):
+     """Returns the QNX-specific feature loads and generated feature declarations.
+
+     Args:
+         rctx: RepositoryContext object with toolchain attributes.
+-        canonical_pkg_name: Canonical repository name of the toolchain package.
+
+     Returns:
+         A tuple of the Starlark load statements and feature declarations.
+     """
+-    # sdp_env's host_dir/target_dir must be plain resolved paths, not labels:
+-    # cc_args' `env` rejects format() variables that aren't builtin cc_toolchain
+-    # variables ("The variable host_dir does not exist").
+-
+-    # TODO: Once Bazel enables label resolution in cc_args' env, we can use labels instead of resolved paths.
+-
+-    target_dir = "/proc/self/cwd/external/{canonical_pkg}/target/qnx".format(canonical_pkg = canonical_pkg_name)
+
+     # io_pkt_ddk's cc_args (unlike sdp_env's env) supports label resolution via
+     # `format`, so it references the package's own target_dir filegroup directly
+     # instead of a hardcoded path. Uses the plain declared repo name (like
+-    # sysroot/cxx_builtin_include_directories above), not canonical_pkg_name --
+-    # that form is only valid for on-disk "/proc/self/cwd/external/..." paths.
++    # sysroot/cxx_builtin_include_directories above).
+     target_dir_label = "@{tc_pkg_repo}//:target_dir".format(tc_pkg_repo = rctx.attr.tc_pkg_repo)
+
+     custom_load = "\n".join([
++        """load("@score_bazel_cpp_toolchains//rules:qnx_compiler_wrapper.bzl", "qnx_compiler_files", "qnx_compiler_wrapper")""",
+         """load("@score_bazel_cpp_toolchains//features/custom/qnx/sdp_env:feature.bzl", "make_sdp_env_feature")""",
+         """load("@score_bazel_cpp_toolchains//features/custom/qnx/gcc_version_flags:feature.bzl", "make_gcc_version_flags_feature")""",
+         """load("@score_bazel_cpp_toolchains//features/custom/qnx/io_pkt_ddk:feature.bzl", "make_io_pkt_ddk_feature")""",
+     ])
+     custom_features = """
++qnx_compiler_wrapper(
++    name = "qcc",
++    compiler = "@{tc_pkg_repo}//:cc",
++    sdk_files = "@{tc_pkg_repo}//:all_files",
++)
++
++qnx_compiler_wrapper(
++    name = "q++",
++    compiler = "@{tc_pkg_repo}//:cxx",
++    sdk_files = "@{tc_pkg_repo}//:all_files",
++)
++
++qnx_compiler_files(
++    name = "compiler_wrapper_files",
++    compilers = [":qcc", ":q++"],
++)
++
+ make_sdp_env_feature(
+-    host_dir = "{host_dir}",
+-    target_dir = "{target_dir}",
+     license_path = "{license_path}",
+     license_info_variable = "{license_info_variable}",
+     license_info_value = "{license_info_value}",
+@@ -134,8 +146,7 @@ make_io_pkt_ddk_feature(
+     cpu = "{cpu}",
+ )
+ """.format(
+-        host_dir = "/proc/self/cwd/external/{canonical_pkg}/host/linux/x86_64".format(canonical_pkg = canonical_pkg_name),
+-        target_dir = target_dir,
++        tc_pkg_repo = rctx.attr.tc_pkg_repo,
+         target_dir_label = target_dir_label,
+         cpu = rctx.attr.tc_cpu,
+         license_path = rctx.attr.license_path,
+@@ -179,7 +190,6 @@ def _get_gcov_path(rctx, canonical_pkg_name):
+     ("external/<repo>/...") because a repository rule cannot resolve a
+     label's execpath (that only exists at analysis/execution time). This will
+     break under --experimental_sibling_repository_layout ("../<repo>/...").
+-    See the related TODO in get_custom_cc_features_qnx.
+
+     Args:
+         rctx: RepositoryContext object with toolchain attributes.
+@@ -274,14 +284,15 @@ def _impl(rctx):
+         "BUILD",
+         rctx.attr._cc_toolchain_build,
+         {
+-            "%{tc_custom_feature_load}": get_custom_cc_features_qnx(rctx, canonical_pkg_name)[0] if rctx.attr.tc_os == _OS_QNX else "",
+-            "%{tc_custom_features}": get_custom_cc_features_qnx(rctx, canonical_pkg_name)[1] if rctx.attr.tc_os == _OS_QNX else "",
++            "%{tc_custom_feature_load}": get_custom_cc_features_qnx(rctx)[0] if rctx.attr.tc_os == _OS_QNX else "",
++            "%{tc_custom_features}": get_custom_cc_features_qnx(rctx)[1] if rctx.attr.tc_os == _OS_QNX else "",
+             "%{cc_toolchain_config}": cc_toolchain_config,
+             "%{tc_cpu}": rctx.attr.tc_cpu,
+             "%{tc_identifier}": tc_identifier,
+             "%{tc_os}": rctx.attr.tc_os,
+             "%{tc_feature_os}": "ebclfsa_hi" if rctx.attr.tc_os == _OS_LINUX and rctx.attr.tc_runtime_ecosystem == "ebclfsa-hi" else rctx.attr.tc_os,
+             "%{tc_pkg_repo}": rctx.attr.tc_pkg_repo,
++            "%{tc_files}": ":all_files" if rctx.attr.tc_os == _OS_QNX else "@{}//:all_files".format(rctx.attr.tc_pkg_repo),
+             "%{tc_runtime_es}": rctx.attr.tc_runtime_ecosystem,
+             "%{tc_version}": rctx.attr.gcc_version,
+             "%{tc_sysroot}": "@{tc_pkg_repo}//:sysroot_dir".format(tc_pkg_repo = rctx.attr.tc_pkg_repo),
+diff --git a/rules/qnx_compiler_wrapper.bzl b/rules/qnx_compiler_wrapper.bzl
+new file mode 100644
+index 0000000..a81a006
+--- /dev/null
++++ b/rules/qnx_compiler_wrapper.bzl
+@@ -0,0 +1,79 @@
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# SPDX-License-Identifier: Apache-2.0
++
++"""Cwd-independent launchers for the compiler artifacts selected by an SDP."""
++
++load("@bazel_skylib//lib:paths.bzl", "paths")
++load("@bazel_skylib//lib:shell.bzl", "shell")
++
++def _relative_path(start, path):
++    # Anchor execpaths before normalizing to retain sibling repository paths.
++    start_parts = paths.normalize("execroot/_main/" + start).split("/")
++    path_parts = paths.normalize("execroot/_main/" + path).split("/")
++    common = 0
++    for left, right in zip(start_parts, path_parts):
++        if left != right:
++            break
++        common += 1
++    return "/".join([".."] * (len(start_parts) - common) + path_parts[common:])
++
++def _impl(ctx):
++    wrapper = ctx.actions.declare_file(ctx.label.name)
++    sdk_root = ctx.file.sdk_root.path if ctx.file.sdk_root else ctx.attr.sdk_files.label.workspace_root
++    ctx.actions.expand_template(
++        template = ctx.file._template,
++        output = wrapper,
++        substitutions = {
++            "'%{sdk_relative_path}'": shell.quote(_relative_path(wrapper.dirname, sdk_root)),
++            "'%{compiler_relative_path}'": shell.quote(_relative_path(wrapper.dirname, ctx.file.compiler.path)),
++        },
++        is_executable = True,
++    )
++    compiler = ctx.attr.compiler[DefaultInfo]
++    files = depset(
++        [wrapper, ctx.file.compiler],
++        transitive = [
++            ctx.attr.sdk_files[DefaultInfo].files,
++            compiler.default_runfiles.files,
++            compiler.data_runfiles.files,
++        ],
++    )
++    return [
++        DefaultInfo(
++            executable = wrapper,
++            runfiles = ctx.runfiles(transitive_files = files),
++        ),
++        OutputGroupInfo(compiler_files = files),
++    ]
++
++qnx_compiler_wrapper = rule(
++    implementation = _impl,
++    executable = True,
++    attrs = {
++        "compiler": attr.label(allow_single_file = True, executable = True, cfg = "exec", mandatory = True),
++        "sdk_root": attr.label(
++            allow_single_file = True,
++            doc = "Optional SDK directory artifact; otherwise use sdk_files' repository root.",
++        ),
++        "sdk_files": attr.label(mandatory = True),
++        "_template": attr.label(
++            default = "//templates:qnx_compiler_wrapper.template",
++            allow_single_file = True,
++        ),
++    },
++)
++
++def _files_impl(ctx):
++    return DefaultInfo(files = depset(
++        transitive = [compiler[OutputGroupInfo].compiler_files for compiler in ctx.attr.compilers],
++    ))
++
++qnx_compiler_files = rule(
++    implementation = _files_impl,
++    attrs = {
++        # Match cc_toolchain_config's executable attributes, including their
++        # execution configuration, rather than building target-side launchers.
++        "compilers": attr.label_list(cfg = "exec", mandatory = True),
++    },
++)
+diff --git a/templates/BUILD.bazel b/templates/BUILD.bazel
+new file mode 100644
+index 0000000..95543bf
+--- /dev/null
++++ b/templates/BUILD.bazel
+@@ -0,0 +1,5 @@
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# SPDX-License-Identifier: Apache-2.0
++
++exports_files(["qnx_compiler_wrapper.template"])
+diff --git a/templates/BUILD.template b/templates/BUILD.template
+index 3ba32be..3adb716 100644
+--- a/templates/BUILD.template
++++ b/templates/BUILD.template
+@@ -54,15 +54,15 @@ filegroup(
+
+ cc_toolchain(
+     name = "cc_toolchain",
+-    all_files = "@%{tc_pkg_repo}//:all_files",
+-    ar_files = "@%{tc_pkg_repo}//:all_files",
+-    as_files = "@%{tc_pkg_repo}//:all_files",
+-    compiler_files = "@%{tc_pkg_repo}//:all_files",
++    all_files = "%{tc_files}",
++    ar_files = "%{tc_files}",
++    as_files = "%{tc_files}",
++    compiler_files = "%{tc_files}",
+     coverage_files = ":all_files",
+     dwp_files = ":empty",
+-    linker_files = "@%{tc_pkg_repo}//:all_files",
++    linker_files = "%{tc_files}",
+     objcopy_files = ":empty",
+-    strip_files = "@%{tc_pkg_repo}//:all_files",
++    strip_files = "%{tc_files}",
+     toolchain_config = ":cc_toolchain_config",
+ )
+
+diff --git a/templates/qnx_compiler_wrapper.template b/templates/qnx_compiler_wrapper.template
+new file mode 100644
+index 0000000..1a09eb4
+--- /dev/null
++++ b/templates/qnx_compiler_wrapper.template
+@@ -0,0 +1,25 @@
++#!/bin/bash
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# SPDX-License-Identifier: Apache-2.0
++
++set -euo pipefail
++IFS=$'\n\t'
++
++# Do not resolve the script symlink into Bazel's repository cache or change the
++# compiler's working directory: relative source paths belong to the caller.
++case "$0" in
++    */*) wrapper_dir="${0%/*}" ;;
++    *) wrapper_dir=. ;;
++esac
++sdk_relative_path='%{sdk_relative_path}'
++compiler_relative_path='%{compiler_relative_path}'
++sdk_root="$(cd -L -- "${wrapper_dir}/${sdk_relative_path}" && pwd -L)"
++# Native Bazel depfiles must match the toolchain's builtin include prefix.
++caller_root="$(pwd -P)"
++if [[ "$sdk_root" == "$caller_root/"* ]]; then
++    sdk_root="/proc/self/cwd/${sdk_root#"$caller_root/"}"
++fi
++export QNX_HOST="${sdk_root}/host/linux/x86_64"
++export QNX_TARGET="${sdk_root}/target/qnx"
++exec "${wrapper_dir}/${compiler_relative_path}" "$@"
+diff --git a/tests/BUILD b/tests/BUILD
+index 6ea8f44..e391cf1 100644
+--- a/tests/BUILD
++++ b/tests/BUILD
+@@ -62,6 +62,7 @@ test_suite(
+     tests = [
+         "//guardrails:feature_lists_test",
+         "//guardrails:no_legacy_features_guard_test",
++        "//guardrails:qnx_compiler_wrapper_test",
+         "//guardrails:sysroot_assembly_flags_guard_test",
+     ],
+ )
+diff --git a/tests/MODULE.bazel.lock b/tests/MODULE.bazel.lock
+index 9010226..de3b3e8 100644
+--- a/tests/MODULE.bazel.lock
++++ b/tests/MODULE.bazel.lock
+@@ -1404,7 +1404,7 @@
+     },
+     "@@score_bazel_cpp_toolchains+//extensions:gcc.bzl%gcc": {
+       "general": {
+-        "bzlTransitiveDigest": "Fjw5WFQzq85PzM/WTqjX0X/FFCRC6zuCa19nJxUv2dE=",
++        "bzlTransitiveDigest": "BX46uIzV6+z3yI7Cq/XbWN7clIrqTZVeWJpf8CXj7GA=",
+         "usagesDigest": "KF6GFcgyV7tT38zFX12qeL6jNwermuh0oKu4SOgzY90=",
+         "recordedInputs": [
+           "REPO_MAPPING:,score_bazel_cpp_toolchains score_bazel_cpp_toolchains+",
+diff --git a/tests/guardrails/BUILD b/tests/guardrails/BUILD
+index ad74120..e3c32cc 100644
+--- a/tests/guardrails/BUILD
++++ b/tests/guardrails/BUILD
+@@ -15,6 +15,7 @@
+
+ load(":feature_lists_test.bzl", "feature_lists_test")
+ load(":legacy_feature_guard.bzl", "no_legacy_features_guard_test")
++load(":qnx_compiler_wrapper_test.bzl", "qnx_compiler_wrapper_test")
+ load(":sysroot_assembly_flags_guard.bzl", "sysroot_assembly_flags_guard_test")
+
+ feature_lists_test(
+@@ -22,6 +23,11 @@ feature_lists_test(
+     visibility = ["//visibility:public"],
+ )
+
++qnx_compiler_wrapper_test(
++    name = "qnx_compiler_wrapper_test",
++    visibility = ["//visibility:public"],
++)
++
+ # Validates the C++ toolchain resolved for the current --config. Run it under
+ # each platform config (x86_64-linux, aarch64-linux, x86_64-qnx, ...) to cover
+ # the whole toolchain matrix.
+diff --git a/tests/guardrails/qnx_compiler_wrapper_test.bzl b/tests/guardrails/qnx_compiler_wrapper_test.bzl
+new file mode 100644
+index 0000000..c38d276
+--- /dev/null
++++ b/tests/guardrails/qnx_compiler_wrapper_test.bzl
+@@ -0,0 +1,133 @@
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# SPDX-License-Identifier: Apache-2.0
++
++"""Exercise analyzed compiler selections without a licensed SDP."""
++
++load("@bazel_skylib//lib:shell.bzl", "shell")
++load("@score_bazel_cpp_toolchains//rules:qnx_compiler_wrapper.bzl", "qnx_compiler_files", "qnx_compiler_wrapper")
++
++def _fake_sdk_impl(ctx):
++    sdk = ctx.actions.declare_directory(ctx.label.name)
++    ctx.actions.run_shell(
++        outputs = [sdk],
++        arguments = [sdk.path],
++        command = """
++set -euo pipefail
++mkdir -p "$1/host/linux/x86_64/usr/lib" "$1/target/qnx"
++printf FAKE-LIBRARY-FOR-TESTING > "$1/host/linux/x86_64/usr/lib/liblicense.so.1"
++printf FAKE-TARGET-FOR-TESTING > "$1/target/qnx/marker"
++""",
++    )
++    return DefaultInfo(files = depset([sdk]))
++
++_fake_sdk = rule(implementation = _fake_sdk_impl)
++
++def _fake_compiler_impl(ctx):
++    directory = ctx.label.name + "/vendor 'tools'"
++    compiler = ctx.actions.declare_file(directory + "/" + ctx.attr.filename)
++    helper = ctx.actions.declare_file(directory + "/compiler helper")
++    ctx.actions.write(
++        compiler,
++        """#!/bin/bash
++set -euo pipefail
++export VENDOR_LAUNCHER_SELECTED="${0##*/}"
++exec "${0%/*}/compiler helper" "$@"
++""",
++        is_executable = True,
++    )
++    ctx.actions.write(
++        helper,
++        """#!/bin/bash
++set -euo pipefail
++sdk_for_files="$EXPECTED_SDK"
++if [[ "$sdk_for_files" == /proc/self/cwd/* ]]; then
++    sdk_for_files="${PWD}/${sdk_for_files#/proc/self/cwd/}"
++fi
++[[ -f "${sdk_for_files}/host/linux/x86_64/usr/lib/liblicense.so.1" ]] || exit 127
++[[ "$QNX_HOST" == "${EXPECTED_SDK}/host/linux/x86_64" ]] || exit 1
++[[ "$QNX_TARGET" == "${EXPECTED_SDK}/target/qnx" ]] || exit 1
++[[ -f "${sdk_for_files}/target/qnx/marker" ]] || exit 1
++[[ "$PWD" == "$EXPECTED_CWD" ]] || exit 1
++[[ "$QNX_CONFIGURATION_EXCLUSIVE" == /var/tmp/.qnx ]] || exit 1
++[[ "$QNX_SHARED_LICENSE_FILE" == FAKE-LICENSE-FOR-TESTING ]] || exit 1
++[[ "$LM_LICENSE_FILE" == FAKE-SERVER-FOR-TESTING ]] || exit 1
++[[ "$#" == 2 && "$1" == "-DVALUE=two words" && "$2" == "source file.c" ]] || exit 1
++[[ -f "$2" ]] || exit 1
++[[ "$VENDOR_LAUNCHER_SELECTED" == "$EXPECTED_COMPILER" ]] || exit 1
++exit "${COMPILER_STATUS:-0}"
++""",
++        is_executable = True,
++    )
++    return DefaultInfo(
++        executable = compiler,
++        runfiles = ctx.runfiles(files = [helper]),
++    )
++
++_fake_compiler = rule(
++    implementation = _fake_compiler_impl,
++    executable = True,
++    attrs = {"filename": attr.string(mandatory = True)},
++)
++
++def _impl(ctx):
++    inputs = ctx.attr.compiler_files[DefaultInfo].files
++    args = [ctx.file.sdk.path, str(len(ctx.attr.wrappers))]
++    for target, filename in zip(ctx.attr.wrappers, ctx.attr.filenames):
++        args.extend([target[DefaultInfo].files_to_run.executable.path, filename])
++    for file in inputs.to_list():
++        args.extend([file.short_path, file.path])
++    script = ctx.actions.declare_file(ctx.label.name + "_runner.sh")
++    ctx.actions.write(
++        script,
++        "#!/bin/bash\nset -euo pipefail\nexec bash {} {}\n".format(
++            shell.quote(ctx.file._test.short_path),
++            " ".join([shell.quote(arg) for arg in args]),
++        ),
++        is_executable = True,
++    )
++    return DefaultInfo(
++        executable = script,
++        runfiles = ctx.runfiles(files = [ctx.file._test], transitive_files = inputs),
++    )
++
++_test = rule(
++    implementation = _impl,
++    test = True,
++    attrs = {
++        "wrappers": attr.label_list(cfg = "exec", mandatory = True),
++        "compiler_files": attr.label(mandatory = True),
++        "filenames": attr.string_list(mandatory = True),
++        "sdk": attr.label(cfg = "exec", allow_single_file = True, mandatory = True),
++        "_test": attr.label(default = ":qnx_compiler_wrapper_test.sh", allow_single_file = True),
++    },
++)
++
++def qnx_compiler_wrapper_test(name, **kwargs):
++    """Test standard names and alternate filegroup-selected vendor launchers."""
++    sdk = name + "_sdp"
++    _fake_sdk(name = sdk)
++    wrappers = []
++    filenames = ["qcc", "q++", "alternate-c-driver", "alternate-cxx-driver"]
++    for index, filename in enumerate(filenames):
++        compiler = name + "_compiler_" + str(index)
++        selection = compiler + "_selection"
++        wrapper = name + "_wrappers/" + str(index) + "/" + ("qcc" if index % 2 == 0 else "q++")
++        _fake_compiler(name = compiler, filename = filename)
++        native.filegroup(name = selection, srcs = [":" + compiler])
++        qnx_compiler_wrapper(
++            name = wrapper,
++            compiler = ":" + selection,
++            sdk_root = ":" + sdk,
++            sdk_files = ":" + sdk,
++        )
++        wrappers.append(":" + wrapper)
++    qnx_compiler_files(name = name + "_files", compilers = wrappers)
++    _test(
++        name = name,
++        wrappers = wrappers,
++        compiler_files = ":" + name + "_files",
++        filenames = filenames,
++        sdk = ":" + sdk,
++        **kwargs
++    )
+diff --git a/tests/guardrails/qnx_compiler_wrapper_test.sh b/tests/guardrails/qnx_compiler_wrapper_test.sh
+new file mode 100644
+index 0000000..603e712
+--- /dev/null
++++ b/tests/guardrails/qnx_compiler_wrapper_test.sh
+@@ -0,0 +1,80 @@
++#!/bin/bash
++# Copyright (c) 2026 Contributors to the Eclipse Foundation
++#
++# SPDX-License-Identifier: Apache-2.0
++
++set -euo pipefail
++IFS=$'\n\t'
++
++sdk_execpath="$1"
++count="$2"
++shift 2
++wrappers=()
++compilers=()
++for ((index=0; index<count; index++)); do
++    wrappers+=("$1")
++    compilers+=("$2")
++    shift 2
++done
++runfiles="$PWD"
++root="$(mktemp -d "${TEST_TMPDIR:?}/qnx-cwd.XXXXXX")"
++trap 'rm -rf -- "$root"' EXIT
++execroot="${root}/relocated execroot"
++mkdir -p "$execroot"
++while [[ "$#" != 0 ]]; do
++    source="${runfiles}/$1"
++    destination="${execroot}/$2"
++    mkdir -p "$(dirname -- "$destination")"
++    cp -RL "$source" "$destination"
++    shift 2
++done
++chmod -R u+w "$execroot"
++export EXPECTED_SDK
++logical_sdk="$(cd -L -- "${execroot}/${sdk_execpath}" && pwd -L)"
++export QNX_CONFIGURATION_EXCLUSIVE=/var/tmp/.qnx
++export QNX_SHARED_LICENSE_FILE=FAKE-LICENSE-FOR-TESTING
++export LM_LICENSE_FILE=FAKE-SERVER-FOR-TESTING
++
++# Keep the invoked path in the execroot even when the script is a sandbox
++# symlink to a file outside it. The SDK must never resolve through that symlink.
++mkdir -p "${root}/repository cache"
++mv "${execroot}/${wrappers[0]}" "${root}/repository cache/qcc"
++ln -s "${root}/repository cache/qcc" "${execroot}/${wrappers[0]}"
++
++for sdk_layout in directory symlink; do
++    if [[ "$sdk_layout" == symlink ]]; then
++        mv "${execroot}/${sdk_execpath}" "${root}/repository cache/sdk"
++        ln -s "${root}/repository cache/sdk" "${execroot}/${sdk_execpath}"
++        physical_sdk="$(cd -- "${execroot}/${sdk_execpath}" && pwd -P)"
++        [[ "$physical_sdk" != "$logical_sdk" ]] || exit 1
++        printf 'Logical SDK: %s\nPhysical SDK: %s\n' "$logical_sdk" "$physical_sdk"
++    fi
++    for cwd in "$execroot" "${execroot}/external/crate/manifest" \
++        "${execroot}/bazel-out/cmake/build/CMakeFiles/CMakeScratch/TryCompile-test"; do
++        printf 'SDK layout: %s; cwd: %s\n' "$sdk_layout" "$cwd"
++        mkdir -p "$cwd"
++        touch "${cwd}/source file.c"
++        (
++            cd -- "$cwd"
++            export EXPECTED_CWD="$PWD"
++            EXPECTED_SDK="$logical_sdk"
++            if [[ "$cwd" == "$execroot" ]]; then
++                EXPECTED_SDK="/proc/self/cwd/${sdk_execpath}"
++            fi
++            export QNX_HOST=/proc/self/cwd/external/fake_sdp/host/linux/x86_64
++            export QNX_TARGET=/proc/self/cwd/external/fake_sdp/target/qnx
++            for ((index=0; index<count; index++)); do
++                export EXPECTED_COMPILER="${compilers[index]}"
++                wrapper="${wrappers[index]}"
++                [[ "${wrapper##*/}" == qcc || "${wrapper##*/}" == q++ ]] || exit 1
++                "${execroot}/${wrapper}" "-DVALUE=two words" "source file.c"
++                status=0
++                COMPILER_STATUS=42 "${execroot}/${wrapper}" "-DVALUE=two words" "source file.c" || status=$?
++                [[ "$status" == 42 ]] || exit 1
++                if [[ "$cwd" == "$execroot" ]]; then
++                    "./${wrapper}" "-DVALUE=two words" "source file.c"
++                fi
++            done
++        )
++    done
++done

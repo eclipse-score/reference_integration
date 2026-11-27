@@ -27,6 +27,7 @@ pkg_filegroup(
     srcs = [
         "//deploy/config_management:config_daemon_bin",
         "//deploy/config_management:config_daemon_configs",
+        "//deploy/diagnostics:diagnostics_bin",
         "//deploy/lifecycle:launch_manager_bin",
         "//deploy/logging:datarouter_bin",
         "//deploy/logging:datarouter_configs",
@@ -49,9 +50,6 @@ pkg_tar(
     srcs = [
         ":data_dir",
         ":platform_bundle",
-        # Not part of platform_bundle: that one is also consumed by the QNX images,
-        # and the OpenSOVD gateway and CDA are not supported on QNX.
-        "//deploy/diagnostics:diagnostics_bin",
     ],
     visibility = ["//visibility:public"],
 )

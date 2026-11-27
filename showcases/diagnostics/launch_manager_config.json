@@ -6,7 +6,7 @@
             "ready_timeout_ms": 30000,
             "shutdown_timeout_ms": 2000,
             "environmental_variables": {
-                "PATH": "/usr/local/bin:/usr/bin:/bin"
+                "PATH": "/proc/boot:/usr/local/bin:/usr/bin:/bin"
             },
             "sandbox": {
                 "uid": 0,
@@ -37,7 +37,7 @@
                 "binary_name": "sh",
                 "process_arguments": [
                     "-c",
-                    "mkdir -p /var/lib/opensovd-cda/flash /var/lib/opensovd-cda/storage"
+                    "mkdir -p /data/diagnostics/flash /data/diagnostics/storage"
                 ],
                 "application_profile": {
                     "application_type": "Native",
@@ -62,7 +62,7 @@
             "deployment_config": {
                 "ready_timeout_ms": 60000,
                 "environmental_variables": {
-                    "PATH": "/usr/local/bin:/usr/bin:/bin",
+                    "PATH": "/proc/boot:/usr/local/bin:/usr/bin:/bin",
                     "CDA_CONFIG_FILE": "/showcases/data/diagnostics/opensovd-cda.toml"
                 }
             }
@@ -77,7 +77,7 @@
             },
             "deployment_config": {
                 "environmental_variables": {
-                    "PATH": "/usr/local/bin:/usr/bin:/bin",
+                    "PATH": "/proc/boot:/usr/local/bin:/usr/bin:/bin",
                     "SOVD_URL": "http://0.0.0.0:7690/sovd",
                     "SOVD_UPSTREAM_URL": "unix:///run/opensovd-cda.sock:/vehicle/v15"
                 }

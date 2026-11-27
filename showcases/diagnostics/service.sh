@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # *******************************************************************************
 # Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
@@ -18,20 +18,49 @@
 # address. The image starts it at boot (crinit task diagnostics), the showcase check starts it
 # when it does not run yet.
 
+set -eu
+
 DATA=/showcases/data/diagnostics
 
 # Hold the lock from before the network wait until the manager has stopped. A
 # boot service waits for a check that got there first; a check instead joins an
 # existing service and waits for it to become ready.
-exec 9>/run/score-diagnostics.lock || exit 1
-if [[ "${1:-}" == --if-not-running ]]; then
+lock=/run/score-diagnostics.lock.d
+lock_owned=false
+manager=
+cleanup() {
+    if [ -n "$manager" ]; then
+        kill -s TERM "$manager" 2>/dev/null || true
+        wait "$manager" 2>/dev/null || true
+    fi
+    if "$lock_owned"; then
+        rmdir "$lock"
+    fi
+}
+exec 9>/run/score-diagnostics.lock
+if [ "$(uname -s)" = QNX ]; then
+    # QNX has no util-linux flock. A trapped directory lock is shared by boot and checks.
+    while ! mkdir "$lock" 2>/dev/null; do
+        [ -d "$lock" ] || exit 1
+        [ "${1:-}" != --if-not-running ] || exit 75
+        sleep 1
+    done
+    lock_owned=true
+elif [ "${1:-}" = --if-not-running ]; then
     flock -n -E 75 9 || exit $?
 else
-    flock 9 || exit 1
+    flock 9
 fi
+trap cleanup EXIT
+trap 'exit 0' TERM INT
 
 has_address() {
-    [[ -n "$(ip -4 -o addr show 2>/dev/null | grep -v ' lo ')" || -n "$(hostname -I 2>/dev/null)" ]]
+    if [ "$(uname -s)" = QNX ]; then
+        ifconfig -a | awk '$1 == "inet" && $2 != "127.0.0.1" { found = 1 } END { exit !found }'
+    else
+        ip -4 -o addr show 2>/dev/null | grep -qv ' lo ' ||
+            [ -n "$(hostname -I 2>/dev/null)" ]
+    fi
 }
 
 for _ in $(seq 1 60); do
@@ -41,14 +70,12 @@ done
 
 cd "$DATA" || exit 1
 # Under a name of its own: other showcases stop "their" launch manager by name (pkill -f
-# launch_manager in simple_lifecycle), which must not stop this service. Keep the lock in
-# this shell, not in the manager's children, and forward termination to the manager.
-( exec 9>&-; exec -a diagnostics_lm /usr/bin/launch_manager ) &
+# launch_manager in simple_lifecycle), which must not stop this service. Both Bash on Linux
+# and ksh on QNX support exec -a; /bin/sh on Linux need not support it.
+if [ "$(uname -s)" = QNX ]; then
+    /bin/sh -c 'exec 9>&-; exec -a diagnostics_lm /usr/bin/launch_manager' &
+else
+    /bin/bash -c 'exec 9>&-; exec -a diagnostics_lm /usr/bin/launch_manager' &
+fi
 manager=$!
-stop() {
-    kill -s TERM "$manager" 2>/dev/null || true
-    wait "$manager" 2>/dev/null || true
-    exit 0
-}
-trap stop TERM INT
 wait "$manager"

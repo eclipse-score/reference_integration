@@ -14,6 +14,7 @@
 
 import http.server
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -93,6 +94,8 @@ class DiagnosticsServiceTest(unittest.TestCase):
         self.write_executable("check.sh", check)
         self.env = os.environ.copy()
         self.env["PATH"] = f"{root}:{self.env['PATH']}"
+        self.env["TMPDIR"] = str(root)
+        self.lock_acquired = root / "locked"
 
     def write_executable(self, name, content):
         path = self.root / name
@@ -134,7 +137,7 @@ class DiagnosticsServiceTest(unittest.TestCase):
 
     def test_check_waits_for_boot_service_before_network(self):
         boot, _ = self.start("service.sh")
-        self.wait_for(lambda: (self.root / "locked").exists(), "boot service did not acquire the lock")
+        self.wait_for(self.lock_acquired.exists, "boot service did not acquire the lock")
         check, output = self.start("check.sh")
         self.wait_for(
             lambda: "waiting for the existing" in output.read_text(),
@@ -158,6 +161,46 @@ class DiagnosticsServiceTest(unittest.TestCase):
         assert check.wait(timeout=15) == 0, output.read_text()
         self.wait_for(lambda: len(self.starts()) == 2, "boot did not acquire the released lock")
         assert boot.poll() is None
+
+
+class QnxDiagnosticsServiceTest(DiagnosticsServiceTest):
+    def setUp(self):
+        super().setUp()
+        root = self.root
+        self.lock_acquired = root / "lock.d"
+        self.write_executable("uname", "#!/bin/sh\necho QNX\n")
+        self.write_executable(
+            "ifconfig",
+            f'#!/bin/sh\n[ -f "{root}/network" ] && printf "eth0:\\n    inet 192.0.2.1 netmask 0xffffff00\\n"\n',
+        )
+        self.write_executable("ip", "#!/bin/sh\nexit 1\n")
+        self.write_executable("flock", "#!/bin/sh\nexit 1\n")
+        if shutil.which("nc") is None:
+            self.write_executable(
+                "nc",
+                "#!/usr/bin/env python3\n"
+                "import socket, sys\n"
+                "with socket.create_connection((sys.argv[1], int(sys.argv[2])), timeout=5) as connection:\n"
+                "    connection.sendall(sys.stdin.buffer.read())\n"
+                "    with connection.makefile('rb') as response:\n"
+                "        sys.stdout.buffer.write(response.read())\n",
+            )
+        # Exercise the QNX directory lock with real mkdir, including contention.
+        self.write_executable(
+            "mkdir",
+            f'#!/bin/sh\n/bin/mkdir "$@" && exit 0\ntouch "{root}/blocking-attempt"\nexit 1\n',
+        )
+        service = root / "service.sh"
+        shell = shutil.which("ksh") or "/bin/bash"
+        service.write_text(service.read_text().replace("/bin/sh -c", f"{shell} -c"))
+
+    def test_service_releases_lock_when_stopped(self):
+        (self.root / "network").touch()
+        service, output = self.start("service.sh")
+        self.wait_for(lambda: len(self.starts()) == 1, "service did not start a manager")
+        service.terminate()
+        assert service.wait(timeout=5) == 0, output.read_text()
+        assert not self.lock_acquired.exists(), "service left its QNX lock behind"
 
 
 if __name__ == "__main__":

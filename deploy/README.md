@@ -38,7 +38,7 @@ Layer 3 may rely on the following, and on nothing else:
 | `datarouter` | `/usr/bin/datarouter/datarouter`, config in `/usr/bin/datarouter/etc` |
 | `config_daemon` | `/usr/bin/config_management/config_daemon`, config in `/usr/bin/config_management/etc` |
 | `platform_info_service` | `/usr/bin/platform_info/platform_info_service`, config in `/usr/bin/platform_info/etc`; offers the mw::com service `score/platform/info` whose `platform_info` field reports the S-CORE module versions from `known_good.json` (interface in `deploy/platform_info/platform_info.h`) |
-| `opensovd-gateway`, `opensovd-cda` | `/usr/bin/diagnostics/`. Binaries only; Linux images only (`//deploy:platform_tar`), they are not part of `//deploy:platform_bundle` because the OpenSOVD components do not support QNX. The CDA needs a configuration (`CDA_CONFIG_FILE`) and ECU databases, which the platform does not ship |
+| `opensovd-gateway`, `opensovd-cda` | `/usr/bin/diagnostics/`. Binaries only, included in both Linux and QNX images through `//deploy:platform_bundle`. The CDA needs a configuration (`CDA_CONFIG_FILE`) and ECU databases, which the platform does not ship |
 
 There is no system-wide mw::com configuration: mw::com reads
 `./etc/mw_com_config.json` relative to the working directory, or the file
@@ -75,7 +75,13 @@ The OpenSOVD gateway (the one of `diagnostics`, which forwards to the CDA when `
 databases are test data of the CDA's ECU simulator, so they belong to the showcase
 `Diagnostics Stack` (`//showcases/diagnostics`, installed in `/showcases/data/diagnostics`), which
 starts both, with the gateway forwarding to the CDA over a Unix domain socket (`SOVD_UPSTREAM_URL`), and checks that the CDA loads the databases and reports ready and that the gateway lists the apps of the CDA next to its own. The platform
-integration test `//platform_integration_tests/diagnostics` runs it on Linux x86_64.
+integration test `//platform_integration_tests/diagnostics` runs it on Linux and QNX x86_64.
+
+The showcase stores writable CDA state under `/data/diagnostics`; on QNX `/data`
+and `/run` point into the RAM disk. Its scripts use `/bin/sh`, QNX `ifconfig`
+and the image's existing netcat instead of requiring Bash or Linux networking tools.
+On QNX, the service uses a directory lock under `/run`, removed on normal shutdown.
+After an uncatchable termination such as `SIGKILL`, reboot the target to clear it.
 
 Long term each S-CORE module should export its own deployment package
 upstream, so that "deployed correctly" becomes checkable rather than agreed.

@@ -29,8 +29,6 @@ score_py_pytest(
     deps = [":diagnostics_orchestration"],
 )
 
-# Linux only: the OpenSOVD gateway and the CDA are not supported on QNX, so the test is skipped
-# (not failed) when the pit suite runs for QNX.
 py_itf_test(
     name = "diagnostics",
     size = "large",
@@ -40,29 +38,33 @@ py_itf_test(
             "--docker-image-bootstrap=$(location //images/linux_x86_64:image_load)",
             "--docker-image=score_showcases:latest",
         ],
-        "//conditions:default": [],
+        "//platform_integration_tests:config_qnx_x86_64": [
+            "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
+            "--qemu-image=$(location //images/qnx_x86_64:image)",
+        ],
     }),
     data = select({
         "//platform_integration_tests:config_linux_x86_64": [
             "//images/linux_x86_64:image_load",
         ],
-        "//conditions:default": [],
+        "//platform_integration_tests:config_qnx_x86_64": [
+            "//feature_integration_tests/configs:qemu_bridge_config.json",
+            "//images/qnx_x86_64:image",
+        ],
     }),
     plugins = select({
         "//platform_integration_tests:config_linux_x86_64": [
             "@score_itf//score/itf/plugins:docker_plugin",
         ],
-        "//conditions:default": [],
+        "//platform_integration_tests:config_qnx_x86_64": [
+            "@score_itf//score/itf/plugins:qemu_plugin",
+        ],
     }) + [
         "@score_itf//score/itf/plugins:attribute_plugin",
     ],
     tags = [
         "manual",
     ],
-    target_compatible_with = select({
-        "//platform_integration_tests:config_linux_x86_64": [],
-        "//conditions:default": ["@platforms//:incompatible"],
-    }),
     deps = [
         ":diagnostics_orchestration",
         "//platform_integration_tests:showcase_runner",

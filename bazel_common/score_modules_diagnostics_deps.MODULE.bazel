@@ -18,6 +18,10 @@ bazel_dep(name = "classic-diagnostic-adapter")
 git_override(
     module_name = "classic-diagnostic-adapter",
     commit = "0946583dd9da16d59ff17c3407386f94f0ea9dd2",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:0001-cda-systemd-notify-linux-only.patch",
+    ],
     remote = "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
 )
 
@@ -32,5 +36,9 @@ bazel_dep(name = "opensovd_core")
 git_override(
     module_name = "opensovd_core",
     commit = "90eead01d42a873dd7365d1c9762c21c147ef283",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:0002-opensovd-core-qnx-platforms.patch",
+    ],
     remote = "https://github.com/eclipse-opensovd/opensovd-core.git",
 )

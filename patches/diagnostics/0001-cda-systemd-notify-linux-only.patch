@@ -1,0 +1,153 @@
+# SPDX-FileCopyrightText: 2026 Contributors to the Eclipse Foundation
+# SPDX-License-Identifier: Apache-2.0
+#
+# Keep systemd notifications on Linux and generate Cargo dependencies for QNX.
+# Upstream: https://github.com/eclipse-opensovd/classic-diagnostic-adapter/pull/779
+# Related platform support: https://github.com/bazelbuild/rules_rust/pull/4469
+diff --git a/MODULE.bazel b/MODULE.bazel
+index b7c3a98..bb3d626 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -15,6 +15,8 @@ module(
+     bazel_compatibility = [">=8.6.0"],
+ )
+
++bazel_dep(name = "bazel_skylib", version = "1.9.2")
++bazel_dep(name = "platforms", version = "1.0.0")
+ bazel_dep(name = "rules_rust", version = "0.68.1")
+ single_version_override(
+     module_name = "rules_rust",
+@@ -45,14 +47,28 @@ register_toolchains(
+ )
+
+ cda_crate_universe = use_extension(
+-    "@rules_rust//crate_universe:extensions.bzl",
++    "//bazel:cda_crate_extension.bzl",
+     "crate",
+ )
++cda_crate_universe.render_config(
++    platforms_template = "@classic-diagnostic-adapter//bazel:{triple}",
++)
+ cda_crate_universe.from_cargo(
+     name = "cda_crates",
+     cargo_lockfile = "//:Cargo.lock",
+     manifests = ["//:Cargo.toml"],
+     skip_cargo_lockfile_overwrite = True,
++    supported_platform_triples = [
++        "aarch64-apple-darwin",
++        "aarch64-unknown-linux-gnu",
++        "aarch64-unknown-nto-qnx710",
++        "wasm32-unknown-unknown",
++        "wasm32-wasip1",
++        "x86_64-pc-nto-qnx710",
++        "x86_64-pc-windows-msvc",
++        "x86_64-unknown-linux-gnu",
++        "x86_64-unknown-nixos-gnu",
++    ],
+ )
+ use_repo(
+     cda_crate_universe,
+diff --git a/bazel/BUILD.bazel b/bazel/BUILD.bazel
+index 6f71a4d..b524aef 100644
+--- a/bazel/BUILD.bazel
++++ b/bazel/BUILD.bazel
+@@ -9,9 +9,34 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+
++load("@rules_rust//rust/platform:triple_mappings.bzl", "triple_to_constraint_set")
++
+ exports_files([
+     "build_metadata.env",
+     "can_crate_extension.bzl",
++    "cda_crate_extension.bzl",
+     "check_mbedtls_revision.py",
+     "rust_crate.bzl",
+ ])
++
++# rules_rust 0.68.1 can map QNX triples but does not declare the x86_64 setting.
++# Reuse the selected rules_rust mappings, including consumer-specific QNX ABIs.
++[
++    config_setting(
++        name = triple,
++        constraint_values = triple_to_constraint_set(triple),
++        visibility = ["//visibility:public"],
++    )
++    # Keep aligned with cda_crate_universe.from_cargo in MODULE.bazel.
++    for triple in [
++        "aarch64-apple-darwin",
++        "aarch64-unknown-linux-gnu",
++        "aarch64-unknown-nto-qnx710",
++        "wasm32-unknown-unknown",
++        "wasm32-wasip1",
++        "x86_64-pc-nto-qnx710",
++        "x86_64-pc-windows-msvc",
++        "x86_64-unknown-linux-gnu",
++        "x86_64-unknown-nixos-gnu",
++    ]
++]
+diff --git a/bazel/cda_crate_extension.bzl b/bazel/cda_crate_extension.bzl
+new file mode 100644
+index 0000000..ba20159
+--- /dev/null
++++ b/bazel/cda_crate_extension.bzl
+@@ -0,0 +1,16 @@
++# SPDX-FileCopyrightText: 2026 Copyright (c) Contributors to the Eclipse Foundation
++#
++# See the NOTICE file(s) distributed with this work for additional
++# information regarding copyright ownership.
++#
++# This program and the accompanying materials are made available under the
++# terms of the Apache License Version 2.0 which is available at
++# https://www.apache.org/licenses/LICENSE-2.0
++#
++# SPDX-License-Identifier: Apache-2.0
++
++"""Crate-universe extension identity with access to CDA's platform settings."""
++
++load("@rules_rust//crate_universe:extensions.bzl", _crate = "crate")
++
++crate = _crate
+diff --git a/cda-extra/BUILD.bazel b/cda-extra/BUILD.bazel
+index 8ada726..e84b957 100644
+--- a/cda-extra/BUILD.bazel
++++ b/cda-extra/BUILD.bazel
+@@ -14,14 +14,19 @@ load("//bazel:rust_crate.bzl", "workspace_rust_library")
+ workspace_rust_library(
+     name = "cda_extra",
+     srcs = glob(["src/**/*.rs"]),
+-    crate_features = ["systemd-notify"],
++    crate_features = select({
++        "@platforms//os:linux": ["systemd-notify"],
++        "//conditions:default": [],
++    }),
+     crate_name = "cda_extra",
+     crate_root = "src/lib.rs",
+     deps = [
+-        "@can_crates//:sd-notify",
+         "@cda_crates//:tokio",
+         "@cda_crates//:tracing",
+         "//cda-health:cda_health",
+         "//cda-interfaces:cda_interfaces",
+-    ],
++    ] + select({
++        "@platforms//os:linux": ["@can_crates//:sd-notify"],
++        "//conditions:default": [],
++    }),
+ )
+diff --git a/cda-main/BUILD.bazel b/cda-main/BUILD.bazel
+index e9ad36b..c07e2bc 100644
+--- a/cda-main/BUILD.bazel
++++ b/cda-main/BUILD.bazel
+@@ -44,8 +44,10 @@ workspace_rust_library(
+         "config-optional",
+         "health",
+         "mbedtls",
+-        "systemd-notify",
+     ] + select({
++        "@platforms//os:linux": ["systemd-notify"],
++        "//conditions:default": [],
++    }) + select({
+         "//:can_enabled": ["can"],
+         "//conditions:default": [],
+     }),

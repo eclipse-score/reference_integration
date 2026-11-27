@@ -13,6 +13,12 @@
 
 load(":opensovd_build_stamp_test.bzl", "opensovd_build_stamp_test")
 
+exports_files([
+    "0001-cda-systemd-notify-linux-only.patch",
+    "0002-opensovd-core-qnx-platforms.patch",
+    "0003-bazel-cpp-toolchains-qnx-sdk-paths.patch",
+])
+
 alias(
     name = "opensovd_stamp_env",
     actual = "@opensovd_build_stamp//:stamp.env",

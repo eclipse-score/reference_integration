@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # *******************************************************************************
 # Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
@@ -18,14 +18,16 @@
 # service at boot), this starts it with service.sh for the check and stops it afterwards.
 # Prints "diagnostics_check: PASSED" on success.
 
+set -eu
+
 DATA=/showcases/data/diagnostics
 LOG_DIR="$(mktemp -d)"
 
 launch_manager=
 stop() {
-  [[ -n "$launch_manager" ]] || return 0
-  kill -s TERM "$launch_manager" 2>/dev/null
-  wait "$launch_manager" 2>/dev/null
+  [ -n "$launch_manager" ] || return 0
+  kill -s TERM "$launch_manager" 2>/dev/null || true
+  wait "$launch_manager" 2>/dev/null || true
 }
 trap stop EXIT
 
@@ -42,37 +44,62 @@ fail() {
 # addresses, or on the address of the image only, depending on the network configuration of the image.
 hosts() {
   echo 127.0.0.1
-  ip -4 -o addr show 2>/dev/null | awk '$2 != "lo" { sub("/.*", "", $4); print $4 }'
+  if [ "$(uname -s)" = QNX ]; then
+    ifconfig -a | awk '$1 == "inet" && $2 != "127.0.0.1" { print $2 }'
+  else
+    ip -4 -o addr show | awk '$2 != "lo" { sub("/.*", "", $4); print $4 }'
+  fi
+}
+
+transport() {
+  if [ "$(uname -s)" = QNX ]; then
+    timeout 5 nc "$1" "$2"
+  else
+    timeout 5 /bin/bash -c "exec 3<>\"/dev/tcp/\$1/\$2\" || exit 1; cat >&3; cat <&3" request "$1" "$2"
+  fi
 }
 
 # request <port> <path> [method] [token]: prints the status line and body from the first address
 # that answers. A POST sends the development credentials to the gateway's authorize endpoint.
 # Prints nothing if nothing listens or the whole answer does not arrive within 5 seconds.
 request() {
-  local host
   for host in $(hosts); do
-    timeout 5 bash -c '
-            exec 3<>"/dev/tcp/$1/$2" || exit 1
-            body=""
-            [[ "$4" != POST ]] || body='\''{"client_id":"diagnostics-check","client_secret":"test"}'\''
-            printf "%s %s HTTP/1.0\r\nHost: %s:%s\r\n" "$4" "$3" "$1" "$2" >&3
-            [[ -z "$5" ]] || printf "Authorization: Bearer %s\r\n" "$5" >&3
-            [[ -z "$body" ]] || printf "Content-Type: application/json\r\nContent-Length: %s\r\n" "${#body}" >&3
-            printf "\r\n%s" "$body" >&3
-            read -r status <&3
-            body="$(cat <&3 | tr -d "\r" | sed "1,/^\$/d")"
-            echo "$status"
-            echo "$body"' request "$host" "$1" "$2" "${3:-GET}" "${4:-}" 2>/dev/null && return 0
+    # QNX ships netcat but not Bash's /dev/tcp. HTTP/1.0 closes the response connection.
+    response="$(
+      {
+        body=""
+        [ "${3:-GET}" != POST ] || body='{"client_id":"diagnostics-check","client_secret":"test"}'
+        printf "%s %s HTTP/1.0\r\nHost: %s:%s\r\n" "${3:-GET}" "$2" "$host" "$1"
+        [ -z "${4:-}" ] || printf "Authorization: Bearer %s\r\n" "$4"
+        [ -z "$body" ] || printf "Content-Type: application/json\r\nContent-Length: %s\r\n" "${#body}"
+        printf "\r\n%s" "$body"
+      } | transport "$host" "$1" 2>/dev/null
+    )" || continue
+    [ -n "$response" ] || continue
+    printf '%s\n' "$response" | tr -d '\r'
+    return 0
   done
+  return 0
 }
 
 # The CDA offers the app sovd2uds, the gateway its own app score-diagnostics: both are listed only
 # if the gateway forwards to the CDA.
 lists_both_apps() {
-  [[ "$(head -1 <<<"$1")" == *" 200"* && "$1" == *'"sovd2uds"'* && "$1" == *'"score-diagnostics"'* ]]
+  case "$(printf '%s\n' "$1" | head -1)" in
+    *" 200"*) ;;
+    *) return 1 ;;
+  esac
+  case "$1" in
+    *'"sovd2uds"'*) ;;
+    *) return 1 ;;
+  esac
+  case "$1" in
+    *'"score-diagnostics"'*) return 0 ;;
+    *) return 1 ;;
+  esac
 }
 
-if [[ -n "$(request 7690 /sovd/v1/version-info | head -1)" ]]; then
+if [ -n "$(request 7690 /sovd/v1/version-info | head -1)" ]; then
   echo "diagnostics_check: the diagnostics service is running"
 else
   "$DATA/service.sh" --if-not-running >"$LOG_DIR/service.log" 2>&1 &
@@ -83,27 +110,26 @@ fi
 # loads the databases: wait until it lists both.
 answer=
 token=
-token_pattern='"access_token"[[:space:]]*:[[:space:]]*"([^"]+)"'
 for _ in $(seq 1 120); do
-  if [[ -z "$token" ]]; then
+  if [ -z "$token" ]; then
     authorization="$(request 7690 /sovd/v1/authorize POST)"
-    if [[ "$(head -1 <<<"$authorization")" == *" 200"* && "$authorization" =~ $token_pattern ]]; then
-      token="${BASH_REMATCH[1]}"
-    fi
+    case "$(printf '%s\n' "$authorization" | head -1)" in
+      *" 200"*) token="$(printf '%s\n' "$authorization" | sed -n 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')" ;;
+    esac
   fi
-  [[ -z "$token" ]] || answer="$(request 7690 /sovd/v1/apps GET "$token")"
+  [ -z "$token" ] || answer="$(request 7690 /sovd/v1/apps GET "$token")"
   lists_both_apps "$answer" && break
-  if [[ -n "$launch_manager" ]] && ! kill -0 "$launch_manager" 2>/dev/null; then
+  if [ -n "$launch_manager" ] && ! kill -0 "$launch_manager" 2>/dev/null; then
     # Exit 75 means the boot service (or another check) already holds the lock.
-    wait "$launch_manager"
-    status=$?
+    status=0
+    wait "$launch_manager" || status=$?
     launch_manager=
-    [[ "$status" == 75 ]] || fail "the launch manager exited (status $status)"
+    [ "$status" = 75 ] || fail "the launch manager exited (status $status)"
     echo "diagnostics_check: waiting for the existing diagnostics service"
   fi
   sleep 1
 done
-[[ -n "$answer" ]] || fail "the gateway does not answer on port 7690"
+[ -n "$answer" ] || fail "the gateway does not answer on port 7690"
 echo "diagnostics_check: the gateway answers on port 7690"
 lists_both_apps "$answer" || fail "the gateway does not list the apps of the CDA next to its own: $answer"
 echo "diagnostics_check: the gateway lists the app of the CDA next to its own"
