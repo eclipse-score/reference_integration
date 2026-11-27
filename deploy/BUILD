@@ -27,6 +27,7 @@ pkg_filegroup(
     srcs = [
         "//deploy/config_management:config_daemon_bin",
         "//deploy/config_management:config_daemon_configs",
+        "//deploy/diagnostics:diagnostics_bin",
         "//deploy/lifecycle:launch_manager_bin",
         "//deploy/logging:datarouter_bin",
         "//deploy/logging:datarouter_configs",

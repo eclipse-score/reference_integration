@@ -17,6 +17,7 @@ import pytest
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
+    _provide_opensovd_stamp,
     combine_reports,
     count_testcases,
     coverage_args,
@@ -25,6 +26,7 @@ from module_tests import (
     normalize_lcov,
     override_rc,
     report,
+    vanished_overrides,
 )
 
 
@@ -40,6 +42,18 @@ def test_graph_modules_walks_nested_and_indirect_deps():
     assert graph_modules(graph) == {"rules_cc", "platforms", "zlib"}
 
 
+def test_vanished_overrides_reads_the_module_names_from_bazels_error():
+    stderr = (
+        "ERROR: Error computing the main repository mapping: "
+        "the root module specifies overrides on nonexistent module(s): boost, boost.assert, rules_foreign_cc\n"
+    )
+    assert vanished_overrides(stderr) == {"boost", "boost.assert", "rules_foreign_cc"}
+
+
+def test_vanished_overrides_is_empty_for_other_output():
+    assert vanished_overrides("INFO: Invocation ID: 1\n") == set()
+
+
 def test_override_rc_is_sorted_one_line_per_module():
     rc = override_rc({"zlib": Path("/o/zlib+"), "platforms": Path("/o/platforms")})
     assert rc == "common --override_module=platforms=/o/platforms\ncommon --override_module=zlib=/o/zlib+\n"
@@ -48,6 +62,63 @@ def test_override_rc_is_sorted_one_line_per_module():
 def test_override_rc_appends_extra_test_config_as_build_flags():
     rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
     assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
+
+
+def test_override_rc_selects_the_stamp_when_opensovd_is_pinned():
+    rc = override_rc({"opensovd_core": Path("/o/opensovd_core+")})
+    assert rc == (
+        "common --override_module=opensovd_core=/o/opensovd_core+\n"
+        "build --@opensovd_core//opensovd-cli/gateway:build_stamp="
+        "//patches/diagnostics:opensovd_stamp_env\n"
+    )
+
+
+def test_opensovd_stamp_is_copied_into_the_module_root(tmp_path, monkeypatch):
+    output_base = tmp_path / "output_base"
+    stamp = output_base / "external" / "stamp" / "stamp.env"
+    stamp.parent.mkdir(parents=True)
+    stamp.write_text("OPENSOVD_COMMIT_SHA=abc\nSOURCE_DATE_EPOCH=123\n")
+    workspace = tmp_path / "module"
+    workspace.mkdir()
+    calls = []
+
+    def fake_bazel(args):
+        calls.append(args)
+        if args[0] == "cquery":
+            return SimpleNamespace(returncode=0, stdout="external/stamp/stamp.env\n")
+        return SimpleNamespace(returncode=0, stdout=f"{output_base}\n")
+
+    monkeypatch.setattr("module_tests.bazel", fake_bazel)
+    _provide_opensovd_stamp(workspace, {"opensovd_core": Path("/pinned")})
+    package = workspace / "patches" / "diagnostics"
+    assert (package / "opensovd_stamp.env").read_text() == stamp.read_text()
+    assert 'name = "opensovd_stamp_env"' in (package / "BUILD.bazel").read_text()
+    assert calls == [
+        ["cquery", "--lockfile_mode=error", "//patches/diagnostics:opensovd_stamp_env", "--output=files"],
+        ["info", "output_base"],
+    ]
+
+
+def test_opensovd_stamp_is_not_needed_without_the_pinned_module(tmp_path, monkeypatch):
+    monkeypatch.setattr("module_tests.bazel", lambda *_args: pytest.fail("must not invoke Bazel"))
+    _provide_opensovd_stamp(tmp_path, {})
+    assert not (tmp_path / "patches").exists()
+
+
+def test_opensovd_stamp_refuses_to_replace_an_existing_package(tmp_path, monkeypatch):
+    package = tmp_path / "patches" / "diagnostics"
+    package.mkdir(parents=True)
+    (package / "BUILD.bazel").write_text("existing\n")
+    monkeypatch.setattr("module_tests.bazel", lambda _args: SimpleNamespace(returncode=0, stdout="external/stamp\n"))
+    with pytest.raises(SystemExit, match="already exists"):
+        _provide_opensovd_stamp(tmp_path, {"opensovd_core": Path("/pinned")})
+    assert (package / "BUILD.bazel").read_text() == "existing\n"
+
+
+def test_opensovd_stamp_resolution_failure_is_reported(tmp_path, monkeypatch):
+    monkeypatch.setattr("module_tests.bazel", lambda _args: SimpleNamespace(returncode=1, stdout=""))
+    with pytest.raises(SystemExit, match="could not resolve"):
+        _provide_opensovd_stamp(tmp_path, {"opensovd_core": Path("/pinned")})
 
 
 def test_coverage_args_put_unified_config_before_target_separator():

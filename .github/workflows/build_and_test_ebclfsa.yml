@@ -38,7 +38,8 @@ jobs:
         uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
+          # The EB image build nearly fills the runner's disk. A restored Bazel
+          # action cache consumes several GiB in addition to the build outputs.
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Install QEMU

@@ -96,5 +96,9 @@ single_version_override(
 bazel_dep(name = "score_bazel_cpp_toolchains")
 single_version_override(
     module_name = "score_bazel_cpp_toolchains",
+    patch_strip = 1,
+    patches = [
+        "//patches/diagnostics:0003-bazel-cpp-toolchains-qnx-sdk-paths.patch",
+    ],
     version = "1.1.0-rc3",
 )

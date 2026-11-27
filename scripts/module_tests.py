@@ -21,6 +21,7 @@ ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.baz
 module's ``extra_test_config`` are layered over the module's .bazelrc. The only edits to the module
 are one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
 defined in MODULE files, and a ``bazel_dep`` raising score_devcontainer to its known_good version.
+When OpenSOVD is pinned, its integration build stamp is made available in the module workspace.
 """
 
 import argparse
@@ -114,9 +115,45 @@ def fetch(names: set[str]) -> dict[str, Path]:
     return found
 
 
+def vanished_overrides(stderr: str) -> set[str]:
+    """Modules that Bazel reports as ``overrides on nonexistent module(s)``, if any.
+
+    A module that the unpinned graph reaches only through a dependency that the pins replace by
+    another version (for example ``score_tooling`` -> ``google_benchmark`` -> ``libpfm`` ->
+    ``rules_foreign_cc``) leaves the graph once the pins apply, and Bazel rejects its override.
+    """
+    match = re.search(r"overrides on nonexistent module\(s\): ([^\n]+)", stderr)
+    return {name.strip() for name in match.group(1).split(",")} if match else set()
+
+
+def drop_vanished_pins(pinned: dict[str, Path], rc: Path, workspace: Path, env: dict, extra: list[str]) -> None:
+    """Remove the pins whose module is not in the module's graph once all pins apply.
+
+    Dropping one can remove another from the graph, so this repeats until Bazel accepts the set.
+    """
+    while True:
+        rc.write_text(override_rc(pinned, extra))
+        result = subprocess.run(
+            ["bazel", "mod", "graph", "--output=json", "--lockfile_mode=update"],
+            cwd=workspace,
+            env=env,
+            text=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+        gone = vanished_overrides(result.stderr) & pinned.keys()
+        if not gone:
+            return
+        print(f"+ not in the graph once pinned, dropping the pins of: {', '.join(sorted(gone))}", file=sys.stderr)
+        for name in gone:
+            del pinned[name]
+
+
 def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> str:
     """Pin each module to its path; the module's ``extra_test_config`` flags follow as build flags."""
     rc = "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
+    if "opensovd_core" in paths:
+        rc += "build --@opensovd_core//opensovd-cli/gateway:build_stamp=//patches/diagnostics:opensovd_stamp_env\n"
     return rc + "".join(f"build --{flag}\n" for flag in extra_test_config)
 
 
@@ -236,6 +273,30 @@ def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str
         line = f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n'
     with module_file.open("a") as f:
         f.write(line)
+
+
+def _provide_opensovd_stamp(workspace: Path, pinned: dict[str, Path]) -> None:
+    """Provide the stamp selected by OpenSOVD's upstream build setting."""
+    if "opensovd_core" not in pinned:
+        return
+
+    result = bazel(["cquery", "--lockfile_mode=error", "//patches/diagnostics:opensovd_stamp_env", "--output=files"])
+    files = result.stdout.splitlines()
+    if result.returncode or len(files) != 1 or not files[0].startswith("external/"):
+        sys.exit("could not resolve the integration OpenSOVD build stamp")
+    output_base = bazel(["info", "output_base"])
+    if output_base.returncode:
+        sys.exit("could not find the integration Bazel output base")
+    source = Path(output_base.stdout.strip()) / files[0]
+    package = workspace / "patches" / "diagnostics"
+    if package.exists():
+        sys.exit(f"cannot install the OpenSOVD build stamp: {package} already exists")
+    package.mkdir(parents=True)
+    shutil.copyfile(source, package / "opensovd_stamp.env")
+    (package / "BUILD.bazel").write_text(
+        'exports_files(["opensovd_stamp.env"], visibility = ["//visibility:public"])\n'
+        'alias(name = "opensovd_stamp_env", actual = ":opensovd_stamp.env", visibility = ["//visibility:public"])\n'
+    )
 
 
 def normalize_lcov(text: str, module: str) -> str:
@@ -375,7 +436,8 @@ def run(args: argparse.Namespace) -> int:
     own_graph = mod_graph(workspace, {**env, "BZLMOD_ALLOW_YANKED_VERSIONS": "all"})
     shared = (graph_modules(own_graph) & resolved) - {module.name}
     pinned = fetch(shared)
-    rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
+    drop_vanished_pins(pinned, rc, workspace, env, module.metadata.extra_test_config)
+    _provide_opensovd_stamp(workspace, pinned)
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 

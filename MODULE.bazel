@@ -93,3 +93,18 @@ git_override(
 bazel_dep(name = "score_sbom", version = "0.1.1")
 
 include("//bazel_common:score_sbom.MODULE.bazel")
+
+# ── score_diagnostics: the overrides of its dependencies ──
+# Overrides are only honoured in the root module, so the ones of score_diagnostics are repeated
+# here. They are generated from known_good.json (group diagnostics_deps).
+include("//bazel_common:score_modules_diagnostics_deps.MODULE.bazel")
+
+# Must match the opensovd_core hash of the diagnostics_deps group in known_good.json.
+opensovd_commit = "90eead01d42a873dd7365d1c9762c21c147ef283"
+
+opensovd_build_stamp = use_repo_rule("//patches/diagnostics:opensovd_build_stamp.bzl", "opensovd_build_stamp")
+
+opensovd_build_stamp(
+    name = "opensovd_build_stamp",
+    commit = opensovd_commit,
+)

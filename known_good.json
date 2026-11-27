@@ -84,7 +84,8 @@
                 "bazel_patches": [
                     "//patches/persistency:003-undev-deps-for-root-module.patch",
                     "//patches/persistency:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/persistency:005-undev-integration-test-deps.patch"
+                    "//patches/persistency:005-undev-integration-test-deps.patch",
+                    "//patches/persistency:006-unique-quick-start-label.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
@@ -131,7 +132,8 @@
                 "bazel_patches": [
                     "//patches/lifecycle:002-undev-integration-test-deps.patch",
                     "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
-                    "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                    "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+                    "//patches/lifecycle:006-unique-quick-start-label.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -235,7 +237,8 @@
                 "repo": "https://github.com/eclipse-score/crypto.git",
                 "hash": "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
                 "bazel_patches": [
-                    "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
+                    "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
+                    "//patches/crypto:002-unique-quick-start-label.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -288,6 +291,25 @@
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//tests/cpp:cpp_test_main"
+                    ]
+                }
+            },
+            "score_diagnostics": {
+                "repo": "https://github.com/eclipse-score/diagnostics.git",
+                "hash": "0152801c524c4af8d718ed03915703e8ef632131",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "exclude_test_targets": [],
+                    "test_args": [
+                        "--config=_score_diag_common_build_settings",
+                        "--",
+                        "//examples/...",
+                        "//tests/...",
+                        "//score/..."
                     ]
                 }
             }
@@ -363,6 +385,9 @@
                 "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
                 "docs": false,
                 "version": "1.1.0-rc3",
+                "bazel_patches": [
+                    "//patches/diagnostics:0003-bazel-cpp-toolchains-qnx-sdk-paths.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -374,6 +399,29 @@
                     "rust_coverage_config": "ferrocene-coverage"
                 },
                 "pin_version": true
+            }
+        },
+        "diagnostics_deps": {
+            "classic-diagnostic-adapter": {
+                "repo": "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
+                "hash": "0946583dd9da16d59ff17c3407386f94f0ea9dd2",
+                "bazel_patches": [
+                    "//patches/diagnostics:0001-cda-systemd-notify-linux-only.patch"
+                ],
+                "docs": false
+            },
+            "mbedtls-rs": {
+                "repo": "https://github.com/eclipse-opensovd/mbedtls-rs.git",
+                "hash": "1dac0d8c6a80feb3864e86aac80b35cf34b10f87",
+                "docs": false
+            },
+            "opensovd_core": {
+                "repo": "https://github.com/eclipse-opensovd/opensovd-core.git",
+                "hash": "90eead01d42a873dd7365d1c9762c21c147ef283",
+                "bazel_patches": [
+                    "//patches/diagnostics:0002-opensovd-core-qnx-platforms.patch"
+                ],
+                "docs": false
             }
         }
     },

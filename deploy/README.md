@@ -38,6 +38,7 @@ Layer 3 may rely on the following, and on nothing else:
 | `datarouter` | `/usr/bin/datarouter/datarouter`, config in `/usr/bin/datarouter/etc` |
 | `config_daemon` | `/usr/bin/config_management/config_daemon`, config in `/usr/bin/config_management/etc` |
 | `platform_info_service` | `/usr/bin/platform_info/platform_info_service`, config in `/usr/bin/platform_info/etc`; offers the mw::com service `score/platform/info` whose `platform_info` field reports the S-CORE module versions from `known_good.json` (interface in `deploy/platform_info/platform_info.h`) |
+| `opensovd-gateway`, `opensovd-cda` | `/usr/bin/diagnostics/`. Binaries only, included in both Linux and QNX images through `//deploy:platform_bundle`. The CDA needs a configuration (`CDA_CONFIG_FILE`) and ECU databases, which the platform does not ship |
 
 There is no system-wide mw::com configuration: mw::com reads
 `./etc/mw_com_config.json` relative to the working directory, or the file
@@ -68,6 +69,19 @@ platform info service (`//deploy/platform_info`) reports the S-CORE version
 the platform was built from; the showcase `Platform Version Check` fails
 unless the platform provides it and reports the version the showcases were
 built for.
+
+The OpenSOVD gateway (the one of `diagnostics`, which forwards to the CDA when `SOVD_UPSTREAM_URL` is set) and the classic diagnostic adapter (CDA) of `diagnostics`
+(`//deploy/diagnostics`) are deployed as binaries only. Their configuration and the ECU
+databases are test data of the CDA's ECU simulator, so they belong to the showcase
+`Diagnostics Stack` (`//showcases/diagnostics`, installed in `/showcases/data/diagnostics`), which
+starts both, with the gateway forwarding to the CDA over a Unix domain socket (`SOVD_UPSTREAM_URL`), and checks that the CDA loads the databases and reports ready and that the gateway lists the apps of the CDA next to its own. The platform
+integration test `//platform_integration_tests/diagnostics` runs it on Linux and QNX x86_64.
+
+The showcase stores writable CDA state under `/data/diagnostics`; on QNX `/data`
+and `/run` point into the RAM disk. Its scripts use `/bin/sh`, QNX `ifconfig`
+and the image's existing netcat instead of requiring Bash or Linux networking tools.
+On QNX, the service uses a directory lock under `/run`, removed on normal shutdown.
+After an uncatchable termination such as `SIGKILL`, reboot the target to clear it.
 
 Long term each S-CORE module should export its own deployment package
 upstream, so that "deployed correctly" becomes checkable rather than agreed.
@@ -128,3 +142,17 @@ to the owner of the device.
 
 The showcases start the platform daemons they need themselves; nothing has to
 be started beforehand.
+
+### S-CORE images for the Raspberry Pi 4B
+
+Instead of installing the archives by hand, build an SD card image that has the platform, the
+showcases and the diagnostics service deployed in it, like the QEMU image, and flash its `.wic`
+file:
+
+| Base | Build | See |
+|---|---|---|
+| Raspberry Pi OS Lite (64-bit) | `bazel build --config=linux-aarch64 //images/rpios_rpi4b:image` | [images/rpios_rpi4b](../images/rpios_rpi4b/README.md) |
+| EB corbos Linux for Safety Applications | `bazel build --config=eb-aarch64 //images/ebclfsa_rpi4b:image` | [images/ebclfsa_rpi4b](../images/ebclfsa_rpi4b/README.md) |
+
+Both have a static address that is set at build time, see
+[images/network](../images/network/README.md).
