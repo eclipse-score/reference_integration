@@ -1,0 +1,1666 @@
+Component Requirements
+======================
+
+**Coverage:** 0.0% (0 of 44 items OK)
+
+.. _lobster-item-c8b44191e832598cf3c4a9b4ec123d0c51a5830c:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.SafetyCertifiedTransportMechanismUnderQNX
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      On the QNX operating system, the message passing component shall use the QNX-message-passing as the underlying IPC mechanism.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.OSIndependentAPI <lobster-item-9931ba53b300691e0563bca0c321fc6ced735ac4>`
+   * :ref:`MessagePassing.SafetyCertifiedTransportMechanism <lobster-item-b41252240f68be0bdf1e3135dbc3a280b5313013>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:19:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L19>`__
+
+.. _lobster-item-3ed3932e1617891c204fa9604d572b35dc411f5f:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.TransportMechanismOnLinux
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      On the Linux operating system, the message passing component shall use unix domain-sockets as the underlying IPC mechanism.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.QMImplementationOnNonQnxOS <lobster-item-6c9104785b51328dd3ac66363807185fa4836887>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:26:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L26>`__
+
+.. _lobster-item-28516872c9d516cc7e25ea0de3381a6dfb8e78e3:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.OSProvidedClientIdentityPerConnection
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The message passing server shall identify the client of a Server Connection once, when the connection is accepted, by the client's OS-provided process ID (PID), user ID (UID), and primary group ID (GID).
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:34:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L34>`__
+
+.. _lobster-item-86f22d383c88746f7b1a8541a82c82113d652644:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerCallbacksAreSequential
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall serialize all callbacks belonging to the same server instance, such that no two such callbacks execute concurrently.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:46:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L46>`__
+
+.. _lobster-item-d055e7db8e712723d4c4bc27bb00fa242bb9cc01:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerProcessesSinglePendingRequest
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall not dispatch a new sent-with-reply message callback on a given \`ServerConnection\` until the preceding request has been replied to.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:53:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L53>`__
+
+.. _lobster-item-b745dbd983c695bf2fb07b8fd7d2c16bb50da44b:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionMaintainsStateMachine
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall maintain a state machine with the states \`Starting\`, \`Ready\`, \`Stopping\`, and \`Stopped\`.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:60:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L60>`__
+
+.. _lobster-item-2bf288a4a05c8811d1ca45534fd7760eb46f9a70:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientSendUsesDirectTransportCallByDefault
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall issue the \`Send\` message via an immediate OS-level transport call, which may block the calling thread, unless \`ClientConfig::truly\_async\` is configured, or a \`SendWaitReply\`/\`SendWithCallback\` reply is currently pending on the same connection while \`ClientConfig::fully\_ordered\` is configured.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousUnidirectionalCommunication <lobster-item-78e568a0bd29ee997bbc89d77a556b4b347e7b52>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:67:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L67>`__
+
+.. _lobster-item-d03a94878125f3805cbeccc979166ef03a5fa250:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientSendQueuesForAsyncOrOrderingReasons
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall enqueue the \`Send\` message for asynchronous delivery by the background transport, returning after local acceptance, whenever \`ClientConfig::truly\_async\` is configured, or whenever a \`SendWaitReply\`/\`SendWithCallback\` reply is currently pending on the same connection while \`ClientConfig::fully\_ordered\` is configured.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:75:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L75>`__
+
+.. _lobster-item-49c2ba97fad1c38fa0189a26fb40195e574ec529:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.SendWaitReplyBlocksUntilServerReply
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The ClientConnection shall block the calling thread during a SendWaitReply call until a reply from the server is received or an error is detected.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:83:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L83>`__
+
+.. _lobster-item-f871af82c845b3a754171fd902ecb1414dd2b223:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.MessageOrderPreservationPerConnection
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The message passing component shall deliver messages of the same delivery type from the same \`IClientConnection\` instance to the server in the order they were sent.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.PointToPointConnections <lobster-item-a825aba417f691a5f3123dfa486fa142a4ff1cc9>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:90:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L90>`__
+
+.. _lobster-item-31c4cdad17b7cec7f6b373a7c95856a8f5f32b60:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.SingleServerInstancePerServiceIdentifier
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The message passing component shall prevent more than one active \`IServer\` instance serves any given service identifier at any point in time.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.PointToPointConnections <lobster-item-a825aba417f691a5f3123dfa486fa142a4ff1cc9>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:97:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L97>`__
+
+.. _lobster-item-183811174f434c563f661cf8157bf17baee6345f:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerStartListeningAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServer\` shall provide a \`StartListening\` method that registers connection, disconnection, fire-and-forget message, and sent-with-reply message callbacks.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:108:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L108>`__
+
+.. _lobster-item-757bfb1d3471e29e6c51ac3225df5d266b4cea0a:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerStopListeningAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServer\` shall provide a \`StopListening\` method that releases all registered callbacks and closes all active server connections.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:115:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L115>`__
+
+.. _lobster-item-005415bbc9f45d23a36d2617c687e2debad5c6d0:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionSendAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a Send method that accepts a byte-span message and transmits it to the server.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousUnidirectionalCommunication <lobster-item-78e568a0bd29ee997bbc89d77a556b4b347e7b52>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:122:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L122>`__
+
+.. _lobster-item-6e728e91024a876cdec182d4f682689d0804e3af:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionSendWaitReplyAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`SendWaitReply\` method that accepts a message byte span and a reply buffer span and returns the received reply payload trimmed to its actual size.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:129:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L129>`__
+
+.. _lobster-item-abffce41799847c784bb944e3203696831784cb2:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionSendWithCallbackAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`SendWithCallback\` method that accepts a message byte span and a reply callback and returns after the message has been accepted by the local message passing layer.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:136:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L136>`__
+
+.. _lobster-item-ce1e28811ef2eba814c18734437de3ddf42a8fca:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerConnectionReplyAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServerConnection\` shall provide a Reply method that accepts a byte-span message and delivers it as the reply to the pending REQUEST from the client.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:143:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L143>`__
+
+.. _lobster-item-6aaa777799dad7c90cc9ecbb8b4e133712a1b198:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerConnectionNotifyAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServerConnection\` shall provide a \`Notify\` method that accepts a byte-span message and sends it as an asynchronous notification to the client.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AsynchronousServerNotification <lobster-item-b1b51c71dba830c5e0e7d53b5d804c0544198838>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:150:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L150>`__
+
+.. _lobster-item-e7192f4a9a7501652ec85cfc6c48f5d5a3a7219f:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientFactoryCreateAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientFactory\` shall provide a \`Create\` method that accepts a \`ServiceProtocolConfig\` and a \`ClientConfig\` and returns a new \`IClientConnection\` instance configured for the service specified by the \`ServiceProtocolConfig\`.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.OSIndependentAPI <lobster-item-9931ba53b300691e0563bca0c321fc6ced735ac4>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:157:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L157>`__
+
+.. _lobster-item-0b4b44fdb75f2e9b126bbe4282a599b8ded87a18:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerFactoryCreateAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServerFactory\` shall provide a \`Create\` method that accepts a \`ServiceProtocolConfig\` and a \`ServerConfig\` and returns a new \`IServer\` instance configured for the service specified by the \`ServiceProtocolConfig\`.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.OSIndependentAPI <lobster-item-9931ba53b300691e0563bca0c321fc6ced735ac4>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:164:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L164>`__
+
+.. _lobster-item-32a5a6673f94ae082631e808968f048a97cfe376:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientFactoryEngineSharingAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`ClientFactory\` shall provide a constructor accepting a \`shared\_ptr<Engine>\` and a \`GetEngine\` accessor, so that it can share a single \`Engine\` instance with other \`ClientFactory\`/\`ServerFactory\` instances in the same process instead of each owning its own.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SingletonFreeImplementation <lobster-item-75942ae52ea4a9b57c80544c22a76c8d806d29e9>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:171:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L171>`__
+
+.. _lobster-item-65b52387ce1ebc0d61032db8761e9b9f3d9ad8d2:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerFactoryEngineSharingAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`ServerFactory\` shall provide a constructor accepting a \`shared\_ptr<Engine>\` and a \`GetEngine\` accessor, so that it can share a single \`Engine\` instance with other \`ClientFactory\`/\`ServerFactory\` instances in the same process instead of each owning its own.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SingletonFreeImplementation <lobster-item-75942ae52ea4a9b57c80544c22a76c8d806d29e9>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:178:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L178>`__
+
+.. _lobster-item-c13e294a8f2f6da60233f825387fa209993bcd5e:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionGetStateAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`GetState\` method that returns the current connection state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:185:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L185>`__
+
+.. _lobster-item-c42353323ad44d5d39a35005aee3ff842f115617:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionGetStopReasonAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`GetStopReason\` method that returns the reason for the most recent transition to the \`Stopping\`/\`Stopped\` state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:192:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L192>`__
+
+.. _lobster-item-e9b9478afc844d24891f7c0b29524f3f0c91890e:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionStartAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`Start\` method that begins connecting to the server, registering the state and notification callbacks for the connection's lifetime.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:199:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L199>`__
+
+.. _lobster-item-e3b0aae657cce3b7812c533cc08a276187ee3bdc:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionStopAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`Stop\` method that ends the existing connection.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:206:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L206>`__
+
+.. _lobster-item-35e5359a9e5cfcbf7789a2bd3d8c6dece273df32:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IClientConnectionRestartAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IClientConnection\` shall provide a \`Restart\` method that attempts to bring a stopped connection back to the \`Starting\` state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:213:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L213>`__
+
+.. _lobster-item-40032b3c77dd639d0e26002679afa842a781952c:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerConnectionGetClientIdentityAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServerConnection\` shall provide a \`GetClientIdentity\` method that returns the client's OS-provided process ID (PID), user ID (UID), and primary group ID (GID), established once when the connection was accepted.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientIdentificationForAccessControl <lobster-item-c88f14db4a6927bc2363f7a7e986db0cdfd0cc1d>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:220:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L220>`__
+
+.. _lobster-item-abc0a22b9782e6823e60cb3312c6066194da5e43:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.IServerConnectionGetUserDataAPI
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      \`IServerConnection\` shall provide a \`GetUserData\` method that returns the \`UserData\` object associated with the connection, as returned by the connection callback when the connection was accepted.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:228:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L228>`__
+
+.. _lobster-item-302f9a749d97475b33976026e8e9f61909baf6d4:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerPreallocatesConnectionObjects
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall preallocate memory for the number of \`IServerConnection\` objects specified by \`ServerConfig::pre\_alloc\_connections\` at construction time, without allocating additional memory for each incoming client connection.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AllowsBoundedMonotonicMemoryAllocation <lobster-item-13ab3e95e90ecab64403d39ec451cfedd2efe973>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:239:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L239>`__
+
+.. _lobster-item-555d71af7fc08ec1339fbb5c5b96ff1f415c02cd:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerRingBufferQueueSizeConfigurable
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall implement the shared incoming message queue as a ring buffer with the number of slots equal to \`ServerConfig::max\_queued\_sends\`, configured at construction time.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AllowsBoundedMonotonicMemoryAllocation <lobster-item-13ab3e95e90ecab64403d39ec451cfedd2efe973>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:246:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L246>`__
+
+.. _lobster-item-272611f1645a3f2b4b09c19b6c2523be5967f3df:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerConnectionRefusal
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall enable the connection callback to reject an incoming client connection by returning an error, without establishing a server connection for the rejected client.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:253:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L253>`__
+
+.. _lobster-item-8346b9cd08a8a5abcb4448d33f2e0dacdab4d5f4:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ServerIConnectionHandlerDispatch
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The server shall invoke the \`IConnectionHandler\` virtual methods of the \`UserData\` object for a given \`IServerConnection\` instead of the server-wide callbacks, when the UserData holds an \`IConnectionHandler\` instance.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:260:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L260>`__
+
+.. _lobster-item-66271ff8c7107c2e1b8995a1e15a26f9038768c5:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionSendQueuePreallocation
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall preallocate send queue storage for the number of asynchronous messages specified by \`ClientConfig::max\_queued\_sends\` at construction time.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AllowsBoundedMonotonicMemoryAllocation <lobster-item-13ab3e95e90ecab64403d39ec451cfedd2efe973>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:271:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L271>`__
+
+.. _lobster-item-ad9ec3c0cd9d9745f5292397166c0dcb4a9fed9b:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionSharedResourceEngineInjection
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall accept an \`ISharedResourceEngine\` instance as a constructor parameter, which shouldbe the exclusive provider forall shared resources.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SingletonFreeImplementation <lobster-item-75942ae52ea4a9b57c80544c22a76c8d806d29e9>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:279:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L279>`__
+
+.. _lobster-item-03da5be8c9ef4a170a61a8f5ff9b075879a71521:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionMockInjectionForTesting
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall use the \`ISharedResourceEngine\` interface for all OS interactions.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AllowsResourceMockInjectionForTesting <lobster-item-21c7def39d91dea649a7aada0e3466298c4e5413>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:286:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L286>`__
+
+.. _lobster-item-11eb8bac40cdaa960d87c16b5bdfe1d4dd04a76c:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionSendFailsWhenStopped
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall return an error for a Send call when the connection is in the \`Stopped\` state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousUnidirectionalCommunication <lobster-item-78e568a0bd29ee997bbc89d77a556b4b347e7b52>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:294:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L294>`__
+
+.. _lobster-item-c68576219af5b2d13cae61823a18d0ad0d3425cc:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionSendWaitReplyFailsWhenStopped
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall return an error for a \`SendWaitReply\` call when the connection is in the \`Stopped\` state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:301:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L301>`__
+
+.. _lobster-item-64eb4e6b36d587b042da259a2fc0aa57676f334c:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionSendWithCallbackFailsWhenStopped
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall return an error for a \`SendWithCallback\` call when the connection is in the \`Stopped\` state.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:308:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L308>`__
+
+.. _lobster-item-4f82140f2d70e45a9068394b471a0fef0390bfd7:
+
+.. dropdown:: [PARTIAL] TRLC Compreq MessagePassing.ClientConnectionStateCallbackInvocation
+   :open:
+   :class-title: sd-bg-warning
+
+   .. pull-quote::
+
+      The \`ClientConnection\` shall invoke the registered \`StateCallback\` each time the connection state changes, passing the new state as the argument.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ClientInterface <lobster-item-6d471d1d971e93044b2bff56e88d633b253e2944>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/requirements/component\_requirements.trlc:315:18 <../../../../../score/message_passing/dependability/requirements/component_requirements.trlc#L315>`__
+
+.. _lobster-item-a6d90a4f3f29bad1c3304acea059e30b50724844:
+
+.. dropdown:: [MISSING] TRLC Compreq MessagePassing.OsIpcFaultHandling
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The component shall detect OS IPC transport failures by checking the return value of every OS call.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`ClientConnectionTest:SuccessfullyConnectingAtFirstAttemptThenFirstReadDisconnected <lobster-item-42dbfde9428f750b332ce12a2ed5974688265da0>`
+   * :ref:`ClientConnectionTest:SuccessfullyConnectingAtFirstAttemptThenSpuriousReadGetsIgnored <lobster-item-0059dbe3b59ec8de9ecca4efb1ca283efd7c6f7d>`
+   * :ref:`ClientConnectionTest:SendWaitReplyFailsWhenCannotSendMessageDirectly <lobster-item-c6262094690d74233f5472a959d4b2c5536e8f48>`
+   * :ref:`ClientConnectionTest:SendWaitReplyFailsDirectlyButUnblocksQueue <lobster-item-49110a5404bb26e2b6b91039ab843c6909aec652>`
+   * :ref:`ClientConnectionTest:SendWaitReplyFailsWhenQueuedMessageCancels <lobster-item-cb1dc0c2307e084a275d484e3f553b93c46c5473>`
+   * :ref:`ClientConnectionTest:SendWithCallbackFailsWhenCannotSendMessageDirectly <lobster-item-30abf3e870d05cc021ca3ed486c29358fd0b3246>`
+   * :ref:`ClientConnectionTest:SendWithCallbackReportsFailureWhenQueuedSendFailsTrulyAsync <lobster-item-1870d9d4265965d4bf46d46bd2ebbdb71c2d031e>`
+   * :ref:`ClientConnectionTest:QueuedSendsCancelIfConnectionClosed <lobster-item-9741190aa95e383b433aa6b537d65f450aa9dbc3>`
+   * :ref:`ClientConnectionTest:ConnectedStopsIfReceivesIoError <lobster-item-2c36ce1c440144890b02b023d4821992af678b83>`
+   * :ref:`ClientConnectionTest:ConnectedStopsIfReceivesInvalidCode <lobster-item-21a9aace5c1dc9ec5a7ac21d5a44ccf5aa842946>`
+   * :ref:`ClientConnectionTest:ConnectedStopsIfReceivesReplyWithoutSend <lobster-item-844a439ce3b390eee4cb67029065cb43a6df21b8>`
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * tracing destination req MessagePassing.OSIndependentAPI has version 2 (expected 1)
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.OSIndependentAPI <lobster-item-9931ba53b300691e0563bca0c321fc6ced735ac4>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/safety\_analysis/safetymeasures.trlc:23:18 <../../../../../score/message_passing/dependability/safety_analysis/safetymeasures.trlc#L23>`__
+
+.. _lobster-item-4ebf2ae9aa6f2ab21542db0ed11cb9e415a1e75c:
+
+.. dropdown:: [MISSING] TRLC Compreq MessagePassing.SendBufferArgumentValidation
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The component shall validate all arguments of Send, SendWaitReply, and SendWithCallback before any IPC operation is initiated.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`ClientConnectionTest:NotConnectedSendNotReady <lobster-item-10dbf8ecc9a1517c3b6a407f00055d902b57a5e9>`
+   * :ref:`ClientConnectionTest:SendWaitReplyFailsWhenCalledInCallback <lobster-item-21da162759f39509fb4d353f5d1e6c2b8bf69703>`
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * tracing destination req MessagePassing.AsynchronousUnidirectionalCommunication has version 3 (expected 1)
+      * tracing destination req MessagePassing.SynchronousBidirectionalCommunication has version 2 (expected 1)
+      * tracing destination req MessagePassing.SynchronousUnidirectionalCommunication has version 3 (expected 1)
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+   * :ref:`MessagePassing.SynchronousUnidirectionalCommunication <lobster-item-78e568a0bd29ee997bbc89d77a556b4b347e7b52>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/safety\_analysis/safetymeasures.trlc:31:18 <../../../../../score/message_passing/dependability/safety_analysis/safetymeasures.trlc#L31>`__
+
+.. _lobster-item-8ba2f56cc9d8b54d4297b3847b32354ad567a203:
+
+.. dropdown:: [MISSING] TRLC Compreq MessagePassing.BE\_MessageTooBig
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The component shall enforce the configured max\_send\_size, max\_reply\_size, and max\_notify\_size limits on every client send path and every server Reply and Notify path.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * tracing destination req MessagePassing.ServerInterface has version 2 (expected 1)
+      * tracing destination req MessagePassing.AsynchronousUnidirectionalCommunication has version 3 (expected 1)
+      * tracing destination req MessagePassing.SynchronousBidirectionalCommunication has version 2 (expected 1)
+      * tracing destination req MessagePassing.SynchronousUnidirectionalCommunication has version 3 (expected 1)
+      * missing reference to Unit Test
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.ServerInterface <lobster-item-f4728a059e1e0a10e0cd4410460e1633af193f73>`
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+   * :ref:`MessagePassing.SynchronousBidirectionalCommunication <lobster-item-4d4739f75f79fb3025389970abd4524c6f3281c1>`
+   * :ref:`MessagePassing.SynchronousUnidirectionalCommunication <lobster-item-78e568a0bd29ee997bbc89d77a556b4b347e7b52>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/safety\_analysis/safetymeasures.trlc:39:18 <../../../../../score/message_passing/dependability/safety_analysis/safetymeasures.trlc#L39>`__
+
+.. _lobster-item-d0b61519b0e18820cc0a4d2fa81d987ed3d2d0c7:
+
+.. dropdown:: [MISSING] TRLC Compreq MessagePassing.BE\_SendQueueExhausted
+   :open:
+   :class-title: sd-bg-danger sd-text-white
+
+   .. pull-quote::
+
+      The component shall use a pre-allocated, bounded pool for asynchronous client send messages and return an error when the pool is exhausted without blocking or silently dropping the message.
+
+   .. raw:: html
+
+      <hr>
+
+   **Traces to:**
+
+   * :ref:`ClientConnectionTest:GivenTrulyAsyncWhenSendIsCalledItIsQueued <lobster-item-667854f9e97a5436caad1a0d51e28d476e04ab30>`
+   * :ref:`ClientConnectionTest:SendIsNotQueuedIfTrulyAsyncButNoSlots <lobster-item-36d31a062fdcc66ccacfec714147dc77a08c80b6>`
+   * :ref:`ClientConnectionTest:SendWaitReplyFailsWhenCannotQueueMessage <lobster-item-623d10d217030499d2c6ae17d93ffec58ace32d7>`
+   * :ref:`ClientConnectionTest:SendWithCallbackFailsWhenCannotQueueMessage <lobster-item-cb0d0330c17f35d32fee54205f7ed3275383d2c5>`
+   * :ref:`ClientConnectionTest:SendWithCallbackFailsWhenCannotQueueMessageTrulyAsync <lobster-item-280c6e7dda1c52c934443288f5b202fad466e609>`
+   * :ref:`ClientConnectionTest:SendWithCallbackStillHasItsSlotBusyWhenQueuedSendHappensTrulyAsync <lobster-item-f7c4d2f96f6cd8b6746702a9346d57b3c326d1db>`
+   * :ref:`//score/message\_passing/dependability:component\_message\_passing <lobster-item-6d680e73e2c22a36691c6c0ac0074f9b7dd00a20>`
+
+   .. card::
+      :class-card: lobster-issue-card
+
+      * tracing destination req MessagePassing.AllowsBoundedMonotonicMemoryAllocation has version 2 (expected 1)
+      * tracing destination req MessagePassing.AsynchronousUnidirectionalCommunication has version 3 (expected 1)
+
+   .. raw:: html
+
+      <hr>
+
+   **Derived from:**
+
+   * :ref:`MessagePassing.AllowsBoundedMonotonicMemoryAllocation <lobster-item-13ab3e95e90ecab64403d39ec451cfedd2efe973>`
+   * :ref:`MessagePassing.AsynchronousUnidirectionalCommunication <lobster-item-e0a331bc1f530d94070d43bc91e45ed18fc6c50c>`
+
+   .. raw:: html
+
+      <hr>
+
+   **Source:** `score/message\_passing/dependability/safety\_analysis/safetymeasures.trlc:47:18 <../../../../../score/message_passing/dependability/safety_analysis/safetymeasures.trlc#L47>`__
+
