@@ -13,6 +13,22 @@ manager: a hanging or crashing warning function is detected, the system falls ba
 degraded mode and recovers, visible step by step in the DLT log. See
 [drive_replay/README.md](drive_replay/README.md).
 
+# Simple Lifecycle Demo
+
+The [simple lifecycle showcase](simple_lifecycle/simple_lifecycle.score.json)
+uses SIGUSR1 to stop C++ heartbeat reporting, after which the launch manager
+kills the app and enters its fallback run target. SIGTERM then shuts down the
+launch manager.
+
+Its [configuration](simple_lifecycle/configs/launch_manager_config.json) allows
+1-30 heartbeats per 1000 ms window and tolerates one failed window. The apps
+normally report every 50 ms (about 20 heartbeats per window). This gives QEMU
+scheduling delays more headroom than a 100 ms window without disabling
+supervision. Both health-monitor apps use a 1000 ms deadline bound.
+The integration test requires the signal script to start before the C++ app's
+unexpected termination; a premature supervision failure must not pass as the
+intended malfunction.
+
 # S-CORE Platform Run
 
 `/showcases/bin/cli --examples 'S-CORE Platform Run'` starts the launch manager

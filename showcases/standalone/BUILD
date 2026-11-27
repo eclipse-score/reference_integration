@@ -86,17 +86,16 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
-# TODO: baselibs 0.2.19 moved examples/log_* into the separate module examples/integration; re-enable once consumable.
-# score_pkg_bundle(
-#     name = "baselibs",
-#     bins = [
-#         "@score_baselibs//examples/log_builtin:log_builtin",
-#         "@score_baselibs//examples/log_custom:log_custom",
-#         "@score_baselibs//examples/log_cpp_init:log_cpp_init",
-#     ],
-#     config_data = ["//showcases/standalone:baselibs.score.json"],
-#     package_dir = "standalone",
-# )
+score_pkg_bundle(
+    name = "baselibs",
+    bins = [
+        "@score_baselibs//examples/integration/log_builtin:log_builtin",
+        "@score_baselibs//examples/integration/log_custom:log_custom",
+        "@score_baselibs//examples/integration/log_cpp_init:log_cpp_init",
+    ],
+    config_data = ["//showcases/standalone:baselibs.score.json"],
+    package_dir = "standalone",
+)
 
 score_pkg_bundle(
     name = "persistency",

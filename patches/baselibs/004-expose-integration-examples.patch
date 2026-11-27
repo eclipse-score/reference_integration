@@ -1,0 +1,27 @@
+diff --git a/.bazelignore b/.bazelignore
+--- a/.bazelignore
++++ b/.bazelignore
+@@ -1 +0,0 @@
+-examples/integration
+diff --git a/examples/integration/log_builtin/BUILD b/examples/integration/log_builtin/BUILD
+--- a/examples/integration/log_builtin/BUILD
++++ b/examples/integration/log_builtin/BUILD
+@@ -16,6 +16,7 @@
+ rust_binary(
+     name = "log_builtin",
+     srcs = glob(["src/**/*.rs"]),
++    visibility = ["//visibility:public"],
+     deps = [
+         "@score_baselibs//score/log_rust/score_log",
+         "@score_baselibs//score/log_rust/stdout_logger",
+diff --git a/examples/integration/log_custom/BUILD b/examples/integration/log_custom/BUILD
+--- a/examples/integration/log_custom/BUILD
++++ b/examples/integration/log_custom/BUILD
+@@ -16,6 +16,7 @@
+ rust_binary(
+     name = "log_custom",
+     srcs = glob(["src/**/*.rs"]),
++    visibility = ["//visibility:public"],
+     deps = [
+         "@score_baselibs//score/log_rust/score_log",
+     ],

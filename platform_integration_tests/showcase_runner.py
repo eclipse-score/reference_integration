@@ -29,7 +29,7 @@ def run_showcases(target, *names: str) -> str:
     output to confirm that the platform feature under test actually worked.
     """
     selection = ",".join(names)
-    exit_code, out = target.execute(f"{_CLI} --examples='{selection}'")
+    exit_code, out = target.execute(f"{_CLI} --examples='{selection}' 2>&1")
     output = out.decode(errors="replace")
     logger.info(output)
     assert exit_code == 0, f"Showcase CLI exited with {exit_code}:\n{output}"

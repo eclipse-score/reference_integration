@@ -26,8 +26,7 @@ score_pkg_bundle(
         "//showcases/standalone:persistency_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/drive_replay:drive_replay_pkg_files",
-        # TODO: re-enable with the baselibs showcase (showcases/standalone/BUILD).
-        # "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/standalone:baselibs_pkg_files",
         "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/standalone:platform_info_pkg_files",
         "//showcases/combined/lifecycle_comm:lifecycle_comm_pkg_files",
@@ -53,8 +52,7 @@ pkg_filegroup(
         "//showcases/combined/lifecycle_time_comm:lifecycle_time_comm_pkg_files",
         "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
-        # TODO: re-enable with the baselibs showcase (showcases/standalone/BUILD).
-        # "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/standalone:baselibs_pkg_files",
         "//showcases/standalone:comm_pkg_files",
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/standalone:crypto_pkg_files",

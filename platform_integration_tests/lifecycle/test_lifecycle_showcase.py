@@ -47,9 +47,14 @@ def test_lifecycle_showcase(target):
     assert not _unexpected_termination("state_manager").search(output), (
         f"state_manager crashed — mw_com_config.json missing or working_dir misconfigured:\n{output}"
     )
-    # lifecycle_signal.sh (delay=2s) sends SIGUSR1; LM detects unexpected exit and recovers.
+    # SIGUSR1 stops C++ heartbeat reporting; LM then kills the app and recovers.
+    signal_started = output.find("App 2: starting /showcases/bin/lifecycle_signal.sh")
+    assert signal_started >= 0, f"The SIGUSR1 injection script did not start:\n{output}"
     cpp_terminated = _unexpected_termination("cpp_supervised_app").search(output)
     assert cpp_terminated, f"LM did not detect cpp_supervised_app termination via SIGUSR1:\n{output}"
+    assert signal_started < cpp_terminated.start(), (
+        f"LM killed cpp_supervised_app before the SIGUSR1 injection script started:\n{output}"
+    )
     # The apps run with -m1000; a missed deadline would cause the failure instead of SIGUSR1.
     assert "stopped too late" not in output, (
         f"A supervised app missed its deadline, so the failure was not caused by SIGUSR1:\n{output}"
