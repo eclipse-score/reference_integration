@@ -157,6 +157,7 @@ score_pkg_bundle(
     bins = [
         "@score_lifecycle//score/launch_manager",
         "@score_lifecycle//examples/c_supervised_app",
+        "@score_lifecycle//examples/cpp_alive_supervised_app",
         "@score_lifecycle//examples/cpp_lifecycle_app",
         "@score_lifecycle//examples/control_application:lmcontrol",
     ],
