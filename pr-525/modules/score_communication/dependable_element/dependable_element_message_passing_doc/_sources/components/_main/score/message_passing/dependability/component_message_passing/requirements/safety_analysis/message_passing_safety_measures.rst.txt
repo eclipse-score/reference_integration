@@ -1,0 +1,18 @@
+Component Requirements
+======================
+.. requirement:definition:: MessagePassing.OsIpcFaultHandling
+
+   The component shall detect OS IPC transport failures by checking the return value of every OS call.
+
+.. requirement:definition:: MessagePassing.SendBufferArgumentValidation
+
+   The component shall validate all arguments of Send, SendWaitReply, and SendWithCallback before any IPC operation is initiated.
+
+.. requirement:definition:: MessagePassing.BE_MessageTooBig
+
+   The component shall enforce the configured max_send_size, max_reply_size, and max_notify_size limits on every client send path and every server Reply and Notify path.
+
+.. requirement:definition:: MessagePassing.BE_SendQueueExhausted
+
+   The component shall use a pre-allocated, bounded pool for asynchronous client send messages and return an error when the pool is exhausted without blocking or silently dropping the message.
+
