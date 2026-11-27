@@ -151,7 +151,7 @@ def apply_overrides(known_good: KnownGood, repo_overrides: List[str]) -> KnownGo
         logging.info(f"Successfully applied {overrides_applied} override(s)")
 
     # Update timestamp
-    known_good.timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
+    known_good.timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     return known_good
 
