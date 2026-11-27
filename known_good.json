@@ -12,6 +12,7 @@
                 "metadata": {
                     "code_root_path": "//score/...",
                     "exclude_test_targets": [
+                        "//examples/integration/...",
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
@@ -23,6 +24,7 @@
                         "//score/language/safecpp/safe_math/details:floating_point_environment_test"
                     ],
                     "test_notes": {
+                        "//examples/integration/...": "The integration examples are a separate Bazel workspace; the logger showcase patch exposes them to the parent workspace only for packaging.",
                         "//score/mw/log:log_stream_test": "TODO fix: fails under clang (unified llvm coverage toolchain): -Werror,-Wdeprecated-declarations",
                         "//score/mw/log:log_types_test": "TODO fix: fails under clang (unified llvm coverage toolchain): -Werror,-Wdeprecated-declarations",
                         "//score/language/safecpp/safe_math/details:floating_point_environment_test": "TODO fix: fails under clang (unified llvm coverage toolchain): floating point exceptions not raised (WillCatchError, WillNotLeakError)"
