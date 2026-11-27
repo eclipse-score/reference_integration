@@ -29,8 +29,6 @@ jobs:
   build:
     name: aarch64
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/eclipse-score/devcontainer:v1.11.4
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
@@ -43,6 +41,12 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Install QEMU
+        # The os_images prebuild boots the image in qemu-system-aarch64 to install the S-CORE packages.
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: qemu-system-arm
+          apt_update: true
       - name: Build for EB corbos Linux for Safety Applications and run tests
         run: |
           bazel build --lockfile_mode=error --config=eb-aarch64 //images/ebclfsa_aarch64:run
