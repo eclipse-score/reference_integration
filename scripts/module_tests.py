@@ -36,6 +36,7 @@ from collections import Counter
 from pathlib import Path
 
 from known_good.models.known_good import load_known_good
+from known_good.models.module import Module
 from quality_runners import append_to_step_summary, generate_markdown_report, with_status
 
 REF_INT = Path(__file__).resolve().parents[1]
@@ -317,16 +318,35 @@ def _write_summary(
     append_to_step_summary(text)
 
 
-def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[str], env: dict) -> None:
+def lobster_source_root(module: Module) -> str | None:
+    """GitHub URL of the module's sources at its pinned commit, to link the traceability report to.
+
+    The report links every item to its file below this root. Without one the links are relative to
+    the report's place in the build tree, so they break once the HTML is published without the
+    sources. A module pinned by version has no commit to link to and keeps the relative links.
+    """
+    if not module.hash:
+        return None
+    try:
+        return f"https://github.com/{module.owner_repo}/blob/{module.hash}/"
+    except ValueError:
+        return None
+
+
+def _collect_dependable_element_docs(
+    workspace: Path, out: Path, targets: list[str], env: dict, *, source_root: str | None = None
+) -> None:
     """Build the module's dependable element sphinx targets and keep their HTML for the main docs.
 
     The main docs build cannot depend on them via Bazel (docs_as_code only takes docs()/docs_bundle
     labels as external needs), so the HTML travels as part of the module report instead. A failure
-    here is reported but does not fail the module's tests.
+    here is reported but does not fail the module's tests. ``source_root`` is the URL the traceability
+    report links the module's files below, see ``lobster_source_root``.
     """
     if not targets:
         return
-    code, _ = streamed(["bazel", "build", "--keep_going", *targets], workspace, env)
+    define = [f"--define=LOBSTER_SOURCE_ROOT={source_root}"] if source_root else []
+    code, _ = streamed(["bazel", "build", "--keep_going", *define, *targets], workspace, env)
     for target in targets:
         package, name = target.removeprefix("//").split(":")
         html = workspace / "bazel-bin" / package / name / "html"
@@ -400,7 +420,9 @@ def run(args: argparse.Namespace) -> int:
     if coverage_enabled:
         coverage_exit = _collect_coverage(workspace, out, env)
         exit_code = exit_code or coverage_exit
-    _collect_dependable_element_docs(workspace, out, module.metadata.dependable_element_docs, env)
+    _collect_dependable_element_docs(
+        workspace, out, module.metadata.dependable_element_docs, env, source_root=lobster_source_root(module)
+    )
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
     _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
     return exit_code

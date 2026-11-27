@@ -14,14 +14,17 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from known_good.models.module import Module
 from module_tests import (
     STATUS_LINE,
     _collect_coverage,
+    _collect_dependable_element_docs,
     combine_reports,
     count_testcases,
     coverage_args,
     graph_modules,
     lcov_percentages,
+    lobster_source_root,
     normalize_lcov,
     override_rc,
     report,
@@ -252,3 +255,42 @@ def test_baselibs_uses_shared_floating_point_exclusion_once():
     target = "//score/language/safecpp/safe_math/details:floating_point_environment_test"
     args = coverage_args(["--", "//..."], ["cpp"], [target], module="score_baselibs")
     assert args.count(f"-{target}") == 1
+
+
+def test_lobster_source_root_links_to_the_pinned_commit():
+    """A branch would drift under the published docs, the pinned commit keeps every line number valid."""
+    module = Module.from_dict(
+        "score_communication", {"repo": "https://github.com/eclipse-score/communication.git", "hash": "2b964fd"}
+    )
+    assert lobster_source_root(module) == "https://github.com/eclipse-score/communication/blob/2b964fd/"
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        {"repo": "https://github.com/eclipse-score/baselibs.git", "version": "0.2.0"},
+        {"repo": "https://gitlab.example.org/eclipse-score/baselibs.git", "hash": "2b964fd"},
+    ],
+    ids=["pinned_by_version", "not_on_github"],
+)
+def test_lobster_source_root_is_unset_without_a_commit_on_github(data):
+    assert lobster_source_root(Module.from_dict("score_baselibs", data)) is None
+
+
+@pytest.mark.parametrize(
+    ("source_root", "defines"),
+    [
+        ("https://github.com/o/r/blob/abc/", ["--define=LOBSTER_SOURCE_ROOT=https://github.com/o/r/blob/abc/"]),
+        (None, []),
+    ],
+)
+def test_dependable_element_docs_link_the_report_to_the_source_root(tmp_path, monkeypatch, source_root, defines):
+    calls = []
+
+    def streamed(command, cwd, env):
+        calls.append((command, cwd, env))
+        return 0, ""
+
+    monkeypatch.setattr("module_tests.streamed", streamed)
+    _collect_dependable_element_docs(tmp_path, tmp_path / "out", ["//doc:de_doc"], {"K": "v"}, source_root=source_root)
+    assert calls == [(["bazel", "build", "--keep_going", *defines, "//doc:de_doc"], tmp_path, {"K": "v"})]
