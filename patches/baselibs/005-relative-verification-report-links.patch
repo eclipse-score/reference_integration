@@ -1,0 +1,25 @@
+Absolute /verification_report links resolve against the root of the integrating Sphinx project
+when the baselibs docs are mounted (modules/functional_modules/score_baselibs); use relative links.
+
+diff --git a/score/mw/log/docs/detailed_design/chklst_impl_inspection.rst b/score/mw/log/docs/detailed_design/chklst_impl_inspection.rst
+index 2e80055..bd30cf3 100644
+--- a/score/mw/log/docs/detailed_design/chklst_impl_inspection.rst
++++ b/score/mw/log/docs/detailed_design/chklst_impl_inspection.rst
+@@ -81,7 +81,7 @@ See also :need:`doc_concept__wp_inspections` for further information about revie
+      - no
+      - Checked: 72 existing test cases are linked to 14 of the 18 component
+        requirements. The requirement-to-test traceability is shown in
+-       :doc:`/verification_report/requirements_statistics`.
++       :doc:`../../../../verification_report/requirements_statistics`.
+ 
+        Following issues need to be addressed:
+ 
+@@ -148,7 +148,7 @@ See also :need:`doc_concept__wp_inspections` for further information about revie
+      - All violations in ASIL related code must be justified. This includes the checks of coding guidelines.
+      - yes
+      - Refer to the generated :doc:`verification report
+-       </verification_report/module_verification_report>` and revision-specific
++       <../../../../verification_report/module_verification_report>` and revision-specific
+        CI results.
+ 
+        Deviations:
