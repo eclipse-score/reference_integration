@@ -1,0 +1,73 @@
+score_platform main merged the logging and tracing features into feat__log_and_trace /
+doc__log_and_trace; feat__logging and doc__logging no longer exist. Remove once logging links the new IDs.
+
+diff --git a/docs/components/datarouter/index.rst b/docs/components/datarouter/index.rst
+index ba8c2f28..6d7880f7 100644
+--- a/docs/components/datarouter/index.rst
++++ b/docs/components/datarouter/index.rst
+@@ -23,7 +23,7 @@ Datarouter
+    :safety: QM
+    :status: valid
+    :uses: logic_arc_int__logging__shared_memory, logic_arc_int__logging__datarouter_msg_client
+-   :belongs_to: feat__logging
++   :belongs_to: feat__log_and_trace
+ 
+    Datarouter is the DLT (Diagnostic log and trace) daemon executable. It reads records from source shared-memory ring buffers, manages source
+    sessions, routes messages to configured channels via UDP multicast, and reports source statistics and message drops.
+diff --git a/docs/components/mw_log/architecture/component_architecture.rst b/docs/components/mw_log/architecture/component_architecture.rst
+index 933c658f..37cbe828 100644
+--- a/docs/components/mw_log/architecture/component_architecture.rst
++++ b/docs/components/mw_log/architecture/component_architecture.rst
+@@ -61,7 +61,7 @@ A component can optional also consist of lower level components to further struc
+    :status: valid
+    :version: 1
+    :implements: logic_arc_int__log_cpp__logging, logic_arc_int__logging__shared_memory, logic_arc_int__logging__datarouter_msg_client
+-   :belongs_to: feat__logging
++   :belongs_to: feat__log_and_trace
+ 
+    This is the logging component library responsible for selecting the appropriate log sinks based on configuration at runtime. It can perform tasks such as log formatting, filtering, and composite backend selection based on runtime context and configuration. The logging component is designed to be extensible, allowing for custom logging backend to be added as needed.
+ 
+@@ -91,7 +91,7 @@ Interfaces
+ 
+ .. logic_arc_int:: Log Record Shared-Memory
+    :id: logic_arc_int__logging__shared_memory
+-   :included_by: feat__logging
++   :included_by: feat__log_and_trace
+    :security: YES
+    :safety: ASIL_B
+    :status: valid
+@@ -105,7 +105,7 @@ Interfaces
+ 
+ .. logic_arc_int:: Control Channel
+    :id: logic_arc_int__logging__datarouter_msg_client
+-   :included_by: feat__logging
++   :included_by: feat__log_and_trace
+    :security: YES
+    :safety: ASIL_B
+    :status: valid
+diff --git a/docs/features/logging/architecture/index.rst b/docs/features/logging/architecture/index.rst
+index e4745175..603036c9 100644
+--- a/docs/features/logging/architecture/index.rst
++++ b/docs/features/logging/architecture/index.rst
+@@ -113,7 +113,7 @@ Static Architecture
+    :version: 1
+    :includes: logic_arc_int__log_cpp__logging
+    :fulfils: feat_req__logging__log_sources_user_app, feat_req__logging__asil_support
+-   :belongs_to: feat__logging
++   :belongs_to: feat__log_and_trace
+ 
+    .. needarch::
+       :scale: 50
+diff --git a/docs/features/logging/safety_planning/index.rst b/docs/features/logging/safety_planning/index.rst
+index 53686f8d..7907c778 100644
+--- a/docs/features/logging/safety_planning/index.rst
++++ b/docs/features/logging/safety_planning/index.rst
+@@ -49,7 +49,7 @@ Safety Work products List
+     * - :need:`wp__feat_request`
+       - :need:`gd_temp__change_feature_request`
+       - :ndf:`copy('status', need_id='gd_temp__change_feature_request')`
+-      - :need:`doc__logging`
++      - :need:`doc__log_and_trace`
+ 
+     * - :need:`wp__requirements_feat`
+       - :need:`gd_temp__req_feat_req`
