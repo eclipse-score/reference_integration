@@ -47,4 +47,4 @@ Read it first and follow it exactly.
    the script could not resolve, and pinned modules bumped.
 6. On request (skill, 6): analyse red CI checks, fix them in separate commits,
    push, and update the PR body (*Incompatible Changes*, *Patches checked
-   against the new versions*, *Cherry-picked*) in the format of skill 5.
+   against the new versions*, *Cherry-picked*, *Other fixes*) in the format of skill 5.

@@ -92,14 +92,15 @@ Exit code 2 of the script means at least one module had an error (see the
   `MODULE.bazel.lock`. Message in English.
 - Draft PR against `main`, title
   `Pre-release check: latest module releases (<YYYY-MM-DD>)`.
-- PR body (English), in this order (reference: PR #508). Sections 4-7 are
+- PR body (English), in this order (reference: PR #508). Sections 4-8 are
   added or updated whenever the branch changes after the first push (section
   6); omit a section only if it would be empty, except *Incompatible Changes*.
   1. One paragraph on the purpose: pins every module of `known_good.json` to
      its latest Bazel registry release (keeping a pinned commit if it is newer
      than that release; name the modules on a branch head) to test whether the
      latest module releases work together; build and tests are verified by
-     this PR's CI only, it is not meant to be merged as is.
+     this PR's CI; once green (with the fixes of section 6), the PR is merged
+     into `main`.
   2. The report from `/tmp/pre_release_report.md` unchanged
      (one table, *Module versions*).
   3. `### Pinned modules bumped`: modules with `pin_version: true` as
@@ -120,6 +121,10 @@ Exit code 2 of the script means at least one module had an error (see the
      cleanly |`.
   7. `### Cherry-picked` (only if PRs were cherry-picked): ``- #<n>: `<sha>`
      <title>`` plus how conflicts were resolved or why a pick was skipped.
+  8. `### Other fixes` (only if any): one bullet per fix in
+     reference_integration that is not caused by a module change (e.g. a
+     flaky test that also fails on `main`): what failed, the cause and the
+     fix.
 - Create the PR with `gh pr create --draft --base main --head "$BRANCH"
   --title "…" --body-file <file>`. Without `gh`, use
   `POST /repos/eclipse-score/reference_integration/pulls` with
