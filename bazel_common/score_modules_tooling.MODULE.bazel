@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-28T11:05:18Z
+# Generated from known_good.json at 2026-11-28T11:45:06Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
@@ -57,9 +57,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_platform")
-single_version_override(
+git_override(
     module_name = "score_platform",
-    version = "0.7.7",
+    commit = "73ae55e45715ad4dc41666c6e585e6c790724418",
+    remote = "https://github.com/eclipse-score/score.git",
 )
 
 bazel_dep(name = "score_rules_imagefs")
