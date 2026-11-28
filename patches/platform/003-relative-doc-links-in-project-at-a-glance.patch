@@ -1,0 +1,32 @@
+Absolute :doc: links resolve against the root of the integrating Sphinx project when the
+platform docs are mounted (modules/functional_modules/score_platform); use relative links.
+
+diff --git a/docs/users_guide/project_at_a_glance.rst b/docs/users_guide/project_at_a_glance.rst
+index 6abd180aae..8e250bd0d9 100644
+--- a/docs/users_guide/project_at_a_glance.rst
++++ b/docs/users_guide/project_at_a_glance.rst
+@@ -70,7 +70,7 @@ Common
+ 
+ - **Decisions go up, work goes sideways:** the PLC decides; Communities set common rules; Feature Teams build
+   the modules.
+-- **Teams are created or closed by the PLC** (see :doc:`/platform_management_plan/project_management`).
++- **Teams are created or closed by the PLC** (see :doc:`../platform_management_plan/project_management`).
+ - **Everything is open:** all meetings are in the S-CORE calendar and open to everyone; minutes are public in
+   the GitHub Discussions.
+ - **Members and leads are defined by the CODEOWNERS** of the owned repositories.
+@@ -83,13 +83,13 @@ New features and changes with impact on the platform or other teams go through t
+ decided after a Final Comment Period; changes inside one team use the normal Issue/PR flow. The process is
+ described in the :ref:`FEP guideline <feature_request_guideline>`.
+ 
+-As defined in the :doc:`Project Management Plan </platform_management_plan/project_management>`, the PLC triages
++As defined in the :doc:`Project Management Plan <../platform_management_plan/project_management>`, the PLC triages
+ incoming requests and is notified once a FEP enters its Final Comment Period.
+ 
+ Decision Record (DR)
+ ^^^^^^^^^^^^^^^^^^^^
+ 
+-- Every relevant decision is a **Decision Record** (``dec_rec`` need) in :doc:`/design_decisions/index`,
++- Every relevant decision is a **Decision Record** (``dec_rec`` need) in :doc:`../design_decisions/index`,
+   created by PR.
+ - Grouped by category: **strategy, architecture, infrastructure, process, integration, AI**
+   (e.g. ``DR-003-Strat`` module maturity levels).

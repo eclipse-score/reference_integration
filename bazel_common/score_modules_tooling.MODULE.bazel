@@ -60,6 +60,10 @@ bazel_dep(name = "score_platform")
 git_override(
     module_name = "score_platform",
     commit = "73ae55e45715ad4dc41666c6e585e6c790724418",
+    patch_strip = 1,
+    patches = [
+        "//patches/platform:003-relative-doc-links-in-project-at-a-glance.patch",
+    ],
     remote = "https://github.com/eclipse-score/score.git",
 )
 
