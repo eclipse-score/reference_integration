@@ -86,18 +86,82 @@ Exit code 2 of the script means at least one module had an error (see the
 
 - **No local build, tests or other checks, and no fixes.** Only the versions
   are replaced (plus the regenerated files and lockfile from section 4); the
-  CI of the draft PR verifies build and tests. A red CI is a valid result.
+  CI of the draft PR verifies build and tests. A red CI is a valid result;
+  fixes follow only on request (section 6).
 - One commit with `known_good.json`, the generated `bazel_common/` files and
   `MODULE.bazel.lock`. Message in English.
 - Draft PR against `main`, title
   `Pre-release check: latest module releases (<YYYY-MM-DD>)`.
-- PR body (English), in this order:
-  1. One sentence on the purpose (test of the latest module releases, build
-     and tests verified by the PR's CI, not meant to be merged as is).
+- PR body (English), in this order (reference: PR #508). Sections 4-7 are
+  added or updated whenever the branch changes after the first push (section
+  6); omit a section only if it would be empty, except *Incompatible Changes*.
+  1. One paragraph on the purpose: pins every module of `known_good.json` to
+     its latest Bazel registry release (keeping a pinned commit if it is newer
+     than that release; name the modules on a branch head) to test whether the
+     latest module releases work together; build and tests are verified by
+     this PR's CI only, it is not meant to be merged as is.
   2. The report from `/tmp/pre_release_report.md` unchanged
      (one table, *Module versions*).
-  3. *Pinned modules bumped*: modules with `pin_version: true`, old -> new.
+  3. `### Pinned modules bumped`: modules with `pin_version: true` as
+     ``- `module`: old -> new``; one sentence naming the pinned modules that
+     already are at their latest release.
+  4. `### Modules set to their branch head`: which modules use `--use-head`
+     and why (e.g. fixes that make local patches obsolete are not released).
+  5. `### Incompatible Changes`: one bullet per change in a module that breaks
+     reference_integration (build, tests, docs), format:
+     ``- **`module` version: what changed.** Details (link the upstream PR),
+     what was adapted here (patch, files) and the upstream follow-up.``
+     Keep the heading with no bullets if there are none.
+  6. `### Patches checked against the new versions`: one sentence on how the
+     patches were checked, then a table `| Module | Patch | Result |` with the
+     module version, the patch file and one of *Removed: <why>*, *Still
+     needed, rebased (<what changed>)*, *Still needed: <why>*, *New: <why>;
+     remove once <condition>*; last row `| all others | | Still apply
+     cleanly |`.
+  7. `### Cherry-picked` (only if PRs were cherry-picked): ``- #<n>: `<sha>`
+     <title>`` plus how conflicts were resolved or why a pick was skipped.
 - Create the PR with `gh pr create --draft --base main --head "$BRANCH"
   --title "…" --body-file <file>`. Without `gh`, use
   `POST /repos/eclipse-score/reference_integration/pulls` with
-  `"draft": true` and the token from the environment.
+  `"draft": true` and the token from the environment. Update the body later
+  with `PATCH /repos/eclipse-score/reference_integration/pulls/<n>`. Use
+  unique `/tmp` file names per run (old helper scripts may still exist there).
+
+## 6. Follow-up after CI (only when the user asks)
+
+The first push contains only the version changes (section 5). Fixes are made
+only on request, on the same branch, **one commit per patch or change**, and
+are listed in the PR body (sections 5.5-5.7).
+
+- **Check a patch before rebasing it.** Clone the module at its new ref under
+  `/tmp`, apply the patches in `bazel_patches` order with `git apply`
+  (forward), and check failing ones with `git apply --check --reverse`
+  (already upstream -> remove). A patch that still applies can still be
+  obsolete: re-check its reason against the new ref (e.g. a page that is now
+  committed upstream, a dependency that is no longer used). For un-dev
+  patches, grep which of the dev-only repos are still referenced by the
+  packages reference_integration uses (`code_root_path`, test targets, root
+  `BUILD` for `docs_bundle`) and drop hunks for unused ones.
+- **Rebase** by re-doing the change on the new ref in the clone and taking
+  `git diff` (keep the patch's header text; keep CRLF line endings of CRLF
+  files). Remove a dropped patch from `bazel_patches` and delete the file.
+- **Verify** with `bazel mod deps --lockfile_mode=update` and
+  `bazel query --keep_going` on the used packages (`@module//...`); for docs
+  changes `bazel run //:docs` (the `docs-check` job). Patches of
+  `git_override` modules do not change `MODULE.bazel.lock`.
+- **Docs of mounted modules:** absolute `:doc:` links (`/path`) resolve
+  against the reference_integration docs root, not the module's mount point
+  (`modules/functional_modules/<module>`); patch them to relative links.
+  Sphinx settings of a module's `conf.py` (e.g. `required_in_id`) do not apply
+  when mounted; mirror them in `docs/conf.py`. Renamed need IDs (e.g.
+  `feat__logging` -> `feat__log_and_trace`) need patches in every module that
+  links them.
+- **Cherry-picks** from other PRs: `git cherry-pick -x`; skip empty "Initial
+  plan" commits; resolve conflicts in generated files by regenerating, and
+  skip a pick whose change is already on the branch.
+- Stage only the files of the current commit (`git add <paths>`); a staged
+  `git rm` from an earlier step otherwise ends up in the wrong commit.
+- CI logs: `GET /repos/{repo}/commits/{sha}/check-runs`, then
+  `GET /repos/{repo}/actions/jobs/{id}/logs` and follow the redirect
+  **without** the auth header. Compare with the same jobs on `main` to tell
+  new failures from existing ones.
