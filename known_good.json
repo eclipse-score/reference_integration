@@ -6,7 +6,9 @@
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:003-export-aou-requirements.patch"
+                    "//patches/baselibs:003-export-aou-requirements.patch",
+                    "//patches/baselibs:004-platform-log-and-trace-feature-ids.patch",
+                    "//patches/baselibs:005-relative-verification-report-links.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -35,7 +37,7 @@
                         "//..."
                     ]
                 },
-                "version": "0.2.19"
+                "version": "0.2.21"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
@@ -83,7 +85,6 @@
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "bazel_patches": [
                     "//patches/persistency:003-undev-deps-for-root-module.patch",
-                    "//patches/persistency:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/persistency:005-undev-integration-test-deps.patch"
                 ],
                 "metadata": {
@@ -108,7 +109,7 @@
                         "//:unit_tests"
                     ]
                 },
-                "version": "0.5.0"
+                "version": "0.6.0"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -159,15 +160,14 @@
                         "//..."
                     ]
                 },
-                "hash": "d8decb3b898c5e2221e3c6bfdc9fcfd097570a6c"
+                "version": "0.11.0"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
                 "bazel_patches": [
                     "//patches/logging:002-undev-component-test-deps.patch",
-                    "//patches/logging:003-relative-verification-report-links.patch",
                     "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-                    "//patches/logging:007-docs-drop-generated-dependency-pages.patch"
+                    "//patches/logging:008-platform-log-and-trace-feature-ids.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -201,11 +201,11 @@
                         "-//score/test/component/..."
                     ]
                 },
-                "hash": "dc2973f775d13a0bfc07615014ca56bf93a59c9b"
+                "hash": "a0a162e630eaca176d607529b1159400983ffea5"
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "version": "0.3.3",
+                "version": "0.4.0",
                 "bazel_patches": [
                     "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
                     "//patches/time:003-undev-rules-imagefs.patch"
@@ -233,7 +233,7 @@
             },
             "score_crypto": {
                 "repo": "https://github.com/eclipse-score/crypto.git",
-                "hash": "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
+                "version": "0.1.0",
                 "bazel_patches": [
                     "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch"
                 ],
@@ -308,19 +308,19 @@
             },
             "score_devcontainer": {
                 "repo": "https://github.com/eclipse-score/devcontainer.git",
-                "version": "1.13.0",
+                "version": "1.14.0",
                 "docs": false,
                 "pin_version": true
             },
             "score_tools": {
                 "repo": "https://github.com/eclipse-score/tools.git",
                 "docs": false,
-                "version": "0.0.4"
+                "version": "0.0.5"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
                 "docs": false,
-                "version": "3.0.2"
+                "version": "3.1.0"
             },
             "score_os_images": {
                 "repo": "https://github.com/eclipse-score/os_images.git",
@@ -329,15 +329,18 @@
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
+                "bazel_patches": [
+                    "//patches/platform:003-relative-doc-links-in-project-at-a-glance.patch"
+                ],
                 "docs": {
                     "mount_at": "modules/functional_modules/score_platform"
                 },
-                "hash": "05665bfc08112b64321a79a0eabc2e5fe664a4c5"
+                "hash": "73ae55e45715ad4dc41666c6e585e6c790724418"
             },
             "score_rules_imagefs": {
                 "repo": "https://github.com/eclipse-score/rules_imagefs.git",
                 "docs": false,
-                "version": "0.1.0"
+                "version": "0.2.1"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
@@ -360,7 +363,7 @@
             "score_bazel_cpp_toolchains": {
                 "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
                 "docs": false,
-                "version": "1.1.0-rc3",
+                "version": "1.1.0",
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -386,5 +389,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-11-25T13:53:19Z"
+    "timestamp": "2026-11-28T11:45:06Z"
 }

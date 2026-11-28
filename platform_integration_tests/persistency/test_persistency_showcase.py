@@ -18,7 +18,7 @@ from attribute_plugin import add_test_properties
 from showcase_runner import run_showcases
 
 _KVS_FILE = "/data/kvs_0_0.json"
-_EXPECTED_KEYS = {"number", "bool", "string", "null", "array", "object"}
+_EXPECTED_KEYS = {"i8", "u8", "i16", "u16", "f32", "number", "bool", "string", "null", "array", "object"}
 
 
 @add_test_properties(
@@ -27,7 +27,7 @@ _EXPECTED_KEYS = {"number", "bool", "string", "null", "array", "object"}
     derivation_technique="requirements-analysis",
 )
 def test_persistency_kvs_showcase(target):
-    """Verifies that the KVS showcase writes six typed key-value pairs to disk
+    """Verifies that the KVS showcase writes eleven typed key-value pairs to disk
     and that a second KVS process can reload them — exercising hash validation."""
     output = run_showcases(target, "Persistency KVS Example")
     assert "Done!" in output, f"createtestdata did not complete:\n{output}"

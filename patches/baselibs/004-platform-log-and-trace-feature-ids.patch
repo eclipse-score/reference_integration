@@ -1,0 +1,28 @@
+score_platform main merged the logging and tracing features into feat__log_and_trace;
+feat__logging and feat__tracing no longer exist. Remove once baselibs links the new ID.
+
+diff --git a/score/analysis/tracing/generic_trace_library/docs/architecture/index.rst b/score/analysis/tracing/generic_trace_library/docs/architecture/index.rst
+index e8aff81..a2244a7 100644
+--- a/score/analysis/tracing/generic_trace_library/docs/architecture/index.rst
++++ b/score/analysis/tracing/generic_trace_library/docs/architecture/index.rst
+@@ -29,6 +29,6 @@ Generic Trace Library Architecture
+    :safety: ASIL_B
+    :status: valid
+    :version: 1
+-   :belongs_to: feat__tracing[version==1]
++   :belongs_to: feat__log_and_trace[version==1]
+ 
+    The Generic Trace Library (GTL) component implementing the tracing client API.
+diff --git a/score/mw/log/docs/architecture/component_architecture.rst b/score/mw/log/docs/architecture/component_architecture.rst
+index 21380db..6e75969 100644
+--- a/score/mw/log/docs/architecture/component_architecture.rst
++++ b/score/mw/log/docs/architecture/component_architecture.rst
+@@ -62,7 +62,7 @@ A component can optional also consist of lower level components to further struc
+    :safety: ASIL_B
+    :status: valid
+    :version: 1
+-   :belongs_to: feat__logging
++   :belongs_to: feat__log_and_trace
+ 
+ .. comp_arc_sta:: Log Frontend (Static View)
+    :id: comp_arc_sta__log__static_view

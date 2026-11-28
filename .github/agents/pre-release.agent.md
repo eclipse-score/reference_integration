@@ -24,8 +24,10 @@ Read it first and follow it exactly.
   has to change (outdated values, new releases, a wrong value), fix the script
   if needed and rerun it, then replace the whole table in the PR body with the
   new output. Leave the OK/NOK column empty; it is set by hand in the PR later.
-- DO NOT build, run tests or other local checks, and DO NOT fix anything;
-  only replace the versions (skill, 5).
+- DO NOT build, run tests or other local checks, and DO NOT fix anything
+  for the first push; only replace the versions (skill, 5). Fixes (patches,
+  adaptations, cherry-picks) only when the user asks, following skill 6:
+  one commit per change, verified with Bazel, listed in the PR body.
 - DO NOT edit generated files by hand (`bazel_common/*.MODULE.bazel`,
   `bazel_common/docs_bundles.bzl`, `MODULE.bazel.lock`); regenerate them.
 - Never print the GitHub token.
@@ -43,3 +45,6 @@ Read it first and follow it exactly.
    skill 5.
 5. Report: PR URL, modules with 10 or more commits since the release, modules
    the script could not resolve, and pinned modules bumped.
+6. On request (skill, 6): analyse red CI checks, fix them in separate commits,
+   push, and update the PR body (*Incompatible Changes*, *Patches checked
+   against the new versions*, *Cherry-picked*, *Other fixes*) in the format of skill 5.

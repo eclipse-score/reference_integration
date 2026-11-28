@@ -195,11 +195,12 @@ int main(int argc, const char* argv[])
         .SetAsDefaultLogger();
     const score::mw::health::MonitorTag monitor_tag{"fcw_cycle"};
     // Heartbeat range minimum must exceed half the internal cycle; the supervisor cycle must be a multiple of it.
+    // Allow time for KVS flushes and scheduling delays without treating them as a hang.
     auto health_monitor_result =
         score::mw::health::HealthMonitorBuilder()
             .AddHeartbeatMonitor(monitor_tag,
                                  score::mw::health::heartbeat::HeartbeatMonitorBuilder(
-                                     score::mw::health::TimeRange(10ms, 300ms)))
+                                     score::mw::health::TimeRange(10ms, 2000ms)))
             .WithInternalProcessingCycle(kMonitorCycle)
             .WithSupervisorApiCycle(kCycle)
             .Build();
@@ -218,7 +219,7 @@ int main(int argc, const char* argv[])
     auto heartbeat = std::move(*heartbeat_result);
     health_monitor.Start();
     score::mw::lifecycle::report_running();
-    logger.LogInfo() << "supervised by health monitor: heartbeat every 50 ms, tolerance 300 ms";
+    logger.LogInfo() << "supervised by health monitor: heartbeat every 50 ms, tolerance 2000 ms";
 
     WarningLevel level{WarningLevel::kNone};
     double episode_min_ttc_s{kNoCollisionTtcS};

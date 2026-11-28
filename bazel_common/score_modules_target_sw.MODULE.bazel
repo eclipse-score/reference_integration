@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-25T13:53:19Z
+# Generated from known_good.json at 2026-11-28T11:45:06Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
@@ -22,8 +22,10 @@ single_version_override(
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
         "//patches/baselibs:003-export-aou-requirements.patch",
+        "//patches/baselibs:004-platform-log-and-trace-feature-ids.patch",
+        "//patches/baselibs:005-relative-verification-report-links.patch",
     ],
-    version = "0.2.19",
+    version = "0.2.21",
 )
 
 bazel_dep(name = "score_communication")
@@ -44,10 +46,9 @@ single_version_override(
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
-        "//patches/persistency:004-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/persistency:005-undev-integration-test-deps.patch",
     ],
-    version = "0.5.0",
+    version = "0.6.0",
 )
 
 bazel_dep(name = "score_kyron")
@@ -58,28 +59,26 @@ git_override(
 )
 
 bazel_dep(name = "score_lifecycle")
-git_override(
+single_version_override(
     module_name = "score_lifecycle",
-    commit = "d8decb3b898c5e2221e3c6bfdc9fcfd097570a6c",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
         "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
         "//patches/lifecycle:005-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
     ],
-    remote = "https://github.com/eclipse-score/lifecycle.git",
+    version = "0.11.0",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "dc2973f775d13a0bfc07615014ca56bf93a59c9b",
+    commit = "a0a162e630eaca176d607529b1159400983ffea5",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
-        "//patches/logging:003-relative-verification-report-links.patch",
         "//patches/logging:006-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
-        "//patches/logging:007-docs-drop-generated-dependency-pages.patch",
+        "//patches/logging:008-platform-log-and-trace-feature-ids.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -92,18 +91,17 @@ single_version_override(
         "//patches/time:007-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
         "//patches/time:003-undev-rules-imagefs.patch",
     ],
-    version = "0.3.3",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "score_crypto")
-git_override(
+single_version_override(
     module_name = "score_crypto",
-    commit = "7294739bb618ed2fc2ffe3aaccacc8d57553a7e3",
     patch_strip = 1,
     patches = [
         "//patches/crypto:001-bazel-cpp-toolchains-1.1-qnx-sdp-pkg.patch",
     ],
-    remote = "https://github.com/eclipse-score/crypto.git",
+    version = "0.1.0",
 )
 
 bazel_dep(name = "score_config_management")

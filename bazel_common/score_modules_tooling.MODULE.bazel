@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-25T13:53:19Z
+# Generated from known_good.json at 2026-11-28T11:45:06Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
@@ -35,19 +35,19 @@ single_version_override(
 bazel_dep(name = "score_devcontainer")
 single_version_override(
     module_name = "score_devcontainer",
-    version = "1.13.0",
+    version = "1.14.0",
 )
 
 bazel_dep(name = "score_tools")
 single_version_override(
     module_name = "score_tools",
-    version = "0.0.4",
+    version = "0.0.5",
 )
 
 bazel_dep(name = "score_tooling")
 single_version_override(
     module_name = "score_tooling",
-    version = "3.0.2",
+    version = "3.1.0",
 )
 
 bazel_dep(name = "score_os_images")
@@ -59,14 +59,18 @@ single_version_override(
 bazel_dep(name = "score_platform")
 git_override(
     module_name = "score_platform",
-    commit = "05665bfc08112b64321a79a0eabc2e5fe664a4c5",
+    commit = "73ae55e45715ad4dc41666c6e585e6c790724418",
+    patch_strip = 1,
+    patches = [
+        "//patches/platform:003-relative-doc-links-in-project-at-a-glance.patch",
+    ],
     remote = "https://github.com/eclipse-score/score.git",
 )
 
 bazel_dep(name = "score_rules_imagefs")
 single_version_override(
     module_name = "score_rules_imagefs",
-    version = "0.1.0",
+    version = "0.2.1",
 )
 
 bazel_dep(name = "score_bazel_platforms")
@@ -96,5 +100,5 @@ single_version_override(
 bazel_dep(name = "score_bazel_cpp_toolchains")
 single_version_override(
     module_name = "score_bazel_cpp_toolchains",
-    version = "1.1.0-rc3",
+    version = "1.1.0",
 )
