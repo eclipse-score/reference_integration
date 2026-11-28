@@ -48,6 +48,9 @@ extensions = [
 # Some mounted baselibs and logging docs lack required architecture links.
 score_cross_module_compatibility_allow_missing_mandatory_links = True
 
+# Same as score_platform's conf.py: its logging/tracing IDs live under features/log_and_trace.
+required_in_id = ["logging", "tracing"]
+
 exclude_patterns = [
     # The following entries are not required when building the documentation via 'bazel
     # build //:docs', as that command runs in a sandboxed environment. However, when
